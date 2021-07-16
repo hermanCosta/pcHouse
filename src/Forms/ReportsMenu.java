@@ -5,6 +5,7 @@
  */
 package Forms;
 
+import java.awt.Color;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 /**
@@ -16,11 +17,17 @@ public class ReportsMenu extends javax.swing.JInternalFrame {
     /**
      * Creates new form OrdersMenu
      */
+    
+    Color defaultColor, mouseEnteredColor;
     public ReportsMenu() {
         initComponents();
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
+        
+                
+        defaultColor = new Color(21,76,121);
+        mouseEnteredColor = new Color(118,181,197);
         
     }
 
@@ -33,35 +40,208 @@ public class ReportsMenu extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        panel_close_till = new javax.swing.JPanel();
+        label_close_till = new javax.swing.JLabel();
+        panel_today_orders = new javax.swing.JPanel();
+        label_today_orders = new javax.swing.JLabel();
 
         setBorder(null);
         setPreferredSize(new java.awt.Dimension(660, 400));
 
-        jLabel1.setText("Reports");
+        panel_close_till.setBackground(new java.awt.Color(21, 76, 121));
+        panel_close_till.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        panel_close_till.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                panel_close_tillMousePressed(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                panel_close_tillMouseClicked(evt);
+            }
+        });
+
+        label_close_till.setBackground(new java.awt.Color(255, 255, 255));
+        label_close_till.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        label_close_till.setForeground(new java.awt.Color(255, 255, 255));
+        label_close_till.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_close_till.png"))); // NOI18N
+        label_close_till.setText(" Close Till");
+        label_close_till.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                label_close_tillMousePressed(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                label_close_tillMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                label_close_tillMouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                label_close_tillMouseEntered(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panel_close_tillLayout = new javax.swing.GroupLayout(panel_close_till);
+        panel_close_till.setLayout(panel_close_tillLayout);
+        panel_close_tillLayout.setHorizontalGroup(
+            panel_close_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_close_tillLayout.createSequentialGroup()
+                .addContainerGap(21, Short.MAX_VALUE)
+                .addComponent(label_close_till, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15))
+        );
+        panel_close_tillLayout.setVerticalGroup(
+            panel_close_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_close_tillLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(label_close_till)
+                .addGap(21, 21, 21))
+        );
+
+        panel_today_orders.setBackground(new java.awt.Color(21, 76, 121));
+        panel_today_orders.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        panel_today_orders.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                panel_today_ordersMousePressed(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                panel_today_ordersMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                panel_today_ordersMouseExited(evt);
+            }
+        });
+
+        label_today_orders.setBackground(new java.awt.Color(255, 255, 255));
+        label_today_orders.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        label_today_orders.setForeground(new java.awt.Color(255, 255, 255));
+        label_today_orders.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_today_orders.png"))); // NOI18N
+        label_today_orders.setText(" Today Orders");
+        label_today_orders.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                label_today_ordersMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                label_today_ordersMouseReleased(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                label_today_ordersMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                label_today_ordersMouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                label_today_ordersMouseEntered(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panel_today_ordersLayout = new javax.swing.GroupLayout(panel_today_orders);
+        panel_today_orders.setLayout(panel_today_ordersLayout);
+        panel_today_ordersLayout.setHorizontalGroup(
+            panel_today_ordersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_today_ordersLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(label_today_orders, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                .addGap(17, 17, 17))
+        );
+        panel_today_ordersLayout.setVerticalGroup(
+            panel_today_ordersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_today_ordersLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(label_today_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(9, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(261, 261, 261)
-                .addComponent(jLabel1)
-                .addContainerGap(351, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(panel_close_till, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(panel_today_orders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(165, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(54, 54, 54)
-                .addComponent(jLabel1)
-                .addContainerGap(330, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(210, 210, 210)
+                        .addComponent(panel_today_orders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(210, 210, 210)
+                        .addComponent(panel_close_till, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(206, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void label_close_tillMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_close_tillMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_label_close_tillMousePressed
+
+    private void label_close_tillMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_close_tillMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_label_close_tillMouseClicked
+
+    private void label_close_tillMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_close_tillMouseExited
+        // TODO add your handling code here:
+        panel_close_till.setBackground(defaultColor);
+    }//GEN-LAST:event_label_close_tillMouseExited
+
+    private void label_close_tillMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_close_tillMouseEntered
+        // TODO add your handling code here:
+        panel_close_till.setBackground(mouseEnteredColor);
+    }//GEN-LAST:event_label_close_tillMouseEntered
+
+    private void panel_close_tillMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_close_tillMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_panel_close_tillMousePressed
+
+    private void panel_close_tillMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_close_tillMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_panel_close_tillMouseClicked
+
+    private void label_today_ordersMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_label_today_ordersMousePressed
+
+    private void label_today_ordersMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMouseReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_label_today_ordersMouseReleased
+
+    private void label_today_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_label_today_ordersMouseClicked
+
+    private void label_today_ordersMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMouseExited
+        // TODO add your handling code here:
+        panel_today_orders.setBackground(defaultColor);
+    }//GEN-LAST:event_label_today_ordersMouseExited
+
+    private void label_today_ordersMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMouseEntered
+        // TODO add your handling code here:
+        panel_today_orders.setBackground(mouseEnteredColor);
+    }//GEN-LAST:event_label_today_ordersMouseEntered
+
+    private void panel_today_ordersMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_today_ordersMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_panel_today_ordersMousePressed
+
+    private void panel_today_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_today_ordersMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_panel_today_ordersMouseClicked
+
+    private void panel_today_ordersMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_today_ordersMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_panel_today_ordersMouseExited
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel label_close_till;
+    private javax.swing.JLabel label_today_orders;
+    private javax.swing.JPanel panel_close_till;
+    private javax.swing.JPanel panel_today_orders;
     // End of variables declaration//GEN-END:variables
 }
