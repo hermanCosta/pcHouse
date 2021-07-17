@@ -19,12 +19,12 @@ public class ProductsMenu extends javax.swing.JInternalFrame {
      */
     
      Color defaultColor, mouseEnteredColor;
+     
     public ProductsMenu() {
         initComponents();
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
-        
         
         defaultColor = new Color(21,76,121);
         mouseEnteredColor = new Color(118,181,197);
@@ -45,7 +45,7 @@ public class ProductsMenu extends javax.swing.JInternalFrame {
         label_sellings = new javax.swing.JLabel();
 
         setBorder(null);
-        setPreferredSize(new java.awt.Dimension(660, 400));
+        setPreferredSize(new java.awt.Dimension(734, 609));
 
         panel_add_new.setBackground(new java.awt.Color(21, 76, 121));
         panel_add_new.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));

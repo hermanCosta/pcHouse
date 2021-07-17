@@ -28,9 +28,21 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
         
         defaultColor = new Color(21,76,121);
         mouseEnteredColor = new Color(118,181,197);
+    }
+    
+    public void openCreateOrder()
+    {
+        CreateOrder createOrder = new CreateOrder();
+        createOrder.setVisible(true);
+    }
+    
+    public void openNewOrder()
+    {
         
-        
-        
+        NewOrder newOrder = new NewOrder();
+        panel_order_menu.removeAll();
+        panel_order_menu.add(newOrder).setVisible(true);
+                
     }
 
     /**
@@ -42,6 +54,7 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        panel_order_menu = new javax.swing.JPanel();
         panel_new_order = new javax.swing.JPanel();
         label_new_order = new javax.swing.JLabel();
         panel_check_existing = new javax.swing.JPanel();
@@ -49,6 +62,8 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
 
         setBorder(null);
         setPreferredSize(new java.awt.Dimension(660, 400));
+
+        panel_order_menu.setPreferredSize(new java.awt.Dimension(734, 609));
 
         panel_new_order.setBackground(new java.awt.Color(21, 76, 121));
         panel_new_order.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -151,28 +166,38 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
+        javax.swing.GroupLayout panel_order_menuLayout = new javax.swing.GroupLayout(panel_order_menu);
+        panel_order_menu.setLayout(panel_order_menuLayout);
+        panel_order_menuLayout.setHorizontalGroup(
+            panel_order_menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_order_menuLayout.createSequentialGroup()
+                .addComponent(panel_new_order, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(panel_check_existing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 251, Short.MAX_VALUE))
+        );
+        panel_order_menuLayout.setVerticalGroup(
+            panel_order_menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_order_menuLayout.createSequentialGroup()
+                .addGap(70, 70, 70)
+                .addGroup(panel_order_menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panel_check_existing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panel_new_order, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(470, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panel_new_order, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(panel_check_existing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(171, Short.MAX_VALUE))
+                .addComponent(panel_order_menu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(panel_check_existing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(panel_new_order, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(288, Short.MAX_VALUE))
+            .addComponent(panel_order_menu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -185,13 +210,12 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
 
     private void label_new_orderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_new_orderMouseClicked
         // TODO add your handling code here:
-
-
+        openNewOrder();
     }//GEN-LAST:event_label_new_orderMouseClicked
 
     private void panel_new_orderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_new_orderMousePressed
         // TODO add your handling code here:
- 
+        openNewOrder();
     }//GEN-LAST:event_panel_new_orderMousePressed
 
     private void panel_new_orderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_new_orderMouseClicked
@@ -250,5 +274,6 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
     private javax.swing.JLabel label_new_order;
     private javax.swing.JPanel panel_check_existing;
     private javax.swing.JPanel panel_new_order;
+    private javax.swing.JPanel panel_order_menu;
     // End of variables declaration//GEN-END:variables
 }

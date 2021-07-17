@@ -46,7 +46,7 @@ public class ReportsMenu extends javax.swing.JInternalFrame {
         label_today_orders = new javax.swing.JLabel();
 
         setBorder(null);
-        setPreferredSize(new java.awt.Dimension(660, 400));
+        setPreferredSize(new java.awt.Dimension(734, 609));
 
         panel_close_till.setBackground(new java.awt.Color(21, 76, 121));
         panel_close_till.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
