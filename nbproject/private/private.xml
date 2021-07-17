@@ -3,9 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/pchouse/Billing.java</file>
-            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/pchouse/MainMenu.java</file>
-            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/pchouse/CreateOrder.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/OrdersMenu.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/MainMenu.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/ReportsMenu.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/Billing.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Img/icon_today_orders.png</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/CreateOrder.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Img/icon_new_order.png</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/NewOrder.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/ProductsMenu.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Img/icon_add_new.png</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/Orders.java</file>
         </group>
     </open-files>
 </project-private>
