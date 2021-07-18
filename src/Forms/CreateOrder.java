@@ -12,12 +12,14 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+
 
 /**
  *
@@ -31,12 +33,12 @@ public class CreateOrder extends javax.swing.JFrame {
     public CreateOrder() {
         initComponents();
         //setExtendedState(JFrame.MAXIMIZED_BOTH);
-        AutoID();
+        autoID();
         
     }
     
-    Connection con;
-    PreparedStatement pst;
+    Connection connection;
+    PreparedStatement preparedStatement;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -50,7 +52,7 @@ public class CreateOrder extends javax.swing.JFrame {
         try {
             //Class.forName("com.mysql.jdbc.Driver");
               Class.forName("com.mysql.cj.jdbc.Driver");
-              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","hermanhgc","He11m@ns");
+              connection = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","hermanhgc","He11m@ns");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(CreateOrder.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -58,12 +60,12 @@ public class CreateOrder extends javax.swing.JFrame {
         }
     }
     
-    public void AutoID()
+    public void autoID()
     {
         
         try {
             connection();
-            Statement s = con.createStatement();
+            Statement s = connection.createStatement();
             
              ResultSet rs = s.executeQuery("select Max(orderNo) from repair");
              rs.next();
@@ -98,7 +100,6 @@ public class CreateOrder extends javax.swing.JFrame {
         String model = txModel.getText();
         String serialNumber = txSerialNumber.getText();
         String fault = txFault.getText();
-        
         String price = txPrice.getText();
         String deposit = txDeposit.getText();
         String due = txDue.getText();
@@ -108,19 +109,19 @@ public class CreateOrder extends javax.swing.JFrame {
         
         
         try {
-            pst = con.prepareStatement("insert into repair(orderNo,costumerName,contactNo,deviceBrand, deviceModel,serialNumber,fault,repairPrice,deposit,due,status)values(?,?,?,?,?,?,?,?,?,?,?)");
-            pst.setString(1, orderNo);
-            pst.setString(2, customerName);
-            pst.setString(3, contact);
-            pst.setString(4, brand);
-            pst.setString(5, model);
-            pst.setString(6, serialNumber);
-            pst.setString(7, fault);
-            pst.setString(8, price);
-            pst.setString(9, deposit);
-            pst.setString(10, due);
-            pst.setString(11, status);
-            pst.executeUpdate();
+            preparedStatement = connection.prepareStatement("insert into repair(orderNo,costumerName,contactNo,deviceBrand, deviceModel,serialNumber,fault,repairPrice,deposit,due,status)values(?,?,?,?,?,?,?,?,?,?,?)");
+            preparedStatement.setString(1, orderNo);
+            preparedStatement.setString(2, customerName);
+            preparedStatement.setString(3, contact);
+            preparedStatement.setString(4, brand);
+            preparedStatement.setString(5, model);
+            preparedStatement.setString(6, serialNumber);
+            preparedStatement.setString(7, fault);
+            preparedStatement.setString(8, price);
+            preparedStatement.setString(9, deposit);
+            preparedStatement.setString(10, due);
+            preparedStatement.setString(11, status);
+            preparedStatement.executeUpdate();
             
             JOptionPane.showMessageDialog(this, "New order created successfully!");
             
@@ -136,7 +137,7 @@ public class CreateOrder extends javax.swing.JFrame {
             txDue.setText("");
             txStatus.setSelectedIndex(-1);
             txName.requestFocus();
-            AutoID();
+            autoID();
             
             
             
@@ -163,7 +164,7 @@ public class CreateOrder extends javax.swing.JFrame {
         String due = txDue.getText();
         
         
-        new PrintOrder(orderNo,customerName,contact,brand,model,serialNumber,fault,price,deposit,due).setVisible(true);
+       // new PrintOrder(orderNo,customerName,contact,brand,model,serialNumber,fault,price,deposit,due).setVisible(true);
     }
     
     

@@ -814,7 +814,6 @@ public class MainMenu extends javax.swing.JFrame {
     private void label_new_orderMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_new_orderMouseExited
         // TODO add your handling code here:
         panel_new_order.setBackground(defaultColor);
-        
     }//GEN-LAST:event_label_new_orderMouseExited
 
     private void label_new_orderMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_new_orderMouseEntered
@@ -824,10 +823,12 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void panel_new_orderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_new_orderMousePressed
         // TODO add your handling code here:
+        panel_new_order.setBackground(clickedColor);
     }//GEN-LAST:event_panel_new_orderMousePressed
 
     private void panel_new_orderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_new_orderMouseClicked
         // TODO add your handling code here:
+        panel_new_order.setBackground(clickedColor);
     }//GEN-LAST:event_panel_new_orderMouseClicked
 
     private void label_add_newMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_add_newMousePressed
@@ -850,6 +851,7 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void panel_add_newMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_add_newMousePressed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_panel_add_newMousePressed
 
     private void panel_add_newMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_add_newMouseClicked

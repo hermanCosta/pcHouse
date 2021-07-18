@@ -23,30 +23,42 @@ public class PrintOrder extends javax.swing.JFrame {
     }
     
     String _orderNo;
-    String _customerName;
+    String _firstName;
+    String _lastName;
     String _contact;
-    String _brand;
-    String _model;
+    String _email;
+    String _deviceBrand;
+    String _deviceModel;
     String _serialNumber;
     String _fault;
+    String _importantNotes;
+    String _serviceProduct;
     String _price;
     String _deposit;
     String _due;
     
     
+    //new PrintOrder(orderNo,firstName,lastName,contact,email,deviceBrand,deviceModel,serialNumber,
+    //fault,importantNotes,serviceProduct,price,deposit,due).setVisible(true);
     
     
-    
-    public PrintOrder(String orderNo, String customerName, String contact, String brand, String model, String serialNumber, String fault, String price, String deposit, String due) {
+   PrintOrder(String orderNo, String firstName, String lastName, String contact, String email, String deviceBrand,
+              String deviceModel, String serialNumber, String fault, String importantNotes, String serviceProduct,
+              String price, String deposit, String due) {
         
+    
         initComponents();
         
         this._orderNo = orderNo;
-        this._customerName = customerName;
+        this._firstName = firstName;
+        this._lastName = lastName;
         this._contact = contact;
-        this._brand = brand;
-        this._model = model;
+        this._email = email;
+        this._deviceBrand = deviceBrand;
+        this._deviceModel = deviceModel;
         this._serialNumber = serialNumber;
+        this._importantNotes = importantNotes;
+        this._serviceProduct = serviceProduct;
         this._price = price;
         this._deposit = deposit;
         this._due = due;
@@ -56,17 +68,21 @@ public class PrintOrder extends javax.swing.JFrame {
         txPrintPanel.setText(txPrintPanel.getText() + "\n");
         
         txPrintPanel.setText(txPrintPanel.getText() + " " + "Order No: " + _orderNo +  "\n");
-        txPrintPanel.setText(txPrintPanel.getText() + " " + "Customer Name: " + _customerName +  "\n");
+        txPrintPanel.setText(txPrintPanel.getText() + " " + "Customer Name: " + _firstName + " " + _lastName + "\n");
         txPrintPanel.setText(txPrintPanel.getText() + " " + "Contact No: " + _contact +  "\n");
-        txPrintPanel.setText(txPrintPanel.getText() + " " + "Brand: " + _model +  "\n");
+        txPrintPanel.setText(txPrintPanel.getText() + " " + "Email Address: " + _email +  "\n");
+        txPrintPanel.setText(txPrintPanel.getText() + " " + "Brand: " + _deviceBrand +  "\n");
+        txPrintPanel.setText(txPrintPanel.getText() + " " + "Model: " + _deviceModel +  "\n");
         txPrintPanel.setText(txPrintPanel.getText() + " " + "S/N: " + _serialNumber +  "\n");
-        txPrintPanel.setText(txPrintPanel.getText() + " " + "Price: €" + _deposit +  "\n");
+        txPrintPanel.setText(txPrintPanel.getText() + " " + "Important Notes: " + _importantNotes +  "\n");
+        txPrintPanel.setText(txPrintPanel.getText() + " " + "Service|Product: " + _serviceProduct +  "\n");
+        txPrintPanel.setText(txPrintPanel.getText() + " " + "Price: €" + _price +  "\n");
         txPrintPanel.setText(txPrintPanel.getText() + " " + "Deposit Paid: €" + _deposit +  "\n");
-        txPrintPanel.setText(txPrintPanel.getText() + " " + "Due: €" + _deposit +  "\n");
+        txPrintPanel.setText(txPrintPanel.getText() + " " + "Due: €" + _due +  "\n");
         
         txPrintPanel.setText(txPrintPanel.getText() + "**********************************************\n");
         txPrintPanel.setText(txPrintPanel.getText() + "**********************************************\n");
-        txPrintPanel.setText(txPrintPanel.getText() + "********Thank you for choosing us*************\n");
+        txPrintPanel.setText(txPrintPanel.getText() + "********Thank you for trusting us*************\n");
         
         try {
             txPrintPanel.print();
@@ -74,6 +90,8 @@ public class PrintOrder extends javax.swing.JFrame {
             Logger.getLogger(PrintOrder.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    
     
     
     
