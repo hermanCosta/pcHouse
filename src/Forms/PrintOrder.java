@@ -5,9 +5,19 @@
  */
 package Forms;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
 import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextPane;
 
 /**
  *
@@ -37,14 +47,9 @@ public class PrintOrder extends javax.swing.JFrame {
     String _deposit;
     String _due;
     
-    
-    //new PrintOrder(orderNo,firstName,lastName,contact,email,deviceBrand,deviceModel,serialNumber,
-    //fault,importantNotes,serviceProduct,price,deposit,due).setVisible(true);
-    
-    
-   PrintOrder(String orderNo, String firstName, String lastName, String contact, String email, String deviceBrand,
-              String deviceModel, String serialNumber, String fault, String importantNotes, String serviceProduct,
-              String price, String deposit, String due) {
+    PrintOrder(String orderNo, String firstName, String lastName, String contact, String email, String deviceBrand,
+               String deviceModel, String serialNumber, String fault, String importantNotes, String serviceProduct,
+               String price, String deposit, String due) {
         
     
         initComponents();
@@ -63,33 +68,45 @@ public class PrintOrder extends javax.swing.JFrame {
         this._deposit = deposit;
         this._due = due;
         
-        txPrintPanel.setText(txPrintPanel.getText() + "**********************************************\n");
-        txPrintPanel.setText(txPrintPanel.getText() + "******************PCHOUSE*********************\n");
-        txPrintPanel.setText(txPrintPanel.getText() + "\n");
+        txt_panel_print.setText(txt_panel_print.getText() + "**********************************************\n");
+        txt_panel_print.setText(txt_panel_print.getText() + "******************PCHOUSE*********************\n");
+        txt_panel_print.setText(txt_panel_print.getText() + "\n");
         
-        txPrintPanel.setText(txPrintPanel.getText() + " " + "Order No: " + _orderNo +  "\n");
-        txPrintPanel.setText(txPrintPanel.getText() + " " + "Customer Name: " + _firstName + " " + _lastName + "\n");
-        txPrintPanel.setText(txPrintPanel.getText() + " " + "Contact No: " + _contact +  "\n");
-        txPrintPanel.setText(txPrintPanel.getText() + " " + "Email Address: " + _email +  "\n");
-        txPrintPanel.setText(txPrintPanel.getText() + " " + "Brand: " + _deviceBrand +  "\n");
-        txPrintPanel.setText(txPrintPanel.getText() + " " + "Model: " + _deviceModel +  "\n");
-        txPrintPanel.setText(txPrintPanel.getText() + " " + "S/N: " + _serialNumber +  "\n");
-        txPrintPanel.setText(txPrintPanel.getText() + " " + "Important Notes: " + _importantNotes +  "\n");
-        txPrintPanel.setText(txPrintPanel.getText() + " " + "Service|Product: " + _serviceProduct +  "\n");
-        txPrintPanel.setText(txPrintPanel.getText() + " " + "Price: €" + _price +  "\n");
-        txPrintPanel.setText(txPrintPanel.getText() + " " + "Deposit Paid: €" + _deposit +  "\n");
-        txPrintPanel.setText(txPrintPanel.getText() + " " + "Due: €" + _due +  "\n");
+        txt_panel_print.setText(txt_panel_print.getText() + " " + "Order No: " + _orderNo +  "\n");
+        txt_panel_print.setText(txt_panel_print.getText() + " " + "Customer Name: " + _firstName + " " + _lastName + "\n");
+        txt_panel_print.setText(txt_panel_print.getText() + " " + "Contact No: " + _contact +  "\n");
+        txt_panel_print.setText(txt_panel_print.getText() + " " + "Email Address: " + _email +  "\n");
+        txt_panel_print.setText(txt_panel_print.getText() + " " + "Brand: " + _deviceBrand +  "\n");
+        txt_panel_print.setText(txt_panel_print.getText() + " " + "Model: " + _deviceModel +  "\n");
+        txt_panel_print.setText(txt_panel_print.getText() + " " + "S/N: " + _serialNumber +  "\n");
+        txt_panel_print.setText(txt_panel_print.getText() + " " + "Important Notes: " + _importantNotes +  "\n");
+        txt_panel_print.setText(txt_panel_print.getText() + " " + "Service|Product: " + _serviceProduct +  "\n");
+        txt_panel_print.setText(txt_panel_print.getText() + " " + "Price: €" + _price +  "\n");
+        txt_panel_print.setText(txt_panel_print.getText() + " " + "Deposit Paid: €" + _deposit +  "\n");
+        txt_panel_print.setText(txt_panel_print.getText() + " " + "Due: €" + _due +  "\n");
         
-        txPrintPanel.setText(txPrintPanel.getText() + "**********************************************\n");
-        txPrintPanel.setText(txPrintPanel.getText() + "**********************************************\n");
-        txPrintPanel.setText(txPrintPanel.getText() + "********Thank you for trusting us*************\n");
+        txt_panel_print.setText(txt_panel_print.getText() + "**********************************************\n");
+        txt_panel_print.setText(txt_panel_print.getText() + "**********************************************\n");
+        txt_panel_print.setText(txt_panel_print.getText() + "********Thank you for trusting us*************\n");
         
-        try {
-            txPrintPanel.print();
-        } catch (PrinterException ex) {
-            Logger.getLogger(PrintOrder.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
+        //about header ans footer
+        //MessageFormat footer = new MessageFormat("Page - {0}");
+        
+        
+        
+        
+        //printOrderDetails(txt_panel_print);
+        
+        
+//        try {
+//            txPrintPanel.print();
+//        } catch (PrinterException ex) {
+//            Logger.getLogger(PrintOrder.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
+    
+    
 
     
     
@@ -106,26 +123,37 @@ public class PrintOrder extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        txPrintPanel = new javax.swing.JTextPane();
+        txt_panel_print = new javax.swing.JTextPane();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
 
-        txPrintPanel.setFont(new java.awt.Font("Monospaced", 1, 13)); // NOI18N
-        jScrollPane1.setViewportView(txPrintPanel);
+        txt_panel_print.setFont(new java.awt.Font("Monospaced", 1, 13)); // NOI18N
+        jScrollPane1.setViewportView(txt_panel_print);
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/logo.png"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 904, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(53, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         pack();
@@ -169,7 +197,50 @@ public class PrintOrder extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextPane txPrintPanel;
+    private javax.swing.JTextPane txt_panel_print;
     // End of variables declaration//GEN-END:variables
+    
+    private void printOrderDetails(JTextPane panel)
+    {
+        PrinterJob printerJob = PrinterJob.getPrinterJob();
+        printerJob.setJobName("Print Order Details");
+        printerJob.setPrintable(new Printable() {
+            @Override
+            public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                
+                if(pageIndex > 0)
+                {
+                    return Printable.NO_SUCH_PAGE;
+                }
+                Graphics2D graphics2D = (Graphics2D)graphics;
+                graphics2D.translate(pageFormat.getImageableX() * 2, pageFormat.getImageableY() * 2);
+                graphics2D.scale(0.5, 0.5);
+                
+              
+                
+              txt_panel_print.paint(graphics2D);
+              return Printable.PAGE_EXISTS;
+            }
+        });
+        
+        boolean returningResult = printerJob.printDialog();
+        
+        //MessageFormat footer = new MessageFormat("Page - {0}");
+        
+        if(returningResult)
+        {
+            try {
+                printerJob.print();
+
+            } catch (PrinterException ex) {
+                Logger.getLogger(PrintOrder.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+                
+    }
+
+
 }
