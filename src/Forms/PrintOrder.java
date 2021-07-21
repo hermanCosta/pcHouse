@@ -8,16 +8,33 @@ package Forms;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
+import java.awt.print.Paper;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-import java.text.MessageFormat;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.print.Doc;
+import javax.print.DocFlavor;
+import javax.print.DocPrintJob;
+import javax.print.PrintException;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.SimpleDoc;
+import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.print.attribute.standard.MediaSizeName;
 import javax.swing.JTextPane;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.printing.PDFPageable;
+
+
+
+
 
 /**
  *
@@ -31,6 +48,9 @@ public class PrintOrder extends javax.swing.JFrame {
     public PrintOrder() {
         initComponents();
     }
+    
+    Paper paper = new Paper();
+    
     
     String _orderNo;
     String _firstName;
@@ -89,30 +109,50 @@ public class PrintOrder extends javax.swing.JFrame {
         txt_panel_print.setText(txt_panel_print.getText() + "**********************************************\n");
         txt_panel_print.setText(txt_panel_print.getText() + "********Thank you for trusting us*************\n");
         
+       // PrintSupport.printComponent(txt_panel_print);
         
-        //about header ans footer
-        //MessageFormat footer = new MessageFormat("Page - {0}");
+//        try
+//        {
+//            boolean complete  = txt_panel_print.print();
+//            if (complete) {
+//                JOptionPane.showMessageDialog(null, "Done", "Information", JOptionPane.INFORMATION_MESSAGE);
+//            } else {
+//                JOptionPane.showMessageDialog(null, "Printing", "Printer",JOptionPane.ERROR_MESSAGE);
+//            }
+//            
+//        } catch (PrinterException ex) {
+//                    
+//                    JOptionPane.showMessageDialog(null, ex);
+//                    }
+//                    
         
-        
-        
-        
-        //printOrderDetails(txt_panel_print);
         
         
 //        try {
-//            txPrintPanel.print();
-//        } catch (PrinterException ex) {
+//            txt_panel_print.print();
+//            
+//            } catch (PrinterException ex) {
 //            Logger.getLogger(PrintOrder.class.getName()).log(Level.SEVERE, null, ex);
 //        }
+//        
+        
+        
+        
+        
+        
+                
     }
-    
-    
+ 
+            
+        
+        
+        
 
     
-    
-    
-    
 
+
+    
+        
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -124,36 +164,25 @@ public class PrintOrder extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         txt_panel_print = new javax.swing.JTextPane();
-        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setUndecorated(true);
 
         txt_panel_print.setFont(new java.awt.Font("Monospaced", 1, 13)); // NOI18N
         jScrollPane1.setViewportView(txt_panel_print);
-
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/logo.png"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 904, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 910, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 53, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 640, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 12, Short.MAX_VALUE))
         );
 
         pack();
@@ -194,18 +223,44 @@ public class PrintOrder extends javax.swing.JFrame {
                 new PrintOrder().setVisible(true);
             }
         });
+        
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextPane txt_panel_print;
     // End of variables declaration//GEN-END:variables
+    
+    
+    
+    private PrinterJob createPDFPrinterJob(PDDocument pdfDocument) {
+        
+        
+    PrinterJob printJob = PrinterJob.getPrinterJob();
+
+    PageFormat pageFormat = new PageFormat();
+    //pageFormat.setOrientation(PageFormat.PORTRAIT);
+
+    Paper paper = new Paper();
+    pageFormat.setPaper(paper);
+    
+    //printJob.setPrintable(new PDPageable(pdfDocument), pageFormat);
+    printJob.setPageable(new PDFPageable(pdfDocument));
+
+    return printJob;
+}
+    
+    
+   
     
     private void printOrderDetails(JTextPane panel)
     {
         PrinterJob printerJob = PrinterJob.getPrinterJob();
         printerJob.setJobName("Print Order Details");
+        
+        printerJob.defaultPage().getPaper();
+        
         printerJob.setPrintable(new Printable() {
             @Override
             public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
@@ -219,7 +274,6 @@ public class PrintOrder extends javax.swing.JFrame {
                 graphics2D.translate(pageFormat.getImageableX() * 2, pageFormat.getImageableY() * 2);
                 graphics2D.scale(0.5, 0.5);
                 
-              
                 
               txt_panel_print.paint(graphics2D);
               return Printable.PAGE_EXISTS;
@@ -239,8 +293,37 @@ public class PrintOrder extends javax.swing.JFrame {
                 Logger.getLogger(PrintOrder.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-                
     }
-
-
 }
+
+
+
+/* print to PDF *need to test
+
+        File file = new File("path/to/pdf");
+                DocFlavor flavor = DocFlavor.INPUT_STREAM.PDF;
+                PrintRequestAttributeSet attr = new HashPrintRequestAttributeSet();
+                attr.add(MediaSizeName.ISO_A4);
+                FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(PrintOrder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+                PrintService printService = PrintServiceLookup.lookupDefaultPrintService();
+                
+                Doc doc = new SimpleDoc(fis, flavor, null);
+                DocPrintJob job = printService.createPrintJob();
+        try {
+            job.print(doc, attr);
+        } catch (PrintException ex) {
+            Logger.getLogger(PrintOrder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            fis.close();
+        
+        } catch (IOException ex) {
+            Logger.getLogger(PrintOrder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+*/

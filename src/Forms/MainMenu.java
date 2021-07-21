@@ -780,7 +780,7 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void label_check_existingMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_check_existingMouseClicked
         // TODO add your handling code here:
-        //openNewOrder();
+        openOrdersMenu();
     }//GEN-LAST:event_label_check_existingMouseClicked
 
     private void label_check_existingMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_check_existingMouseExited

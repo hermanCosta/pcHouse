@@ -52,7 +52,7 @@ public class Orders extends javax.swing.JFrame {
         connection();
         
         try {
-            pst = con.prepareStatement("select * from repair");
+            pst = con.prepareStatement("select * from orderDetails");
             ResultSet rs = pst.executeQuery();
             
             ResultSetMetaData rsd = rs.getMetaData();
@@ -68,8 +68,10 @@ public class Orders extends javax.swing.JFrame {
                 for(int i = 1; i <= c; i++)
                 {
                     v2.add(rs.getString("orderNo"));
-                    v2.add(rs.getString("costumerName"));
-                  
+                    v2.add(rs.getString("firstName"));
+                    v2.add(rs.getString("lastName"));
+                    v2.add(rs.getString("contactNo"));
+                    v2.add(rs.getString("deviceBrand"));
                     v2.add(rs.getString("deviceModel"));
                     v2.add(rs.getString("serialNumber"));
                     v2.add(rs.getString("repairPrice"));
@@ -106,17 +108,17 @@ public class Orders extends javax.swing.JFrame {
 
         jFrameTableView.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "OrderNo.", "Costumer", "Model", "S/N", "Price", "Deposit", "Due", "Status"
+                "OrderNo.", "First Name", "Last Name", "Contact No", "Email", "Brand", "Model", "S/N", "Fault", "Notes", "Price", "Deposit", "Due", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -136,7 +138,8 @@ public class Orders extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 854, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

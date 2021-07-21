@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import static java.util.Optional.empty;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -582,10 +583,10 @@ public class NewOrder extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         int price = Integer.parseInt(txt_price.getText());
         int deposit = Integer.parseInt(txt_deposit.getText());
-       
+        //txt_deposit.getText().equals("");
+        
         int total = price - deposit;
-       
-        txt_due.setText(String.valueOf(total));         
+        txt_due.setText(String.valueOf(total));
     }//GEN-LAST:event_txt_depositKeyReleased
 
     private void btn_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelActionPerformed
