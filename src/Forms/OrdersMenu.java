@@ -31,8 +31,8 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
          */
         Color defaultColor, mouseEnteredColor;
         Connection connection;
-        ResultSet result ;
-        PreparedStatement pst;
+        ResultSet resultSet ;
+        PreparedStatement preparedState;
        
     public OrdersMenu() {
         initComponents();
@@ -48,6 +48,7 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
         defaultColor = new Color(21,76,121);
         mouseEnteredColor = new Color(118,181,197);
         
+        //searchOrder();
         //recentOrders();
     }
     
@@ -66,9 +67,9 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
          dbConnection();
         
          try {
-            pst = connection.prepareStatement("SELECT * FROM orderDetails ORDER BY orderNo DESC LIMIT 10 ");
+            preparedState = connection.prepareStatement("SELECT * FROM orderDetails ORDER BY orderNo DESC LIMIT 10 ");
                                         
-            ResultSet resultSet = pst.executeQuery();
+            ResultSet resultSet = preparedState.executeQuery();
             
             ResultSetMetaData rsd = resultSet.getMetaData();
             int c; 
@@ -106,13 +107,14 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
         //lbl_latest_orders_created.setVisible(false);
          
          try {
-            pst = connection.prepareStatement("SELECT * FROM orderDetails"
-                                        + "WHERE orderNo LIKE '%" + searchOrder + "%' " 
-                                        + "OR firstName LIKE '%" + searchOrder + "%' "
-                                        + "OR lastName LIKE '%" + searchOrder + "%' "
-                                        + "OR contactNo LIKE '%" + searchOrder + "%' ");
+            preparedState = connection.prepareStatement("SELECT * FROM orderDetails WHERE orderNo LIKE '%" + searchOrder + "%' OR firstName LIKE '%" + searchOrder + "%' OR lastName LIKE '%" + searchOrder + "%' OR contactNo LIKE '%" + searchOrder + "%' ");
+                                          
+                                       // + "WHERE orderNo LIKE '%" + searchOrder + "%' " 
+                                        //+ "OR firstName LIKE '%" + searchOrder + "%' "
+                                        //+ "OR lastName LIKE '%" + searchOrder + "%' ");
+                                       // + "OR contactNo LIKE '%" + searchOrder + "%' ");
             
-            ResultSet resultSet = pst.executeQuery();
+            ResultSet resultSet = preparedState.executeQuery();
             
             ResultSetMetaData rsd = resultSet.getMetaData();
             int c; 

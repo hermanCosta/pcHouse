@@ -217,7 +217,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
         setPreferredSize(new java.awt.Dimension(655, 700));
 
-        panel_order_details.setBackground(new java.awt.Color(255, 255, 255));
         panel_order_details.setPreferredSize(new java.awt.Dimension(655, 700));
 
         lbl_order_no.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
