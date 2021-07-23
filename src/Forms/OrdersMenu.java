@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
-import static picocli.CommandLine.Help.Ansi.Style.bold;
 
 /**
  *
@@ -37,6 +36,7 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
     public OrdersMenu() {
         initComponents();
         
+        
         table_view_orders.setRowHeight(25);
         table_view_orders.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
                 
@@ -48,8 +48,8 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
         defaultColor = new Color(21,76,121);
         mouseEnteredColor = new Color(118,181,197);
         
-        //searchOrder();
-        //recentOrders();
+        
+        recentOrders();
     }
     
     public void dbConnection() 
@@ -64,10 +64,11 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
     
     public void recentOrders()
     {
+        label_latest_orders_created.setVisible(true);
          dbConnection();
         
          try {
-            preparedState = connection.prepareStatement("SELECT * FROM orderDetails ORDER BY orderNo DESC LIMIT 10 ");
+            preparedState = connection.prepareStatement("SELECT * FROM orderDetails ORDER BY orderNo DESC LIMIT 15 ");
                                         
             ResultSet resultSet = preparedState.executeQuery();
             
@@ -99,15 +100,24 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
         }
     }
     
+    
     public void searchOrder() {
         
-        dbConnection();
-        
         String searchOrder = txt_search_order.getText();
-        //lbl_latest_orders_created.setVisible(false);
+        
+        
+        if(searchOrder.isEmpty())
+        {
+            recentOrders();
+            txt_search_order.getAction().setEnabled(false);
+        }
+        else{
+            
+            label_latest_orders_created.setVisible(false);
+            label_latest_orders_created.setVisible(false);dbConnection();
          
          try {
-            preparedState = connection.prepareStatement("SELECT * FROM orderDetails WHERE orderNo LIKE '%" + searchOrder + "%' OR firstName LIKE '%" + searchOrder + "%' OR lastName LIKE '%" + searchOrder + "%' OR contactNo LIKE '%" + searchOrder + "%' ");
+            preparedState = connection.prepareStatement("SELECT * FROM orderDetails WHERE orderNo LIKE '%" + searchOrder + "%' OR firstName LIKE '%" + searchOrder + "%' OR lastName LIKE '%" + searchOrder + "%' OR contactNo LIKE '%" + searchOrder + "%' LIMIT 15");
                                           
                                        // + "WHERE orderNo LIKE '%" + searchOrder + "%' " 
                                         //+ "OR firstName LIKE '%" + searchOrder + "%' "
@@ -143,6 +153,7 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
             Logger.getLogger(CreateOrder.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -153,11 +164,23 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
+        jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
+        jMenu1 = new javax.swing.JMenu();
         txt_search_order = new javax.swing.JTextField();
         btn_search_order = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         table_view_orders = new javax.swing.JTable();
-        lbl_latest_orders_created = new javax.swing.JLabel();
+        label_latest_orders_created = new javax.swing.JLabel();
+
+        jCheckBoxMenuItem1.setSelected(true);
+        jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
+
+        jCheckBoxMenuItem2.setSelected(true);
+        jCheckBoxMenuItem2.setText("jCheckBoxMenuItem2");
+
+        jMenu1.setText("jMenu1");
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(null);
@@ -169,9 +192,17 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
                 txt_search_orderActionPerformed(evt);
             }
         });
+        txt_search_order.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txt_search_orderKeyTyped(evt);
+            }
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_search_orderKeyPressed(evt);
+            }
+        });
 
         btn_search_order.setBackground(new java.awt.Color(21, 76, 121));
-        btn_search_order.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        btn_search_order.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         btn_search_order.setForeground(new java.awt.Color(255, 255, 255));
         btn_search_order.setText("Search");
         btn_search_order.addActionListener(new java.awt.event.ActionListener() {
@@ -185,6 +216,16 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
         table_view_orders.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         table_view_orders.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
@@ -217,8 +258,8 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(table_view_orders);
         table_view_orders.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
-        lbl_latest_orders_created.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
-        lbl_latest_orders_created.setText("Latest Orders Created");
+        label_latest_orders_created.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
+        label_latest_orders_created.setText("Orders Created Recently");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -226,30 +267,30 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 642, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(txt_search_order)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btn_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE))
+                        .addComponent(btn_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbl_latest_orders_created)
-                .addGap(213, 213, 213))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(201, 201, 201)
+                .addComponent(label_latest_orders_created)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txt_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
-                .addComponent(lbl_latest_orders_created, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(label_latest_orders_created, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(285, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -289,10 +330,24 @@ public class OrdersMenu extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         searchOrder();
     }//GEN-LAST:event_txt_search_orderActionPerformed
+
+    private void txt_search_orderKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_search_orderKeyPressed
+        // TODO add your handling code here:
+        searchOrder();
+    }//GEN-LAST:event_txt_search_orderKeyPressed
+
+    private void txt_search_orderKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_search_orderKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_search_orderKeyTyped
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_search_order;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lbl_latest_orders_created;
+    private javax.swing.JLabel label_latest_orders_created;
     private javax.swing.JTable table_view_orders;
     private javax.swing.JTextField txt_search_order;
     // End of variables declaration//GEN-END:variables

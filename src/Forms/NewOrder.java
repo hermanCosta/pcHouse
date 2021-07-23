@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 /**
@@ -33,8 +34,14 @@ public class NewOrder extends javax.swing.JInternalFrame {
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
         
+        
+        
         autoID();
+        
     }
+    
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -100,7 +107,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         String deviceModel = txt_model.getText();
         String serialNumber = txt_sn.getText();
         String fault = txt_fault.getText();
-        String importantNotes = txt_important_notes.getText();
+        String importantNotes = txt_area_important_notes.getText();
         String serviceProduct = txt_service_product.getText();
         String price = txt_price.getText();
         String deposit = txt_deposit.getText();
@@ -142,7 +149,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             txt_model.setText("");
             txt_sn.setText("");
             txt_fault.setText("");
-            txt_important_notes.setText("");
+            txt_area_important_notes.setText("");
             txt_service_product.setText("");
             txt_price.setText("");
             txt_deposit.setText("");
@@ -168,7 +175,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         String deviceModel = txt_model.getText();
         String serialNumber = txt_sn.getText();
         String fault = txt_fault.getText();
-        String importantNotes = txt_important_notes.getText();
+        String importantNotes = txt_area_important_notes.getText();
         String serviceProduct = txt_service_product.getText();
         String price = txt_price.getText();
         String deposit = txt_deposit.getText();
@@ -181,6 +188,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
         panel_order_details = new javax.swing.JPanel();
         lbl_order_no = new javax.swing.JLabel();
         lbl_first_name = new javax.swing.JLabel();
@@ -191,7 +199,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
         lbl_model = new javax.swing.JLabel();
         lbl_sn = new javax.swing.JLabel();
         lbl_fault = new javax.swing.JLabel();
-        lbl_important_notes = new javax.swing.JLabel();
         lbl_auto_order_no = new javax.swing.JLabel();
         lbl_service_product = new javax.swing.JLabel();
         lbl_price = new javax.swing.JLabel();
@@ -206,7 +213,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
         txt_model = new javax.swing.JTextField();
         txt_sn = new javax.swing.JTextField();
         txt_fault = new javax.swing.JTextField();
-        txt_important_notes = new javax.swing.JTextField();
         txt_service_product = new javax.swing.JTextField();
         txt_price = new javax.swing.JTextField();
         txt_deposit = new javax.swing.JTextField();
@@ -214,6 +220,11 @@ public class NewOrder extends javax.swing.JInternalFrame {
         comboBox_status = new javax.swing.JComboBox<>();
         btn_print = new javax.swing.JButton();
         btn_cancel = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txt_area_important_notes = new javax.swing.JTextArea();
+
+        jCheckBoxMenuItem1.setSelected(true);
+        jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
 
         setPreferredSize(new java.awt.Dimension(655, 700));
 
@@ -245,9 +256,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
         lbl_fault.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         lbl_fault.setText("Fault");
-
-        lbl_important_notes.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
-        lbl_important_notes.setText("Important Notes");
 
         lbl_auto_order_no.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
         lbl_auto_order_no.setText("autoGen");
@@ -311,13 +319,16 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
         txt_sn.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_sn.setPreferredSize(new java.awt.Dimension(63, 20));
+        txt_sn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_snActionPerformed(evt);
+            }
+        });
 
         txt_fault.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
-
-        txt_important_notes.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
-        txt_important_notes.addActionListener(new java.awt.event.ActionListener() {
+        txt_fault.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_important_notesActionPerformed(evt);
+                txt_faultActionPerformed(evt);
             }
         });
 
@@ -370,6 +381,12 @@ public class NewOrder extends javax.swing.JInternalFrame {
             }
         });
 
+        txt_area_important_notes.setColumns(20);
+        txt_area_important_notes.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        txt_area_important_notes.setRows(5);
+        txt_area_important_notes.setBorder(javax.swing.BorderFactory.createTitledBorder("Important Notes"));
+        jScrollPane1.setViewportView(txt_area_important_notes);
+
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);
         panel_order_detailsLayout.setHorizontalGroup(
@@ -400,11 +417,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_email)
                                 .addGap(18, 18, 18)
-                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                        .addComponent(lbl_important_notes)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(txt_email, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                .addComponent(txt_email, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_service_product)
@@ -412,18 +425,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
                             .addComponent(lbl_due))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txt_service_product, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_sn)
-                            .addComponent(lbl_fault)
-                            .addComponent(lbl_model, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_model, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_fault, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_sn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(txt_important_notes))
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
@@ -442,9 +443,24 @@ public class NewOrder extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(comboBox_status, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(lbl_sn)
+                                        .addComponent(lbl_model, javax.swing.GroupLayout.Alignment.TRAILING))
+                                    .addComponent(lbl_fault))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txt_fault, javax.swing.GroupLayout.PREFERRED_SIZE, 521, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txt_sn, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txt_model, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(19, 19, 19)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -472,12 +488,11 @@ public class NewOrder extends javax.swing.JInternalFrame {
                         .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_brand, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_brand)
-                    .addComponent(lbl_important_notes))
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txt_brand, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbl_brand))
                         .addGap(18, 18, 18)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txt_model, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -485,16 +500,12 @@ public class NewOrder extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txt_sn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_sn))
-                        .addGap(18, 18, 18)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_fault)
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(lbl_fault))))
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(txt_important_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(lbl_sn)))
+                    .addComponent(jScrollPane1))
+                .addGap(18, 18, 18)
+                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txt_fault, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_fault))
                 .addGap(18, 18, 18)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_service_product)
@@ -512,7 +523,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboBox_status, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_status))
-                .addGap(26, 26, 26)
+                .addGap(35, 35, 35)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -558,10 +569,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_contactActionPerformed
 
-    private void txt_important_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_important_notesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_important_notesActionPerformed
-
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         saveIntoDB();
@@ -589,14 +596,24 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void btn_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelActionPerformed
         // TODO add your handling code here:
-        
+        new MainMenu().setVisible(true);
     }//GEN-LAST:event_btn_cancelActionPerformed
+
+    private void txt_faultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_faultActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_faultActionPerformed
+
+    private void txt_snActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_snActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_snActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_cancel;
     private javax.swing.JButton btn_print;
     private javax.swing.JComboBox<String> comboBox_status;
+    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbl_auto_order_no;
     private javax.swing.JLabel lbl_brand;
     private javax.swing.JLabel lbl_contact;
@@ -605,7 +622,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lbl_email;
     private javax.swing.JLabel lbl_fault;
     private javax.swing.JLabel lbl_first_name;
-    private javax.swing.JLabel lbl_important_notes;
     private javax.swing.JLabel lbl_last_name;
     private javax.swing.JLabel lbl_model;
     private javax.swing.JLabel lbl_order_no;
@@ -614,6 +630,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lbl_sn;
     private javax.swing.JLabel lbl_status;
     private javax.swing.JPanel panel_order_details;
+    private javax.swing.JTextArea txt_area_important_notes;
     private javax.swing.JTextField txt_brand;
     private javax.swing.JTextField txt_contact;
     private javax.swing.JTextField txt_deposit;
@@ -621,7 +638,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txt_email;
     private javax.swing.JTextField txt_fault;
     private javax.swing.JTextField txt_first_name;
-    private javax.swing.JTextField txt_important_notes;
     private javax.swing.JTextField txt_last_name;
     private javax.swing.JTextField txt_model;
     private javax.swing.JTextField txt_price;
