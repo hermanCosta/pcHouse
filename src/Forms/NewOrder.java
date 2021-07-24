@@ -305,7 +305,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
         lbl_status = new javax.swing.JLabel();
         txt_first_name = new javax.swing.JTextField();
         txt_last_name = new javax.swing.JTextField();
-        txt_contact = new javax.swing.JTextField();
         txt_email = new javax.swing.JTextField();
         txt_brand = new javax.swing.JTextField();
         txt_model = new javax.swing.JTextField();
@@ -320,6 +319,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         btn_cancel = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         txt_area_important_notes = new javax.swing.JTextArea();
+        txt_contact = new javax.swing.JFormattedTextField();
 
         jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
@@ -389,14 +389,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
         txt_last_name.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_last_nameActionPerformed(evt);
-            }
-        });
-
-        txt_contact.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
-        txt_contact.setPreferredSize(new java.awt.Dimension(63, 20));
-        txt_contact.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_contactActionPerformed(evt);
             }
         });
 
@@ -498,6 +490,13 @@ public class NewOrder extends javax.swing.JInternalFrame {
         txt_area_important_notes.setBorder(javax.swing.BorderFactory.createTitledBorder("Important Notes"));
         jScrollPane1.setViewportView(txt_area_important_notes);
 
+        try {
+            txt_contact.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(0##) ###-####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        txt_contact.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);
         panel_order_detailsLayout.setHorizontalGroup(
@@ -531,11 +530,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
                                 .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                    .addComponent(lbl_contact)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lbl_contact)
                                 .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                     .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(lbl_first_name)
@@ -546,7 +542,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
                                             .addComponent(lbl_auto_order_no, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                             .addGap(34, 34, 34)
-                                            .addComponent(txt_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(txt_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                             .addGap(12, 12, 12)
                             .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(panel_order_detailsLayout.createSequentialGroup()
@@ -675,10 +673,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_brandActionPerformed
 
-    private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_contactActionPerformed
-
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         saveIntoDB();
@@ -741,7 +735,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void txt_first_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_first_nameKeyPressed
         // TODO add your handling code here:
-                switch(evt.getKeyCode())
+        
+        //autoComplete 
+        switch(evt.getKeyCode())
         {
             case KeyEvent.VK_BACKSPACE:
                 break;
@@ -755,6 +751,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     firstNameAutoComplete(text);
             });
         }
+        
+        
     }//GEN-LAST:event_txt_first_nameKeyPressed
 
 
@@ -782,7 +780,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
     private javax.swing.JPanel panel_order_details;
     private javax.swing.JTextArea txt_area_important_notes;
     private javax.swing.JTextField txt_brand;
-    private javax.swing.JTextField txt_contact;
+    private javax.swing.JFormattedTextField txt_contact;
     private javax.swing.JTextField txt_deposit;
     private javax.swing.JTextField txt_due;
     private javax.swing.JTextField txt_email;
