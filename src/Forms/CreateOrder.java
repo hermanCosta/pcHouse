@@ -445,10 +445,10 @@ public class CreateOrder extends javax.swing.JFrame {
     }//GEN-LAST:event_txContactActionPerformed
 
     private void txDepositKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txDepositKeyReleased
-       int price = Integer.parseInt(txPrice.getText());
-       int deposit = Integer.parseInt(txDeposit.getText());
+       double price = Double.parseDouble(txPrice.getText());
+       double deposit = Double.parseDouble(txDeposit.getText());
        
-       int total = price - deposit;
+       double total = price - deposit;
        
        txDue.setText(String.valueOf(total)); 
     }//GEN-LAST:event_txDepositKeyReleased
