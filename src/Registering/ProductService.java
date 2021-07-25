@@ -11,20 +11,40 @@ package Registering;
  */
 public class ProductService {
     
-   String serviceProduct;
+   String productService;
    double price;
-
+   int qty;
+   String notes;
+   
     public ProductService(String serviceProduct, double price) {
-        this.serviceProduct = serviceProduct;
+        this.productService = serviceProduct;
         this.price = price;
     }
 
-    public String getServiceProduct() {
-        return serviceProduct;
+    public int getQty() {
+        return qty;
     }
 
-    public void setServiceProduct(String serviceProduct) {
-        this.serviceProduct = serviceProduct;
+    public void setQty(int qty) {
+        this.qty = qty;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    
+
+    public String getProductService() {
+        return productService;
+    }
+
+    public void setProductService(String serviceProduct) {
+        this.productService = serviceProduct;
     }
 
     public double getPrice() {

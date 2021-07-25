@@ -5,6 +5,10 @@
  */
 package Forms;
 
+import InternalForms.NewOrder;
+import InternalForms.Orders;
+import InternalForms.CloseTill;
+import InternalForms.ProductsList;
 import java.awt.Color;
 import javax.swing.JLabel;
 
@@ -12,7 +16,7 @@ import javax.swing.JLabel;
  *
  * @author user
  */
-public final class MainMenu extends javax.swing.JFrame {
+public class MainMenu extends javax.swing.JFrame {
     /**
      * Creates new form MainMenu
      */
@@ -41,28 +45,6 @@ public final class MainMenu extends javax.swing.JFrame {
         label_reports.setBackground(defaultColor);
     }
             
-    public void openNewOrder()
-    {
-        NewOrder newOrder = new NewOrder();
-        desktop_panel.removeAll();
-        desktop_panel.add(newOrder).setVisible(true);
-                
-    }
-    
-    public void openOrdersMenu()
-    {
-        OrdersMenu ordersMenu = new OrdersMenu();
-        desktop_panel.removeAll();
-        desktop_panel.add(ordersMenu).setVisible(true);
-    }
-    
-    public void openProductsMenu()
-    {
-        ProductsMenu productsMenu = new ProductsMenu();
-        desktop_panel.removeAll();
-        desktop_panel.add(productsMenu).setVisible(true);
-    }
-    
     public void expandHome()
     {
         panel_new_order.setVisible(false);
@@ -170,13 +152,6 @@ public final class MainMenu extends javax.swing.JFrame {
         label.setBackground(new Color(165,177,194));
         label.setOpaque(true);
     }
-    
-    public void openReportsMenu()
-    {
-        ReportsMenu reportsMenu = new ReportsMenu();
-        desktop_panel.removeAll();
-        desktop_panel.add(reportsMenu).setVisible(true);
-    }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -195,7 +170,7 @@ public final class MainMenu extends javax.swing.JFrame {
         panel_new_order = new javax.swing.JPanel();
         label_new_order = new javax.swing.JLabel();
         panel_add_new = new javax.swing.JPanel();
-        label_add_new = new javax.swing.JLabel();
+        label_products_list = new javax.swing.JLabel();
         panel_sellings = new javax.swing.JPanel();
         label_sellings = new javax.swing.JLabel();
         panel_close_till = new javax.swing.JPanel();
@@ -395,9 +370,7 @@ public final class MainMenu extends javax.swing.JFrame {
         panel_check_existing.setLayout(panel_check_existingLayout);
         panel_check_existingLayout.setHorizontalGroup(
             panel_check_existingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_check_existingLayout.createSequentialGroup()
-                .addComponent(label_check_existing)
-                .addGap(0, 13, Short.MAX_VALUE))
+            .addComponent(label_check_existing, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
         );
         panel_check_existingLayout.setVerticalGroup(
             panel_check_existingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -441,9 +414,8 @@ public final class MainMenu extends javax.swing.JFrame {
         panel_new_orderLayout.setHorizontalGroup(
             panel_new_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_new_orderLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(label_new_order)
-                .addGap(13, 13, 13))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(label_new_order, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panel_new_orderLayout.setVerticalGroup(
             panel_new_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -462,24 +434,24 @@ public final class MainMenu extends javax.swing.JFrame {
             }
         });
 
-        label_add_new.setBackground(new java.awt.Color(255, 255, 255));
-        label_add_new.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
-        label_add_new.setForeground(new java.awt.Color(255, 255, 255));
-        label_add_new.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_add_new.png"))); // NOI18N
-        label_add_new.setText("Add New");
-        label_add_new.setPreferredSize(new java.awt.Dimension(168, 32));
-        label_add_new.addMouseListener(new java.awt.event.MouseAdapter() {
+        label_products_list.setBackground(new java.awt.Color(255, 255, 255));
+        label_products_list.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        label_products_list.setForeground(new java.awt.Color(255, 255, 255));
+        label_products_list.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_product_list.png"))); // NOI18N
+        label_products_list.setText("Products List");
+        label_products_list.setPreferredSize(new java.awt.Dimension(168, 32));
+        label_products_list.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                label_add_newMousePressed(evt);
+                label_products_listMousePressed(evt);
             }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                label_add_newMouseClicked(evt);
+                label_products_listMouseClicked(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                label_add_newMouseExited(evt);
+                label_products_listMouseExited(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                label_add_newMouseEntered(evt);
+                label_products_listMouseEntered(evt);
             }
         });
 
@@ -487,14 +459,13 @@ public final class MainMenu extends javax.swing.JFrame {
         panel_add_new.setLayout(panel_add_newLayout);
         panel_add_newLayout.setHorizontalGroup(
             panel_add_newLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_add_newLayout.createSequentialGroup()
-                .addContainerGap(43, Short.MAX_VALUE)
-                .addComponent(label_add_new, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(13, 13, 13))
+            .addGroup(panel_add_newLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(label_products_list, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
         );
         panel_add_newLayout.setVerticalGroup(
             panel_add_newLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(label_add_new, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(label_products_list, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         panel_sellings.setBackground(new java.awt.Color(21, 76, 121));
@@ -539,9 +510,8 @@ public final class MainMenu extends javax.swing.JFrame {
         panel_sellingsLayout.setHorizontalGroup(
             panel_sellingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_sellingsLayout.createSequentialGroup()
-                .addContainerGap(50, Short.MAX_VALUE)
-                .addComponent(label_sellings)
-                .addGap(14, 14, 14))
+                .addGap(0, 50, Short.MAX_VALUE)
+                .addComponent(label_sellings, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panel_sellingsLayout.setVerticalGroup(
             panel_sellingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -584,15 +554,12 @@ public final class MainMenu extends javax.swing.JFrame {
         panel_close_tillLayout.setHorizontalGroup(
             panel_close_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_close_tillLayout.createSequentialGroup()
-                .addContainerGap(30, Short.MAX_VALUE)
-                .addComponent(label_close_till)
-                .addGap(14, 14, 14))
+                .addGap(0, 30, Short.MAX_VALUE)
+                .addComponent(label_close_till, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panel_close_tillLayout.setVerticalGroup(
             panel_close_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_close_tillLayout.createSequentialGroup()
-                .addGap(0, 8, Short.MAX_VALUE)
-                .addComponent(label_close_till, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(label_close_till, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         panel_today_orders.setBackground(new java.awt.Color(21, 76, 121));
@@ -637,9 +604,8 @@ public final class MainMenu extends javax.swing.JFrame {
         panel_today_ordersLayout.setHorizontalGroup(
             panel_today_ordersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_today_ordersLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(label_today_orders)
-                .addGap(14, 14, 14))
+                .addGap(0, 6, Short.MAX_VALUE)
+                .addComponent(label_today_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panel_today_ordersLayout.setVerticalGroup(
             panel_today_ordersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -732,7 +698,7 @@ public final class MainMenu extends javax.swing.JFrame {
         );
 
         desktop_panel.setBackground(new java.awt.Color(255, 255, 255));
-        desktop_panel.setPreferredSize(new java.awt.Dimension(655, 700));
+        desktop_panel.setPreferredSize(new java.awt.Dimension(677, 700));
 
         javax.swing.GroupLayout panel_windowLayout = new javax.swing.GroupLayout(panel_window);
         panel_window.setLayout(panel_windowLayout);
@@ -741,7 +707,7 @@ public final class MainMenu extends javax.swing.JFrame {
             .addGroup(panel_windowLayout.createSequentialGroup()
                 .addComponent(panel_menu_bar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(desktop_panel, javax.swing.GroupLayout.DEFAULT_SIZE, 677, Short.MAX_VALUE))
+                .addComponent(desktop_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(panel_header, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         panel_windowLayout.setVerticalGroup(
@@ -838,7 +804,10 @@ public final class MainMenu extends javax.swing.JFrame {
 
     private void label_check_existingMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_check_existingMouseClicked
         // TODO add your handling code here:
-        openOrdersMenu();
+        Orders ordersMenu = new Orders();
+        desktop_panel.removeAll();
+        desktop_panel.add(ordersMenu).setVisible(true);
+        
         panel_check_existing.setBackground(clickedColor);
         panel_new_order.setBackground(defaultColor);
     }//GEN-LAST:event_label_check_existingMouseClicked
@@ -865,7 +834,10 @@ public final class MainMenu extends javax.swing.JFrame {
 
     private void label_new_orderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_new_orderMouseClicked
         // TODO add your handling code here:
-        openNewOrder();
+        NewOrder newOrder = new NewOrder();
+        desktop_panel.removeAll();
+        desktop_panel.add(newOrder).setVisible(true);
+        
         panel_check_existing.setBackground(defaultColor);
         panel_new_order.setBackground(clickedColor);
     }//GEN-LAST:event_label_new_orderMouseClicked
@@ -887,23 +859,28 @@ public final class MainMenu extends javax.swing.JFrame {
         
     }//GEN-LAST:event_panel_new_orderMouseClicked
 
-    private void label_add_newMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_add_newMousePressed
+    private void label_products_listMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_products_listMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_label_add_newMousePressed
+    }//GEN-LAST:event_label_products_listMousePressed
 
-    private void label_add_newMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_add_newMouseClicked
+    private void label_products_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_products_listMouseClicked
         // TODO add your handling code here:
+        //Open ProductsLis Class
+        ProductsList productsList = new ProductsList();
+        desktop_panel.removeAll();
+        desktop_panel.add(productsList).setVisible(true);
+        
         panel_add_new.setBackground(clickedColor);
         panel_sellings.setBackground(defaultColor);
-    }//GEN-LAST:event_label_add_newMouseClicked
+    }//GEN-LAST:event_label_products_listMouseClicked
 
-    private void label_add_newMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_add_newMouseExited
+    private void label_products_listMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_products_listMouseExited
         // TODO add your handling code here:
-    }//GEN-LAST:event_label_add_newMouseExited
+    }//GEN-LAST:event_label_products_listMouseExited
 
-    private void label_add_newMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_add_newMouseEntered
+    private void label_products_listMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_products_listMouseEntered
         // TODO add your handling code here:
-    }//GEN-LAST:event_label_add_newMouseEntered
+    }//GEN-LAST:event_label_products_listMouseEntered
 
     private void panel_add_newMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_add_newMousePressed
         // TODO add your handling code here:
@@ -984,6 +961,10 @@ public final class MainMenu extends javax.swing.JFrame {
 
     private void label_today_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMouseClicked
         // TODO add your handling code here:
+        CloseTill closeTill = new CloseTill();
+        desktop_panel.removeAll();
+        desktop_panel.add(closeTill).setVisible(true);
+        
         panel_today_orders.setBackground(clickedColor);
         panel_close_till.setBackground(defaultColor);
     }//GEN-LAST:event_label_today_ordersMouseClicked
@@ -1067,13 +1048,13 @@ public final class MainMenu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktop_panel;
-    private javax.swing.JLabel label_add_new;
     private javax.swing.JLabel label_check_existing;
     private javax.swing.JLabel label_close_till;
     private javax.swing.JLabel label_home;
     private javax.swing.JLabel label_new_order;
     private javax.swing.JLabel label_orders;
     private javax.swing.JLabel label_products;
+    private javax.swing.JLabel label_products_list;
     private javax.swing.JLabel label_reports;
     private javax.swing.JLabel label_sellings;
     private javax.swing.JLabel label_sign_out;
