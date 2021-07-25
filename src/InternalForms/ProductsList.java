@@ -6,9 +6,9 @@
 package InternalForms;
 
 import Forms.CreateOrder;
-import Registering.Order;
 import Registering.ProductService;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,8 +20,11 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -46,6 +49,8 @@ public class ProductsList extends javax.swing.JInternalFrame {
         
         table_view_products_list.setRowHeight(25);
         table_view_products_list.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
+        //table_view_products_list.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        //table_view_products_list.getColumnModel().getColumn(3).setPreferredWidth(table_view_products_list.getColumnModel().getColumn(3).getPreferredWidth()+50);
         
         defaultColor = new Color(21,76,121);
         mouseEnteredColor = new Color(118,181,197);
@@ -63,7 +68,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         }
     }
     
-        public void displayProductList()
+        public final void displayProductList()
     {
          dbConnection();
         
@@ -76,7 +81,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
             int c; 
             c = rsd.getColumnCount();
             DefaultTableModel defaultTableModel = (DefaultTableModel)table_view_products_list.getModel();
-            defaultTableModel .setRowCount(0);
+            defaultTableModel.setRowCount(0);
             
             while(resultSet.next())
             {
@@ -85,8 +90,8 @@ public class ProductsList extends javax.swing.JInternalFrame {
                 for(int i = 1; i <= c; i++)
                 {
                     vector.add(resultSet.getString("productService"));
-                    vector.add(resultSet.getString("price"));
-                    vector.add(resultSet.getString("qty"));
+                    vector.add(resultSet.getDouble("price"));
+                    vector.add(resultSet.getInt("qty"));
                     vector.add(resultSet.getString("notes"));
                 }
                 defaultTableModel.addRow(vector);
@@ -121,7 +126,9 @@ public class ProductsList extends javax.swing.JInternalFrame {
             
             preparedStatement.executeUpdate();
             
-            JOptionPane.showMessageDialog(this, "Item Added Successfully!");
+            JOptionPane.showMessageDialog(this, "Item added successfully!");
+            
+            displayProductList();
             
             txt_add_product_service.setText("");
             txt_add_price.setText("");
@@ -132,6 +139,67 @@ public class ProductsList extends javax.swing.JInternalFrame {
             Logger.getLogger(CreateOrder.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+        
+        public void searchProductService() {
+        
+        String searchProduct = txt_search_product.getText();
+        
+        
+       
+         
+         try {
+            preparedStatement = connection.prepareStatement("SELECT * FROM productService WHERE productService LIKE '%" + searchProduct + "%'");
+                                          
+                                       // + "WHERE orderNo LIKE '%" + searchOrder + "%' " 
+                                        //+ "OR firstName LIKE '%" + searchOrder + "%' "
+                                        //+ "OR lastName LIKE '%" + searchOrder + "%' ");
+                                       // + "OR contactNo LIKE '%" + searchOrder + "%' ");
+            
+            ResultSet resultSet = preparedStatement.executeQuery();
+            
+            ResultSetMetaData rsd = resultSet.getMetaData();
+            int c; 
+            c = rsd.getColumnCount();
+            DefaultTableModel defaultTableModel = (DefaultTableModel)table_view_products_list.getModel();
+            defaultTableModel .setRowCount(0);
+            
+            while(resultSet.next())
+            {
+                Vector vector = new Vector();
+                
+                for(int i = 1; i <= c; i++)
+                {
+                    vector.add(resultSet.getString("productService"));
+                    vector.add(resultSet.getDouble("price"));
+                    vector.add(resultSet.getInt("qty"));
+                    vector.add(resultSet.getString("notes"));
+                }
+                defaultTableModel.addRow(vector);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CreateOrder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+/**        
+    public void resizeColumnWidth(JTable table) {
+        
+        
+    final TableColumnModel columnModel = table.getColumnModel();
+    for (int column = 0; column < table.getColumnCount(); column++) {
+        int width = 15; // Min width
+        for (int row = 0; row < table.getRowCount(); row++) {
+            TableCellRenderer renderer = table.getCellRenderer(row, column);
+            Component comp = table.prepareRenderer(renderer, row, column);
+            width = Math.max(comp.getPreferredSize().width +1 , width);
+            width = Math.max(width, table.getColumnModel().getColumn(column).getPreferredWidth());
+        }
+        if(width > 300)
+            width=300;
+        columnModel.getColumn(column).setPreferredWidth(width);
+    }
+}
+**/
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -150,8 +218,8 @@ public class ProductsList extends javax.swing.JInternalFrame {
         txt_add_price = new javax.swing.JTextField();
         txt_add_qty = new javax.swing.JTextField();
         txt_add_notes = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        btn_save_product = new javax.swing.JButton();
+        label_title = new javax.swing.JLabel();
 
         setBorder(null);
         setPreferredSize(new java.awt.Dimension(677, 700));
@@ -162,24 +230,45 @@ public class ProductsList extends javax.swing.JInternalFrame {
                 txt_search_productActionPerformed(evt);
             }
         });
+        txt_search_product.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_search_productKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_search_productKeyReleased(evt);
+            }
+        });
 
         table_view_products_list.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
                 {null, null, null, null}
             },
             new String [] {
-                "Product | Service", "Unit Price", "Stock", "Notes"
+                "Product | Service", "Price", "Stock", "Notes"
             }
         ) {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.Double.class, java.lang.Integer.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                true, true, false, true
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jScrollPane1.setViewportView(table_view_products_list);
@@ -209,10 +298,10 @@ public class ProductsList extends javax.swing.JInternalFrame {
         txt_add_notes.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         txt_add_notes.setBorder(javax.swing.BorderFactory.createTitledBorder("Notes"));
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_save.png"))); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btn_save_product.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_save.png"))); // NOI18N
+        btn_save_product.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btn_save_productActionPerformed(evt);
             }
         });
 
@@ -230,8 +319,8 @@ public class ProductsList extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txt_add_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(56, 56, 56))
+                .addComponent(btn_save_product, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(54, 54, 54))
         );
         panel_new_productLayout.setVerticalGroup(
             panel_new_productLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -241,12 +330,12 @@ public class ProductsList extends javax.swing.JInternalFrame {
             .addComponent(txt_add_notes, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(panel_new_productLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_save_product, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel2.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
-        jLabel2.setText("Add a New Product | Service");
+        label_title.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
+        label_title.setText("Add a New Product | Service");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -265,7 +354,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
                         .addComponent(panel_new_product, javax.swing.GroupLayout.PREFERRED_SIZE, 656, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(238, 238, 238)
-                        .addComponent(jLabel2))
+                        .addComponent(label_title))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 656, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -275,7 +364,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addComponent(jLabel2)
+                .addComponent(label_title)
                 .addGap(5, 5, 5)
                 .addComponent(panel_new_product, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -302,17 +391,27 @@ public class ProductsList extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_add_qtyActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btn_save_productActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save_productActionPerformed
         // TODO add your handling code here:
         saveIntoDB();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btn_save_productActionPerformed
+
+    private void txt_search_productKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_search_productKeyPressed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_txt_search_productKeyPressed
+
+    private void txt_search_productKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_search_productKeyReleased
+        // TODO add your handling code here:
+        searchProductService();
+    }//GEN-LAST:event_txt_search_productKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JButton btn_save_product;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel label_search_product;
+    private javax.swing.JLabel label_title;
     private javax.swing.JPanel panel_new_product;
     private javax.swing.JTable table_view_products_list;
     private javax.swing.JTextField txt_add_notes;

@@ -201,6 +201,9 @@ public class Orders extends javax.swing.JInternalFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_search_orderKeyPressed(evt);
             }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_search_orderKeyReleased(evt);
+            }
         });
 
         btn_search_order.setBackground(new java.awt.Color(21, 76, 121));
@@ -335,12 +338,17 @@ public class Orders extends javax.swing.JInternalFrame {
 
     private void txt_search_orderKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_search_orderKeyPressed
         // TODO add your handling code here:
-        searchOrder();
+        
     }//GEN-LAST:event_txt_search_orderKeyPressed
 
     private void txt_search_orderKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_search_orderKeyTyped
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_search_orderKeyTyped
+
+    private void txt_search_orderKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_search_orderKeyReleased
+        // TODO add your handling code here:
+        searchOrder();
+    }//GEN-LAST:event_txt_search_orderKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_search_order;
