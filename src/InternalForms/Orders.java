@@ -6,7 +6,7 @@
 package InternalForms;
 
 import Forms.Billing;
-import Forms.CreateOrder;
+import Forms.ProductList;
 import java.awt.Color;
 import java.awt.Font;
 import java.sql.Connection;
@@ -60,7 +60,7 @@ public class Orders extends javax.swing.JInternalFrame {
               Class.forName("com.mysql.cj.jdbc.Driver");
               connection = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","hermanhgc","He11m@ns");
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(CreateOrder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -98,7 +98,7 @@ public class Orders extends javax.swing.JInternalFrame {
                 defaultTableModel.addRow(vector);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CreateOrder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -152,7 +152,7 @@ public class Orders extends javax.swing.JInternalFrame {
                 defaultTableModel.addRow(vector);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CreateOrder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     }

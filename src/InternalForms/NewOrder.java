@@ -5,7 +5,7 @@
  */
 package InternalForms;
 
-import Forms.CreateOrder;
+import Forms.ProductList;
 import Forms.MainMenu;
 import Forms.PrintOrder;
 import Registering.Order;
@@ -83,7 +83,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
               Class.forName("com.mysql.cj.jdbc.Driver");
               connection = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","hermanhgc","He11m@ns");
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(CreateOrder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -110,7 +110,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
              }
             
         } catch (SQLException ex) {
-            Logger.getLogger(CreateOrder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
         }   
     }
     
@@ -275,7 +275,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             autoID();
             
         } catch (SQLException ex) {
-            Logger.getLogger(CreateOrder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

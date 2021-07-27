@@ -41,9 +41,9 @@ public class Orders extends javax.swing.JFrame {
               Class.forName("com.mysql.cj.jdbc.Driver");
               con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","hermanhgc","He11m@ns");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(CreateOrder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(CreateOrder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -58,6 +58,7 @@ public class Orders extends javax.swing.JFrame {
             ResultSetMetaData rsd = rs.getMetaData();
             int c; 
             c = rsd.getColumnCount();
+            
             DefaultTableModel dft = (DefaultTableModel)jFrameTableView.getModel();
             dft .setRowCount(0);
             
@@ -86,7 +87,7 @@ public class Orders extends javax.swing.JFrame {
             
             
         } catch (SQLException ex) {
-            Logger.getLogger(CreateOrder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

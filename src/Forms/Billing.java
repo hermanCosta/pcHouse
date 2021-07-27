@@ -75,9 +75,9 @@ public class Billing extends javax.swing.JFrame {
               Class.forName("com.mysql.cj.jdbc.Driver");
               con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","hermanhgc","He11m@ns");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(CreateOrder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(CreateOrder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
    
@@ -302,7 +302,7 @@ public class Billing extends javax.swing.JFrame {
         
         BillingUpdate();
         
-        CreateOrder mm = new CreateOrder();
+        ProductList mm = new ProductList();
         this.setVisible(false);
         
         mm.repaint();
