@@ -32,6 +32,9 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import javafx.fxml.FXML;
+import org.controlsfx.control.textfield.TextFields;
 
 /**
  *
@@ -45,11 +48,13 @@ public class NewOrder extends javax.swing.JInternalFrame {
     
     ArrayList faults = new ArrayList();
     ArrayList firstNames = new ArrayList();
-    Connection connection;
-    PreparedStatement preparedStatement;
-    Statement statement;
+    ArrayList<String> products = new ArrayList();
+    Connection con;
+    PreparedStatement ps;
+    Statement st;
     ProductService productService;
     Order order;
+    ResultSet rs;
     
     
     
@@ -67,7 +72,13 @@ public class NewOrder extends javax.swing.JInternalFrame {
         checkEmailFormat(txt_email);
         accessFaultDbColumn();
         accessFirstNameDbColumn();
-            
+        accessProductServiceDbColumn();
+        
+        productServiceAutoComplete();
+        AutoCompleteDecorator.decorate(comboBox_status);
+        
+        
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -81,7 +92,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
     {
         try {
               Class.forName("com.mysql.cj.jdbc.Driver");
-              connection = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","hermanhgc","He11m@ns");
+              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","hermanhgc","He11m@ns");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -92,19 +103,19 @@ public class NewOrder extends javax.swing.JInternalFrame {
         
         try {
             dbConnection();
-            statement = connection.createStatement();
+            st = con.createStatement();
             
-             ResultSet resultSet = statement.executeQuery("select Max(orderNo) from orderDetails");
-             resultSet.next();
-             resultSet.getString("Max(orderNo)");
+             rs = st.executeQuery("select Max(orderNo) from orderDetails");
+             rs.next();
+             rs.getString("Max(orderNo)");
              
-             if (resultSet.getString("Max(orderNo)") == null) 
+             if (rs.getString("Max(orderNo)") == null) 
              {
                 lbl_auto_order_no.setText("0000001");
              }
              else
              {
-                 long id = Long.parseLong(resultSet.getString("Max(orderNo)").substring(2,resultSet.getString("Max(orderNo)").length()));
+                 long id = Long.parseLong(rs.getString("Max(orderNo)").substring(2,rs.getString("Max(orderNo)").length()));
                  id++;
                  lbl_auto_order_no.setText(String.format("%07d", id));            
              }
@@ -162,6 +173,29 @@ public class NewOrder extends javax.swing.JInternalFrame {
         }
     }
     
+    public void productServiceAutoComplete()
+    {
+                //comboBox_status.getSelectedItem().toString();
+        
+        dbConnection();
+        try {
+//            st = con.createStatement();
+//            ps = con.prepareStatement("SELECT productService FROM productService WHERE productService LIKE '%" + serviceProduct +"%'");
+//            
+//            rs = ps.executeQuery();
+            
+            //rs = st.executeQuery("SELECT * FROM productService WHERE productService LIKE '%" + serviceProduct +"%'");
+            rs = st.executeQuery("SELECT * FROM productService");
+            while (rs.next())
+            {
+                comboBox_status.addItem(rs.getString("productService"));
+            }
+            
+            con.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
    
     
     public final void accessFaultDbColumn()
@@ -169,17 +203,15 @@ public class NewOrder extends javax.swing.JInternalFrame {
         dbConnection();
         
         try {
-            statement = connection.createStatement();
+            st = con.createStatement();
             
-            try (ResultSet resultSet = statement.executeQuery("SELECT * FROM orderDetails")) {
-                while (resultSet.next())
+            try (ResultSet rs = st.executeQuery("SELECT * FROM orderDetails")) {
+                while (rs.next())
                 {
-                    String dbFaults = resultSet.getString("fault");
+                    String dbFaults = rs.getString("fault");
                     faults.add(dbFaults);
                 }
             }
-            statement.close();
-            connection.close();
             
         } catch (SQLException ex) {
             Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
@@ -191,23 +223,39 @@ public class NewOrder extends javax.swing.JInternalFrame {
         dbConnection();
         
         try {
-            statement = connection.createStatement();
+            st = con.createStatement();
             
-            try (ResultSet resultSet = statement.executeQuery("SELECT * FROM orderDetails")) {
+            try (ResultSet resultSet = st.executeQuery("SELECT * FROM orderDetails")) {
                 while (resultSet.next())
                 {
                     String dbFaults = resultSet.getString("firstName");
                     firstNames.add(dbFaults);
                 }
             }
-            statement.close();
-            connection.close();
-            
         } catch (SQLException ex) {
             Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
+    public final void accessProductServiceDbColumn()
+    {
+        dbConnection();
+        
+        try {
+            st = con.createStatement();
+            
+            try (ResultSet rs = st.executeQuery("SELECT * FROM productService")) {
+                while (rs.next())
+                {
+                    String dbFaults = rs.getString("productService");
+                    products.add(dbFaults);
+                }
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     public void saveIntoDB()
     {
@@ -235,24 +283,24 @@ public class NewOrder extends javax.swing.JInternalFrame {
         
         
         try {
-            preparedStatement = connection.prepareStatement("INSERT INTO orderDetails(orderNo,firstName,lastName,contactNo,email,deviceBrand,deviceModel,serialNumber,fault,importantNotes,productService,price,deposit,due,status)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-            preparedStatement.setString(1, order.getOrderNo());
-            preparedStatement.setString(2, order.getFirstName());
-            preparedStatement.setString(3, order.getLastName()); 
-            preparedStatement.setString(4, contactNo);
-            preparedStatement.setString(5, order.getEmail());
-            preparedStatement.setString(6, order.getBrand());
-            preparedStatement.setString(7, order.getModel());
-            preparedStatement.setString(8, order.getSerialNumber());
-            preparedStatement.setString(9, order.getFault());
-            preparedStatement.setString(10, order.getImportantNotes());
-            preparedStatement.setString(11, productService.getProductService());
-            preparedStatement.setDouble(12, productService.getPrice());
-            preparedStatement.setDouble(13, order.getDeposit());
-            preparedStatement.setDouble(14, order.getDue());
-            preparedStatement.setString(15, order.getStatus());
+            ps = con.prepareStatement("INSERT INTO orderDetails(orderNo,firstName,lastName,contactNo,email,deviceBrand,deviceModel,serialNumber,fault,importantNotes,productService,price,deposit,due,status)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            ps.setString(1, order.getOrderNo());
+            ps.setString(2, order.getFirstName());
+            ps.setString(3, order.getLastName()); 
+            ps.setString(4, contactNo);
+            ps.setString(5, order.getEmail());
+            ps.setString(6, order.getBrand());
+            ps.setString(7, order.getModel());
+            ps.setString(8, order.getSerialNumber());
+            ps.setString(9, order.getFault());
+            ps.setString(10, order.getImportantNotes());
+            ps.setString(11, productService.getProductService());
+            ps.setDouble(12, productService.getPrice());
+            ps.setDouble(13, order.getDeposit());
+            ps.setDouble(14, order.getDue());
+            ps.setString(15, order.getStatus());
             
-            preparedStatement.executeUpdate();
+            ps.executeUpdate();
             
             JOptionPane.showMessageDialog(this, "New order created successfully!");
             
@@ -549,6 +597,11 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
         txt_service_product.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_service_product.setPreferredSize(new java.awt.Dimension(63, 20));
+        txt_service_product.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_service_productKeyReleased(evt);
+            }
+        });
 
         txt_price.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_price.setPreferredSize(new java.awt.Dimension(63, 20));
@@ -557,16 +610,32 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 txt_priceActionPerformed(evt);
             }
         });
+        txt_price.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_priceKeyPressed(evt);
+            }
+        });
 
         txt_deposit.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_deposit.setPreferredSize(new java.awt.Dimension(63, 20));
         txt_deposit.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_depositKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_depositKeyReleased(evt);
             }
         });
 
-        comboBox_status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "In Progress", "Completed" }));
+        comboBox_status.setEditable(true);
+        comboBox_status.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                comboBox_statusKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                comboBox_statusKeyReleased(evt);
+            }
+        });
 
         btn_print.setBackground(new java.awt.Color(21, 76, 121));
         btn_print.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
@@ -602,6 +671,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         txt_contact.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
 
         label_due.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
+        label_due.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);
@@ -610,7 +680,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_price)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addComponent(lbl_brand)
                         .addGap(15, 15, 15)
@@ -621,19 +690,28 @@ public class NewOrder extends javax.swing.JInternalFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(txt_service_product, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                            .addComponent(lbl_due)
-                            .addGap(132, 132, 132)
-                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txt_price, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                                .addComponent(label_due, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))
-                            .addGap(50, 50, 50)
-                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lbl_deposit)
-                                .addComponent(lbl_status))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(comboBox_status, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lbl_price)
+                                .addComponent(lbl_due))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
+                                    .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(txt_price, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                                        .addComponent(label_due, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))
+                                    .addGap(50, 50, 50)
+                                    .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(lbl_deposit)
+                                        .addComponent(lbl_status))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(comboBox_status, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
+                                    .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(60, 60, 60)
+                                    .addComponent(btn_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(87, 87, 87)))))
                     .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(panel_order_detailsLayout.createSequentialGroup()
                             .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -642,15 +720,11 @@ public class NewOrder extends javax.swing.JInternalFrame {
                                     .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(lbl_first_name)
                                         .addComponent(lbl_order_no))
+                                    .addGap(34, 34, 34)
                                     .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                            .addGap(18, 18, 18)
-                                            .addComponent(lbl_auto_order_no, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                            .addGap(34, 34, 34)
-                                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(txt_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                        .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txt_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lbl_auto_order_no, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGap(12, 12, 12)
                             .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(panel_order_detailsLayout.createSequentialGroup()
@@ -676,12 +750,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
                                     .addComponent(jScrollPane1))
                                 .addComponent(txt_fault)))))
                 .addGap(17, 17, 17))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(60, 60, 60)
-                .addComponent(btn_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(104, 104, 104))
         );
         panel_order_detailsLayout.setVerticalGroup(
             panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -904,6 +972,47 @@ public class NewOrder extends javax.swing.JInternalFrame {
 //        lastName = sb.toString();
 //        txt_last_name.setText(lastName);
     }//GEN-LAST:event_txt_last_nameKeyReleased
+
+    private void txt_priceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_priceKeyPressed
+        
+        char c = evt.getKeyChar();
+        
+        if (Character.isLetter(c)) {
+            //avoidEmptyField(txt_add_price, "price");
+            txt_price.setEditable(false);
+        }
+        else
+        {
+            txt_price.setEditable(true);
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_priceKeyPressed
+
+    private void txt_depositKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_depositKeyPressed
+        // TODO add your handling code here:
+        char c = evt.getKeyChar();
+        
+        if(Character.isLetter(c))
+        {
+            txt_deposit.setEditable(false);
+        }
+        else
+        {
+            txt_deposit.setEditable(true);
+        }
+    }//GEN-LAST:event_txt_depositKeyPressed
+
+    private void comboBox_statusKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboBox_statusKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBox_statusKeyReleased
+
+    private void txt_service_productKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_service_productKeyReleased
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_txt_service_productKeyReleased
+
+    private void comboBox_statusKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboBox_statusKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBox_statusKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

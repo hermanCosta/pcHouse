@@ -31,9 +31,9 @@ public class Orders extends javax.swing.JInternalFrame {
          * Creates new form OrdersMenu
          */
         Color defaultColor, mouseEnteredColor;
-        Connection connection;
-        ResultSet resultSet ;
-        PreparedStatement preparedStatement;
+        Connection con;
+        ResultSet rs ;
+        PreparedStatement ps;
        
     public Orders() {
         initComponents();
@@ -44,8 +44,8 @@ public class Orders extends javax.swing.JInternalFrame {
                 
         //Force remove border
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
-        BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
-        ui.setNorthPane(null);
+        BasicInternalFrameUI UserUi = (BasicInternalFrameUI) this.getUI();
+        UserUi.setNorthPane(null);
         
         defaultColor = new Color(21,76,121);
         mouseEnteredColor = new Color(118,181,197);
@@ -58,42 +58,42 @@ public class Orders extends javax.swing.JInternalFrame {
     {
         try {
               Class.forName("com.mysql.cj.jdbc.Driver");
-              connection = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","hermanhgc","He11m@ns");
+              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","hermanhgc","He11m@ns");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void recentOrders()
+    public final void recentOrders()
     {
         label_latest_orders_created.setVisible(true);
          dbConnection();
         
          try {
-            preparedStatement = connection.prepareStatement("SELECT * FROM orderDetails ORDER BY orderNo DESC LIMIT 15 ");
+            ps = con.prepareStatement("SELECT * FROM orderDetails ORDER BY orderNo DESC LIMIT 15 ");
                                         
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet rs = ps.executeQuery();
             
-            ResultSetMetaData rsd = resultSet.getMetaData();
+            ResultSetMetaData rsd = rs.getMetaData();
             int c; 
             c = rsd.getColumnCount();
             DefaultTableModel defaultTableModel = (DefaultTableModel)table_view_orders.getModel();
             defaultTableModel .setRowCount(0);
             
-            while(resultSet.next())
+            while(rs.next())
             {
                 Vector vector = new Vector();
                 
                 for(int i = 1; i <= c; i++)
                 {
-                    vector.add(resultSet.getString("orderNo"));
-                    vector.add(resultSet.getString("firstName"));
-                    vector.add(resultSet.getString("lastName"));
-                    vector.add(resultSet.getString("contactNo"));
-                    vector.add(resultSet.getString("deviceBrand"));
-                    vector.add(resultSet.getString("deviceModel"));
-                    vector.add(resultSet.getString("serialNumber"));
-                    vector.add(resultSet.getString("status"));
+                    vector.add(rs.getString("orderNo"));
+                    vector.add(rs.getString("firstName"));
+                    vector.add(rs.getString("lastName"));
+                    vector.add(rs.getString("contactNo"));
+                    vector.add(rs.getString("deviceBrand"));
+                    vector.add(rs.getString("deviceModel"));
+                    vector.add(rs.getString("serialNumber"));
+                    vector.add(rs.getString("status"));
                 }
                 defaultTableModel.addRow(vector);
             }
@@ -119,35 +119,30 @@ public class Orders extends javax.swing.JInternalFrame {
             label_latest_orders_created.setVisible(false);dbConnection();
          
          try {
-            preparedStatement = connection.prepareStatement("SELECT * FROM orderDetails WHERE orderNo LIKE '%" + searchOrder + "%' OR firstName LIKE '%" + searchOrder + "%' OR lastName LIKE '%" + searchOrder + "%' OR contactNo LIKE '%" + searchOrder + "%' LIMIT 15");
+            ps = con.prepareStatement("SELECT * FROM orderDetails WHERE orderNo LIKE '%" + searchOrder + "%' OR firstName LIKE '%" + searchOrder + "%' OR lastName LIKE '%" + searchOrder + "%' OR contactNo LIKE '%" + searchOrder + "%' LIMIT 15");
                                           
-                                       // + "WHERE orderNo LIKE '%" + searchOrder + "%' " 
-                                        //+ "OR firstName LIKE '%" + searchOrder + "%' "
-                                        //+ "OR lastName LIKE '%" + searchOrder + "%' ");
-                                       // + "OR contactNo LIKE '%" + searchOrder + "%' ");
+            rs = ps.executeQuery();
             
-            ResultSet resultSet = preparedStatement.executeQuery();
-            
-            ResultSetMetaData rsd = resultSet.getMetaData();
+            ResultSetMetaData rsd = rs.getMetaData();
             int c; 
             c = rsd.getColumnCount();
             DefaultTableModel defaultTableModel = (DefaultTableModel)table_view_orders.getModel();
             defaultTableModel .setRowCount(0);
             
-            while(resultSet.next())
+            while(rs.next())
             {
                 Vector vector = new Vector();
                 
                 for(int i = 1; i <= c; i++)
                 {
-                    vector.add(resultSet.getString("orderNo"));
-                    vector.add(resultSet.getString("firstName"));
-                    vector.add(resultSet.getString("lastName"));
-                    vector.add(resultSet.getString("contactNo"));
-                    vector.add(resultSet.getString("deviceBrand"));
-                    vector.add(resultSet.getString("deviceModel"));
-                    vector.add(resultSet.getString("serialNumber"));
-                    vector.add(resultSet.getString("status"));
+                    vector.add(rs.getString("orderNo"));
+                    vector.add(rs.getString("firstName"));
+                    vector.add(rs.getString("lastName"));
+                    vector.add(rs.getString("contactNo"));
+                    vector.add(rs.getString("deviceBrand"));
+                    vector.add(rs.getString("deviceModel"));
+                    vector.add(rs.getString("serialNumber"));
+                    vector.add(rs.getString("status"));
                 }
                 defaultTableModel.addRow(vector);
             }
@@ -171,7 +166,6 @@ public class Orders extends javax.swing.JInternalFrame {
         jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
         jMenu1 = new javax.swing.JMenu();
         txt_search_order = new javax.swing.JTextField();
-        btn_search_order = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         table_view_orders = new javax.swing.JTable();
         label_latest_orders_created = new javax.swing.JLabel();
@@ -206,19 +200,9 @@ public class Orders extends javax.swing.JInternalFrame {
             }
         });
 
-        btn_search_order.setBackground(new java.awt.Color(21, 76, 121));
-        btn_search_order.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
-        btn_search_order.setForeground(new java.awt.Color(255, 255, 255));
-        btn_search_order.setText("Search");
-        btn_search_order.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_search_orderActionPerformed(evt);
-            }
-        });
-
         jScrollPane1.setVerifyInputWhenFocusTarget(false);
 
-        table_view_orders.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        table_view_orders.setFont(new java.awt.Font("Lucida Grande", 0, 13)); // NOI18N
         table_view_orders.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null},
@@ -243,15 +227,22 @@ public class Orders extends javax.swing.JInternalFrame {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Order", "F. Name", "L. Name", "Contact", "Brand", "Model", "S/N", "Status"
+                "Order", "First N.", "Last N.", "Contact", "Brand", "Model", "S/N", "Status"
             }
         ) {
             Class[] types = new Class [] {
                 java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         table_view_orders.setColumnSelectionAllowed(true);
@@ -262,6 +253,9 @@ public class Orders extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(table_view_orders);
         table_view_orders.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        if (table_view_orders.getColumnModel().getColumnCount() > 0) {
+            table_view_orders.getColumnModel().getColumn(0).setMaxWidth(70);
+        }
 
         label_latest_orders_created.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
         label_latest_orders_created.setText("Orders Created Recently");
@@ -273,24 +267,21 @@ public class Orders extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(201, 201, 201)
                 .addComponent(label_latest_orders_created)
-                .addContainerGap(207, Short.MAX_VALUE))
+                .addContainerGap(223, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(txt_search_order)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btn_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 661, Short.MAX_VALUE)
                 .addGap(10, 10, 10))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txt_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, 615, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addComponent(txt_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(label_latest_orders_created, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -300,11 +291,6 @@ public class Orders extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btn_search_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_search_orderActionPerformed
-        // TODO add your handling code here:
-        searchOrder();
-    }//GEN-LAST:event_btn_search_orderActionPerformed
 
     private void table_view_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_ordersMouseClicked
         // TODO add your handling code here:
@@ -351,7 +337,6 @@ public class Orders extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_search_orderKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_search_order;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
