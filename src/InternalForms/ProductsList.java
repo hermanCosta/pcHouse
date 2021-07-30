@@ -73,7 +73,9 @@ public class ProductsList extends javax.swing.JInternalFrame {
         dbConnection();
         
          try {
-            preparedStatement = connection.prepareStatement("SELECT * FROM productService");
+             
+            String query = "SELECT * FROM productService"; 
+            preparedStatement = connection.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             resultSetMetaData = resultSet.getMetaData();
             
@@ -93,6 +95,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
                     vector.add(resultSet.getInt("qty"));
                     vector.add(resultSet.getString("notes"));
                 }
+                
                 defaultTableModel.addRow(vector);
             }
         } catch (SQLException ex) {
@@ -115,7 +118,8 @@ public class ProductsList extends javax.swing.JInternalFrame {
         dbConnection();
         
         try {
-            preparedStatement = connection.prepareStatement("INSERT INTO productService(productService, price, qty, notes)VALUES(?,?,?,?)");
+            String query = "INSERT INTO productService(productService, price, qty, notes)VALUES(?,?,?,?)";
+            preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, productService.getProductService());
             preparedStatement.setDouble(2, productService.getPrice());
             preparedStatement.setInt(3, productService.getQty());
@@ -138,7 +142,8 @@ public class ProductsList extends javax.swing.JInternalFrame {
         String searchProduct = txt_product_service_list.getText();
          
          try {
-            preparedStatement = connection.prepareStatement("SELECT * FROM productService WHERE productService LIKE '%" + searchProduct + "%'");
+            String query = "SELECT * FROM productService WHERE productService LIKE '%" + searchProduct + "%'"; 
+            preparedStatement = connection.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             resultSetMetaData = resultSet.getMetaData();
             
@@ -165,7 +170,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         }
     }
     
-    public void deleteItemFromProductList()
+    public void deleteProductService()
     {
         dbConnection();
         
@@ -179,7 +184,8 @@ public class ProductsList extends javax.swing.JInternalFrame {
         {
             try {
                 
-                preparedStatement = connection.prepareStatement("DELETE FROM productService WHERE productId = '" + productId + "'");
+                String query = "DELETE FROM productService WHERE productId = '" + productId + "'";
+                preparedStatement = connection.prepareStatement(query);
                 preparedStatement.executeUpdate();
                 defaultTableModel.removeRow(table_view_products_list.getSelectedRow());
                 displayProductList();
@@ -468,7 +474,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
     private void txt_delete_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_delete_product_serviceActionPerformed
         // TODO add your handling code here:
-        deleteItemFromProductList();
+        deleteProductService();
     }//GEN-LAST:event_txt_delete_product_serviceActionPerformed
 
     private void txt_product_service_listKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_product_service_listKeyReleased
@@ -500,7 +506,6 @@ public class ProductsList extends javax.swing.JInternalFrame {
        
         else
         {
-            
             clearFields();
         }
     }//GEN-LAST:event_table_view_products_listMouseClicked
@@ -554,12 +559,13 @@ public class ProductsList extends javax.swing.JInternalFrame {
         String notes = txt_add_notes.getText();
         
         
-        int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Editing ?", "Edit Product|Service", JOptionPane.YES_NO_OPTION);
+        int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Editing ?" + productName, "Edit Product|Service", JOptionPane.YES_NO_OPTION);
         if(confirmEditing == 0)
         {
             try {
                 
-                preparedStatement = connection.prepareStatement("UPDATE productService SET productService = '" + productName +  "', price = " + price + ", qty = " + qty + ", notes = '" + notes + "' WHERE productId = '" + ID +"'");
+                String query = "UPDATE productService SET productService = '" + productName +  "', price = " + price + ", qty = " + qty + ", notes = '" + notes + "' WHERE productId = '" + ID +"'";
+                preparedStatement = connection.prepareStatement(query);
                 preparedStatement.executeUpdate();
                     
                 displayProductList();

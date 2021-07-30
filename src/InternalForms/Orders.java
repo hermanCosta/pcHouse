@@ -252,7 +252,7 @@ public class Orders extends javax.swing.JInternalFrame {
             }
         });
         jScrollPane1.setViewportView(table_view_orders);
-        table_view_orders.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        table_view_orders.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         if (table_view_orders.getColumnModel().getColumnCount() > 0) {
             table_view_orders.getColumnModel().getColumn(0).setMaxWidth(70);
         }
@@ -294,22 +294,22 @@ public class Orders extends javax.swing.JInternalFrame {
 
     private void table_view_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_ordersMouseClicked
         // TODO add your handling code here:
-        DefaultTableModel d1 = (DefaultTableModel)table_view_orders.getModel();
+        DefaultTableModel dm = (DefaultTableModel)table_view_orders.getModel();
         int selectedIndex = table_view_orders.getSelectedRow();
 
-        String status = d1.getValueAt(selectedIndex, 7).toString();
+        String status = dm.getValueAt(selectedIndex, 7).toString();
 
         if (status.equals("Completed")) {
             JOptionPane.showMessageDialog(this, "This order has been completed!");
         }
         else
         {
-            String orderNo = d1.getValueAt(selectedIndex, 0).toString();
-            String model = d1.getValueAt(selectedIndex, 2).toString();
-            String serialNumber = d1.getValueAt(selectedIndex, 3).toString();
-            String price = d1.getValueAt(selectedIndex, 4).toString();
-            String deposit = d1.getValueAt(selectedIndex, 5).toString();
-            String due = d1.getValueAt(selectedIndex, 6).toString();
+            String orderNo = dm.getValueAt(selectedIndex, 0).toString();
+            String model = dm.getValueAt(selectedIndex, 2).toString();
+            String serialNumber = dm.getValueAt(selectedIndex, 3).toString();
+            String price = dm.getValueAt(selectedIndex, 4).toString();
+            String deposit = dm.getValueAt(selectedIndex, 5).toString();
+            String due = dm.getValueAt(selectedIndex, 6).toString();
 
             new Billing(orderNo,model,serialNumber,price,deposit,due).setVisible(true);
 

@@ -40,9 +40,7 @@ public class Orders extends javax.swing.JFrame {
             //Class.forName("com.mysql.jdbc.Driver");
               Class.forName("com.mysql.cj.jdbc.Driver");
               con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","hermanhgc","He11m@ns");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -208,6 +206,7 @@ public class Orders extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new Orders().setVisible(true);
             }

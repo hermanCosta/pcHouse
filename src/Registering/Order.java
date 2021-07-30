@@ -5,6 +5,8 @@
  */
 package Registering;
 
+import java.sql.Date;
+
 /**
  *
  * @author user
@@ -12,14 +14,24 @@ package Registering;
 public class Order extends Device {
     String orderNo, status;
     double deposit, due;
+    java.sql.Timestamp issuedDate;
     
     
-    public Order(String orderNo, String firstName, String lastName, String email, String brand, String model, String serialNumber, String fault, String importantNotes, double deposit, double due, String status) {
+    public Order(String orderNo, String firstName, String lastName, String email, String brand, String model, String serialNumber, String fault, String importantNotes, double deposit, double due, String status, java.sql.Timestamp issuedDate) {
         super(brand, model, serialNumber, fault, importantNotes, firstName, lastName, email);
         this.orderNo = orderNo;
         this.status = status;
         this.deposit = deposit;
         this.due = due;
+        this.issuedDate = issuedDate;
+    }
+
+    public java.sql.Timestamp getIssuedDate() {
+        return issuedDate;
+    }
+
+    public void setIssuedDate(java.sql.Timestamp issuedDate) {
+        this.issuedDate = issuedDate;
     }
 
     public double getDeposit() {
