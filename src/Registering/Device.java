@@ -10,15 +10,13 @@ package Registering;
  * @author user
  */
 public class Device extends Costumer {
-    String brand, model, serialNumber, fault, importantNotes;
+    String brand, model, serialNumber;
 
-    public Device(String brand, String model, String serialNumber, String fault, String importantNotes, String firstName, String lastName, String email) {
+    public Device(String brand, String model, String serialNumber, String firstName, String lastName, String email) {
         super(firstName, lastName, email);
         this.brand = brand;
         this.model = model;
         this.serialNumber = serialNumber;
-        this.fault = fault;
-        this.importantNotes = importantNotes;
     }
 
     public String getBrand() {
@@ -44,22 +42,4 @@ public class Device extends Costumer {
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
     }
-
-    public String getFault() {
-        return fault;
-    }
-
-    public void setFault(String fault) {
-        this.fault = fault;
-    }
-    
-    public String getImportantNotes() {
-        return importantNotes;
-    }
-
-    public void setImportantNotes(String importantNotes) {
-        this.importantNotes = importantNotes;
-    }
-
-
 }

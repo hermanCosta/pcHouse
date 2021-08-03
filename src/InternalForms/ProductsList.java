@@ -234,7 +234,8 @@ public class ProductsList extends javax.swing.JInternalFrame {
         btn_clear_fields = new javax.swing.JButton();
 
         setBorder(null);
-        setPreferredSize(new java.awt.Dimension(677, 700));
+        setMaximumSize(new java.awt.Dimension(1049, 700));
+        setPreferredSize(new java.awt.Dimension(1049, 700));
 
         table_view_products_list.setFont(new java.awt.Font("Lucida Grande", 0, 13)); // NOI18N
         table_view_products_list.setModel(new javax.swing.table.DefaultTableModel(
@@ -263,7 +264,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
                 java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.Integer.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -274,7 +275,6 @@ public class ProductsList extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        table_view_products_list.setColumnSelectionAllowed(true);
         table_view_products_list.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 table_view_products_listMousePressed(evt);
@@ -284,7 +284,6 @@ public class ProductsList extends javax.swing.JInternalFrame {
             }
         });
         jScrollPane1.setViewportView(table_view_products_list);
-        table_view_products_list.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         if (table_view_products_list.getColumnModel().getColumnCount() > 0) {
             table_view_products_list.getColumnModel().getColumn(0).setMaxWidth(40);
             table_view_products_list.getColumnModel().getColumn(2).setMaxWidth(65);
@@ -432,12 +431,12 @@ public class ProductsList extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panel_new_product, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(15, 15, 15))
+                .addGap(12, 12, 12))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
