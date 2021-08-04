@@ -257,7 +257,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "ID", "Product | Service", "Price", "Qty", "Notes"
+                "ID", "Product | Service", "Price €", "Qty", "Notes"
             }
         ) {
             Class[] types = new Class [] {
@@ -306,7 +306,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         });
 
         txt_add_price.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
-        txt_add_price.setBorder(javax.swing.BorderFactory.createTitledBorder("Price"));
+        txt_add_price.setBorder(javax.swing.BorderFactory.createTitledBorder("Price €"));
         txt_add_price.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_add_priceKeyPressed(evt);

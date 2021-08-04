@@ -10,19 +10,10 @@ package Registering;
  * @author user
  */
 public class Fault {
-    int faultID;
     String fault;
 
     public Fault(String fault) {
         this.fault = fault;
-    }
-
-    public int getFaultID() {
-        return faultID;
-    }
-
-    public void setFaultID(int faultID) {
-        this.faultID = faultID;
     }
 
     public String getFault() {

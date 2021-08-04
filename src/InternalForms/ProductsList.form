@@ -72,7 +72,7 @@
               <Table columnCount="5" rowCount="15">
                 <Column editable="false" title="ID" type="java.lang.Integer"/>
                 <Column editable="false" title="Product | Service" type="java.lang.String"/>
-                <Column editable="false" title="Price" type="java.lang.Double"/>
+                <Column editable="false" title="Price &#x20ac;" type="java.lang.Double"/>
                 <Column editable="false" title="Qty" type="java.lang.Integer"/>
                 <Column editable="false" title="Notes" type="java.lang.String"/>
               </Table>
@@ -172,7 +172,7 @@
             </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Price"/>
+                <TitledBorder title="Price &#x20ac;"/>
               </Border>
             </Property>
           </Properties>

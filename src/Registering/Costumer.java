@@ -14,10 +14,10 @@ public class Costumer {
     String firstName, lastName, email, contactNo;
     
     
-    public Costumer(String firstName, String lastName, String email) {
+    public Costumer(String firstName, String lastName, String contactNo, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
-        //this.contactNo = contactNo;
+        this.contactNo = contactNo;
         this.email = email;
     }
 
@@ -37,13 +37,13 @@ public class Costumer {
         this.lastName = lastName;
     }
 
-//    public String getContactNo() {
-//        return contactNo;
-//    }
-//
-//    public void setContactNo(String contactNo) {
-//        this.contactNo = contactNo;
-//    }
+    public String getContactNo() {
+        return contactNo;
+    }
+
+    public void setContactNo(String contactNo) {
+        this.contactNo = contactNo;
+    }
 
     public String getEmail() {
         return email;

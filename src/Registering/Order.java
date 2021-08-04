@@ -20,8 +20,8 @@ public class Order extends Device {
     JSONArray prices;
     
     
-    public Order(String orderNo, String firstName, String lastName, String email, String brand, String model, String serialNumber, JSONArray faults, String importantNotes,JSONArray productsServices, JSONArray prices, double deposit, double due, String status, java.sql.Timestamp issuedDate) {
-        super(brand, model, serialNumber, firstName, lastName, email);
+    public Order(String orderNo, String firstName, String lastName, String contactNo, String email, String brand, String model, String serialNumber, JSONArray faults, String importantNotes,JSONArray productsServices, JSONArray prices, double deposit, double due, String status, java.sql.Timestamp issuedDate) {
+        super(brand, model, serialNumber, firstName, lastName, contactNo, email);
         this.orderNo = orderNo;
         this.faults = faults;
         this.productsServices = productsServices;

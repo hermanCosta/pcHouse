@@ -12,8 +12,8 @@ package Registering;
 public class Device extends Costumer {
     String brand, model, serialNumber;
 
-    public Device(String brand, String model, String serialNumber, String firstName, String lastName, String email) {
-        super(firstName, lastName, email);
+    public Device(String brand, String model, String serialNumber, String firstName, String lastName,String contactNo, String email) {
+        super(firstName, lastName, contactNo, email);
         this.brand = brand;
         this.model = model;
         this.serialNumber = serialNumber;

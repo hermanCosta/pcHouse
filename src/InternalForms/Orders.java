@@ -107,7 +107,6 @@ public class Orders extends javax.swing.JInternalFrame {
         
         String searchOrder = txt_search_order.getText();
         
-        
         if(searchOrder.isEmpty())
         {
             recentOrders();
