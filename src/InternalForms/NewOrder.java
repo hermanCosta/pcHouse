@@ -1349,34 +1349,24 @@ public class NewOrder extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameKeyPressed
 
     private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
-        // TODO add your handling code here:
-//        txt_contact.addFocusListener(new java.awt.event.FocusAdapter() {
-//        
-//            @Override
-//            public void focusLost(java.awt.event.FocusEvent evt)
-//            {
-//                
-//            }
-//        });
         
-        
+        dbConnection();
+
         String firstName = txt_first_name.getText();
         String lastName = txt_last_name.getText();
         String contactNo = txt_contact.getText();
         String email = txt_email.getText();
         
         try {
-            // TODO add your handling code here:
-            dbConnection();
-            
-            String checkQuery = "SELECT * FROM customers WHERE contactNo = '" +contactNo+ "'";
-            ps = con.prepareStatement(checkQuery);
+            String query = "SELECT * FROM customers WHERE contactNo = '" +contactNo+ "'";
+            ps = con.prepareStatement(query);
             rs = ps.executeQuery();
             
+            //show a message if a costumer is not found in the db
             if (!rs.isBeforeFirst() && firstName.trim().isEmpty() && lastName.trim().isEmpty())
-            {
-               JOptionPane.showMessageDialog(null, "Customer not found in the Database", "New Order", JOptionPane.ERROR_MESSAGE);
-            }
+                JOptionPane.showMessageDialog(null, "Customer not found in the Database", "New Order", JOptionPane.ERROR_MESSAGE);
+            
+            //add a new costumer if not exist AND fields are not empty
             else if (!rs.isBeforeFirst() && !firstName.trim().isEmpty() && !lastName.trim().isEmpty())
             {
                 int confirmInsertion = JOptionPane.showConfirmDialog(null, "Do you want to add a new Customer ?", "Add New Customer", JOptionPane.YES_NO_OPTION);
