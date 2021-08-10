@@ -12,15 +12,14 @@ import org.json.JSONArray;
  * @author user
  */
 public class Order extends Device {
-    String orderNo, status, importantNotes;
+    String orderNo, status, importantNotes, issuedDate;
     double deposit, due;
-    java.sql.Timestamp issuedDate;
     JSONArray faults;
     JSONArray productsServices;
     JSONArray prices;
     
     
-    public Order(String orderNo, String firstName, String lastName, String contactNo, String email, String brand, String model, String serialNumber, JSONArray faults, String importantNotes,JSONArray productsServices, JSONArray prices, double deposit, double due, String status, java.sql.Timestamp issuedDate) {
+    public Order(String orderNo, String firstName, String lastName, String contactNo, String email, String brand, String model, String serialNumber, JSONArray faults, String importantNotes,JSONArray productsServices, JSONArray prices, double deposit, double due, String status, String issuedDate) {
         super(brand, model, serialNumber, firstName, lastName, contactNo, email);
         this.orderNo = orderNo;
         this.faults = faults;
@@ -99,11 +98,11 @@ public class Order extends Device {
         this.status = status;
     }
     
-    public java.sql.Timestamp getIssuedDate() {
+    public String getIssuedDate() {
         return issuedDate;
     }
 
-    public void setIssuedDate(java.sql.Timestamp issuedDate) {
+    public void setIssuedDate(String issuedDate) {
         this.issuedDate = issuedDate;
     }
 }

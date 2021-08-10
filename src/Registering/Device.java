@@ -5,11 +5,11 @@
  */
 package Registering;
 
-/**
+/** 
  *
  * @author user
  */
-public class Device extends Costumer {
+public class Device extends Customer {
     String brand, model, serialNumber;
 
     public Device(String brand, String model, String serialNumber, String firstName, String lastName,String contactNo, String email) {

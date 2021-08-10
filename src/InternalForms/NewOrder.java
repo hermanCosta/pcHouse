@@ -7,13 +7,14 @@ package InternalForms;
 
 import Forms.ProductList;
 import Forms.MainMenu;
-import Registering.Costumer;
+import Registering.Customer;
 import Registering.Order;
 import Registering.ProductService;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -21,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -35,8 +37,14 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.json.JSONArray;
+
 
 /**
  *
@@ -50,9 +58,14 @@ public class NewOrder extends javax.swing.JInternalFrame {
     ArrayList firstNames = new ArrayList();
     ArrayList faults = new ArrayList();
     ArrayList lastNames = new ArrayList();
+    
+    JSONArray tableFaults = new JSONArray();
+    JSONArray tableProductColumn = new JSONArray();
+    JSONArray tablePriceColumn = new JSONArray();
     Connection con;
     PreparedStatement ps;
     Statement stmt;
+    Customer customer;
     ProductService productService;
     Order order;
     ResultSet rs;
@@ -68,7 +81,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
         
-        txt_first_name.requestFocus();
+        txt_contact.requestFocus();
         table_view_faults.setRowHeight(25);
         table_view_faults.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
         table_view_products.setRowHeight(25);
@@ -99,7 +112,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
     {
         try {
               Class.forName("com.mysql.cj.jdbc.Driver");
-              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","hermanhgc","He11m@ns");
+              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -112,7 +125,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             dbConnection();
             stmt = con.createStatement();
             
-             rs = stmt.executeQuery("select Max(orderNo) from orderDetails");
+             rs = stmt.executeQuery("SELECT Max(orderNo) FROM orderDetails");
              rs.next();
              rs.getString("Max(orderNo)");
              
@@ -305,9 +318,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
     
     public void saveIntoDB()
     {
-        JSONArray tableFaults = new JSONArray();
-        JSONArray tableProductColumn = new JSONArray();
-        JSONArray tablePriceColumn = new JSONArray();
+        
             
         String orderNo = lbl_auto_order_no.getText();
         String firstName = txt_first_name.getText();
@@ -323,9 +334,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
         String status = combo_box_status.getSelectedItem().toString();
         
         java.util.Date date = new java.util.Date();
-        java.sql.Timestamp issuedDate = new java.sql.Timestamp(date.getTime());
+        java.sql.Timestamp currentDateTime = new java.sql.Timestamp(date.getTime());
+        String issueDate = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(currentDateTime);
         
-            
             
         for(int i = 0; i < table_view_faults.getRowCount(); i++)
         {
@@ -338,8 +349,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
            tablePriceColumn.put(table_view_products.getValueAt(j, 1));
         }
         
-        order = new Order(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, tableFaults, importantNotes, tableProductColumn, tablePriceColumn, deposit, due, status, issuedDate);
+        order = new Order(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, tableFaults, importantNotes, tableProductColumn, tablePriceColumn, deposit, due, status, issueDate);
         
+        //System.out.println(order.getOrderNo());
         dbConnection();
         
         try {
@@ -360,11 +372,14 @@ public class NewOrder extends javax.swing.JInternalFrame {
             ps.setDouble(13, order.getDeposit());
             ps.setDouble(14, order.getDue());
             ps.setString(15, order.getStatus());
-            ps.setTimestamp(16, order.getIssuedDate());
+            ps.setString(16, order.getIssuedDate());
+            //ps.setInt(1, order.getCustomerID());
             
             ps.executeUpdate();
             
             JOptionPane.showMessageDialog(this, "New order created successfully!");
+            
+            print();
             
             lbl_auto_order_no.setText("");
             txt_first_name.setText("");
@@ -480,19 +495,35 @@ public class NewOrder extends javax.swing.JInternalFrame {
         String orderNo = lbl_auto_order_no.getText();
         String firstName = txt_first_name.getText();
         String lastName = txt_last_name.getText();
-        String contact = txt_contact.getText();
+        String contactNo = txt_contact.getText();
         String email = txt_email.getText();
         String deviceBrand = txt_brand.getText();
         String deviceModel = txt_model.getText();
         String serialNumber = txt_sn.getText();
-        String fault = txt_fault.getText();
         String importantNotes = txt_area_important_notes.getText();
-        String serviceProduct = combo_box_status.getSelectedItem().toString();
-        String price = txt_total.getText();
-        String deposit = txt_deposit.getText();
-        String due = txt_due.getText();
+        double deposit = Double.parseDouble(txt_deposit.getText());
+        double due = Double.parseDouble(txt_due.getText());
+        double total = Double.parseDouble(txt_total.getText());
         
-       // new PrintOrder(orderNo,firstName,lastName,contact,email,deviceBrand,deviceModel,serialNumber,fault,importantNotes,serviceProduct,price,deposit,due).setVisible(true);
+        java.util.Date date = new java.util.Date();
+        java.sql.Timestamp currentDateTime = new java.sql.Timestamp(date.getTime());
+        String issueDate = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(currentDateTime);
+        
+            
+//        for(int i = 0; i < table_view_faults.getRowCount(); i++)
+//        {
+//           tableFaults.put(table_view_faults.getValueAt(i, 0));
+//        }
+//        
+//        for(int j = 0; j < table_view_products.getRowCount(); j++)
+//        {
+//           tableProductColumn.put(table_view_products.getValueAt(j, 0));
+//           tablePriceColumn.put(table_view_products.getValueAt(j, 1));
+//        }
+//        
+      // new Print(order.getOrderNo(), order.getFirstName(), order.getLastName(), order.getContactNo(), order.getEmail(), order.getBrand(), order.getModel(), order.getSerialNumber(), tableFaults ,order.getImportantNotes(),tableProductColumn, tablePriceColumn, total, order.getDeposit(), order.getDue(), order.getIssuedDate()).setVisible(true);
+      new Print(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, table_view_faults, importantNotes, table_view_products, total, deposit, due, issueDate).setVisible(true);
+       
     }
     
     @SuppressWarnings("unchecked")
@@ -549,6 +580,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         setMaximumSize(new java.awt.Dimension(1049, 827));
         setPreferredSize(new java.awt.Dimension(1049, 700));
         setSize(new java.awt.Dimension(1049, 700));
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         panel_order_details.setPreferredSize(new java.awt.Dimension(655, 700));
 
@@ -927,40 +959,39 @@ public class NewOrder extends javax.swing.JInternalFrame {
                                 .addComponent(txt_brand, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
-                                    .addGap(12, 12, 12)
-                                    .addComponent(lbl_service_product)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(label_add_table_view))
-                                .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                    .addGap(6, 6, 6)
-                                    .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane2)
-                                        .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                            .addGap(6, 6, 6)
-                                            .addComponent(lbl_due)
-                                            .addGap(0, 0, 0)
-                                            .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(18, 18, Short.MAX_VALUE)
-                                            .addComponent(lbl_deposit)
-                                            .addGap(0, 0, 0)
-                                            .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(lbl_price)
-                                            .addGap(0, 0, 0)
-                                            .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 576, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
+                                        .addComponent(lbl_service_product)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(label_add_table_view))
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                        .addComponent(lbl_due)
+                                        .addGap(0, 0, 0)
+                                        .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, Short.MAX_VALUE)
+                                        .addComponent(lbl_deposit)
+                                        .addGap(0, 0, 0)
+                                        .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(lbl_price)
+                                        .addGap(0, 0, 0)
+                                        .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lbl_fault)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txt_fault, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                        .addComponent(lbl_fault)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txt_fault, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(0, 225, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(67, 67, 67)
                         .addComponent(btn_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1041,22 +1072,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 .addGap(195, 195, 195))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, 1038, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(panel_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        getContentPane().add(panel_order_details, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 0, 1022, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -1107,8 +1123,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
-        print();
         saveIntoDB();
+       // print();
     }//GEN-LAST:event_btn_printActionPerformed
 
     private void txt_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_totalActionPerformed
@@ -1144,7 +1160,27 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void btn_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelActionPerformed
         // TODO add your handling code here:
-        new MainMenu().setVisible(true);
+        print();
+       //OrderPrinting orderPrinting = new OrderPrinting(); 
+        
+       // panel_order_details.removeAll();
+        //print();
+       //panel_order_details.add(orderPrinting).setVisible(true);
+        
+        //this.dispose();
+        
+        //new MainMenu().setVisible(true);
+        
+//        try
+//        {
+//            InputStream i = getClass().getResourceAsStream("/Users/HermanCosta/NetBeansProjects/PcHouse/src/Reports/test.jrxml");
+//            JasperPrint jp = JasperFillManager.fillReport(i, null, new JREmptyDataSource());
+//            JasperViewer.viewReport(jp);
+//        }
+//        catch (Exception e)
+//                {
+//                    e.printStackTrace();
+//                }
     }//GEN-LAST:event_btn_cancelActionPerformed
 
     private void txt_snActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_snActionPerformed
@@ -1372,16 +1408,21 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 int confirmInsertion = JOptionPane.showConfirmDialog(null, "Do you want to add a new Customer ?", "Add New Customer", JOptionPane.YES_NO_OPTION);
                 if(confirmInsertion == 0)
                 {
-                    Costumer costumer = new Costumer(firstName, lastName, contactNo, email);
+                    customer = new Customer(firstName, lastName, contactNo, email);
                     String insertQuery = "INSERT INTO customers (firstName, lastName, contactNo, email) VALUES(?, ?, ?, ?)";
-                    ps = con.prepareStatement(insertQuery);
-                    ps.setString(1, costumer.getFirstName());
-                    ps.setString(2, costumer.getLastName());
-                    ps.setString(3, costumer.getContactNo());
-                    ps.setString(4, costumer.getEmail());
-                    ps.executeUpdate();
                     
+                    ps = con.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+                    ps.setString(1, customer.getFirstName());
+                    ps.setString(2, customer.getLastName());
+                    ps.setString(3, customer.getContactNo());
+                    ps.setString(4, customer.getEmail());
+                    ps.executeUpdate();
                     txt_brand.requestFocus();
+                    
+                    rs = ps.getGeneratedKeys();
+                    if (rs.next())
+                        customer.setCustomerID(rs.getInt(1));
+                        //System.out.println("Customer ID: " + rs.getInt(1));
                 }
                 else
                 {
@@ -1403,6 +1444,17 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     txt_last_name.setText(rs.getString("lastName"));
                     txt_contact.setText(rs.getString("contactNo"));
                     txt_email.setText(rs.getString("email"));
+                    int id = rs.getInt("customerID");
+                    System.out.println("Customer ID: " + id);
+//                    order.setCustomerID(id);
+                    
+//                    rs = ps.getGeneratedKeys();
+//                    if (rs.next())
+//                    {
+//                    customer.setCustomerID(rs.getInt(1));
+//                    
+//                    System.out.println("Customer ID: " + rs.getInt(1));
+//                    }
                 }
             }
             
