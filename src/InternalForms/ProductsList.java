@@ -9,6 +9,7 @@ import Forms.ProductList;
 import Registering.ProductService;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.print.PrinterException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,12 +17,14 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.MessageFormat;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -470,8 +473,8 @@ public class ProductsList extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btn_edit_product_serviceActionPerformed
 
     private void btn_add_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add_product_serviceActionPerformed
-        // TODO add your handling code here:
-        addNewProductService();
+             // TODO add your handling code here:
+             addNewProductService();
     }//GEN-LAST:event_btn_add_product_serviceActionPerformed
 
     private void txt_delete_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_delete_product_serviceActionPerformed

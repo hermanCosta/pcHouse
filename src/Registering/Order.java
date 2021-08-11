@@ -12,7 +12,7 @@ import org.json.JSONArray;
  * @author user
  */
 public class Order extends Device {
-    String orderNo, status, importantNotes, issuedDate;
+    String orderNo, importantNotes,status, issuedDate;
     double deposit, due;
     JSONArray faults;
     JSONArray productsServices;

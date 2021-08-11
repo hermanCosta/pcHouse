@@ -5,6 +5,7 @@
  */
 package InternalForms;
 
+import Common.DBConnection;
 import Forms.Billing;
 import Forms.ProductList;
 import java.awt.Color;
@@ -15,18 +16,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
+import org.json.JSONArray;
 
 /**
  *
  * @author user
  */
-public class Orders extends javax.swing.JInternalFrame {
+public class OrderList extends javax.swing.JInternalFrame {
         /**
          * Creates new form OrdersMenu
          */
@@ -35,7 +38,7 @@ public class Orders extends javax.swing.JInternalFrame {
         ResultSet rs ;
         PreparedStatement ps;
        
-    public Orders() {
+    public OrderList() {
         initComponents();
         
         
@@ -72,7 +75,7 @@ public class Orders extends javax.swing.JInternalFrame {
          try {
             ps = con.prepareStatement("SELECT * FROM orderDetails ORDER BY orderNo DESC LIMIT 15 ");
                                         
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
             
             ResultSetMetaData rsd = rs.getMetaData();
             int c; 
@@ -164,10 +167,11 @@ public class Orders extends javax.swing.JInternalFrame {
         jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
         jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
         jMenu1 = new javax.swing.JMenu();
+        desktop_panel_order_details = new javax.swing.JDesktopPane();
         txt_search_order = new javax.swing.JTextField();
+        label_latest_orders_created = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         table_view_orders = new javax.swing.JTable();
-        label_latest_orders_created = new javax.swing.JLabel();
 
         jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
@@ -181,6 +185,11 @@ public class Orders extends javax.swing.JInternalFrame {
         setBorder(null);
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
+
+        desktop_panel_order_details.setBackground(new java.awt.Color(255, 255, 255));
+        desktop_panel_order_details.setMaximumSize(new java.awt.Dimension(1049, 827));
+        desktop_panel_order_details.setSize(new java.awt.Dimension(1049, 827));
+        desktop_panel_order_details.setLayout(null);
 
         txt_search_order.setFont(new java.awt.Font("Lucida Grande", 0, 20)); // NOI18N
         txt_search_order.addActionListener(new java.awt.event.ActionListener() {
@@ -199,6 +208,14 @@ public class Orders extends javax.swing.JInternalFrame {
                 txt_search_orderKeyReleased(evt);
             }
         });
+        desktop_panel_order_details.add(txt_search_order);
+        txt_search_order.setBounds(90, 30, 880, 35);
+
+        label_latest_orders_created.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
+        label_latest_orders_created.setForeground(new java.awt.Color(255, 255, 255));
+        label_latest_orders_created.setText("Orders Created Recently");
+        desktop_panel_order_details.add(label_latest_orders_created);
+        label_latest_orders_created.setBounds(360, 80, 253, 25);
 
         jScrollPane1.setVerifyInputWhenFocusTarget(false);
 
@@ -255,50 +272,34 @@ public class Orders extends javax.swing.JInternalFrame {
             table_view_orders.getColumnModel().getColumn(0).setMaxWidth(70);
         }
 
-        label_latest_orders_created.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
-        label_latest_orders_created.setText("Orders Created Recently");
+        desktop_panel_order_details.add(jScrollPane1);
+        jScrollPane1.setBounds(30, 130, 990, 520);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(txt_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, 615, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(220, 220, 220))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(400, 400, 400)
-                        .addComponent(label_latest_orders_created))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1017, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(15, Short.MAX_VALUE))
+            .addComponent(desktop_panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, 1052, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(txt_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(label_latest_orders_created, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(desktop_panel_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, 675, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void table_view_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_ordersMouseClicked
-        // TODO add your handling code here:
+    public void payOrder()
+    {
+        
         DefaultTableModel dm = (DefaultTableModel)table_view_orders.getModel();
         int selectedIndex = table_view_orders.getSelectedRow();
 
-        String status = dm.getValueAt(selectedIndex, 7).toString();
+        String orderSelected = dm.getValueAt(selectedIndex, 1).toString();
 
-        if (status.equals("Completed")) {
+        if (orderSelected.equals("Completed")) {
             JOptionPane.showMessageDialog(this, "This order has been completed!");
         }
         else
@@ -314,6 +315,73 @@ public class Orders extends javax.swing.JInternalFrame {
 
             this.setVisible(false);
         }
+        
+    }
+    
+    public void openSelectedOrder()
+    {
+        //Vector faults = new Vector();
+        JSONArray faults = new JSONArray();
+        String orderNo = "";
+        String firstName = "";
+        String lastName = "";
+        String contactNo = "";
+        String email = "";
+        String deviceBrand = "";
+        String deviceModel = "";
+        String serialNumber = "";
+        String importantNotes ="";
+        double deposit = 0;
+        double due = 0;
+        String status = "";
+        String issueDate = "";
+        
+        dbConnection();
+        DefaultTableModel dtm = (DefaultTableModel)table_view_orders.getModel();
+        int orderSelected = table_view_orders.getSelectedRow();
+        String selectedOrderNo = dtm.getValueAt(orderSelected, 0).toString();
+        
+            try {
+                String query = "SELECT * FROM orderDetails WHERE orderNo ='" + selectedOrderNo + "'";
+                ps = con.prepareStatement(query);
+                rs = ps.executeQuery();
+                
+                
+                while(rs.next())
+                {
+                   orderNo = rs.getString("orderNo");
+                   firstName = rs.getString("firstName");
+                   lastName = rs.getString("lastName");
+                   contactNo = rs.getString("contactNo");
+                   email = rs.getString("email");
+                   deviceBrand = rs.getString("deviceBrand");
+                   deviceModel = rs.getString("deviceModel");
+                   serialNumber = rs.getString("serialNumber");
+                   importantNotes = rs.getString("importantNotes");
+                   faults.put(rs.getString("fault"));
+                   deposit = rs.getDouble("deposit");
+                   due = rs.getDouble("due");
+                   issueDate = rs.getString("issuedDate");
+                   
+                   
+                }
+                
+                System.out.println("OrderNo of Selected Row is: " + orderNo);
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+            OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, deposit, due, issueDate);
+            desktop_panel_order_details.removeAll();
+            desktop_panel_order_details.add(orderDetails).setVisible(true);
+            
+    }
+    
+    private void table_view_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_ordersMouseClicked
+        // TODO add your handling code here:
+        openSelectedOrder();
     }//GEN-LAST:event_table_view_ordersMouseClicked
 
     private void txt_search_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_search_orderActionPerformed
@@ -337,6 +405,7 @@ public class Orders extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JDesktopPane desktop_panel_order_details;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
     private javax.swing.JMenu jMenu1;

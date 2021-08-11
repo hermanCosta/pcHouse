@@ -10,10 +10,12 @@ import Forms.MainMenu;
 import Registering.Customer;
 import Registering.Order;
 import Registering.ProductService;
+import com.lowagie.text.Document;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.print.PrinterException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -335,7 +337,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         
         java.util.Date date = new java.util.Date();
         java.sql.Timestamp currentDateTime = new java.sql.Timestamp(date.getTime());
-        String issueDate = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(currentDateTime);
+        String issueDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDateTime);
         
             
         for(int i = 0; i < table_view_faults.getRowCount(); i++)
@@ -507,7 +509,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         
         java.util.Date date = new java.util.Date();
         java.sql.Timestamp currentDateTime = new java.sql.Timestamp(date.getTime());
-        String issueDate = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(currentDateTime);
+        String issueDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDateTime);
         
             
 //        for(int i = 0; i < table_view_faults.getRowCount(); i++)
@@ -1124,7 +1126,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         saveIntoDB();
-       // print();
+        print();
     }//GEN-LAST:event_btn_printActionPerformed
 
     private void txt_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_totalActionPerformed
@@ -1159,18 +1161,19 @@ public class NewOrder extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_depositKeyReleased
 
     private void btn_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelActionPerformed
-        // TODO add your handling code here:
-        print();
-       //OrderPrinting orderPrinting = new OrderPrinting(); 
-        
-       // panel_order_details.removeAll();
-        //print();
-       //panel_order_details.add(orderPrinting).setVisible(true);
-        
-        //this.dispose();
-        
-        //new MainMenu().setVisible(true);
-        
+            // TODO add your handling code here:
+            
+            //print();
+            //OrderPrinting orderPrinting = new OrderPrinting();
+            
+            // panel_order_details.removeAll();
+            //print();
+            //panel_order_details.add(orderPrinting).setVisible(true);
+            
+            //this.dispose();
+            
+            new MainMenu().setVisible(true);
+            
 //        try
 //        {
 //            InputStream i = getClass().getResourceAsStream("/Users/HermanCosta/NetBeansProjects/PcHouse/src/Reports/test.jrxml");
@@ -1181,6 +1184,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
 //                {
 //                    e.printStackTrace();
 //                }
+     
     }//GEN-LAST:event_btn_cancelActionPerformed
 
     private void txt_snActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_snActionPerformed

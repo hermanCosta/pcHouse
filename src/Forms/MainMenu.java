@@ -6,7 +6,7 @@
 package Forms;
 
 import InternalForms.NewOrder;
-import InternalForms.Orders;
+import InternalForms.OrderList;
 import InternalForms.CloseTill;
 import InternalForms.ProductsList;
 import java.awt.Color;
@@ -793,7 +793,7 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void label_check_existingMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_check_existingMouseClicked
         // TODO add your handling code here:
-        Orders ordersMenu = new Orders();
+        OrderList ordersMenu = new OrderList();
         desktop_panel.removeAll();
         desktop_panel.add(ordersMenu).setVisible(true);
         

@@ -6,27 +6,25 @@
 package InternalForms;
 
 import Forms.PrintOrder;
-import com.lowagie.text.pdf.PdfTemplate;
-import java.awt.Component;
+import static com.itextpdf.text.pdf.XfaXpathConstructor.XdpPackage.Pdf;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfWriter;
+import com.qoppa.pdfWriter.PDFPrinterJob;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Vector;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextPane;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import javax.swing.text.DefaultCaret;
-import org.json.JSONArray;
 
 /**
  *
@@ -63,6 +61,7 @@ public class Print extends javax.swing.JFrame {
             double total, double deposit, double due, String issuedDate) {
         
         initComponents();
+        //printOrderDetails();
         
         DefaultCaret caret = (DefaultCaret) txt_area_print_important_notes.getCaret();
         caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
@@ -83,11 +82,6 @@ public class Print extends javax.swing.JFrame {
         this._total = total;
         this._issuedDate = issuedDate;
         
-        
-        
-        
-        
-        
         lbl_print_issued_date.setText(this._issuedDate);
         lbl_print_order_no.setText(this._orderNo);
         lbl_print_first_name.setText(this._firstName);
@@ -101,8 +95,8 @@ public class Print extends javax.swing.JFrame {
         lbl_print_total_products.setText("€" + String.valueOf(this._total));
         lbl_print_deposit.setText("€" + String.valueOf(this._deposit));
         lbl_print_due.setText("€" + String.valueOf(this._due));
-                
         
+       
 //        DefaultTableModel printFaultsTable = (DefaultTableModel) table_view_print_faults.getModel();
 //        printFaultsTable.setRowCount(0);
 //        Vector faults = new Vector();
@@ -127,11 +121,65 @@ public class Print extends javax.swing.JFrame {
             //product + ".....................€" + price + "\n"));
         }
         
+        printOrderDetails();
         
-        
-        //printOrderDetails();
         
     }
+    
+    
+    public void createPDF()
+    {
+        String path = "";
+        JFileChooser j = new JFileChooser();
+        j.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int x= j.showSaveDialog(this);
+        
+        if(x == JFileChooser.APPROVE_OPTION)
+        {
+            path = j.getSelectedFile().getPath();
+        }
+        
+        Document document = new Document();
+        
+      
+            
+        try {
+            
+            PdfWriter.getInstance(document, new FileOutputStream(path + "order.pdf"));
+            
+            document.open();
+            
+            document.add(new Paragraph("Order number: "+ this._orderNo + "                   " + "Issued: " + this._issuedDate));
+            
+            document.close();
+            
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Print.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DocumentException ex) {
+            Logger.getLogger(Print.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+       
+    }
+    
+    
+    public void printPDF()
+    {
+        PDFPrinterJob printer = (PDFPrinterJob)PDFPrinterJob.getPrinterJob();
+         printer.setPrintable((Printable) new Print());
+         printer.setCopies(1);
+         
+        try {
+            printer.print("/Users/HermanCosta/Desktop/pcHouse/mydoc.pdf");
+            System.out.println("Done!");
+            
+        } catch (PrinterException ex) {
+            Logger.getLogger(Print.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         
+    }
+    
     
       private void printOrderDetails()
     {
@@ -156,7 +204,7 @@ public class Print extends javax.swing.JFrame {
                // graphics2D.translate(pageFormat.getImageableX() * 2, pageFormat.getImageableY() * 2);
                 //graphics2D.scale(0.5, 0.5);
                 
-                
+                    
              panel_print_order.paint(graphics2D);
               return Printable.PAGE_EXISTS;
             }
@@ -564,7 +612,9 @@ public class Print extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        
+    
+//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
