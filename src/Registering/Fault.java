@@ -12,9 +12,9 @@ package Registering;
 public class Fault {
     String fault;
 
-    public Fault(String fault) {
-        this.fault = fault;
-    }
+//    public Fault(String fault) {
+//        this.fault = fault;
+//    }
 
     public String getFault() {
         return fault;

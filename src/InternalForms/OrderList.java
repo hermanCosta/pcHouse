@@ -8,8 +8,10 @@ package InternalForms;
 import Common.DBConnection;
 import Forms.Billing;
 import Forms.ProductList;
+import Registering.Fault;
 import java.awt.Color;
 import java.awt.Font;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -23,6 +25,9 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
+import jdk.nashorn.internal.ir.ObjectNode;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 
 /**
@@ -318,9 +323,11 @@ public class OrderList extends javax.swing.JInternalFrame {
         
     }
     
-    public void openSelectedOrder()
+    public void openSelectedOrder() throws IOException
     {
-        //Vector faults = new Vector();
+        ObjectMapper objMap=new ObjectMapper();
+        
+        Vector faultsList = new Vector();
         JSONArray faults = new JSONArray();
         String orderNo = "";
         String firstName = "";
@@ -363,25 +370,39 @@ public class OrderList extends javax.swing.JInternalFrame {
                    due = rs.getDouble("due");
                    issueDate = rs.getString("issuedDate");
                    
+                   faultsList.add(rs.getString("fault"));
                    
+                   JsonNode parent = new ObjectMapper().readTree(rs.getString("fault"));
+                   String fault = parent.path("Faults").asText();
+                   
+                   //final ObjectNode node = new ObjectMapper().readValue(rs.getString("fault"), ObjectNode.class);
+                   //Fault fa = (Fault)objMap.readValue(rs.getString("fault"), Fault.class);  
+                   System.out.println("Faults: " + fault);
                 }
                 
-                System.out.println("OrderNo of Selected Row is: " + orderNo);
+                    
+                //  System.out.println("Faults To Vector: " + faultsList);  
+                //System.out.println("OrderNo of Selected Row is: " + orderNo);
                 
             } catch (SQLException ex) {
                 Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             
-            OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, deposit, due, issueDate);
+            //OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, deposit, due, issueDate);
+            OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, importantNotes, faultsList, deposit, due, issueDate);
             desktop_panel_order_details.removeAll();
             desktop_panel_order_details.add(orderDetails).setVisible(true);
             
     }
     
     private void table_view_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_ordersMouseClicked
-        // TODO add your handling code here:
-        openSelectedOrder();
+            try {
+                // TODO add your handling code here:
+                openSelectedOrder();
+            } catch (IOException ex) {
+                Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }//GEN-LAST:event_table_view_ordersMouseClicked
 
     private void txt_search_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_search_orderActionPerformed

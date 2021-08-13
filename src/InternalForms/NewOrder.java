@@ -6,17 +6,14 @@
 package InternalForms;
 
 import Forms.ProductList;
-import Forms.MainMenu;
 import Registering.Customer;
+import Registering.Fault;
 import Registering.Order;
 import Registering.ProductService;
-import com.lowagie.text.Document;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.print.PrinterException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -26,6 +23,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,13 +37,11 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import net.sf.jasperreports.engine.JREmptyDataSource;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.view.JasperViewer;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -318,10 +314,14 @@ public class NewOrder extends javax.swing.JInternalFrame {
         }
     }
     
-    public void saveIntoDB()
+    public void saveIntoDB() throws JSONException
     {
         
-            
+        ObjectMapper objMap=new ObjectMapper();
+        List<Fault> list = new ArrayList<>();
+        Fault fa = new Fault();
+        JSONObject my_obj = new JSONObject();
+        
         String orderNo = lbl_auto_order_no.getText();
         String firstName = txt_first_name.getText();
         String lastName = txt_last_name.getText();
@@ -339,11 +339,13 @@ public class NewOrder extends javax.swing.JInternalFrame {
         java.sql.Timestamp currentDateTime = new java.sql.Timestamp(date.getTime());
         String issueDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDateTime);
         
-            
         for(int i = 0; i < table_view_faults.getRowCount(); i++)
         {
-           tableFaults.put(table_view_faults.getValueAt(i, 0));
+           //list.add((Fault) table_view_faults.getValueAt(i, 0));
+           my_obj.put("faults", table_view_faults.getValueAt(i, 0));
+           //tableFaults.put(table_view_faults.getValueAt(i, 0));
         }
+        System.out.println(list);
         
         for(int j = 0; j < table_view_products.getRowCount(); j++)
         {
@@ -368,6 +370,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             ps.setString(7, order.getModel());
             ps.setString(8, order.getSerialNumber());
             ps.setString(9, order.getFaults().toString());
+ //           ps.setObject(9, objMap.writerWithDefaultPrettyPrinter().writeValueAsString(Fault));
             ps.setString(10, order.getImportantNotes());
             ps.setString(11, order.getProductsServices().toString());
             ps.setString(12, order.getPrices().toString());
@@ -582,7 +585,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
         setMaximumSize(new java.awt.Dimension(1049, 827));
         setPreferredSize(new java.awt.Dimension(1049, 700));
         setSize(new java.awt.Dimension(1049, 700));
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         panel_order_details.setPreferredSize(new java.awt.Dimension(655, 700));
 
@@ -754,7 +756,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
         txt_area_important_notes.setColumns(20);
         txt_area_important_notes.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
-        txt_area_important_notes.setRows(5);
+        txt_area_important_notes.setRows(4);
         txt_area_important_notes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Important Notes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 15))); // NOI18N
         jScrollPane1.setViewportView(txt_area_important_notes);
 
@@ -913,9 +915,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
         panel_order_detailsLayout.setHorizontalGroup(
             panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_order_no)
@@ -992,12 +994,12 @@ public class NewOrder extends javax.swing.JInternalFrame {
                                         .addComponent(lbl_fault)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(txt_fault, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                        .addGap(214, 214, 214)
                         .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(67, 67, 67)
-                        .addComponent(btn_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(220, 220, 220))))
+                        .addComponent(btn_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_order_detailsLayout.setVerticalGroup(
             panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1067,14 +1069,25 @@ public class NewOrder extends javax.swing.JInternalFrame {
                                         .addGap(6, 6, 6)
                                         .addComponent(lbl_due))))))
                     .addComponent(jSeparator3))
-                .addGap(28, 28, 28)
+                .addGap(68, 68, 68)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(195, 195, 195))
+                .addGap(155, 155, 155))
         );
 
-        getContentPane().add(panel_order_details, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 0, 1022, -1));
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(panel_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, 1022, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panel_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -1124,8 +1137,12 @@ public class NewOrder extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_brandActionPerformed
 
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
-        // TODO add your handling code here:
-        saveIntoDB();
+        try {
+            // TODO add your handling code here:
+            saveIntoDB();
+        } catch (JSONException ex) {
+            Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
+        }
         print();
     }//GEN-LAST:event_btn_printActionPerformed
 
@@ -1172,19 +1189,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             
             //this.dispose();
             
-            new MainMenu().setVisible(true);
-            
-//        try
-//        {
-//            InputStream i = getClass().getResourceAsStream("/Users/HermanCosta/NetBeansProjects/PcHouse/src/Reports/test.jrxml");
-//            JasperPrint jp = JasperFillManager.fillReport(i, null, new JREmptyDataSource());
-//            JasperViewer.viewReport(jp);
-//        }
-//        catch (Exception e)
-//                {
-//                    e.printStackTrace();
-//                }
-     
+            //new MainMenu().setVisible(true);
     }//GEN-LAST:event_btn_cancelActionPerformed
 
     private void txt_snActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_snActionPerformed
