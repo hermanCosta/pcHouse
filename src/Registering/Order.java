@@ -5,31 +5,27 @@
  */
 package Registering;
 
-import org.json.JSONArray;
-
 /**
  *
  * @author user
  */
 public class Order extends Device {
-    String orderNo, importantNotes,status, issuedDate;
-    double deposit, due;
-    JSONArray faults;
-    JSONArray productsServices;
-    JSONArray prices;
+    String orderNo, importantNotes,status, issuedDate, fault, productService, prices;
+    double deposit, due, total;
     
     
-    public Order(String orderNo, String firstName, String lastName, String contactNo, String email, String brand, String model, String serialNumber, JSONArray faults, String importantNotes,JSONArray productsServices, JSONArray prices, double deposit, double due, String status, String issuedDate) {
-        super(brand, model, serialNumber, firstName, lastName, contactNo, email);
-        this.orderNo = orderNo;
-        this.faults = faults;
-        this.productsServices = productsServices;
-        this.prices = prices;
-        this.importantNotes = importantNotes;
-        this.deposit = deposit;
-        this.due = due;
-        this.status = status;
-        this.issuedDate = issuedDate;
+    public Order(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, String _brand, String _model, String _serialNumber, String _importantNotes, String _fault, String _productService, String _prices, double _total, double _deposit, double _due, String _status, String _issuedDate) {
+        super(_brand, _model, _serialNumber, _firstName, _lastName, _contactNo, _email);
+        this.orderNo = _orderNo;
+        this.fault = _fault;
+        this.importantNotes = _importantNotes;
+        this.productService = _productService;
+        this.prices = _prices;
+        this.total = _total;
+        this.deposit = _deposit;
+        this.due = _due;
+        this.status = _status;
+        this.issuedDate = _issuedDate;
         
     }
     
@@ -41,37 +37,28 @@ public class Order extends Device {
         this.orderNo = orderNo;
     }
 
-    public JSONArray getFaults() {
-        return faults;
+    public String getProductService() {
+        return productService;
     }
 
-    public void setFaults(JSONArray faults) {
-        this.faults = faults;
+    public void setProductService(String productService) {
+        this.productService = productService;
+    }
+    
+     public String getFault() {
+        return fault;
     }
 
-    public JSONArray getProductsServices() {
-        return productsServices;
+    public void setFault(String fault) {
+        this.fault = fault;
     }
 
-    public void setProductsServices(JSONArray productsServices) {
-        this.productsServices = productsServices;
-    }
-
-    public JSONArray getPrices() {
+    public String getPrices() {
         return prices;
     }
 
-    public void setPrices(JSONArray prices) {
+    public void setPrices(String prices) {
         this.prices = prices;
-    }
-    
-
-    public String getImportantNotes() {
-        return importantNotes;
-    }
-
-    public void setImportantNotes(String importantNotes) {
-        this.importantNotes = importantNotes;
     }
     
     public double getDeposit() {
@@ -81,7 +68,15 @@ public class Order extends Device {
     public void setDeposit(double deposit) {
         this.deposit = deposit;
     }
+    
+    public String getImportantNotes() {
+        return importantNotes;
+    }
 
+    public void setImportantNotes(String importantNotes) {
+        this.importantNotes = importantNotes;
+    }
+    
     public double getDue() {
         return due;
     }
@@ -89,6 +84,16 @@ public class Order extends Device {
     public void setDue(double due) {
         this.due = due;
     }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+    
+    
 
     public String getStatus() {
         return status;

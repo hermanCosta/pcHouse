@@ -5,30 +5,22 @@
  */
 package InternalForms;
 
-import Common.DBConnection;
 import Forms.Billing;
 import Forms.ProductList;
-import Registering.Fault;
 import java.awt.Color;
 import java.awt.Font;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
-import jdk.nashorn.internal.ir.ObjectNode;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.json.JSONArray;
 
 /**
  *
@@ -46,6 +38,7 @@ public class OrderList extends javax.swing.JInternalFrame {
     public OrderList() {
         initComponents();
         
+      //  desktop_panel_order_details.setVisible(true);
         
         table_view_orders.setRowHeight(25);
         table_view_orders.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
@@ -75,7 +68,7 @@ public class OrderList extends javax.swing.JInternalFrame {
     public final void recentOrders()
     {
         label_latest_orders_created.setVisible(true);
-         dbConnection();
+        dbConnection();
         
          try {
             ps = con.prepareStatement("SELECT * FROM orderDetails ORDER BY orderNo DESC LIMIT 15 ");
@@ -102,7 +95,9 @@ public class OrderList extends javax.swing.JInternalFrame {
                     vector.add(rs.getString("deviceModel"));
                     vector.add(rs.getString("serialNumber"));
                     vector.add(rs.getString("status"));
+                    
                 }
+                
                 defaultTableModel.addRow(vector);
             }
         } catch (SQLException ex) {
@@ -123,7 +118,6 @@ public class OrderList extends javax.swing.JInternalFrame {
         else{
             
             label_latest_orders_created.setVisible(false);
-            label_latest_orders_created.setVisible(false);dbConnection();
          
          try {
             ps = con.prepareStatement("SELECT * FROM orderDetails WHERE orderNo LIKE '%" + searchOrder + "%' OR firstName LIKE '%" + searchOrder + "%' OR lastName LIKE '%" + searchOrder + "%' OR contactNo LIKE '%" + searchOrder + "%' LIMIT 15");
@@ -177,6 +171,7 @@ public class OrderList extends javax.swing.JInternalFrame {
         label_latest_orders_created = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         table_view_orders = new javax.swing.JTable();
+        lbl_search_icon = new javax.swing.JLabel();
 
         jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
@@ -186,7 +181,6 @@ public class OrderList extends javax.swing.JInternalFrame {
 
         jMenu1.setText("jMenu1");
 
-        setBackground(new java.awt.Color(255, 255, 255));
         setBorder(null);
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -214,7 +208,7 @@ public class OrderList extends javax.swing.JInternalFrame {
             }
         });
         desktop_panel_order_details.add(txt_search_order);
-        txt_search_order.setBounds(90, 30, 880, 35);
+        txt_search_order.setBounds(110, 30, 860, 35);
 
         label_latest_orders_created.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
         label_latest_orders_created.setForeground(new java.awt.Color(255, 255, 255));
@@ -280,6 +274,10 @@ public class OrderList extends javax.swing.JInternalFrame {
         desktop_panel_order_details.add(jScrollPane1);
         jScrollPane1.setBounds(30, 130, 990, 520);
 
+        lbl_search_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icons-search.png"))); // NOI18N
+        desktop_panel_order_details.add(lbl_search_icon);
+        lbl_search_icon.setBounds(80, 30, 30, 30);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -322,13 +320,9 @@ public class OrderList extends javax.swing.JInternalFrame {
         }
         
     }
-    
-    public void openSelectedOrder() throws IOException
+    public void openSelectedOrder() 
     {
-        ObjectMapper objMap=new ObjectMapper();
         
-        Vector faultsList = new Vector();
-        JSONArray faults = new JSONArray();
         String orderNo = "";
         String firstName = "";
         String lastName = "";
@@ -338,6 +332,10 @@ public class OrderList extends javax.swing.JInternalFrame {
         String deviceModel = "";
         String serialNumber = "";
         String importantNotes ="";
+        String faults = "";
+        String productService = "";
+        String price = "";
+        double total = 0;
         double deposit = 0;
         double due = 0;
         String status = "";
@@ -365,44 +363,33 @@ public class OrderList extends javax.swing.JInternalFrame {
                    deviceModel = rs.getString("deviceModel");
                    serialNumber = rs.getString("serialNumber");
                    importantNotes = rs.getString("importantNotes");
-                   faults.put(rs.getString("fault"));
+                   faults = rs.getString("fault");
+                   productService = rs.getString("productService");
+                   price = rs.getString("price");
+                   total = rs.getDouble("total");
                    deposit = rs.getDouble("deposit");
                    due = rs.getDouble("due");
                    issueDate = rs.getString("issuedDate");
                    
-                   faultsList.add(rs.getString("fault"));
                    
-                   JsonNode parent = new ObjectMapper().readTree(rs.getString("fault"));
-                   String fault = parent.path("Faults").asText();
                    
-                   //final ObjectNode node = new ObjectMapper().readValue(rs.getString("fault"), ObjectNode.class);
-                   //Fault fa = (Fault)objMap.readValue(rs.getString("fault"), Fault.class);  
-                   System.out.println("Faults: " + fault);
                 }
-                
-                    
-                //  System.out.println("Faults To Vector: " + faultsList);  
-                //System.out.println("OrderNo of Selected Row is: " + orderNo);
-                
             } catch (SQLException ex) {
                 Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             
             //OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, deposit, due, issueDate);
-            OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, importantNotes, faultsList, deposit, due, issueDate);
+            OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService, price, total, deposit, due, issueDate);
             desktop_panel_order_details.removeAll();
             desktop_panel_order_details.add(orderDetails).setVisible(true);
             
     }
     
     private void table_view_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_ordersMouseClicked
-            try {
-                // TODO add your handling code here:
-                openSelectedOrder();
-            } catch (IOException ex) {
-                Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            
+        openSelectedOrder();
+        
     }//GEN-LAST:event_table_view_ordersMouseClicked
 
     private void txt_search_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_search_orderActionPerformed
@@ -432,6 +419,7 @@ public class OrderList extends javax.swing.JInternalFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel label_latest_orders_created;
+    private javax.swing.JLabel lbl_search_icon;
     private javax.swing.JTable table_view_orders;
     private javax.swing.JTextField txt_search_order;
     // End of variables declaration//GEN-END:variables

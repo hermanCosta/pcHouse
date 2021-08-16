@@ -7,7 +7,6 @@ package InternalForms;
 
 import Forms.ProductList;
 import Registering.Customer;
-import Registering.Fault;
 import Registering.Order;
 import Registering.ProductService;
 import com.sun.glass.events.KeyEvent;
@@ -23,7 +22,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,12 +35,8 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 
 /**
  *
@@ -57,9 +51,10 @@ public class NewOrder extends javax.swing.JInternalFrame {
     ArrayList faults = new ArrayList();
     ArrayList lastNames = new ArrayList();
     
-    JSONArray tableFaults = new JSONArray();
-    JSONArray tableProductColumn = new JSONArray();
-    JSONArray tablePriceColumn = new JSONArray();
+    Vector vecFaults = new Vector();
+    Vector vecProducts = new Vector();
+    Vector vecPrices = new Vector();
+    
     Connection con;
     PreparedStatement ps;
     Statement stmt;
@@ -68,6 +63,12 @@ public class NewOrder extends javax.swing.JInternalFrame {
     Order order;
     ResultSet rs;
     ResultSetMetaData rsmd;
+    
+    String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
+           deviceModel,  serialNumber, importantNotes, stringFaults, 
+           stringProducts, stringPrices, issueDate, status; 
+
+    double total, deposit, due;
     
     
     
@@ -96,7 +97,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
         accessDbColumn(lastNames, "SELECT * FROM customers", "lastName");
         accessDbColumn(faults, "SELECT * FROM faults","faultName");
         listProductService();
-        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -314,52 +314,65 @@ public class NewOrder extends javax.swing.JInternalFrame {
         }
     }
     
-    public void saveIntoDB() throws JSONException
+    public void saveIntoDB()
     {
+//        String orderNo = lbl_auto_order_no.getText();
+//        String firstName = txt_first_name.getText();
+//        String lastName = txt_last_name.getText();
+//        String contactNo = txt_contact.getText();
+//        String email = txt_email.getText();
+//        String deviceBrand = txt_brand.getText();
+//        String deviceModel = txt_model.getText();
+//        String serialNumber = txt_sn.getText();
+//        String importantNotes = txt_area_important_notes.getText();
+//        double deposit = Double.parseDouble(txt_deposit.getText());
+//        double due = Double.parseDouble(txt_due.getText());
+//        double total = Double.parseDouble(txt_total.getText());
+//        String status = combo_box_status.getSelectedItem().toString();
         
-        ObjectMapper objMap=new ObjectMapper();
-        List<Fault> list = new ArrayList<>();
-        Fault fa = new Fault();
-        JSONObject my_obj = new JSONObject();
-        
-        String orderNo = lbl_auto_order_no.getText();
-        String firstName = txt_first_name.getText();
-        String lastName = txt_last_name.getText();
-        String contactNo = txt_contact.getText();
-        String email = txt_email.getText();
-        String deviceBrand = txt_brand.getText();
-        String deviceModel = txt_model.getText();
-        String serialNumber = txt_sn.getText();
-        String importantNotes = txt_area_important_notes.getText();
-        double deposit = Double.parseDouble(txt_deposit.getText());
-        double due = Double.parseDouble(txt_due.getText());
-        String status = combo_box_status.getSelectedItem().toString();
+        orderNo = lbl_auto_order_no.getText();
+        firstName = txt_first_name.getText();
+        lastName = txt_last_name.getText();
+        contactNo = txt_contact.getText();
+        email = txt_email.getText();
+        deviceBrand = txt_brand.getText();
+        deviceModel = txt_model.getText();
+        serialNumber = txt_sn.getText();
+        importantNotes = txt_area_important_notes.getText();
+        deposit = Double.parseDouble(txt_deposit.getText());
+        due = Double.parseDouble(txt_due.getText());
+        total = Double.parseDouble(txt_total.getText());
+        status = combo_box_status.getSelectedItem().toString();
         
         java.util.Date date = new java.util.Date();
         java.sql.Timestamp currentDateTime = new java.sql.Timestamp(date.getTime());
-        String issueDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDateTime);
+        issueDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
         
+        //pass table items from faults and products table to vector 
         for(int i = 0; i < table_view_faults.getRowCount(); i++)
         {
-           //list.add((Fault) table_view_faults.getValueAt(i, 0));
-           my_obj.put("faults", table_view_faults.getValueAt(i, 0));
-           //tableFaults.put(table_view_faults.getValueAt(i, 0));
+           vecFaults.add(table_view_faults.getValueAt(i, 0));
         }
-        System.out.println(list);
         
         for(int j = 0; j < table_view_products.getRowCount(); j++)
         {
-           tableProductColumn.put(table_view_products.getValueAt(j, 0));
-           tablePriceColumn.put(table_view_products.getValueAt(j, 1));
+           vecProducts.add(table_view_products.getValueAt(j, 0));
+           vecPrices.add(table_view_products.getValueAt(j, 1));
         }
         
-        order = new Order(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, tableFaults, importantNotes, tableProductColumn, tablePriceColumn, deposit, due, status, issueDate);
+        // pass vector elemnets to a String splitted by a comma,
+        // in order to save into DB
+        stringFaults = vecFaults.toString().replace("[", "").replace("]", "");
+        stringProducts = vecProducts.toString().replace("[", "").replace("]", "");
+        stringPrices = vecPrices.toString().replace("[", "").replace("]", "");
+                
         
-        //System.out.println(order.getOrderNo());
+        order = new Order(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber,importantNotes, stringFaults, stringProducts, stringPrices, total, deposit, due, status, issueDate);
+        
         dbConnection();
         
         try {
-            String query = "INSERT INTO orderDetails(orderNo,firstName,lastName,contactNo,email,deviceBrand,deviceModel,serialNumber,fault,importantNotes,productService,price,deposit,due,status,issuedDate)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, productService, price, total, deposit, due, status, issuedDate)VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = con.prepareStatement(query);
             ps.setString(1, order.getOrderNo());
             ps.setString(2, order.getFirstName());
@@ -369,15 +382,15 @@ public class NewOrder extends javax.swing.JInternalFrame {
             ps.setString(6, order.getBrand());
             ps.setString(7, order.getModel());
             ps.setString(8, order.getSerialNumber());
-            ps.setString(9, order.getFaults().toString());
- //           ps.setObject(9, objMap.writerWithDefaultPrettyPrinter().writeValueAsString(Fault));
-            ps.setString(10, order.getImportantNotes());
-            ps.setString(11, order.getProductsServices().toString());
-            ps.setString(12, order.getPrices().toString());
-            ps.setDouble(13, order.getDeposit());
-            ps.setDouble(14, order.getDue());
-            ps.setString(15, order.getStatus());
-            ps.setString(16, order.getIssuedDate());
+            ps.setString(9, order.getImportantNotes());
+            ps.setString(10, order.getFault());
+            ps.setString(11, order.getProductService());
+            ps.setString(12, order.getPrices());
+            ps.setDouble(13, order.getTotal());
+            ps.setDouble(14, order.getDeposit());
+            ps.setDouble(15, order.getDue());
+            ps.setString(16, order.getStatus());
+            ps.setString(17, order.getIssuedDate());
             //ps.setInt(1, order.getCustomerID());
             
             ps.executeUpdate();
@@ -497,38 +510,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
     
     public void print()
     {
-        String orderNo = lbl_auto_order_no.getText();
-        String firstName = txt_first_name.getText();
-        String lastName = txt_last_name.getText();
-        String contactNo = txt_contact.getText();
-        String email = txt_email.getText();
-        String deviceBrand = txt_brand.getText();
-        String deviceModel = txt_model.getText();
-        String serialNumber = txt_sn.getText();
-        String importantNotes = txt_area_important_notes.getText();
-        double deposit = Double.parseDouble(txt_deposit.getText());
-        double due = Double.parseDouble(txt_due.getText());
-        double total = Double.parseDouble(txt_total.getText());
-        
-        java.util.Date date = new java.util.Date();
-        java.sql.Timestamp currentDateTime = new java.sql.Timestamp(date.getTime());
-        String issueDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDateTime);
-        
-            
-//        for(int i = 0; i < table_view_faults.getRowCount(); i++)
-//        {
-//           tableFaults.put(table_view_faults.getValueAt(i, 0));
-//        }
-//        
-//        for(int j = 0; j < table_view_products.getRowCount(); j++)
-//        {
-//           tableProductColumn.put(table_view_products.getValueAt(j, 0));
-//           tablePriceColumn.put(table_view_products.getValueAt(j, 1));
-//        }
-//        
-      // new Print(order.getOrderNo(), order.getFirstName(), order.getLastName(), order.getContactNo(), order.getEmail(), order.getBrand(), order.getModel(), order.getSerialNumber(), tableFaults ,order.getImportantNotes(),tableProductColumn, tablePriceColumn, total, order.getDeposit(), order.getDue(), order.getIssuedDate()).setVisible(true);
-      new Print(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, table_view_faults, importantNotes, table_view_products, total, deposit, due, issueDate).setVisible(true);
-       
+        new Print(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
+                serialNumber, stringFaults, importantNotes, table_view_products, total, 
+                deposit, due, issueDate).setVisible(true);
     }
     
     @SuppressWarnings("unchecked")
@@ -838,16 +822,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 "Product | Service", "Price €"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Double.class
-            };
             boolean[] canEdit = new boolean [] {
                 false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -1004,7 +981,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         panel_order_detailsLayout.setVerticalGroup(
             panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(12, 12, 12)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1069,11 +1046,11 @@ public class NewOrder extends javax.swing.JInternalFrame {
                                         .addGap(6, 6, 6)
                                         .addComponent(lbl_due))))))
                     .addComponent(jSeparator3))
-                .addGap(68, 68, 68)
+                .addGap(57, 57, 57)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(155, 155, 155))
+                .addGap(166, 166, 166))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1137,12 +1114,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_brandActionPerformed
 
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
-        try {
-            // TODO add your handling code here:
-            saveIntoDB();
-        } catch (JSONException ex) {
-            Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        // TODO add your handling code here:
+        saveIntoDB();
         print();
     }//GEN-LAST:event_btn_printActionPerformed
 
@@ -1312,7 +1285,47 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void txt_faultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_faultActionPerformed
         // TODO add your handling code here:
+        
         addNewFaultIfNotExistIntoDb();
+        
+        JSONArray jArray = new JSONArray();
+        
+//        for(int i = 0; i < table_view_faults.getRowCount(); i++)
+//        {
+//           //list.add((Fault) table_view_faults.getValueAt(i, 0));
+//           jArray.put(table_view_faults.getValueAt(i, 0));
+//        }
+//        
+//        try {
+//            for (int i = 0 ; i < jArray.length() ; i++)
+//            {
+//                System.out.println(jArray.getString(i));
+//            }
+            
+            
+            
+//        try {
+//            JSONObject jObj = new JSONObject(jArray);
+//            //jObj.put("faults", jArray);
+//            
+//            JSONArray fa = jObj.getJSONArray("faults");
+//            JSONArray array = (JSONArray)jObj.get("faults");
+//            
+//            System.out.println("Faults from jTable: " + jObj);
+//            
+//            for (int i = 0; i < jArray.length() ; i++)
+//            {
+//                JSONObject fault = jArray.getJSONObject(i);
+//                String k = (String) fault.keys().next();
+//                System.out.println("Key: " + k + ", Single fault: " + fault.getString(k));
+//            }
+//            
+//        } catch (JSONException ex) {
+//            Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        } catch (JSONException ex) {
+//            Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }//GEN-LAST:event_txt_faultActionPerformed
 
     private void combo_box_product_serviceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_combo_box_product_serviceKeyPressed

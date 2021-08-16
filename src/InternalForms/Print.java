@@ -6,7 +6,6 @@
 package InternalForms;
 
 import Forms.PrintOrder;
-import com.qoppa.pdfWriter.PDFPrinterJob;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
@@ -27,122 +26,75 @@ public class Print extends javax.swing.JFrame {
      * Creates new form Print
      */
     
-    JTable _tableFaults;
-    JTable _tableProducts;
-    String _orderNo;
-    String _firstName;
-    String _lastName;
-    String _contactNo;
-    String _email;
-    String _deviceBrand;
-    String _deviceModel;
-    String _serialNumber;
-    String _importantNotes;
-    double _deposit;
-    double _due;
-    double _total;
-    String _issuedDate;
+    JTable tableProducts;
+    double deposit, due, total;
+    String orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, 
+            importantNotes, faults, issuedDate;
     
     public Print() {
         initComponents();
     }
     
-    Print(String orderNo, String firstName, String lastName, String contactNo, String email, String deviceBrand, 
-            String deviceModel, String serialNumber, JTable tableFaults, String importantNotes, JTable tableProducts, 
-            double total, double deposit, double due, String issuedDate) {
+    Print(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, String _deviceBrand, 
+            String _deviceModel, String _serialNumber, String _faults, String _importantNotes, JTable _tableProducts, 
+            double _total, double _deposit, double _due, String _issuedDate) {
         
         initComponents();
         
         txt_area_product_service.setBorder(null);
-        txt_pane_faults.setCaretPosition(0);
-        //printOrderDetails();
+        txt_pane_print_faults.setCaretPosition(0);
         
         //DefaultCaret caret = (DefaultCaret) txt_area_print_important_notes.getCaret();
         //caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
         
-        this._orderNo = orderNo;
-        this._firstName = firstName;
-        this._lastName = lastName;
-        this._contactNo = contactNo;
-        this._email = email;
-        this._deviceBrand = deviceBrand;
-        this._deviceModel = deviceModel;
-        this._serialNumber = serialNumber;
-        this._importantNotes = importantNotes;
-        this._deposit = deposit;
-        this._due = due;
-        this._tableFaults = tableFaults;
-        this._tableProducts = tableProducts;
-        this._total = total;
-        this._issuedDate = issuedDate;
+        this.orderNo = _orderNo;
+        this.firstName = _firstName;
+        this.lastName = _lastName;
+        this.contactNo = _contactNo;
+        this.email = _email;
+        this.deviceBrand = _deviceBrand;
+        this.deviceModel = _deviceModel;
+        this.serialNumber = _serialNumber;
+        this.importantNotes = _importantNotes;
+        this.deposit = _deposit;
+        this.due = _due;
+        this.faults = _faults;
+        this.tableProducts = _tableProducts;
+        this.total = _total;
+        this.issuedDate = _issuedDate;
         
-        lbl_print_issued_date.setText("Date: " + this._issuedDate);
-        lbl_print_order_no.setText("Order: " + this._orderNo);
-        lbl_print_first_name.setText("Customer name: " + this._firstName + " " + this._lastName);
-        //lbl_print_last_name.setText(this._lastName);
-        lbl_print_contact.setText("Contact no.: " + this._contactNo);
-        lbl_print_email.setText("Email:" + this._email);
-        lbl_print_brand.setText("Device brand: " + this._deviceBrand);
-        lbl_print_model.setText("Device model: " + this._deviceModel);
-        lbl_print_sn.setText("S/N: " + this._serialNumber);
-        txt_pane_important_notes.setText(this._importantNotes);
-        lbl_print_total_products.setText("Total: €" + String.valueOf(this._total));
-        lbl_print_deposit.setText("Deposit paid: €" + String.valueOf(this._deposit));
-        lbl_print_due.setText("Due:     €" + String.valueOf(this._due));
-        
-       
-//        DefaultTableModel printFaultsTable = (DefaultTableModel) table_view_print_faults.getModel();
-//        printFaultsTable.setRowCount(0);
-//        Vector faults = new Vector();
-//        System.out.println(printFaultsTable);
-//        
-        for (int i = 0; i < _tableFaults.getRowCount(); i++)
-        {
-            String fault = (String) _tableFaults.getValueAt(i, NORMAL);
-            if (_tableFaults.getRowCount() == 0)  {
-                txt_pane_faults.setText(txt_pane_faults.getText() + fault + ".");
-            }
-            else {
-            txt_pane_faults.setText(txt_pane_faults.getText() + fault + ",   ");
-            }
-        }
-        
-       // DefaultTableModel printProductsTable = (DefaultTableModel) table_view_print_products.getModel();
-        ///printProductsTable.setRowCount(0);
-       // Vector products = new Vector();
-        
-        for (int i = 0; i < _tableProducts.getRowCount(); i++)
-        {
-            String product = (String) _tableProducts.getValueAt(i, 0);
-            double price = (Double) _tableProducts.getValueAt(i, 1);
-            txt_area_product_service.setText(txt_area_product_service.getText() + " - " + product + "\t\t\t" + "€" + price +"\n");
-        }
-        
+        loadOrderToPrint();
         printOrderDetails();    
     }
     
-    
-    public void printPDF()
+    public void loadOrderToPrint()
     {
-        PDFPrinterJob printer = (PDFPrinterJob)PDFPrinterJob.getPrinterJob();
-         printer.setPrintable((Printable) new Print());
-         printer.setCopies(1);
-         
-        try {
-            printer.print("/Users/HermanCosta/Desktop/pcHouse/mydoc.pdf");
-            System.out.println("Done!");
-            
-        } catch (PrinterException ex) {
-            Logger.getLogger(Print.class.getName()).log(Level.SEVERE, null, ex);
+        lbl_print_issued_date.setText("Date: " + issuedDate);
+        lbl_print_order_no.setText("Order: " + orderNo);
+        lbl_print_first_name.setText("Customer name: " + firstName + " " + lastName);
+        lbl_print_contact.setText("Contact no.: " + contactNo);
+        lbl_print_email.setText("Email: " + email);
+        lbl_print_brand.setText("Device brand: " + deviceBrand);
+        lbl_print_model.setText("Device model: " + deviceModel);
+        lbl_print_sn.setText("S/N: " + serialNumber);
+        txt_pane_important_notes.setText(importantNotes);
+        txt_pane_print_faults.setText(faults);
+        lbl_print_total_products.setText("Total: €" + String.valueOf(total));
+        lbl_print_deposit.setText("Deposit paid: €" + String.valueOf(deposit));
+        lbl_print_due.setText("Due:     €" + String.valueOf(due));
+        
+        for (int i = 0; i < tableProducts.getRowCount(); i++)
+        {
+            String product = tableProducts.getValueAt(i, 0).toString();
+            String price = tableProducts.getValueAt(i, 1).toString();
+            txt_area_product_service.setText(txt_area_product_service.getText() + " - " + product + "\t\t\t" + "€" + price +"\n");
         }
-         
     }
-    
-    
-      private void printOrderDetails()
+
+    private void printOrderDetails()
     {
         PrinterJob printerJob = PrinterJob.getPrinterJob();
-        printerJob.setJobName("Print Order Details");
+        printerJob.setJobName("Printing Order: " + this.orderNo);
         
         PageFormat format = printerJob.getPageFormat(null);
         //printerJob.defaultPage().getPaper();
@@ -157,20 +109,13 @@ public class Print extends javax.swing.JFrame {
                     return Printable.NO_SUCH_PAGE;
                 }
                 Graphics2D graphics2D = (Graphics2D)graphics;
+                panel_print_order.paint(graphics2D);
                 
-                //this.Paint(graphics2D);
-               // graphics2D.translate(pageFormat.getImageableX() * 2, pageFormat.getImageableY() * 2);
-                //graphics2D.scale(0.5, 0.5);
-                
-                    
-             panel_print_order.paint(graphics2D);
               return Printable.PAGE_EXISTS;
             }
         }, format);
         
         boolean returningResult = printerJob.printDialog();
-        
-        //MessageFormat footer = new MessageFormat("Page - {0}");
         
         if(returningResult)
         {
@@ -216,7 +161,7 @@ public class Print extends javax.swing.JFrame {
         txt_pane_important_notes = new javax.swing.JTextPane();
         lbl_faults = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        txt_pane_faults = new javax.swing.JTextPane();
+        txt_pane_print_faults = new javax.swing.JTextPane();
         lbl_product_service = new javax.swing.JLabel();
         lbl_print_deposit = new javax.swing.JLabel();
         lbl_print_due = new javax.swing.JLabel();
@@ -224,6 +169,7 @@ public class Print extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         txt_area_product_service = new javax.swing.JTextArea();
+        lbl_price = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -285,13 +231,13 @@ public class Print extends javax.swing.JFrame {
 
         jScrollPane2.setBorder(null);
 
-        txt_pane_faults.setEditable(false);
-        txt_pane_faults.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
-        txt_pane_faults.setRequestFocusEnabled(false);
-        jScrollPane2.setViewportView(txt_pane_faults);
+        txt_pane_print_faults.setEditable(false);
+        txt_pane_print_faults.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
+        txt_pane_print_faults.setRequestFocusEnabled(false);
+        jScrollPane2.setViewportView(txt_pane_print_faults);
 
         lbl_product_service.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
-        lbl_product_service.setText("Product | Service:");
+        lbl_product_service.setText("Product | Service");
 
         lbl_print_deposit.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
         lbl_print_deposit.setText("deposit");
@@ -310,6 +256,9 @@ public class Print extends javax.swing.JFrame {
         txt_area_product_service.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         txt_area_product_service.setRows(5);
         jScrollPane3.setViewportView(txt_area_product_service);
+
+        lbl_price.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        lbl_price.setText("Price");
 
         javax.swing.GroupLayout panel_print_orderLayout = new javax.swing.GroupLayout(panel_print_order);
         panel_print_order.setLayout(panel_print_orderLayout);
@@ -336,32 +285,35 @@ public class Print extends javax.swing.JFrame {
                                 .addComponent(lbl_print_contact, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(lbl_print_email, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
                                 .addComponent(lbl_print_brand, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(lbl_print_sn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lbl_print_due, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lbl_print_deposit, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_print_orderLayout.createSequentialGroup()
-                                                .addComponent(lbl_logo_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(30, 30, 30)
-                                                .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
-                                                        .addComponent(lbl_mobile)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(lbl_mobile_number))
-                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
-                                                        .addComponent(lbl_phone)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(lbl_land_line_number))
-                                                    .addComponent(lbl_address, javax.swing.GroupLayout.Alignment.TRAILING)))
-                                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
-                                            .addComponent(lbl_faults, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(lbl_product_service, javax.swing.GroupLayout.Alignment.LEADING))
-                                        .addComponent(lbl_important_notes))
-                                    .addComponent(jScrollPane3)
-                                    .addComponent(lbl_print_total_products, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                .addComponent(lbl_print_sn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lbl_print_due, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lbl_print_deposit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_print_orderLayout.createSequentialGroup()
+                                            .addComponent(lbl_logo_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(30, 30, 30)
+                                            .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
+                                                    .addComponent(lbl_mobile)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(lbl_mobile_number))
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
+                                                    .addComponent(lbl_phone)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(lbl_land_line_number))
+                                                .addComponent(lbl_address, javax.swing.GroupLayout.Alignment.TRAILING)))
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
+                                        .addComponent(lbl_faults, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_print_orderLayout.createSequentialGroup()
+                                            .addComponent(lbl_product_service)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(lbl_price)
+                                            .addGap(130, 130, 130)))
+                                    .addComponent(lbl_important_notes))
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(lbl_print_total_products, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         panel_print_orderLayout.setVerticalGroup(
@@ -410,7 +362,9 @@ public class Print extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(lbl_product_service)
+                .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_product_service)
+                    .addComponent(lbl_price))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -497,6 +451,7 @@ public class Print extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_mobile;
     private javax.swing.JLabel lbl_mobile_number;
     private javax.swing.JLabel lbl_phone;
+    private javax.swing.JLabel lbl_price;
     private javax.swing.JLabel lbl_print_brand;
     private javax.swing.JLabel lbl_print_contact;
     private javax.swing.JLabel lbl_print_deposit;
@@ -513,7 +468,7 @@ public class Print extends javax.swing.JFrame {
     private javax.swing.JSeparator line_header;
     private javax.swing.JPanel panel_print_order;
     private javax.swing.JTextArea txt_area_product_service;
-    private javax.swing.JTextPane txt_pane_faults;
     private javax.swing.JTextPane txt_pane_important_notes;
+    private javax.swing.JTextPane txt_pane_print_faults;
     // End of variables declaration//GEN-END:variables
 }
