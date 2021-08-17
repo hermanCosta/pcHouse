@@ -5,7 +5,6 @@
  */
 package InternalForms;
 
-import Forms.PrintOrder;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
@@ -123,7 +122,7 @@ public class Print extends javax.swing.JFrame {
                 printerJob.print();
 
             } catch (PrinterException ex) {
-                Logger.getLogger(PrintOrder.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Print.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             this.dispose();

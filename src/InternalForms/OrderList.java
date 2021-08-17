@@ -6,7 +6,6 @@
 package InternalForms;
 
 import Forms.Billing;
-import Forms.ProductList;
 import java.awt.Color;
 import java.awt.Font;
 import java.sql.Connection;
@@ -38,8 +37,6 @@ public class OrderList extends javax.swing.JInternalFrame {
     public OrderList() {
         initComponents();
         
-      //  desktop_panel_order_details.setVisible(true);
-        
         table_view_orders.setRowHeight(25);
         table_view_orders.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
                 
@@ -61,7 +58,7 @@ public class OrderList extends javax.swing.JInternalFrame {
               Class.forName("com.mysql.cj.jdbc.Driver");
               con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","hermanhgc","He11m@ns");
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -101,7 +98,7 @@ public class OrderList extends javax.swing.JInternalFrame {
                 defaultTableModel.addRow(vector);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -148,7 +145,7 @@ public class OrderList extends javax.swing.JInternalFrame {
                 defaultTableModel.addRow(vector);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     }
@@ -166,7 +163,7 @@ public class OrderList extends javax.swing.JInternalFrame {
         jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
         jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
         jMenu1 = new javax.swing.JMenu();
-        desktop_panel_order_details = new javax.swing.JDesktopPane();
+        desktop_pane_order_list = new javax.swing.JDesktopPane();
         txt_search_order = new javax.swing.JTextField();
         label_latest_orders_created = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -185,10 +182,10 @@ public class OrderList extends javax.swing.JInternalFrame {
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
 
-        desktop_panel_order_details.setBackground(new java.awt.Color(255, 255, 255));
-        desktop_panel_order_details.setMaximumSize(new java.awt.Dimension(1049, 827));
-        desktop_panel_order_details.setSize(new java.awt.Dimension(1049, 827));
-        desktop_panel_order_details.setLayout(null);
+        desktop_pane_order_list.setBackground(new java.awt.Color(255, 255, 255));
+        desktop_pane_order_list.setMaximumSize(new java.awt.Dimension(1049, 827));
+        desktop_pane_order_list.setSize(new java.awt.Dimension(1049, 827));
+        desktop_pane_order_list.setLayout(null);
 
         txt_search_order.setFont(new java.awt.Font("Lucida Grande", 0, 20)); // NOI18N
         txt_search_order.addActionListener(new java.awt.event.ActionListener() {
@@ -207,13 +204,13 @@ public class OrderList extends javax.swing.JInternalFrame {
                 txt_search_orderKeyReleased(evt);
             }
         });
-        desktop_panel_order_details.add(txt_search_order);
+        desktop_pane_order_list.add(txt_search_order);
         txt_search_order.setBounds(110, 30, 860, 35);
 
         label_latest_orders_created.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
         label_latest_orders_created.setForeground(new java.awt.Color(255, 255, 255));
         label_latest_orders_created.setText("Orders Created Recently");
-        desktop_panel_order_details.add(label_latest_orders_created);
+        desktop_pane_order_list.add(label_latest_orders_created);
         label_latest_orders_created.setBounds(360, 80, 253, 25);
 
         jScrollPane1.setVerifyInputWhenFocusTarget(false);
@@ -271,23 +268,23 @@ public class OrderList extends javax.swing.JInternalFrame {
             table_view_orders.getColumnModel().getColumn(0).setMaxWidth(70);
         }
 
-        desktop_panel_order_details.add(jScrollPane1);
-        jScrollPane1.setBounds(30, 130, 990, 520);
+        desktop_pane_order_list.add(jScrollPane1);
+        jScrollPane1.setBounds(20, 130, 1000, 520);
 
         lbl_search_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icons-search.png"))); // NOI18N
-        desktop_panel_order_details.add(lbl_search_icon);
+        desktop_pane_order_list.add(lbl_search_icon);
         lbl_search_icon.setBounds(80, 30, 30, 30);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktop_panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, 1052, Short.MAX_VALUE)
+            .addComponent(desktop_pane_order_list, javax.swing.GroupLayout.DEFAULT_SIZE, 1052, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(desktop_panel_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, 675, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(desktop_pane_order_list, javax.swing.GroupLayout.PREFERRED_SIZE, 675, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -338,8 +335,9 @@ public class OrderList extends javax.swing.JInternalFrame {
         double total = 0;
         double deposit = 0;
         double due = 0;
-        String status = "";
         String issueDate = "";
+        String status = "";
+        String finishedDate = "";
         
         dbConnection();
         DefaultTableModel dtm = (DefaultTableModel)table_view_orders.getModel();
@@ -370,20 +368,32 @@ public class OrderList extends javax.swing.JInternalFrame {
                    deposit = rs.getDouble("deposit");
                    due = rs.getDouble("due");
                    issueDate = rs.getString("issuedDate");
-                   
-                   
+                   status = rs.getString("status");
+                   finishedDate = rs.getString("finishedDate");
                    
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
             }
             
+            if (status.equals("In Progress"))
+            {
+                OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, 
+                        email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService, 
+                        price, total, deposit, due, status, issueDate);
             
-            //OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, deposit, due, issueDate);
-            OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService, price, total, deposit, due, issueDate);
-            desktop_panel_order_details.removeAll();
-            desktop_panel_order_details.add(orderDetails).setVisible(true);
+                desktop_pane_order_list.add(orderDetails).setVisible(true);
+            }
             
+            else if (status.equals("Fixed") || status.equals("Not Fixable"))
+            {
+                FinishedOrder fixedOrder = new FinishedOrder(orderNo, firstName, lastName, contactNo, 
+                        email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService, 
+                        price, total, deposit, due, status, issueDate, finishedDate);
+            
+                desktop_pane_order_list.add(fixedOrder).setVisible(true);
+            }
+                    
     }
     
     private void table_view_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_ordersMouseClicked
@@ -413,7 +423,7 @@ public class OrderList extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JDesktopPane desktop_panel_order_details;
+    private javax.swing.JDesktopPane desktop_pane_order_list;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
     private javax.swing.JMenu jMenu1;

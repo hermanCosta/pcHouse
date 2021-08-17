@@ -5,7 +5,6 @@
  */
 package InternalForms;
 
-import Forms.ProductList;
 import Registering.Customer;
 import Registering.Order;
 import Registering.ProductService;
@@ -20,9 +19,11 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,7 +69,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     
     String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
            deviceModel,  serialNumber, importantNotes, stringFaults, 
-           stringProducts, stringPrices, issueDate; 
+           stringProducts, stringPrices, status, issueDate, finishedDate; 
 
     double total, deposit, due;
     
@@ -78,8 +79,10 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         
     }
 
-   //public OrderDetails(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, JSONArray _faultsTable, double _deposit, double _due, String _issueDate) {
-    public OrderDetails(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, String _stringFaults, String _stringProducts, String _stringPrices, double _total, double _deposit, double _due, String _issueDate) {
+    public OrderDetails(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
+            String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
+            String _stringFaults, String _stringProducts, String _stringPrices, double _total, double _deposit, 
+            double _due, String _status, String _issueDate) {
         
         initComponents();
         
@@ -99,6 +102,11 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         this.total = _total;
         this.deposit = _deposit;
         this.due = _due;
+        this.status = _status;
+        
+        Date date = new java.util.Date();
+        Timestamp currentDateTime = new Timestamp(date.getTime());
+        finishedDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
         
         //Remove borders
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
@@ -182,7 +190,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
               Class.forName("com.mysql.cj.jdbc.Driver");
               con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -432,76 +440,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         });
     }
     
-    public void fixOrder()
-    {
-        
-    }
-    
-    public void updateOrderIntoDB()
-    {
-        firstName = txt_first_name.getText();
-        lastName = txt_last_name.getText();
-        contactNo = txt_contact.getText();
-        email = txt_email.getText();
-        deviceBrand = txt_brand.getText();
-        deviceModel = txt_model.getText();
-        serialNumber = txt_sn.getText();
-        importantNotes = txt_area_important_notes.getText();
-        total = Double.parseDouble(txt_total.getText());
-        deposit = Double.parseDouble(txt_deposit.getText());
-        due = Double.parseDouble(txt_due.getText());
-        
-        java.util.Date date = new java.util.Date();
-        java.sql.Timestamp currentDateTime = new java.sql.Timestamp(date.getTime());
-        String updateDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
-        
-         //pass table items from faults and products table to vector 
-        for(int i = 0; i < table_view_faults.getRowCount(); i++)
-        {
-           vecUpdateFaults.add(table_view_faults.getValueAt(i, 0));
-        }
-        
-        for(int j = 0; j < table_view_products.getRowCount(); j++)
-        {
-           vecUpdateProducts.add(table_view_products.getValueAt(j, 0));
-           vecUpdatePrices.add(table_view_products.getValueAt(j, 1));
-        }
-        
-        // pass vector elemnets to a String splitted by a comma,
-        // in order to save into DB
-        stringFaults = vecUpdateFaults.toString().replace("[", " ").replace("]", "");
-        stringProducts = vecUpdateProducts.toString().replace("[", " ").replace("]", "");
-        stringPrices = vecUpdatePrices.toString().replace("[", " ").replace("]", "");
-        
-        dbConnection();
-        int confirmUpdate = JOptionPane.showConfirmDialog(null, "Do you really want to save changes on order " + this.orderNo + " ?", "Update Order Details", JOptionPane.YES_NO_OPTION);
-        if (confirmUpdate == 0)
-        {
-            try 
-            {
-                String query = "UPDATE orderDetails SET firstName ='" + this.firstName + "',"
-                        + "lastName ='" + this.lastName + "', contactNo ='" + this.contactNo + "',"
-                        +"email ='" + this.email + "', deviceBrand ='" + this.deviceBrand +"'," 
-                        +"deviceModel ='" + this.deviceModel + "', serialNumber ='" + this.serialNumber + "',"
-                        +"fault = '" + stringFaults + "',importantNotes = '" + this.importantNotes +"'," 
-                        +"productService ='" + stringProducts + "',price ='" + stringPrices +"',"
-                        +"deposit = '" + this.deposit +"', total ='" + this.total + "',"
-                        +"due = '" + this.due + "',issuedDate ='" + updateDate + "'"
-                        + " WHERE orderNo = '" + this.orderNo + "'";
-                
-                ps = con.prepareStatement(query);
-                ps.executeUpdate();
-
-                JOptionPane.showMessageDialog(this,  "Order " + orderNo + " Updated Successfully!");
-            
-            } 
-            catch (SQLException ex) 
-            {
-                Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    
     public void print()
     {
         new Print(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
@@ -517,6 +455,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         buttonGroup1 = new javax.swing.ButtonGroup();
+        desktop_pane_order_details = new javax.swing.JDesktopPane();
         panel_order_details = new javax.swing.JPanel();
         lbl_order_no = new javax.swing.JLabel();
         lbl_first_name = new javax.swing.JLabel();
@@ -546,7 +485,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         txt_area_important_notes = new javax.swing.JTextArea();
         txt_deposit = new javax.swing.JTextField();
         txt_total = new javax.swing.JTextField();
-        btn_fix = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JSeparator();
         jScrollPane2 = new javax.swing.JScrollPane();
         table_view_products = new javax.swing.JTable();
@@ -554,10 +492,12 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         table_view_faults = new javax.swing.JTable();
         label_add_table_view = new javax.swing.JLabel();
         txt_due = new javax.swing.JTextField();
-        btn_print = new javax.swing.JButton();
+        lbl_issued_date_time = new javax.swing.JLabel();
+        panel_buttons = new javax.swing.JPanel();
+        btn_fix = new javax.swing.JButton();
         btn_not_fix = new javax.swing.JButton();
         btn_save_changes = new javax.swing.JButton();
-        lbl_issued_date_time = new javax.swing.JLabel();
+        btn_print = new javax.swing.JButton();
 
         jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
@@ -565,6 +505,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         setMaximumSize(new java.awt.Dimension(1049, 827));
         setPreferredSize(new java.awt.Dimension(1049, 700));
         setSize(new java.awt.Dimension(1049, 700));
+
+        desktop_pane_order_details.setBackground(new java.awt.Color(255, 255, 255));
 
         panel_order_details.setPreferredSize(new java.awt.Dimension(655, 700));
 
@@ -719,7 +661,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         combo_box_product_service.setEditable(true);
         combo_box_product_service.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         combo_box_product_service.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select or Type" }));
-        combo_box_product_service.setSize(new java.awt.Dimension(96, 30));
         combo_box_product_service.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 combo_box_product_serviceActionPerformed(evt);
@@ -768,16 +709,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         txt_total.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_totalKeyPressed(evt);
-            }
-        });
-
-        btn_fix.setBackground(new java.awt.Color(0, 153, 102));
-        btn_fix.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
-        btn_fix.setForeground(new java.awt.Color(255, 255, 255));
-        btn_fix.setText("Fix");
-        btn_fix.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_fixActionPerformed(evt);
             }
         });
 
@@ -854,13 +785,16 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             }
         });
 
-        btn_print.setBackground(new java.awt.Color(21, 76, 121));
-        btn_print.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
-        btn_print.setForeground(new java.awt.Color(255, 255, 255));
-        btn_print.setText("Print");
-        btn_print.addActionListener(new java.awt.event.ActionListener() {
+        lbl_issued_date_time.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        lbl_issued_date_time.setText("DateTime");
+
+        btn_fix.setBackground(new java.awt.Color(0, 153, 102));
+        btn_fix.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
+        btn_fix.setForeground(new java.awt.Color(255, 255, 255));
+        btn_fix.setText("Fix");
+        btn_fix.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_printActionPerformed(evt);
+                btn_fixActionPerformed(evt);
             }
         });
 
@@ -884,8 +818,42 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             }
         });
 
-        lbl_issued_date_time.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
-        lbl_issued_date_time.setText("DateTime");
+        btn_print.setBackground(new java.awt.Color(21, 76, 121));
+        btn_print.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
+        btn_print.setForeground(new java.awt.Color(255, 255, 255));
+        btn_print.setText("Print");
+        btn_print.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_printActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panel_buttonsLayout = new javax.swing.GroupLayout(panel_buttons);
+        panel_buttons.setLayout(panel_buttonsLayout);
+        panel_buttonsLayout.setHorizontalGroup(
+            panel_buttonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_buttonsLayout.createSequentialGroup()
+                .addGap(81, 81, 81)
+                .addComponent(btn_fix, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btn_not_fix, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btn_save_changes, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panel_buttonsLayout.setVerticalGroup(
+            panel_buttonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_buttonsLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(panel_buttonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_fix, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_not_fix, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_save_changes, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);
@@ -894,93 +862,86 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panel_buttons, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addComponent(lbl_order_no)
-                        .addGap(39, 39, 39)
-                        .addComponent(lbl_auto_order_no))
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addComponent(lbl_email)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
-                            .addComponent(lbl_first_name)
-                            .addGap(18, 18, 18)
-                            .addComponent(txt_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                .addComponent(lbl_order_no)
+                                .addGap(39, 39, 39)
+                                .addComponent(lbl_auto_order_no))
+                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                .addComponent(lbl_email)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
-                                    .addComponent(lbl_last_name)
-                                    .addGap(20, 20, 20))
-                                .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                    .addComponent(lbl_contact)
-                                    .addGap(11, 11, 11)))
-                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txt_contact, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                                .addComponent(txt_last_name))))
-                    .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_order_detailsLayout.createSequentialGroup()
-                            .addComponent(lbl_model)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txt_model, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_order_detailsLayout.createSequentialGroup()
-                            .addComponent(lbl_sn)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txt_sn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addComponent(lbl_brand)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txt_brand, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(69, 69, 69)
-                        .addComponent(btn_fix, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addComponent(lbl_issued)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lbl_issued_date_time)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
-                                .addComponent(lbl_service_product)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(label_add_table_view))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lbl_first_name)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(txt_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
+                                    .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
+                                            .addComponent(lbl_last_name)
+                                            .addGap(20, 20, 20))
+                                        .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                            .addComponent(lbl_contact)
+                                            .addGap(11, 11, 11)))
+                                    .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(txt_contact, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                                        .addComponent(txt_last_name))))
+                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_order_detailsLayout.createSequentialGroup()
+                                    .addComponent(lbl_model)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txt_model, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_order_detailsLayout.createSequentialGroup()
+                                    .addComponent(lbl_sn)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txt_sn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addComponent(lbl_due)
-                                .addGap(0, 0, 0)
-                                .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, Short.MAX_VALUE)
-                                .addComponent(lbl_deposit)
-                                .addGap(0, 0, 0)
-                                .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lbl_price)
-                                .addGap(0, 0, 0)
-                                .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(lbl_brand)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txt_brand, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addComponent(lbl_fault)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txt_fault, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_not_fix, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btn_save_changes, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(84, 84, 84))
+                                .addComponent(lbl_issued)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lbl_issued_date_time)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
+                                        .addComponent(lbl_service_product)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(label_add_table_view))
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                        .addComponent(lbl_due)
+                                        .addGap(0, 0, 0)
+                                        .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, Short.MAX_VALUE)
+                                        .addComponent(lbl_deposit)
+                                        .addGap(0, 0, 0)
+                                        .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(lbl_price)
+                                        .addGap(0, 0, 0)
+                                        .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                        .addComponent(lbl_fault)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txt_fault, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         panel_order_detailsLayout.setVerticalGroup(
             panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1050,26 +1011,38 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                                         .addGap(6, 6, 6)
                                         .addComponent(lbl_due))))))
                     .addComponent(jSeparator3))
-                .addGap(36, 36, 36)
-                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_fix, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_not_fix, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_save_changes, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(111, 111, 111))
+                .addGap(30, 30, 30)
+                .addComponent(panel_buttons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(92, 92, 92))
+        );
+
+        desktop_pane_order_details.setLayer(panel_order_details, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout desktop_pane_order_detailsLayout = new javax.swing.GroupLayout(desktop_pane_order_details);
+        desktop_pane_order_details.setLayout(desktop_pane_order_detailsLayout);
+        desktop_pane_order_detailsLayout.setHorizontalGroup(
+            desktop_pane_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panel_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, 1022, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        desktop_pane_order_detailsLayout.setVerticalGroup(
+            desktop_pane_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panel_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(panel_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, 1022, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(desktop_pane_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(desktop_pane_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -1084,35 +1057,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameActionPerformed
 
     private void txt_first_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_first_nameActionPerformed
-//        try {
-//            // TODO add your handling code here:
-//            dbConnection();
-//            String fName = txt_first_name.getText();
-//            
-//            String checkQuery = "SELECT * FROM customers WHERE firstName = '" +fName+ "'";
-//            ps = con.prepareStatement(checkQuery);
-//            rs = ps.executeQuery();
-//            
-//            if (!rs.isBeforeFirst())
-//            {
-//                int confirmInsertion = JOptionPane.showConfirmDialog(null, "Do you want to add a new costumer First Name ?", "First Name", JOptionPane.YES_NO_OPTION);
-//                if(confirmInsertion == 0)
-//                {
-//                    String query = "INSERT INTO customers (firstName) VALUES(?)";
-//                    ps = con.prepareStatement(query);
-//                    ps.setString(1, fName);
-//                    ps.executeUpdate();
-//                    txt_first_name.setText("");
-//                }
-//                else
-//                {
-//                    txt_first_name.setText("");
-//                }
-//            }    
-//            
-//        } catch (SQLException ex) {
-//            Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
-//        }
     }//GEN-LAST:event_txt_first_nameActionPerformed
 
     private void txt_brandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_brandActionPerformed
@@ -1343,10 +1287,10 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         
         dbConnection();
 
-        String firstName = txt_first_name.getText();
-        String lastName = txt_last_name.getText();
-        String contactNo = txt_contact.getText();
-        String email = txt_email.getText();
+        firstName = txt_first_name.getText();
+        lastName = txt_last_name.getText();
+        contactNo = txt_contact.getText();
+        email = txt_email.getText();
         
         try {
             String query = "SELECT * FROM customers WHERE contactNo = '" +contactNo+ "'";
@@ -1401,15 +1345,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                     txt_email.setText(rs.getString("email"));
                     int id = rs.getInt("customerID");
                     System.out.println("Customer ID: " + id);
-//                    order.setCustomerID(id);
-                    
-//                    rs = ps.getGeneratedKeys();
-//                    if (rs.next())
-//                    {
-//                    customer.setCustomerID(rs.getInt(1));
-//                    
-//                    System.out.println("Customer ID: " + rs.getInt(1));
-//                    }
                 }
             }
             
@@ -1424,8 +1359,32 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
     private void btn_fixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_fixActionPerformed
         // TODO add your handling code here:
-        //updateOrderIntoDB();
-        //print();
+        dbConnection();
+        
+       int confirmFixing = JOptionPane.showConfirmDialog(null, "Do you really want to Tag Order: " 
+               + orderNo + " as Fixed Order", "Update Order", JOptionPane.YES_NO_OPTION);
+       
+       if (confirmFixing == 0)
+       {
+           status = "Fixed";
+           
+            try {
+                String query = "UPDATE orderDetails SET status = '" + status +"', finishedDate = '" 
+                        + finishedDate +"' WHERE orderNo = '"+ orderNo + "'";
+                
+                ps = con.prepareStatement(query);
+                ps.executeUpdate();
+                
+                FinishedOrder fixedOrder = new FinishedOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
+                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringPrices, total,
+                        deposit, due, status, issueDate, finishedDate);
+                
+                desktop_pane_order_details.add(fixedOrder).setVisible(true);
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
+            }
+       }
     }//GEN-LAST:event_btn_fixActionPerformed
 
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
@@ -1435,11 +1394,98 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
     private void btn_not_fixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_not_fixActionPerformed
         // TODO add your handling code here:
+        dbConnection();
+        
+       int confirmFixing = JOptionPane.showConfirmDialog(null, "Do you really want to Tag Order: "
+               + orderNo + " as 'NOT FIXABLE ORDER' ?", "Update Order", JOptionPane.YES_NO_OPTION);
+       
+       if (confirmFixing == 0)
+       {
+           status = "Not Fixable";
+            try {
+                String query = "UPDATE orderDetails SET status = '" + status + "', finishedDate = '" + finishedDate +"'"
+                        + "WHERE orderNo = '"+ orderNo + "'";
+                
+                ps = con.prepareStatement(query);
+                ps.executeUpdate();
+                
+                FinishedOrder fixedOrder = new FinishedOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
+                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringPrices, total,
+                        deposit, due, status, issueDate, finishedDate);
+                
+                desktop_pane_order_details.add(fixedOrder).setVisible(true);
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
+            }
+       }
     }//GEN-LAST:event_btn_not_fixActionPerformed
 
     private void btn_save_changesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save_changesActionPerformed
         // TODO add your handling code here:
-        updateOrderIntoDB();
+        
+        firstName = txt_first_name.getText();
+        lastName = txt_last_name.getText();
+        contactNo = txt_contact.getText();
+        email = txt_email.getText();
+        deviceBrand = txt_brand.getText();
+        deviceModel = txt_model.getText();
+        serialNumber = txt_sn.getText();
+        importantNotes = txt_area_important_notes.getText();
+        total = Double.parseDouble(txt_total.getText());
+        deposit = Double.parseDouble(txt_deposit.getText());
+        due = Double.parseDouble(txt_due.getText());
+        
+        java.util.Date date = new java.util.Date();
+        java.sql.Timestamp currentDateTime = new java.sql.Timestamp(date.getTime());
+        String updateDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
+        
+         //pass table items from faults and products table to vector 
+        for(int i = 0; i < table_view_faults.getRowCount(); i++)
+        {
+           vecUpdateFaults.add(table_view_faults.getValueAt(i, 0));
+        }
+        
+        for(int j = 0; j < table_view_products.getRowCount(); j++)
+        {
+           vecUpdateProducts.add(table_view_products.getValueAt(j, 0));
+           vecUpdatePrices.add(table_view_products.getValueAt(j, 1));
+        }
+        
+        // pass vector elemnets to a String splitted by a comma,
+        // in order to save into DB
+        stringFaults = vecUpdateFaults.toString().replace("[", " ").replace("]", "");
+        stringProducts = vecUpdateProducts.toString().replace("[", " ").replace("]", "");
+        stringPrices = vecUpdatePrices.toString().replace("[", " ").replace("]", "");
+        
+        dbConnection();
+        int confirmUpdate = JOptionPane.showConfirmDialog(null, "Do you really want to save changes on order " 
+                + this.orderNo + " ?", "Update Order Details", JOptionPane.YES_NO_OPTION);
+        if (confirmUpdate == 0)
+        {
+            try 
+            {
+                String query = "UPDATE orderDetails SET firstName ='" + this.firstName + "',"
+                        + "lastName ='" + this.lastName + "', contactNo ='" + this.contactNo + "',"
+                        +"email ='" + this.email + "', deviceBrand ='" + this.deviceBrand +"'," 
+                        +"deviceModel ='" + this.deviceModel + "', serialNumber ='" + this.serialNumber + "',"
+                        +"fault = '" + stringFaults + "',importantNotes = '" + this.importantNotes +"'," 
+                        +"productService ='" + stringProducts + "',price ='" + stringPrices +"',"
+                        +"deposit = '" + this.deposit +"', total ='" + this.total + "',"
+                        +"due = '" + this.due + "',issuedDate ='" + updateDate + "'"
+                        + " WHERE orderNo = '" + this.orderNo + "'";
+                
+                ps = con.prepareStatement(query);
+                ps.executeUpdate();
+
+                JOptionPane.showMessageDialog(this,  "Order " + orderNo + " Updated Successfully!");
+            
+            } 
+            catch (SQLException ex) 
+            {
+                Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_btn_save_changesActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1449,6 +1495,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     private javax.swing.JButton btn_save_changes;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> combo_box_product_service;
+    private javax.swing.JDesktopPane desktop_pane_order_details;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -1473,6 +1520,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lbl_price;
     private javax.swing.JLabel lbl_service_product;
     private javax.swing.JLabel lbl_sn;
+    private javax.swing.JPanel panel_buttons;
     private javax.swing.JPanel panel_order_details;
     private javax.swing.JTable table_view_faults;
     private javax.swing.JTable table_view_products;

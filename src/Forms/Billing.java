@@ -68,20 +68,19 @@ public class Billing extends javax.swing.JFrame {
        new PrintReceipt(printOrderNo,printModel,PrintSerialNumber,printPay,printBalance).setVisible(true);
    }
    
-   public void connection() 
+   public void connection() throws SQLException 
     {
         try {
             //Class.forName("com.mysql.jdbc.Driver");
               Class.forName("com.mysql.cj.jdbc.Driver");
               con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","hermanhgc","He11m@ns");
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            Logger.getLogger(Billing.class.getName()).log(Level.SEVERE, null, ex);
+    }
     }
    
-   public void BillingUpdate()
+   
+   public void BillingUpdate() throws SQLException
    {
        connection();
        String orderNo = _orderNo;
@@ -300,13 +299,17 @@ public class Billing extends javax.swing.JFrame {
         print();
         
         
-        BillingUpdate();
+        try {
+            BillingUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Billing.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-        ProductList mm = new ProductList();
+        //ProductList mm = new ProductList();
         this.setVisible(false);
         
-        mm.repaint();
-        mm.setVisible(true);
+       // mm.repaint();
+        //mm.setVisible(true);
                
         
         

@@ -5,7 +5,6 @@
  */
 package Common;
 
-import Forms.ProductList;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -28,7 +27,7 @@ public class DBConnection {
               con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
               st = con.createStatement();
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

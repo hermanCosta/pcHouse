@@ -5,11 +5,9 @@
  */
 package InternalForms;
 
-import Forms.ProductList;
 import Registering.ProductService;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.print.PrinterException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,14 +15,12 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.MessageFormat;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
@@ -102,7 +98,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
                 defaultTableModel.addRow(vector);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -136,7 +132,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
             clearFields();
             
         } catch (SQLException ex) {
-            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
         
@@ -169,7 +165,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
                 defaultTableModel.addRow(vector);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -194,7 +190,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
                 displayProductList();
 
             } catch (SQLException ex) {
-                Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -215,7 +211,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
               Class.forName("com.mysql.cj.jdbc.Driver");
               connection = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","hermanhgc","He11m@ns");
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
      
@@ -577,7 +573,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
                 clearFields();
                     
             } catch (SQLException ex) {
-                Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         else
