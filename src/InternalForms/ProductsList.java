@@ -38,16 +38,17 @@ public class ProductsList extends javax.swing.JInternalFrame {
      */
     
      Color defaultColor, mouseEnteredColor;
-     Connection connection;
-     PreparedStatement preparedStatement;
+     Connection con;
+     PreparedStatement ps;
      ProductService productService;
      DefaultTableModel defaultTableModel;
-     ResultSet resultSet;
+     ResultSet rs;
      ResultSetMetaData resultSetMetaData;
      Vector vector;
      Statement statement;
      String productId;
      String ID;
+     String addCategory = "";
 
     @SuppressWarnings("unchecked")
      
@@ -73,26 +74,27 @@ public class ProductsList extends javax.swing.JInternalFrame {
         
          try {
              
-            String query = "SELECT * FROM productService"; 
-            preparedStatement = connection.prepareStatement(query);
-            resultSet = preparedStatement.executeQuery();
-            resultSetMetaData = resultSet.getMetaData();
+            String query = "SELECT * FROM products"; 
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery();
+            resultSetMetaData = rs.getMetaData();
             
             int count; 
             count = resultSetMetaData.getColumnCount();
             defaultTableModel = (DefaultTableModel)table_view_products_list.getModel();
             defaultTableModel.setRowCount(0);
             
-            while(resultSet.next())
+            while(rs.next())
             {
                 vector = new Vector();
                 for(int i = 1; i <= count; i++)
                 {
-                    vector.add(resultSet.getInt("productId"));
-                    vector.add(resultSet.getString("productService"));
-                    vector.add(resultSet.getDouble("price"));
-                    vector.add(resultSet.getInt("qty"));
-                    vector.add(resultSet.getString("notes"));
+                    vector.add(rs.getInt("productId"));
+                    vector.add(rs.getString("productService"));
+                    vector.add(rs.getDouble("price"));
+                    vector.add(rs.getInt("qty"));
+                    vector.add(rs.getString("notes"));
+                    vector.add(rs.getString("category"));
                 }
                 
                 defaultTableModel.addRow(vector);
@@ -109,30 +111,53 @@ public class ProductsList extends javax.swing.JInternalFrame {
         double addPrice = Double.parseDouble(txt_add_price.getText());
         int addQty =  Integer.parseInt(txt_add_qty.getText());
         String addNotes = txt_add_notes.getText();
+        addCategory = combo_box_category.getSelectedItem().toString();
         
-        productService = new ProductService(addProductService, addPrice);
-        productService.setQty(addQty);
-        productService.setNotes(addNotes);
-        
-        dbConnection();
-        
-        try {
-            String query = "INSERT INTO productService(productService, price, qty, notes)VALUES(?,?,?,?)";
-            preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, productService.getProductService());
-            preparedStatement.setDouble(2, productService.getPrice());
-            preparedStatement.setInt(3, productService.getQty());
-            preparedStatement.setString(4, productService.getNotes());
-            
-            preparedStatement.executeUpdate();
-            
-            JOptionPane.showMessageDialog(this, "Item added successfully!");
-            
-            displayProductList();
-            clearFields();
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
+        if (addCategory.equals("Select"))
+        {
+            JOptionPane.showMessageDialog(null, "Please, Select a Category", "Product List",JOptionPane.ERROR_MESSAGE);
+        }
+        else
+        {
+            productService = new ProductService(addProductService, addQty, addPrice, addNotes, addCategory);
+
+
+
+            try {
+                
+                
+                dbConnection();
+                 String queryCheck = "SELECT productService FROM products WHERE productService = '" + addProductService + "'";
+                    ps = con.prepareStatement(queryCheck);
+                    rs = ps.executeQuery();
+
+                    if (rs.isBeforeFirst())
+                    {
+                       JOptionPane.showMessageDialog(null, addProductService + " already exist in the Database !", "Products List", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else
+                    {
+
+                        String queryInsert = "INSERT INTO products(productService, price, qty, notes, category) VALUES(?, ?, ?, ?, ?)";
+                        ps = con.prepareStatement(queryInsert);
+
+                        ps.setString(1, productService.getProductService());
+                        ps.setDouble(2, productService.getPrice());
+                        ps.setInt(3, productService.getQty());
+                        ps.setString(4, productService.getNotes());
+                        ps.setString(5, productService.getCategory());
+
+                        ps.executeUpdate();
+
+                        JOptionPane.showMessageDialog(this, "Item added successfully!");
+
+                        displayProductList();
+                        clearFields();
+                    }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
         
@@ -141,26 +166,26 @@ public class ProductsList extends javax.swing.JInternalFrame {
         String searchProduct = txt_product_service_list.getText();
          
          try {
-            String query = "SELECT * FROM productService WHERE productService LIKE '%" + searchProduct + "%'"; 
-            preparedStatement = connection.prepareStatement(query);
-            resultSet = preparedStatement.executeQuery();
-            resultSetMetaData = resultSet.getMetaData();
+            String query = "SELECT * FROM products WHERE productService LIKE '%" + searchProduct + "%'"; 
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery();
+            resultSetMetaData = rs.getMetaData();
             
             int count; 
             count = resultSetMetaData.getColumnCount();
             defaultTableModel = (DefaultTableModel)table_view_products_list.getModel();
             defaultTableModel .setRowCount(0);
             
-            while(resultSet.next())
+            while(rs.next())
             {
                 vector = new Vector();
                 for(int i = 1; i <= count; i++)
                 {
-                    vector.add(resultSet.getInt("productId"));
-                    vector.add(resultSet.getString("productService"));
-                    vector.add(resultSet.getDouble("price"));
-                    vector.add(resultSet.getInt("qty"));
-                    vector.add(resultSet.getString("notes"));
+                    vector.add(rs.getInt("productId"));
+                    vector.add(rs.getString("productService"));
+                    vector.add(rs.getDouble("price"));
+                    vector.add(rs.getInt("qty"));
+                    vector.add(rs.getString("notes"));
                 }
                 defaultTableModel.addRow(vector);
             }
@@ -177,15 +202,18 @@ public class ProductsList extends javax.swing.JInternalFrame {
         defaultTableModel = (DefaultTableModel)table_view_products_list.getModel();
         productId = defaultTableModel.getValueAt(selectedRow, 0).toString();
         
+        String productName = defaultTableModel.getValueAt(selectedRow, 1).toString();
         
-        int confirmDeletion = JOptionPane.showConfirmDialog(null, "Do you really want to delete ?", "Delete Product|Service", JOptionPane.YES_NO_OPTION);
+        
+        int confirmDeletion = JOptionPane.showConfirmDialog(null, "Do you really want to delete " 
+                + productName +" from Database ?", "Delete Product|Service", JOptionPane.YES_NO_OPTION);
         if(confirmDeletion == 0)
         {
             try {
                 
-                String query = "DELETE FROM productService WHERE productId = '" + productId + "'";
-                preparedStatement = connection.prepareStatement(query);
-                preparedStatement.executeUpdate();
+                String query = "DELETE FROM products WHERE productId = '" + productId + "'";
+                ps = con.prepareStatement(query);
+                ps.executeUpdate();
                 defaultTableModel.removeRow(table_view_products_list.getSelectedRow());
                 displayProductList();
 
@@ -205,13 +233,13 @@ public class ProductsList extends javax.swing.JInternalFrame {
         displayProductList();
     }
         
-     public void dbConnection() 
+    public void dbConnection() 
     {
         try {
               Class.forName("com.mysql.cj.jdbc.Driver");
-              connection = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","hermanhgc","He11m@ns");
+              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
      
@@ -226,6 +254,8 @@ public class ProductsList extends javax.swing.JInternalFrame {
         txt_add_price = new javax.swing.JTextField();
         txt_add_qty = new javax.swing.JTextField();
         txt_add_notes = new javax.swing.JTextField();
+        combo_box_category = new javax.swing.JComboBox<>();
+        lbl_category = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         btn_edit_product_service = new javax.swing.JButton();
         btn_add_product_service = new javax.swing.JButton();
@@ -236,34 +266,34 @@ public class ProductsList extends javax.swing.JInternalFrame {
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
 
-        table_view_products_list.setFont(new java.awt.Font("Lucida Grande", 0, 13)); // NOI18N
+        table_view_products_list.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         table_view_products_list.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Product | Service", "Price €", "Qty", "Notes"
+                "ID", "Product | Service", "Price €", "Qty", "Notes", "Category"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.Integer.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -284,9 +314,10 @@ public class ProductsList extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(table_view_products_list);
         if (table_view_products_list.getColumnModel().getColumnCount() > 0) {
-            table_view_products_list.getColumnModel().getColumn(0).setMaxWidth(50);
-            table_view_products_list.getColumnModel().getColumn(2).setMaxWidth(80);
+            table_view_products_list.getColumnModel().getColumn(0).setMaxWidth(60);
+            table_view_products_list.getColumnModel().getColumn(2).setMaxWidth(90);
             table_view_products_list.getColumnModel().getColumn(3).setMaxWidth(80);
+            table_view_products_list.getColumnModel().getColumn(5).setMaxWidth(150);
         }
 
         panel_new_product.setBackground(new java.awt.Color(255, 255, 255));
@@ -306,6 +337,11 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
         txt_add_price.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         txt_add_price.setBorder(javax.swing.BorderFactory.createTitledBorder("Price €"));
+        txt_add_price.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_add_priceActionPerformed(evt);
+            }
+        });
         txt_add_price.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_add_priceKeyPressed(evt);
@@ -336,30 +372,54 @@ public class ProductsList extends javax.swing.JInternalFrame {
             }
         });
 
+        combo_box_category.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        combo_box_category.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select", "Product", "Service", "Other" }));
+        combo_box_category.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                combo_box_categoryActionPerformed(evt);
+            }
+        });
+
+        lbl_category.setFont(new java.awt.Font("Lucida Grande", 1, 12)); // NOI18N
+        lbl_category.setText("Category");
+
         javax.swing.GroupLayout panel_new_productLayout = new javax.swing.GroupLayout(panel_new_product);
         panel_new_product.setLayout(panel_new_productLayout);
         panel_new_productLayout.setHorizontalGroup(
             panel_new_productLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_new_productLayout.createSequentialGroup()
-                .addComponent(txt_product_service_list, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_product_service_list, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txt_add_price, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txt_add_qty, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txt_add_notes)
-                .addGap(0, 0, 0))
+                .addComponent(txt_add_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panel_new_productLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_new_productLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(combo_box_category, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(panel_new_productLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lbl_category)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         panel_new_productLayout.setVerticalGroup(
             panel_new_productLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(txt_product_service_list, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+            .addComponent(txt_product_service_list, javax.swing.GroupLayout.Alignment.TRAILING)
             .addComponent(txt_add_price, javax.swing.GroupLayout.Alignment.TRAILING)
             .addComponent(txt_add_qty, javax.swing.GroupLayout.Alignment.TRAILING)
             .addComponent(txt_add_notes, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(panel_new_productLayout.createSequentialGroup()
+                .addComponent(lbl_category)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(combo_box_category, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         btn_edit_product_service.setBackground(new java.awt.Color(21, 76, 121));
-        btn_edit_product_service.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        btn_edit_product_service.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
         btn_edit_product_service.setForeground(new java.awt.Color(255, 255, 255));
         btn_edit_product_service.setText("Update");
         btn_edit_product_service.addActionListener(new java.awt.event.ActionListener() {
@@ -369,7 +429,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         });
 
         btn_add_product_service.setBackground(new java.awt.Color(21, 76, 121));
-        btn_add_product_service.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        btn_add_product_service.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
         btn_add_product_service.setForeground(new java.awt.Color(255, 255, 255));
         btn_add_product_service.setText("Add");
         btn_add_product_service.addActionListener(new java.awt.event.ActionListener() {
@@ -379,7 +439,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         });
 
         txt_delete_product_service.setBackground(new java.awt.Color(21, 76, 121));
-        txt_delete_product_service.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        txt_delete_product_service.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
         txt_delete_product_service.setForeground(new java.awt.Color(255, 255, 255));
         txt_delete_product_service.setText("Delete");
         txt_delete_product_service.addActionListener(new java.awt.event.ActionListener() {
@@ -389,7 +449,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         });
 
         btn_clear_fields.setBackground(new java.awt.Color(21, 76, 121));
-        btn_clear_fields.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        btn_clear_fields.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
         btn_clear_fields.setForeground(new java.awt.Color(255, 255, 255));
         btn_clear_fields.setText("Clear Fields");
         btn_clear_fields.addActionListener(new java.awt.event.ActionListener() {
@@ -403,25 +463,25 @@ public class ProductsList extends javax.swing.JInternalFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(7, 7, 7)
-                .addComponent(btn_add_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btn_edit_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txt_delete_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btn_clear_fields, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(7, Short.MAX_VALUE))
+                .addGap(13, 13, 13)
+                .addComponent(btn_add_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50)
+                .addComponent(btn_edit_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50)
+                .addComponent(txt_delete_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50)
+                .addComponent(btn_clear_fields, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_edit_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_add_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txt_delete_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_clear_fields, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_edit_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_add_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_delete_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_clear_fields, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -429,27 +489,24 @@ public class ProductsList extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(200, 200, 200)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(199, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addComponent(panel_new_product, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panel_new_product, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(12, 12, 12))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
+                .addGap(26, 26, 26)
                 .addComponent(panel_new_product, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 72, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -470,7 +527,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
     private void btn_add_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add_product_serviceActionPerformed
              // TODO add your handling code here:
-             addNewProductService();
+        addNewProductService();
     }//GEN-LAST:event_btn_add_product_serviceActionPerformed
 
     private void txt_delete_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_delete_product_serviceActionPerformed
@@ -502,7 +559,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
             txt_add_price.setText(defaultTableModel.getValueAt(selectedRow, 2).toString());
             txt_add_qty.setText(defaultTableModel.getValueAt(selectedRow, 3).toString());
             txt_add_notes.setText(defaultTableModel.getValueAt(selectedRow, 4).toString());
-            
+            combo_box_category.setSelectedItem(defaultTableModel.getValueAt(selectedRow, 5).toString());;
         }
        
         else
@@ -550,36 +607,63 @@ public class ProductsList extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_table_view_products_listMousePressed
 
+    private void combo_box_categoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combo_box_categoryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_combo_box_categoryActionPerformed
+
+    private void txt_add_priceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_add_priceActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_add_priceActionPerformed
+
     public void editProductService()
     {
-        dbConnection();
+        
         
         String productName = txt_product_service_list.getText();
         double price = Double.parseDouble(txt_add_price.getText());
         int qty = Integer.parseInt(txt_add_qty.getText());
         String notes = txt_add_notes.getText();
+        String category = combo_box_category.getSelectedItem().toString();
         
-        
-        int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Editing ?" + productName, "Edit Product|Service", JOptionPane.YES_NO_OPTION);
-        if(confirmEditing == 0)
+        if (category.equals("Select"))
         {
-            try {
-                
-                String query = "UPDATE productService SET productService = '" + productName +  "', price = " + price + ", qty = " + qty + ", notes = '" + notes + "' WHERE productId = '" + ID +"'";
-                preparedStatement = connection.prepareStatement(query);
-                preparedStatement.executeUpdate();
-                    
-                displayProductList();
-                clearFields();
-                    
-            } catch (SQLException ex) {
-                Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            JOptionPane.showMessageDialog(null, "Please, select a Category", "Product List", JOptionPane.ERROR_MESSAGE);
         }
         else
         {
-            displayProductList();
-            clearFields();
+            try {
+                dbConnection(); 
+
+                    String queryCheck = "SELECT * FROM products WHERE productService = '" + productName + "'";
+                    ps = con.prepareStatement(queryCheck);
+                    rs = ps.executeQuery();
+
+                    if (rs.isBeforeFirst())
+                    {
+                        JOptionPane.showMessageDialog(null, "No changes to be updated !", "Product List", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else 
+                    {
+                        int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Editing " + productName + " ?", "Edit Product|Service", JOptionPane.YES_NO_OPTION);
+                        if(confirmEditing == 0)
+                        {
+                            String query = "UPDATE products SET productService = '" + productName +  "', price = " + price + ", qty = " + qty + ", notes = '" + notes + "' WHERE productId = '" + ID +"'";
+                            ps = con.prepareStatement(query);
+                            ps.executeUpdate();
+
+                            displayProductList();
+                            clearFields();
+                        }
+                        else
+                        {
+                            displayProductList();
+                            clearFields();
+                        }
+                    }
+
+            } catch (SQLException ex) {
+                    Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
@@ -620,8 +704,10 @@ public class ProductsList extends javax.swing.JInternalFrame {
     private javax.swing.JButton btn_add_product_service;
     private javax.swing.JButton btn_clear_fields;
     private javax.swing.JButton btn_edit_product_service;
+    private javax.swing.JComboBox<String> combo_box_category;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lbl_category;
     private javax.swing.JPanel panel_new_product;
     private javax.swing.JTable table_view_products_list;
     private javax.swing.JTextField txt_add_notes;

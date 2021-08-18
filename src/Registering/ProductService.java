@@ -15,10 +15,13 @@ public class ProductService {
    double price;
    int qty;
    String notes;
+   String category;
    
-    public ProductService(String serviceProduct, double price) {
-        this.productService = serviceProduct;
-        this.price = price;
+    public ProductService(String _serviceProduct, int qty, double _price, String _notes, String _category) {
+        this.productService = _serviceProduct;
+        this.price = _price;
+        this.notes = _notes;
+        this.category = _category;
     }
 
     public int getQty() {
@@ -36,6 +39,16 @@ public class ProductService {
     public void setNotes(String notes) {
         this.notes = notes;
     }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+    
+    
 
     
 

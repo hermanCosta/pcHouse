@@ -684,8 +684,8 @@ public class MainMenu extends javax.swing.JFrame {
         );
 
         desktop_pane_main_menu.setBackground(new java.awt.Color(255, 255, 255));
-        desktop_pane_main_menu.setMaximumSize(new java.awt.Dimension(1049, 827));
-        desktop_pane_main_menu.setSize(new java.awt.Dimension(1049, 827));
+        desktop_pane_main_menu.setMaximumSize(new java.awt.Dimension(1049, 700));
+        desktop_pane_main_menu.setSize(new java.awt.Dimension(1049, 700));
         desktop_pane_main_menu.setLayout(null);
 
         javax.swing.GroupLayout panel_windowLayout = new javax.swing.GroupLayout(panel_window);
@@ -707,8 +707,10 @@ public class MainMenu extends javax.swing.JFrame {
                 .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addGroup(panel_windowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(desktop_pane_main_menu, javax.swing.GroupLayout.PREFERRED_SIZE, 827, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panel_menu_bar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(panel_menu_bar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panel_windowLayout.createSequentialGroup()
+                        .addComponent(desktop_pane_main_menu, javax.swing.GroupLayout.PREFERRED_SIZE, 810, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -721,7 +723,9 @@ public class MainMenu extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel_window, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(panel_window, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
 
         pack();

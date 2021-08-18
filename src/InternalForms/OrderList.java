@@ -184,7 +184,7 @@ public class OrderList extends javax.swing.JInternalFrame {
 
         desktop_pane_order_list.setBackground(new java.awt.Color(255, 255, 255));
         desktop_pane_order_list.setMaximumSize(new java.awt.Dimension(1049, 827));
-        desktop_pane_order_list.setSize(new java.awt.Dimension(1049, 827));
+        desktop_pane_order_list.setSize(new java.awt.Dimension(1049, 700));
         desktop_pane_order_list.setLayout(null);
 
         txt_search_order.setFont(new java.awt.Font("Lucida Grande", 0, 20)); // NOI18N
@@ -215,7 +215,7 @@ public class OrderList extends javax.swing.JInternalFrame {
 
         jScrollPane1.setVerifyInputWhenFocusTarget(false);
 
-        table_view_orders.setFont(new java.awt.Font("Lucida Grande", 0, 13)); // NOI18N
+        table_view_orders.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         table_view_orders.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null},
@@ -265,11 +265,11 @@ public class OrderList extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(table_view_orders);
         if (table_view_orders.getColumnModel().getColumnCount() > 0) {
-            table_view_orders.getColumnModel().getColumn(0).setMaxWidth(70);
+            table_view_orders.getColumnModel().getColumn(0).setMaxWidth(80);
         }
 
         desktop_pane_order_list.add(jScrollPane1);
-        jScrollPane1.setBounds(20, 130, 1000, 520);
+        jScrollPane1.setBounds(20, 130, 1010, 520);
 
         lbl_search_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icons-search.png"))); // NOI18N
         desktop_pane_order_list.add(lbl_search_icon);
@@ -279,12 +279,12 @@ public class OrderList extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktop_pane_order_list, javax.swing.GroupLayout.DEFAULT_SIZE, 1052, Short.MAX_VALUE)
+            .addComponent(desktop_pane_order_list, javax.swing.GroupLayout.DEFAULT_SIZE, 1049, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(desktop_pane_order_list, javax.swing.GroupLayout.PREFERRED_SIZE, 675, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(desktop_pane_order_list, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -311,15 +311,16 @@ public class OrderList extends javax.swing.JInternalFrame {
             String deposit = dm.getValueAt(selectedIndex, 5).toString();
             String due = dm.getValueAt(selectedIndex, 6).toString();
 
-            new Billing(orderNo,model,serialNumber,price,deposit,due).setVisible(true);
+           // new Billing(orderNo,model,serialNumber,price,deposit,due).setVisible(true);
 
             this.setVisible(false);
         }
-        
     }
-    public void openSelectedOrder() 
-    {
-        
+    
+    private void table_view_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_ordersMouseClicked
+
+        if(evt.getClickCount() == 2)
+        {
         String orderNo = "";
         String firstName = "";
         String lastName = "";
@@ -338,6 +339,7 @@ public class OrderList extends javax.swing.JInternalFrame {
         String issueDate = "";
         String status = "";
         String finishedDate = "";
+        String payDate = "";
         
         dbConnection();
         DefaultTableModel dtm = (DefaultTableModel)table_view_orders.getModel();
@@ -348,7 +350,6 @@ public class OrderList extends javax.swing.JInternalFrame {
                 String query = "SELECT * FROM orderDetails WHERE orderNo ='" + selectedOrderNo + "'";
                 ps = con.prepareStatement(query);
                 rs = ps.executeQuery();
-                
                 
                 while(rs.next())
                 {
@@ -370,8 +371,13 @@ public class OrderList extends javax.swing.JInternalFrame {
                    issueDate = rs.getString("issuedDate");
                    status = rs.getString("status");
                    finishedDate = rs.getString("finishedDate");
-                   
                 }
+                String queryPayDate = "SELECT payDate FROM completedOrders WHERE orderNo ='" + selectedOrderNo + "'";
+                ps = con.prepareStatement(queryPayDate);
+                rs = ps.executeQuery();
+                while (rs.next())
+                payDate = rs.getString("payDate");
+                
             } catch (SQLException ex) {
                 Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -393,13 +399,16 @@ public class OrderList extends javax.swing.JInternalFrame {
             
                 desktop_pane_order_list.add(fixedOrder).setVisible(true);
             }
-                    
-    }
-    
-    private void table_view_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_ordersMouseClicked
-            
-        openSelectedOrder();
-        
+            else
+            {
+                CompletedOrder completedOrder = new CompletedOrder(orderNo, firstName, lastName, contactNo, 
+                        email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, 
+                        productService, price, total, deposit, due, issueDate, finishedDate, payDate);
+                
+                desktop_pane_order_list.removeAll();
+                desktop_pane_order_list.add(completedOrder).setVisible(true);
+            }
+        }
     }//GEN-LAST:event_table_view_ordersMouseClicked
 
     private void txt_search_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_search_orderActionPerformed

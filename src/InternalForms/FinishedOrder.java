@@ -5,6 +5,7 @@
  */
 package InternalForms;
 
+import Forms.Billing;
 import Registering.Customer;
 import Registering.Order;
 import Registering.ProductService;
@@ -229,7 +230,7 @@ public class FinishedOrder extends javax.swing.JInternalFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         table_view_faults = new javax.swing.JTable();
         txt_due = new javax.swing.JTextField();
-        btn_pay = new javax.swing.JButton();
+        btn_pay_order = new javax.swing.JButton();
         btn_undo = new javax.swing.JButton();
         btn_print = new javax.swing.JButton();
         lbl_order_status = new javax.swing.JLabel();
@@ -242,7 +243,9 @@ public class FinishedOrder extends javax.swing.JInternalFrame {
         setPreferredSize(new java.awt.Dimension(1049, 700));
         setSize(new java.awt.Dimension(1049, 700));
 
-        panel_order_details.setPreferredSize(new java.awt.Dimension(655, 700));
+        desktop_pane_finished_order.setPreferredSize(new java.awt.Dimension(1049, 700));
+
+        panel_order_details.setPreferredSize(new java.awt.Dimension(1049, 700));
 
         lbl_order_no.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         lbl_order_no.setText("Order Number");
@@ -493,14 +496,14 @@ public class FinishedOrder extends javax.swing.JInternalFrame {
             }
         });
 
-        btn_pay.setBackground(new java.awt.Color(21, 76, 121));
-        btn_pay.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
-        btn_pay.setForeground(new java.awt.Color(255, 255, 255));
-        btn_pay.setText("Pay Order");
-        btn_pay.setFocusable(false);
-        btn_pay.addActionListener(new java.awt.event.ActionListener() {
+        btn_pay_order.setBackground(new java.awt.Color(21, 76, 121));
+        btn_pay_order.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
+        btn_pay_order.setForeground(new java.awt.Color(255, 255, 255));
+        btn_pay_order.setText("Pay Order");
+        btn_pay_order.setFocusable(false);
+        btn_pay_order.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_payActionPerformed(evt);
+                btn_pay_orderActionPerformed(evt);
             }
         });
 
@@ -541,9 +544,9 @@ public class FinishedOrder extends javax.swing.JInternalFrame {
         panel_order_detailsLayout.setHorizontalGroup(
             panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                .addGap(21, 21, 21)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(8, 8, 8)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_sn)
@@ -574,23 +577,25 @@ public class FinishedOrder extends javax.swing.JInternalFrame {
                                 .addComponent(lbl_model)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txt_model, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                .addComponent(lbl_order_no)
+                                .addGap(12, 12, 12)
+                                .addComponent(lbl_auto_order_no)))
+                        .addGap(0, 53, Short.MAX_VALUE))
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lbl_order_created_on, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lbl_order_status, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbl_order_created_on, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                .addComponent(lbl_order_status, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                            .addComponent(lbl_due)
-                            .addGap(0, 0, 0)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 575, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
                             .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, Short.MAX_VALUE)
+                            .addGap(18, 18, 18)
                             .addComponent(lbl_deposit)
                             .addGap(0, 0, 0)
                             .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -604,13 +609,8 @@ public class FinishedOrder extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btn_pay, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lbl_order_no)
-                .addGap(12, 12, 12)
-                .addComponent(lbl_auto_order_no)
+                        .addComponent(btn_pay_order, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbl_due))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_order_detailsLayout.setVerticalGroup(
@@ -618,13 +618,13 @@ public class FinishedOrder extends javax.swing.JInternalFrame {
             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(16, 16, 16)
+                        .addGap(30, 30, 30)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn_pay, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_pay_order, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btn_undo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(14, 14, 14)
+                        .addGap(30, 30, 30)
                         .addComponent(lbl_order_created_on)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbl_order_status)))
@@ -632,28 +632,27 @@ public class FinishedOrder extends javax.swing.JInternalFrame {
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_order_no)
                     .addComponent(lbl_auto_order_no, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(lbl_deposit)
                                 .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lbl_price)
-                                .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(lbl_due))))
+                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lbl_price)
+                                    .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(lbl_due)))
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txt_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_first_name))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(15, 15, 15)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_last_name)
                             .addComponent(txt_last_name, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -679,7 +678,7 @@ public class FinishedOrder extends javax.swing.JInternalFrame {
                             .addComponent(lbl_sn))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(109, Short.MAX_VALUE))
+                .addContainerGap(118, Short.MAX_VALUE))
         );
 
         desktop_pane_finished_order.setLayer(panel_order_details, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -688,11 +687,11 @@ public class FinishedOrder extends javax.swing.JInternalFrame {
         desktop_pane_finished_order.setLayout(desktop_pane_finished_orderLayout);
         desktop_pane_finished_orderLayout.setHorizontalGroup(
             desktop_pane_finished_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, 1013, Short.MAX_VALUE)
+            .addComponent(panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         desktop_pane_finished_orderLayout.setVerticalGroup(
             desktop_pane_finished_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, 673, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -700,15 +699,15 @@ public class FinishedOrder extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(desktop_pane_finished_order)
-                .addContainerGap())
+                .addGap(0, 0, 0)
+                .addComponent(desktop_pane_finished_order, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(desktop_pane_finished_order, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(desktop_pane_finished_order, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -893,9 +892,13 @@ public class FinishedOrder extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_contactKeyReleased
 
-    private void btn_payActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_payActionPerformed
+    private void btn_pay_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pay_orderActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btn_payActionPerformed
+        Billing billing = new Billing(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
+                serialNumber, importantNotes, stringFaults, stringProducts, stringPrices, total, deposit, due, issueDate, 
+                finishedDate);
+        billing.setVisible(true);
+    }//GEN-LAST:event_btn_pay_orderActionPerformed
 
     private void btn_undoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_undoActionPerformed
         // TODO add your handling code here:
@@ -925,10 +928,11 @@ public class FinishedOrder extends javax.swing.JInternalFrame {
 
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
+        print();
     }//GEN-LAST:event_btn_printActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_pay;
+    private javax.swing.JButton btn_pay_order;
     private javax.swing.JButton btn_print;
     private javax.swing.JButton btn_undo;
     private javax.swing.ButtonGroup buttonGroup1;
