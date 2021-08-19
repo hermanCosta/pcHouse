@@ -638,26 +638,32 @@ public class ProductsList extends javax.swing.JInternalFrame {
                     ps = con.prepareStatement(queryCheck);
                     rs = ps.executeQuery();
 
-                    if (rs.isBeforeFirst())
+                    while (rs.next())
                     {
-                        JOptionPane.showMessageDialog(null, "No changes to be updated !", "Product List", JOptionPane.ERROR_MESSAGE);
-                    }
-                    else 
-                    {
-                        int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Editing " + productName + " ?", "Edit Product|Service", JOptionPane.YES_NO_OPTION);
-                        if(confirmEditing == 0)
+                       if( productName.equals(rs.getString("productService")) && price == rs.getDouble("price") && qty == rs.getInt("qty") 
+                               && notes.equals(rs.getString("notes")) && category.equals(rs.getString("category")))
+                       {
+                           JOptionPane.showMessageDialog(null, "No changes to be updated !", "Product List", JOptionPane.ERROR_MESSAGE);
+                       }
+                       else 
                         {
-                            String query = "UPDATE products SET productService = '" + productName +  "', price = " + price + ", qty = " + qty + ", notes = '" + notes + "' WHERE productId = '" + ID +"'";
-                            ps = con.prepareStatement(query);
-                            ps.executeUpdate();
+                            int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Editing " + productName + " ?", 
+                                    "Edit Product|Service", JOptionPane.YES_NO_OPTION);
+                            if(confirmEditing == 0)
+                            {
+                                String query = "UPDATE products SET productService = '" + productName +  "', price = " + price + ", "
+                                        + "qty = " + qty + ", notes = '" + notes + "' WHERE productId = '" + ID +"'";
+                                ps = con.prepareStatement(query);
+                                ps.executeUpdate();
 
-                            displayProductList();
-                            clearFields();
-                        }
-                        else
-                        {
-                            displayProductList();
-                            clearFields();
+                                displayProductList();
+                                clearFields();
+                            }
+                            else
+                            {
+                                displayProductList();
+                                clearFields();
+                            }
                         }
                     }
 

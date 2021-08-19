@@ -5,7 +5,6 @@
  */
 package InternalForms;
 
-import Forms.Billing;
 import java.awt.Color;
 import java.awt.Font;
 import java.sql.Connection;
@@ -181,11 +180,10 @@ public class OrderList extends javax.swing.JInternalFrame {
         setBorder(null);
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
+        getContentPane().setLayout(null);
 
         desktop_pane_order_list.setBackground(new java.awt.Color(255, 255, 255));
         desktop_pane_order_list.setMaximumSize(new java.awt.Dimension(1049, 827));
-        desktop_pane_order_list.setSize(new java.awt.Dimension(1049, 700));
-        desktop_pane_order_list.setLayout(null);
 
         txt_search_order.setFont(new java.awt.Font("Lucida Grande", 0, 20)); // NOI18N
         txt_search_order.addActionListener(new java.awt.event.ActionListener() {
@@ -204,14 +202,10 @@ public class OrderList extends javax.swing.JInternalFrame {
                 txt_search_orderKeyReleased(evt);
             }
         });
-        desktop_pane_order_list.add(txt_search_order);
-        txt_search_order.setBounds(110, 30, 860, 35);
 
         label_latest_orders_created.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
         label_latest_orders_created.setForeground(new java.awt.Color(255, 255, 255));
         label_latest_orders_created.setText("Orders Created Recently");
-        desktop_pane_order_list.add(label_latest_orders_created);
-        label_latest_orders_created.setBounds(360, 80, 253, 25);
 
         jScrollPane1.setVerifyInputWhenFocusTarget(false);
 
@@ -268,25 +262,44 @@ public class OrderList extends javax.swing.JInternalFrame {
             table_view_orders.getColumnModel().getColumn(0).setMaxWidth(80);
         }
 
-        desktop_pane_order_list.add(jScrollPane1);
-        jScrollPane1.setBounds(20, 130, 1010, 520);
-
         lbl_search_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icons-search.png"))); // NOI18N
-        desktop_pane_order_list.add(lbl_search_icon);
-        lbl_search_icon.setBounds(80, 30, 30, 30);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktop_pane_order_list, javax.swing.GroupLayout.DEFAULT_SIZE, 1049, Short.MAX_VALUE)
+        desktop_pane_order_list.setLayer(txt_search_order, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktop_pane_order_list.setLayer(label_latest_orders_created, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktop_pane_order_list.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktop_pane_order_list.setLayer(lbl_search_icon, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout desktop_pane_order_listLayout = new javax.swing.GroupLayout(desktop_pane_order_list);
+        desktop_pane_order_list.setLayout(desktop_pane_order_listLayout);
+        desktop_pane_order_listLayout.setHorizontalGroup(
+            desktop_pane_order_listLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(desktop_pane_order_listLayout.createSequentialGroup()
+                .addGap(80, 80, 80)
+                .addComponent(lbl_search_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(txt_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, 860, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(desktop_pane_order_listLayout.createSequentialGroup()
+                .addGap(360, 360, 360)
+                .addComponent(label_latest_orders_created))
+            .addGroup(desktop_pane_order_listLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1010, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(desktop_pane_order_list, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
-                .addGap(0, 0, Short.MAX_VALUE))
+        desktop_pane_order_listLayout.setVerticalGroup(
+            desktop_pane_order_listLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(desktop_pane_order_listLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(desktop_pane_order_listLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_search_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(13, 13, 13)
+                .addComponent(label_latest_orders_created)
+                .addGap(25, 25, 25)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        getContentPane().add(desktop_pane_order_list);
+        desktop_pane_order_list.setBounds(0, 0, 1049, 663);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -321,30 +334,30 @@ public class OrderList extends javax.swing.JInternalFrame {
 
         if(evt.getClickCount() == 2)
         {
-        String orderNo = "";
-        String firstName = "";
-        String lastName = "";
-        String contactNo = "";
-        String email = "";
-        String deviceBrand = "";
-        String deviceModel = "";
-        String serialNumber = "";
-        String importantNotes ="";
-        String faults = "";
-        String productService = "";
-        String price = "";
-        double total = 0;
-        double deposit = 0;
-        double due = 0;
-        String issueDate = "";
-        String status = "";
-        String finishedDate = "";
-        String payDate = "";
-        
-        dbConnection();
-        DefaultTableModel dtm = (DefaultTableModel)table_view_orders.getModel();
-        int orderSelected = table_view_orders.getSelectedRow();
-        String selectedOrderNo = dtm.getValueAt(orderSelected, 0).toString();
+            String orderNo = "";
+            String firstName = "";
+            String lastName = "";
+            String contactNo = "";
+            String email = "";
+            String deviceBrand = "";
+            String deviceModel = "";
+            String serialNumber = "";
+            String importantNotes ="";
+            String faults = "";
+            String productService = "";
+            String price = "";
+            double total = 0;
+            double deposit = 0;
+            double due = 0;
+            String issueDate = "";
+            String status = "";
+            String finishedDate = "";
+            String payDate = "";
+
+            dbConnection();
+            DefaultTableModel dtm = (DefaultTableModel)table_view_orders.getModel();
+            int orderSelected = table_view_orders.getSelectedRow();
+            String selectedOrderNo = dtm.getValueAt(orderSelected, 0).toString();
         
             try {
                 String query = "SELECT * FROM orderDetails WHERE orderNo ='" + selectedOrderNo + "'";
