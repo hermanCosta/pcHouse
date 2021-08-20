@@ -71,9 +71,9 @@ public class OrderList extends javax.swing.JInternalFrame {
                                         
             rs = ps.executeQuery();
             
-            ResultSetMetaData rsd = rs.getMetaData();
-            int c; 
-            c = rsd.getColumnCount();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int countColumns; 
+            countColumns = rsmd.getColumnCount();
             DefaultTableModel defaultTableModel = (DefaultTableModel)table_view_orders.getModel();
             defaultTableModel .setRowCount(0);
             
@@ -81,7 +81,7 @@ public class OrderList extends javax.swing.JInternalFrame {
             {
                 Vector vector = new Vector();
                 
-                for(int i = 1; i <= c; i++)
+                for(int i = 1; i <= countColumns; i++)
                 {
                     vector.add(rs.getString("orderNo"));
                     vector.add(rs.getString("firstName"));
@@ -353,6 +353,7 @@ public class OrderList extends javax.swing.JInternalFrame {
             String status = "";
             String finishedDate = "";
             String payDate = "";
+            String pickedDate = "";
 
             dbConnection();
             DefaultTableModel dtm = (DefaultTableModel)table_view_orders.getModel();
@@ -384,6 +385,7 @@ public class OrderList extends javax.swing.JInternalFrame {
                    issueDate = rs.getString("issuedDate");
                    status = rs.getString("status");
                    finishedDate = rs.getString("finishedDate");
+                   pickedDate = rs.getString("pickedDate");
                 }
                 String queryPayDate = "SELECT payDate FROM completedOrders WHERE orderNo ='" + selectedOrderNo + "'";
                 ps = con.prepareStatement(queryPayDate);
@@ -395,31 +397,32 @@ public class OrderList extends javax.swing.JInternalFrame {
                 Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            if (status.equals("In Progress"))
-            {
-                OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, 
-                        email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService, 
-                        price, total, deposit, due, status, issueDate);
-            
-                desktop_pane_order_list.add(orderDetails).setVisible(true);
-            }
-            
-            else if (status.equals("Fixed") || status.equals("Not Fixable"))
-            {
-                FinishedOrder fixedOrder = new FinishedOrder(orderNo, firstName, lastName, contactNo, 
-                        email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService, 
-                        price, total, deposit, due, status, issueDate, finishedDate);
-            
-                desktop_pane_order_list.add(fixedOrder).setVisible(true);
-            }
-            else
-            {
-                CompletedOrder completedOrder = new CompletedOrder(orderNo, firstName, lastName, contactNo, 
-                        email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, 
-                        productService, price, total, deposit, due, issueDate, finishedDate, payDate);
-                
-                desktop_pane_order_list.removeAll();
-                desktop_pane_order_list.add(completedOrder).setVisible(true);
+            switch (status) {
+                case "In Progress":
+                    OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo,
+                            email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService,
+                            price, total, deposit, due, status, issueDate, pickedDate);
+                    desktop_pane_order_list.add(orderDetails).setVisible(true);
+                    break;
+                case "Fixed":
+                    OrderFixed fixedOrder = new OrderFixed(orderNo, firstName, lastName, contactNo,
+                            email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService,
+                            price, total, deposit, due, status, issueDate, finishedDate, pickedDate);
+                    desktop_pane_order_list.add(fixedOrder).setVisible(true);
+                    break;
+                case "Not Fixable":
+                    OrderNotFixed orderNotFixed = new OrderNotFixed(orderNo, firstName, lastName, contactNo,
+                            email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService,
+                            price, total, deposit, due, status, issueDate, finishedDate, pickedDate);
+                    desktop_pane_order_list.add(orderNotFixed).setVisible(true);
+                    break;
+                default:
+                    CompletedOrder completedOrder = new CompletedOrder(orderNo, firstName, lastName, contactNo,
+                            email, deviceBrand, deviceModel, serialNumber, importantNotes, faults,
+                            productService, price, total, deposit, due, issueDate, finishedDate, payDate);
+                    desktop_pane_order_list.removeAll();
+                    desktop_pane_order_list.add(completedOrder).setVisible(true);
+                    break;
             }
         }
     }//GEN-LAST:event_table_view_ordersMouseClicked

@@ -150,7 +150,7 @@ public class Receipt extends javax.swing.JFrame {
         lbl_paid_by = new javax.swing.JLabel();
         lbl_issue_date = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         panel_print_order.setBackground(new java.awt.Color(255, 255, 255));
         panel_print_order.setPreferredSize(new java.awt.Dimension(595, 842));
@@ -171,8 +171,6 @@ public class Receipt extends javax.swing.JFrame {
 
         lbl_phone.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         lbl_phone.setText("Phone:");
-
-        line_header.setForeground(new java.awt.Color(0, 0, 0));
 
         lbl_print_order_no.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         lbl_print_order_no.setText("orderNo");
@@ -196,6 +194,8 @@ public class Receipt extends javax.swing.JFrame {
         lbl_product_service.setText("Product | Service");
 
         jScrollPane3.setBorder(null);
+        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         txt_area_product_service.setEditable(false);
         txt_area_product_service.setColumns(20);
@@ -228,24 +228,23 @@ public class Receipt extends javax.swing.JFrame {
                         .addComponent(lbl_print_email, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
                         .addComponent(lbl_print_brand, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lbl_print_sn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_print_orderLayout.createSequentialGroup()
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
+                            .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(lbl_product_service)
-                                .addGap(135, 135, 135))
-                            .addGroup(panel_print_orderLayout.createSequentialGroup()
-                                .addComponent(lbl_logo_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(30, 30, 30)
-                                .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
-                                        .addComponent(lbl_mobile)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lbl_mobile_number))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
-                                        .addComponent(lbl_phone)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lbl_land_line_number))
-                                    .addComponent(lbl_address, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addGap(5, 5, 5)))
+                                .addGroup(panel_print_orderLayout.createSequentialGroup()
+                                    .addComponent(lbl_logo_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(30, 30, 30)
+                                    .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
+                                            .addComponent(lbl_mobile)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(lbl_mobile_number))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
+                                            .addComponent(lbl_phone)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(lbl_land_line_number))
+                                        .addComponent(lbl_address, javax.swing.GroupLayout.Alignment.TRAILING))))
+                            .addGap(5, 5, 5))
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(lbl_print_total_products, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lbl_paid_by, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

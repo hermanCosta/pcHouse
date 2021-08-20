@@ -5,6 +5,7 @@
  */
 package InternalForms;
 
+import Forms.OrderNotes;
 import Registering.Customer;
 import Registering.Order;
 import Registering.ProductService;
@@ -71,7 +72,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     
     String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
            deviceModel,  serialNumber, importantNotes, stringFaults, 
-           stringProducts, stringPrices, status, issueDate, finishedDate; 
+           stringProducts, stringPrices, status, issueDate, finishedDate, pickedDate; 
 
     double total, deposit, due;
     
@@ -84,7 +85,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     public OrderDetails(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
             String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
             String _stringFaults, String _stringProducts, String _stringPrices, double _total, double _deposit, 
-            double _due, String _status, String _issueDate) {
+            double _due, String _status, String _issueDate, String _pickedDate) {
         
         initComponents();
         
@@ -105,6 +106,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         this.deposit = _deposit;
         this.due = _due;
         this.status = _status;
+        this.pickedDate = _pickedDate;
         
         Date date = new Date();
         Timestamp currentDateTime = new Timestamp(date.getTime());
@@ -155,7 +157,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         txt_total.setText(String.valueOf(this.total));
         txt_deposit.setText(String.valueOf(this.deposit));
         txt_due.setText(String.valueOf(this.due));
-        lbl_issued_date_time.setText("Order created on: " + this.issueDate);
+        lbl_issued_date_time.setText("created on: " + this.issueDate);
         
         // Array for holding database String 
         String[] arrayFaults = stringFaults.split(",");
@@ -315,6 +317,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         buttonGroup1 = new javax.swing.ButtonGroup();
+        jDialog1 = new javax.swing.JDialog();
+        jDialog2 = new javax.swing.JDialog();
         desktop_pane_order_details = new javax.swing.JDesktopPane();
         panel_order_details = new javax.swing.JPanel();
         lbl_order_no = new javax.swing.JLabel();
@@ -354,12 +358,34 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         btn_not_fix = new javax.swing.JButton();
         btn_save_changes = new javax.swing.JButton();
         btn_print = new javax.swing.JButton();
+        btn_notes = new javax.swing.JButton();
         jScrollPane_notes = new javax.swing.JScrollPane();
         editor_pane_notes = new javax.swing.JEditorPane();
-        jTextField1 = new javax.swing.JTextField();
 
         jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
+
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jDialog2Layout = new javax.swing.GroupLayout(jDialog2.getContentPane());
+        jDialog2.getContentPane().setLayout(jDialog2Layout);
+        jDialog2Layout.setHorizontalGroup(
+            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog2Layout.setVerticalGroup(
+            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -634,12 +660,13 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             }
         });
 
-        lbl_issued_date_time.setFont(new java.awt.Font("Lucida Grande", 0, 13)); // NOI18N
+        lbl_issued_date_time.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         lbl_issued_date_time.setText("createdOn");
 
         btn_fix.setBackground(new java.awt.Color(0, 153, 102));
-        btn_fix.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
+        btn_fix.setFont(new java.awt.Font("Lucida Grande", 1, 22)); // NOI18N
         btn_fix.setForeground(new java.awt.Color(255, 255, 255));
+        btn_fix.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_fix_order.png"))); // NOI18N
         btn_fix.setText("Fix");
         btn_fix.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -647,9 +674,10 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             }
         });
 
-        btn_not_fix.setBackground(new java.awt.Color(255, 0, 0));
+        btn_not_fix.setBackground(new java.awt.Color(255, 51, 51));
         btn_not_fix.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
         btn_not_fix.setForeground(new java.awt.Color(255, 255, 255));
+        btn_not_fix.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_not_fix.png"))); // NOI18N
         btn_not_fix.setText("Not Fixed");
         btn_not_fix.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -658,8 +686,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         });
 
         btn_save_changes.setBackground(new java.awt.Color(21, 76, 121));
-        btn_save_changes.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        btn_save_changes.setFont(new java.awt.Font("Lucida Grande", 1, 17)); // NOI18N
         btn_save_changes.setForeground(new java.awt.Color(255, 255, 255));
+        btn_save_changes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_save_changes.png"))); // NOI18N
         btn_save_changes.setText("Save Changes");
         btn_save_changes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -670,10 +699,22 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         btn_print.setBackground(new java.awt.Color(21, 76, 121));
         btn_print.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
         btn_print.setForeground(new java.awt.Color(255, 255, 255));
+        btn_print.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_print.png"))); // NOI18N
         btn_print.setText("Print");
         btn_print.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_printActionPerformed(evt);
+            }
+        });
+
+        btn_notes.setBackground(new java.awt.Color(21, 76, 121));
+        btn_notes.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
+        btn_notes.setForeground(new java.awt.Color(255, 255, 255));
+        btn_notes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_notes.png"))); // NOI18N
+        btn_notes.setText("Notes");
+        btn_notes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_notesActionPerformed(evt);
             }
         });
 
@@ -682,15 +723,17 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         panel_buttonsLayout.setHorizontalGroup(
             panel_buttonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_buttonsLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(btn_fix, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(57, 57, 57)
-                .addComponent(btn_not_fix, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(56, 56, 56)
-                .addComponent(btn_save_changes, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18))
+                .addGap(25, 25, 25)
+                .addComponent(btn_fix, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btn_not_fix, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btn_save_changes, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_buttonsLayout.setVerticalGroup(
             panel_buttonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -700,19 +743,19 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                     .addComponent(btn_fix, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_not_fix, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_save_changes, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_save_changes, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
+        jScrollPane_notes.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane_notes.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         jScrollPane_notes.setVerifyInputWhenFocusTarget(false);
 
-        editor_pane_notes.setEditable(false);
         editor_pane_notes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Important Notes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 16))); // NOI18N
         editor_pane_notes.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
         editor_pane_notes.setEnabled(false);
         jScrollPane_notes.setViewportView(editor_pane_notes);
-
-        jTextField1.setText("addNewNotes");
 
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);
@@ -756,7 +799,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                             .addComponent(txt_brand, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(lbl_issued_date_time)
                     .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_order_detailsLayout.createSequentialGroup()
                             .addComponent(lbl_sn)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -794,17 +836,21 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         panel_order_detailsLayout.setVerticalGroup(
             panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txt_fault, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lbl_fault))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
-                        .addComponent(lbl_issued_date_time)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbl_order_no)
-                            .addComponent(lbl_auto_order_no))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                        .addComponent(lbl_issued_date_time, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                .addComponent(lbl_fault)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lbl_auto_order_no, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lbl_order_no, javax.swing.GroupLayout.Alignment.TRAILING)))))
+                    .addComponent(txt_fault, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -827,6 +873,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                                 .addGap(6, 6, 6)
                                 .addComponent(lbl_due))))
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                        .addGap(8, 8, 8)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txt_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_first_name))
@@ -855,10 +902,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                             .addComponent(txt_serial_number, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_sn))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(17, 17, 17)
+                        .addComponent(jScrollPane_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(20, 20, 20)
                 .addComponent(panel_buttons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(92, 92, 92))
         );
@@ -873,7 +918,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         );
         desktop_pane_order_detailsLayout.setVerticalGroup(
             desktop_pane_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, 740, Short.MAX_VALUE)
+            .addComponent(panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, 734, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1278,7 +1323,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
     private void btn_fixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_fixActionPerformed
         // TODO add your handling code here:
-        dbConnection();
         
        int confirmFixing = JOptionPane.showConfirmDialog(null, "Do you really want to Tag Order: " 
                + orderNo + " as Fixed Order", "Update Order", JOptionPane.YES_NO_OPTION);
@@ -1288,16 +1332,18 @@ public class OrderDetails extends javax.swing.JInternalFrame {
            status = "Fixed";
            
             try {
+                dbConnection();
                 String query = "UPDATE orderDetails SET status = '" + status +"', finishedDate = '" 
                         + finishedDate +"' WHERE orderNo = '"+ orderNo + "'";
                 
                 ps = con.prepareStatement(query);
                 ps.executeUpdate();
                 
-                FinishedOrder fixedOrder = new FinishedOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
+                OrderFixed fixedOrder = new OrderFixed(orderNo, firstName, lastName, contactNo, email, deviceBrand,
                         deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringPrices, total,
-                        deposit, due, status, issueDate, finishedDate);
+                        deposit, due, status, issueDate, finishedDate, pickedDate);
                 
+                desktop_pane_order_details.removeAll();
                 desktop_pane_order_details.add(fixedOrder).setVisible(true);
                 
             } catch (SQLException ex) {
@@ -1330,11 +1376,12 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 ps = con.prepareStatement(query);
                 ps.executeUpdate();
                 
-                FinishedOrder fixedOrder = new FinishedOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
+                OrderNotFixed orderNotFixed = new OrderNotFixed(orderNo, firstName, lastName, contactNo, email, deviceBrand,
                         deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringPrices, total,
-                        deposit, due, status, issueDate, finishedDate);
+                        deposit, due, status, issueDate, finishedDate, pickedDate);
                 
-                desktop_pane_order_details.add(fixedOrder).setVisible(true);
+                desktop_pane_order_details.removeAll();
+                desktop_pane_order_details.add(orderNotFixed).setVisible(true);
                 
             } catch (SQLException ex) {
                 Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
@@ -1454,9 +1501,17 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btn_save_changesActionPerformed
 
+    private void btn_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notesActionPerformed
+        // TODO add your handling code here:
+        OrderNotes orderNotes = new OrderNotes(orderNo);
+        orderNotes.setVisible(true);
+        
+    }//GEN-LAST:event_btn_notesActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_fix;
     private javax.swing.JButton btn_not_fix;
+    private javax.swing.JButton btn_notes;
     private javax.swing.JButton btn_print;
     private javax.swing.JButton btn_save_changes;
     private javax.swing.ButtonGroup buttonGroup1;
@@ -1465,12 +1520,13 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     private javax.swing.JEditorPane editor_pane_notes;
     private javax.swing.JLabel icon_add_table_view;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
+    private javax.swing.JDialog jDialog1;
+    private javax.swing.JDialog jDialog2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane_notes;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lbl_auto_order_no;
     private javax.swing.JLabel lbl_brand;
     private javax.swing.JLabel lbl_contact;

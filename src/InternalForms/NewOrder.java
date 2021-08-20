@@ -300,10 +300,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
-        jSeparator1 = new javax.swing.JSeparator();
-        jSeparator2 = new javax.swing.JSeparator();
-        buttonGroup1 = new javax.swing.ButtonGroup();
         panel_order_details = new javax.swing.JPanel();
         lbl_order_no = new javax.swing.JLabel();
         lbl_first_name = new javax.swing.JLabel();
@@ -340,9 +336,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
         txt_due = new javax.swing.JTextField();
         jScrollPane_notes = new javax.swing.JScrollPane();
         editor_pane_notes = new javax.swing.JEditorPane();
-
-        jCheckBoxMenuItem1.setSelected(true);
-        jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
 
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -1308,15 +1301,11 @@ public class NewOrder extends javax.swing.JInternalFrame {
     private javax.swing.JLabel btn_add_table_view;
     private javax.swing.JButton btn_cancel;
     private javax.swing.JButton btn_save_order;
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> combo_box_product_service;
     private javax.swing.JEditorPane editor_pane_notes;
-    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane_notes;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lbl_auto_order_no;
     private javax.swing.JLabel lbl_brand;
     private javax.swing.JLabel lbl_contact;
