@@ -121,6 +121,21 @@ public class OrderFixed extends javax.swing.JInternalFrame {
    public void loadSelectedOrder()
    {
         
+       if (pickedDate != null && !pickedDate.trim().isEmpty())
+        {
+            lbl_order_picked_up_on.setVisible(true);
+            lbl_order_picked_up_on.setText("Picked up on: " + pickedDate);
+            btn_undo.setEnabled(false);
+            btn_pay.setEnabled(false);
+        }
+        else
+        {
+            lbl_order_picked_up_on.setVisible(false);
+            btn_undo.setEnabled(true);
+            btn_pay.setEnabled(true);
+            
+        }
+       
         DefaultTableModel faultsModel = (DefaultTableModel) table_view_faults.getModel();
         faultsModel.setRowCount(0);
         DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
@@ -229,6 +244,7 @@ public class OrderFixed extends javax.swing.JInternalFrame {
         panel_order_status = new javax.swing.JPanel();
         lbl_order_status = new javax.swing.JLabel();
         lbl_date = new javax.swing.JLabel();
+        lbl_order_picked_up_on = new javax.swing.JLabel();
         jScrollPane_notes = new javax.swing.JScrollPane();
         editor_pane_notes = new javax.swing.JEditorPane();
 
@@ -537,6 +553,11 @@ public class OrderFixed extends javax.swing.JInternalFrame {
         lbl_date.setForeground(java.awt.Color.white);
         lbl_date.setText("date");
 
+        lbl_order_picked_up_on.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
+        lbl_order_picked_up_on.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_order_picked_up_on.setText("orderPickedUpOn");
+        lbl_order_picked_up_on.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+
         javax.swing.GroupLayout panel_order_statusLayout = new javax.swing.GroupLayout(panel_order_status);
         panel_order_status.setLayout(panel_order_statusLayout);
         panel_order_statusLayout.setHorizontalGroup(
@@ -544,20 +565,26 @@ public class OrderFixed extends javax.swing.JInternalFrame {
             .addGroup(panel_order_statusLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panel_order_statusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_order_statusLayout.createSequentialGroup()
-                        .addComponent(lbl_order_status, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbl_order_status, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panel_order_statusLayout.createSequentialGroup()
                         .addComponent(lbl_date)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbl_order_picked_up_on, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         panel_order_statusLayout.setVerticalGroup(
             panel_order_statusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_order_statusLayout.createSequentialGroup()
-                .addGap(4, 4, 4)
-                .addComponent(lbl_order_status)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbl_date)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_statusLayout.createSequentialGroup()
+                .addGroup(panel_order_statusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panel_order_statusLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lbl_order_picked_up_on))
+                    .addGroup(panel_order_statusLayout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(lbl_order_status)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lbl_date)))
                 .addContainerGap())
         );
 
@@ -986,6 +1013,7 @@ public class OrderFixed extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lbl_model;
     private javax.swing.JLabel lbl_order_created_on;
     private javax.swing.JLabel lbl_order_no;
+    private javax.swing.JLabel lbl_order_picked_up_on;
     private javax.swing.JLabel lbl_order_status;
     private javax.swing.JLabel lbl_price;
     private javax.swing.JLabel lbl_sn;

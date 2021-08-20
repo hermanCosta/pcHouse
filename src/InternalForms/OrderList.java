@@ -404,12 +404,12 @@ public class OrderList extends javax.swing.JInternalFrame {
                             price, total, deposit, due, status, issueDate, pickedDate);
                     desktop_pane_order_list.add(orderDetails).setVisible(true);
                     break;
-                case "Fixed":
-                    OrderFixed fixedOrder = new OrderFixed(orderNo, firstName, lastName, contactNo,
-                            email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService,
-                            price, total, deposit, due, status, issueDate, finishedDate, pickedDate);
-                    desktop_pane_order_list.add(fixedOrder).setVisible(true);
-                    break;
+//                case "Fixed":
+//                    OrderFixed fixedOrder = new OrderFixed(orderNo, firstName, lastName, contactNo,
+//                            email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService,
+//                            price, total, deposit, due, status, issueDate, finishedDate, pickedDate);
+//                    desktop_pane_order_list.add(fixedOrder).setVisible(true);
+//                    break;
                 case "Not Fixable":
                     OrderNotFixed orderNotFixed = new OrderNotFixed(orderNo, firstName, lastName, contactNo,
                             email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService,
@@ -417,11 +417,10 @@ public class OrderList extends javax.swing.JInternalFrame {
                     desktop_pane_order_list.add(orderNotFixed).setVisible(true);
                     break;
                 default:
-                    CompletedOrder completedOrder = new CompletedOrder(orderNo, firstName, lastName, contactNo,
-                            email, deviceBrand, deviceModel, serialNumber, importantNotes, faults,
-                            productService, price, total, deposit, due, issueDate, finishedDate, payDate);
-                    desktop_pane_order_list.removeAll();
-                    desktop_pane_order_list.add(completedOrder).setVisible(true);
+                    OrderFixed fixedOrder = new OrderFixed(orderNo, firstName, lastName, contactNo,
+                            email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService,
+                            price, total, deposit, due, status, issueDate, finishedDate, pickedDate);
+                    desktop_pane_order_list.add(fixedOrder).setVisible(true);
                     break;
             }
         }

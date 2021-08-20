@@ -355,7 +355,7 @@ public class Billing extends javax.swing.JFrame {
         if (txt_cash.getText().isEmpty() && txt_card.getText().isEmpty())
         {
             
-            //JOptionPane.showMessageDialog(null, "Values can not be Empty !", "Payment",  JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Values can not be Empty !", "Payment",  JOptionPane.ERROR_MESSAGE);
         }
         
         else if(txt_cash.getText().isEmpty() && !txt_card.getText().isEmpty())
@@ -380,15 +380,9 @@ public class Billing extends javax.swing.JFrame {
         
         if (due == 0)
         {
-          JOptionPane.showMessageDialog(null, "Order: " + orderNo + " paid Successfully", "Order Payment",  JOptionPane.INFORMATION_MESSAGE);
           try {
             dbConnection();
 
-            String queryUpdate = "UPDATE orderDetails SET status = 'Completed' WHERE orderNo = ?";
-            ps = con.prepareStatement(queryUpdate);
-            ps.setString(1, orderNo);
-            ps.executeUpdate();
-            
             String queryInsert = "INSERT INTO completedOrders VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             ps = con.prepareStatement(queryInsert);
             ps.setString(1, orderNo);
@@ -400,19 +394,25 @@ public class Billing extends javax.swing.JFrame {
             ps.setDouble(7, totalPaid);
             ps.setString(8, payDate);
             ps.executeUpdate();
+            
+            String pickedDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
+                
+            String queryUpdate = "UPDATE orderDetails SET pickedDate = ? WHERE orderNo = ?";
+            ps = con.prepareStatement(queryUpdate);
+            ps.setString(1, pickedDate);
+            ps.setString(2, orderNo);
+            ps.executeUpdate();
 
+            
             } catch (SQLException ex) {
             Logger.getLogger(Billing.class.getName()).log(Level.SEVERE, null, ex);
             }
+          
+            JOptionPane.showMessageDialog(null, "Order: " + orderNo + " paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
 
+          
+          new OrderFixed().setVisible(true);
           this.dispose();
-          
-          new CompletedOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
-                  serialNumber, importantNotes, stringFaults, stringProducts, stringPrices, total, 
-                  deposit, due, issueDate, finishedDate,payDate).setVisible(true);
-          
-          OrderFixed finishedOrder = new OrderFixed();
-          finishedOrder.getComponent(3);
           
         }
         else

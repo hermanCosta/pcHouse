@@ -960,7 +960,7 @@ public class OrderNotFixed extends javax.swing.JInternalFrame {
                 dbConnection();
                 java.util.Date date = new java.util.Date();
                 java.sql.Timestamp currentDateTime = new java.sql.Timestamp(date.getTime());
-                String pickedDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
+                pickedDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
                 
                 
                 String query = "UPDATE orderDetails SET pickedDate = ? WHERE orderNo = ?";
