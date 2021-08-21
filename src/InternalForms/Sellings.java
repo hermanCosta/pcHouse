@@ -84,7 +84,8 @@ public class Sellings extends javax.swing.JInternalFrame {
         accessDbColumn(firstNames, "SELECT * FROM customers", "firstName");
         accessDbColumn(lastNames, "SELECT * FROM customers", "lastName");
         listProductService();
-        loadSellingsTable();
+        //loadSellingsTable();
+        showList();
     }
 
     
@@ -150,56 +151,17 @@ public class Sellings extends javax.swing.JInternalFrame {
         }   
     }
     
-    public void loadSellingsTable()
+    public ArrayList<Selling> loadSellingsTable()
     {
-        
-        /*
-             dbConnection();
-            
-            String query = "SELECT * FROM products"; 
-            ps = con.prepareStatement(query);
-            rs = ps.executeQuery();
-            rsmd = rs.getMetaData();
-            
-            int count; 
-            count = rsmd.getColumnCount();
-            dtm = (DefaultTableModel)table_view_products_list.getModel();
-            dtm.setRowCount(0);
-            
-            while(rs.next())
-            {
-                vector = new Vector();
-                for(int i = 1; i <= count; i++)
-                {
-                    vector.add(rs.getInt("productId"));
-                    vector.add(rs.getString("productService"));
-                    vector.add(rs.getDouble("price"));
-                    vector.add(rs.getInt("qty"));
-                    vector.add(rs.getString("notes"));
-                    vector.add(rs.getString("category"));
-                }
-                
-                
-                dtm.addRow(vector);
-            }
-        
-        */
+     ArrayList<Selling> sellingList = new ArrayList<>();   
         try {
             dbConnection();
             
             //ORDER BY sellingNo DESC LIMIT 10
-            String query = "SELECT * FROM sellings";
-            Statement st = con.createStatement();
-            //ps = con.prepareStatement(query);
-            rs = st.executeQuery(query);
+            String query = "SELECT * FROM sellings ORDER BY sellingNo LIMIT 10";
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery(query);
             rsmd = rs.getMetaData();
-            
-            int count; 
-            count = rsmd.getColumnCount();
-             DefaultTableModel dtm = (DefaultTableModel)table_view_sellings.getModel();
-            dtm.setRowCount(0);
-        
-            Vector sellings = new Vector();
             
             while (rs.next())
             {
@@ -207,29 +169,35 @@ public class Sellings extends javax.swing.JInternalFrame {
                 rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), rs.getString("price"), 
                 rs.getDouble("total"), rs.getString("sellingDate"));
                 
-                sellings.add(selling);
-                
-                for (Object obj : sellings)
-                {
-                    dtm.addRow(new Object[] {obj});
-                }
-                
-//                for (int i = 1; i <= count; i++)
-//                {
-//                    sellings.add(rs.getString("sellingNo"));
-//                    sellings.add(rs.getString("firstName"));
-//                    sellings.add(rs.getString("lastName"));
-//                    sellings.add(rs.getString("contactNo"));
-//                    sellings.add(rs.getString("productService"));
-//                    sellings.add(rs.getString("total"));
-//                }
-                
-                System.out.println(sellings);
-                
+                sellingList.add(selling);
             }
         } catch (SQLException ex) {
             Logger.getLogger(Sellings.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+       return sellingList; 
+    }
+    
+    public void showList()
+    {
+        ArrayList<Selling> list = loadSellingsTable();
+        
+        DefaultTableModel dtm = (DefaultTableModel)table_view_sellings.getModel();
+        dtm.setRowCount(0);
+        
+        Object[] row = new Object[6];
+        for (int i = 0; i <list.size() ; i++)
+        {
+            row[0] = list.get(i).getSellingNo();
+            row[1] = list.get(i).getFirstName();
+            row[2] = list.get(i).getLastName();
+            row[3] = list.get(i).getContactNo();
+            row[4] = list.get(i).getProductService();
+            row[5] = list.get(i).getTotal();
+            dtm.addRow(row);
+        }
+        
+        
     }
     
     public void autoCompleteFromDb(ArrayList list, String text, JTextField field)
