@@ -843,8 +843,8 @@ public class CompletedOrder extends javax.swing.JInternalFrame {
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         
-        new Receipt(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
-                serialNumber, table_view_products, total, deposit, due, payDate).setVisible(true);
+//        new Receipt(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
+//                serialNumber, table_view_products, total, deposit, due, payDate).setVisible(true);
     }//GEN-LAST:event_btn_printActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

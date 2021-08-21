@@ -5,7 +5,9 @@
  */
 package InternalForms;
 
+import Common.PintTableCells;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,8 +19,13 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -32,6 +39,8 @@ public class OrderList extends javax.swing.JInternalFrame {
         Connection con;
         ResultSet rs ;
         PreparedStatement ps;
+        
+        String tableStatus;
        
     public OrderList() {
         initComponents();
@@ -61,6 +70,7 @@ public class OrderList extends javax.swing.JInternalFrame {
         }
     }
     
+    
     public final void recentOrders()
     {
         label_latest_orders_created.setVisible(true);
@@ -76,6 +86,10 @@ public class OrderList extends javax.swing.JInternalFrame {
             countColumns = rsmd.getColumnCount();
             DefaultTableModel defaultTableModel = (DefaultTableModel)table_view_orders.getModel();
             defaultTableModel .setRowCount(0);
+            
+            //table_view_orders.setForeground(Color.red);
+            table_view_orders.setDefaultRenderer(Object.class, new PintTableCells());
+            
             
             while(rs.next())
             {
@@ -95,11 +109,57 @@ public class OrderList extends javax.swing.JInternalFrame {
                 }
                 
                 defaultTableModel.addRow(vector);
+                //DefaultTableModel model = new DefaultTableModel(vector,);
+                
+//                table_view_orders = new JTable(defaultTableModel) {
+//            @Override
+//            public Component prepareRenderer(TableCellRenderer renderer,
+//                    int row, int col) {
+//                 
+//                String status = "";   
+//                Component c = super.prepareRenderer(renderer, row, col);
+//                if (col == 7) {
+//                   for (int i = 0 ; i < defaultTableModel.getRowCount() ; i++)
+//                {   
+//                     status = defaultTableModel.getValueAt(row, col).toString();
+//                     if(status.equals("Fixed"))
+//                         c.setForeground(Color.green);
+//                         
+//                } 
+//                    c.setForeground(getColor(status));
+//                } else {
+//                    c.setForeground(getForeground());
+//                }
+//                return c;
+//            }
+
+//            private Color getColor(String status) {
+//                Color color = null;
+//                if (status.equals("Fixed")) {
+//                    color = Color.GREEN;
+//                } else if (status.equals("Not Fixed")) {
+//                    color = Color.RED;
+//                } else {
+//                    color = Color.yellow;
+//                }
+//                return color;
+//            }
+//        };
+//                
+               //JOptionPane.showMessageDialog(null, new JScrollPane(table));
+                 
+                 
+//                for (int i = 0 ; i < defaultTableModel.getRowCount() ; i++)
+//                {   
+//                     tableStatus = defaultTableModel.getValueAt(i, 7).toString();
+//                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
     
     
     public void searchOrder() {
@@ -304,32 +364,6 @@ public class OrderList extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void payOrder()
-    {
-        
-        DefaultTableModel dm = (DefaultTableModel)table_view_orders.getModel();
-        int selectedIndex = table_view_orders.getSelectedRow();
-
-        String orderSelected = dm.getValueAt(selectedIndex, 1).toString();
-
-        if (orderSelected.equals("Completed")) {
-            JOptionPane.showMessageDialog(this, "This order has been completed!");
-        }
-        else
-        {
-            String orderNo = dm.getValueAt(selectedIndex, 0).toString();
-            String model = dm.getValueAt(selectedIndex, 2).toString();
-            String serialNumber = dm.getValueAt(selectedIndex, 3).toString();
-            String price = dm.getValueAt(selectedIndex, 4).toString();
-            String deposit = dm.getValueAt(selectedIndex, 5).toString();
-            String due = dm.getValueAt(selectedIndex, 6).toString();
-
-           // new Billing(orderNo,model,serialNumber,price,deposit,due).setVisible(true);
-
-            this.setVisible(false);
-        }
-    }
-    
     private void table_view_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_ordersMouseClicked
 
         if(evt.getClickCount() == 2)
@@ -352,8 +386,8 @@ public class OrderList extends javax.swing.JInternalFrame {
             String issueDate = "";
             String status = "";
             String finishedDate = "";
-            String payDate = "";
             String pickedDate = "";
+            String payDate = "";
 
             dbConnection();
             DefaultTableModel dtm = (DefaultTableModel)table_view_orders.getModel();
@@ -402,24 +436,22 @@ public class OrderList extends javax.swing.JInternalFrame {
                     OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo,
                             email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService,
                             price, total, deposit, due, status, issueDate, pickedDate);
+                    desktop_pane_order_list.removeAll();
                     desktop_pane_order_list.add(orderDetails).setVisible(true);
                     break;
-//                case "Fixed":
-//                    OrderFixed fixedOrder = new OrderFixed(orderNo, firstName, lastName, contactNo,
-//                            email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService,
-//                            price, total, deposit, due, status, issueDate, finishedDate, pickedDate);
-//                    desktop_pane_order_list.add(fixedOrder).setVisible(true);
-//                    break;
                 case "Not Fixable":
+//                    OrderNotFixed orderNotFixed = new OrderNotFixed(orderNo, firstName, lastName, contactNo,
                     OrderNotFixed orderNotFixed = new OrderNotFixed(orderNo, firstName, lastName, contactNo,
                             email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService,
                             price, total, deposit, due, status, issueDate, finishedDate, pickedDate);
+                    desktop_pane_order_list.removeAll();
                     desktop_pane_order_list.add(orderNotFixed).setVisible(true);
                     break;
                 default:
                     OrderFixed fixedOrder = new OrderFixed(orderNo, firstName, lastName, contactNo,
                             email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService,
                             price, total, deposit, due, status, issueDate, finishedDate, pickedDate);
+                    desktop_pane_order_list.removeAll();
                     desktop_pane_order_list.add(fixedOrder).setVisible(true);
                     break;
             }

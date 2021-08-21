@@ -5,6 +5,7 @@
  */
 package InternalForms;
 
+import Forms.Print;
 import Forms.MainMenu;
 import Registering.Customer;
 import Registering.Order;
@@ -590,7 +591,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Description"
+                "Fault Description"
             }
         ) {
             Class[] types = new Class [] {
@@ -947,7 +948,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             deposit = Double.parseDouble(txt_deposit.getText());
             total = priceTotal - deposit;
 
-            txt_due.setText(Double.toString(total));
+            txt_due.setText(String.valueOf(total));
         }
     }//GEN-LAST:event_txt_depositKeyReleased
 

@@ -8,7 +8,6 @@ package Forms;
 import InternalForms.CompletedOrder;
 import InternalForms.OrderFixed;
 import InternalForms.NewOrder;
-import InternalForms.Receipt;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -32,7 +31,7 @@ public class Billing extends javax.swing.JFrame {
     String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
            deviceModel,  serialNumber, importantNotes, stringFaults, 
            stringProducts, stringPrices, issueDate, finishedDate, payDate; 
-    double total, deposit, due, cash, card;
+    double total, deposit, due, cash, card, totalPaid;
     
     public Billing() {
         initComponents();
@@ -104,6 +103,9 @@ public class Billing extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         lbl_total_due1 = new javax.swing.JLabel();
         lbl_due = new javax.swing.JLabel();
+        panel_deposit2 = new javax.swing.JPanel();
+        lbl_change€ = new javax.swing.JLabel();
+        lbl_change = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -202,7 +204,7 @@ public class Billing extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lbl_total_due)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_deposit, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                .addComponent(lbl_deposit, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
                 .addContainerGap())
         );
         panel_depositLayout.setVerticalGroup(
@@ -247,6 +249,37 @@ public class Billing extends javax.swing.JFrame {
                 .addGap(8, 8, 8))
         );
 
+        panel_deposit2.setBackground(new java.awt.Color(255, 153, 153));
+        panel_deposit2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        lbl_change€.setFont(new java.awt.Font("Lucida Grande", 0, 17)); // NOI18N
+        lbl_change€.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_change€.setText("Change €");
+
+        lbl_change.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        lbl_change.setForeground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout panel_deposit2Layout = new javax.swing.GroupLayout(panel_deposit2);
+        panel_deposit2.setLayout(panel_deposit2Layout);
+        panel_deposit2Layout.setHorizontalGroup(
+            panel_deposit2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_deposit2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lbl_change€)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbl_change, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        panel_deposit2Layout.setVerticalGroup(
+            panel_deposit2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_deposit2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panel_deposit2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_change€, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_change, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout panel_billingLayout = new javax.swing.GroupLayout(panel_billing);
         panel_billing.setLayout(panel_billingLayout);
         panel_billingLayout.setHorizontalGroup(
@@ -272,11 +305,12 @@ public class Billing extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(txt_cash))
                         .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(panel_deposit, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(panel_deposit, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(panel_deposit2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(panel_billingLayout.createSequentialGroup()
                         .addGap(9, 9, 9)
                         .addComponent(btn_pay, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(13, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_billingLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_order_payment)
@@ -309,7 +343,9 @@ public class Billing extends javax.swing.JFrame {
                     .addComponent(txt_card))
                 .addGap(56, 56, 56)
                 .addComponent(btn_pay, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                .addGap(112, 112, 112))
+                .addGap(45, 45, 45)
+                .addComponent(panel_deposit2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -350,36 +386,35 @@ public class Billing extends javax.swing.JFrame {
         payDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
         
         
-        double totalPaid = 0;
-        
         if (txt_cash.getText().isEmpty() && txt_card.getText().isEmpty())
         {
-            
             JOptionPane.showMessageDialog(null, "Values can not be Empty !", "Payment",  JOptionPane.ERROR_MESSAGE);
+            return;
         }
         
         else if(txt_cash.getText().isEmpty() && !txt_card.getText().isEmpty())
         {
             card = Double.parseDouble(txt_card.getText());
-            totalPaid = card;
+            cash = 0;
         }
         else if (txt_card.getText().isEmpty() && !txt_cash.getText().isEmpty())
         {
             cash = Double.parseDouble(txt_cash.getText());
-            totalPaid = cash;
+            card = 0;
         }
         
         else
         {
             cash = Double.parseDouble(txt_cash.getText());
             card = Double.parseDouble(txt_card.getText());
-            totalPaid = cash + card;
         }
+
+        totalPaid = cash + card;
         
-        due  = due - totalPaid;
-        
-        if (due == 0)
+        if ((due - totalPaid) <= 0)
         {
+            lbl_change.setText(String.valueOf(totalPaid - due));
+            
           try {
             dbConnection();
 
@@ -408,21 +443,26 @@ public class Billing extends javax.swing.JFrame {
             Logger.getLogger(Billing.class.getName()).log(Level.SEVERE, null, ex);
             }
           
-            JOptionPane.showMessageDialog(null, "Order: " + orderNo + " paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
-
-          
-          new OrderFixed().setVisible(true);
+            JOptionPane.showMessageDialog(null,orderNo + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
+            
+            
+          Receipt receipt =  new Receipt(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
+                serialNumber, stringProducts, total, deposit, due, payDate);
+          receipt.setVisible(true);
+            
           this.dispose();
           
         }
         else
         {
            JOptionPane.showMessageDialog(null, "Values don't match! please, check !", "Order Payment",  JOptionPane.ERROR_MESSAGE);
+           System.out.println("Due after calc: " + (due - totalPaid));
         }
     }//GEN-LAST:event_btn_payActionPerformed
 
     private void txt_cashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cashActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_txt_cashActionPerformed
 
     private void txt_cashKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cashKeyReleased
@@ -440,7 +480,8 @@ public class Billing extends javax.swing.JFrame {
         else
         {
             txt_cash.setEditable(true);
-        }       
+        }   
+        
     }//GEN-LAST:event_txt_cashKeyPressed
 
     private void txt_cardKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cardKeyPressed
@@ -499,6 +540,8 @@ public class Billing extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JLabel lbl_card;
     private javax.swing.JLabel lbl_cash;
+    private javax.swing.JLabel lbl_change;
+    private javax.swing.JLabel lbl_change€;
     private javax.swing.JLabel lbl_deposit;
     private javax.swing.JLabel lbl_due;
     private javax.swing.JLabel lbl_order_no;
@@ -509,6 +552,7 @@ public class Billing extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_total_due1;
     private javax.swing.JPanel panel_billing;
     private javax.swing.JPanel panel_deposit;
+    private javax.swing.JPanel panel_deposit2;
     private javax.swing.JTextField txt_card;
     private javax.swing.JTextField txt_cash;
     // End of variables declaration//GEN-END:variables
