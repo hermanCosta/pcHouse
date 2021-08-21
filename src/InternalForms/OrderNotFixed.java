@@ -8,10 +8,10 @@ package InternalForms;
 import Forms.Print;
 import Forms.Billing;
 import Forms.OrderNotes;
-import Forms.Receipt;
-import Registering.Customer;
-import Registering.Order;
-import Registering.ProductService;
+import Forms.ReceiptOrder;
+import Model.Customer;
+import Model.Order;
+import Model.ProductService;
 import java.awt.Color;
 import java.awt.Font;
 import java.sql.Connection;
@@ -212,14 +212,6 @@ public class OrderNotFixed extends javax.swing.JInternalFrame {
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(OrderNotFixed.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    
-    
-    public void print()
-    {
-        new Print(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
-                serialNumber, stringFaults, importantNotes, table_view_products, total, 
-                deposit, due, issueDate).setVisible(true);
     }
     
     @SuppressWarnings("unchecked")
@@ -1011,7 +1003,7 @@ public class OrderNotFixed extends javax.swing.JInternalFrame {
                 btn_notes1.setVisible(true);
                 
             } catch (SQLException ex) {
-                Logger.getLogger(OrderOldNotFixed.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(OrderNotFixed.class.getName()).log(Level.SEVERE, null, ex);
             }
             
         }

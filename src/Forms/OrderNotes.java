@@ -213,8 +213,8 @@ public class OrderNotes extends javax.swing.JFrame {
         if (evt.getClickCount() == 2)
         {
             
-            int selectedRow = table_view_notes.getSelectedRow();
-            note = table_view_notes.getValueAt(selectedRow, 1).toString();
+//            int selectedRow = table_view_notes.getSelectedRow();
+//            note = table_view_notes.getValueAt(selectedRow, 1).toString();
         
             int confirmDeletion = JOptionPane.showConfirmDialog(null, "Do you want to Delete note " + note + "?", "Order Notes", JOptionPane.YES_NO_OPTION);
             if (confirmDeletion == 0)

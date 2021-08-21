@@ -394,8 +394,8 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lbl_change€" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lbl_change" pref="172" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lbl_change" min="-2" pref="163" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -416,7 +416,7 @@
             <Component class="javax.swing.JLabel" name="lbl_change&#x20ac;">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Lucida Grande" size="17" style="0"/>
+                  <Font name="Lucida Grande" size="17" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>

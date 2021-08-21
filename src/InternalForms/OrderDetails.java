@@ -7,9 +7,9 @@ package InternalForms;
 
 import Forms.Print;
 import Forms.OrderNotes;
-import Registering.Customer;
-import Registering.Order;
-import Registering.ProductService;
+import Model.Customer;
+import Model.Order;
+import Model.ProductService;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -756,7 +756,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
         editor_pane_notes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Important Notes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 16))); // NOI18N
         editor_pane_notes.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
-        editor_pane_notes.setEnabled(false);
         jScrollPane_notes.setViewportView(editor_pane_notes);
 
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
@@ -1368,7 +1367,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         
         new Print(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
-                serialNumber, stringFaults, importantNotes, table_view_products, total, 
+                serialNumber, stringFaults, importantNotes, stringProducts, stringPrices, total, 
                 deposit, due, issueDate).setVisible(true);
     }//GEN-LAST:event_btn_printActionPerformed
 
@@ -1388,7 +1387,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 ps = con.prepareStatement(query);
                 ps.executeUpdate();
                 
-                OrderOldNotFixed orderNotFixed = new OrderOldNotFixed(orderNo, firstName, lastName, contactNo, email, deviceBrand,
+                OrderNotFixed orderNotFixed = new OrderNotFixed(orderNo, firstName, lastName, contactNo, email, deviceBrand,
                         deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringPrices, total,
                         deposit, due, status, issueDate, finishedDate, pickedDate);
                 

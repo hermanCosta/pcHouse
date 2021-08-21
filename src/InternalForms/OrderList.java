@@ -74,22 +74,19 @@ public class OrderList extends javax.swing.JInternalFrame {
     public final void recentOrders()
     {
         label_latest_orders_created.setVisible(true);
-        dbConnection();
-        
-         try {
+
+        try {
+            dbConnection();
             ps = con.prepareStatement("SELECT * FROM orderDetails ORDER BY orderNo DESC LIMIT 15 ");
-                                        
             rs = ps.executeQuery();
             
             ResultSetMetaData rsmd = rs.getMetaData();
-            int countColumns; 
-            countColumns = rsmd.getColumnCount();
+            int countColumns = rsmd.getColumnCount();
             DefaultTableModel defaultTableModel = (DefaultTableModel)table_view_orders.getModel();
             defaultTableModel .setRowCount(0);
             
             //table_view_orders.setForeground(Color.red);
-            table_view_orders.setDefaultRenderer(Object.class, new PintTableCells());
-            
+            //table_view_orders.setDefaultRenderer(Object.class, new PintTableCells());
             
             while(rs.next())
             {
@@ -320,9 +317,10 @@ public class OrderList extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(table_view_orders);
         if (table_view_orders.getColumnModel().getColumnCount() > 0) {
             table_view_orders.getColumnModel().getColumn(0).setMaxWidth(80);
+            table_view_orders.getColumnModel().getColumn(7).setMaxWidth(100);
         }
 
-        lbl_search_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icons-search.png"))); // NOI18N
+        lbl_search_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_search.png"))); // NOI18N
 
         desktop_pane_order_list.setLayer(txt_search_order, javax.swing.JLayeredPane.DEFAULT_LAYER);
         desktop_pane_order_list.setLayer(label_latest_orders_created, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -334,9 +332,9 @@ public class OrderList extends javax.swing.JInternalFrame {
         desktop_pane_order_listLayout.setHorizontalGroup(
             desktop_pane_order_listLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(desktop_pane_order_listLayout.createSequentialGroup()
-                .addGap(80, 80, 80)
+                .addGap(74, 74, 74)
                 .addComponent(lbl_search_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txt_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, 860, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(desktop_pane_order_listLayout.createSequentialGroup()
                 .addGap(360, 360, 360)
@@ -349,9 +347,9 @@ public class OrderList extends javax.swing.JInternalFrame {
             desktop_pane_order_listLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(desktop_pane_order_listLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addGroup(desktop_pane_order_listLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_search_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txt_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(desktop_pane_order_listLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txt_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_search_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(13, 13, 13)
                 .addComponent(label_latest_orders_created)
                 .addGap(25, 25, 25)
@@ -439,7 +437,7 @@ public class OrderList extends javax.swing.JInternalFrame {
                     desktop_pane_order_list.removeAll();
                     desktop_pane_order_list.add(orderDetails).setVisible(true);
                     break;
-                case "Not Fixable":
+                case "Not Fixed":
 //                    OrderNotFixed orderNotFixed = new OrderNotFixed(orderNo, firstName, lastName, contactNo,
                     OrderNotFixed orderNotFixed = new OrderNotFixed(orderNo, firstName, lastName, contactNo,
                             email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService,

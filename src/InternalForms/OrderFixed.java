@@ -8,10 +8,10 @@ package InternalForms;
 import Forms.Print;
 import Forms.Billing;
 import Forms.OrderNotes;
-import Forms.Receipt;
-import Registering.Customer;
-import Registering.Order;
-import Registering.ProductService;
+import Forms.ReceiptOrder;
+import Model.Customer;
+import Model.Order;
+import Model.ProductService;
 import java.awt.Color;
 import java.awt.Font;
 import java.sql.Connection;
@@ -137,16 +137,6 @@ public class OrderFixed extends javax.swing.JInternalFrame {
         
        if (pickedDate != null && !pickedDate.trim().isEmpty())
         {
-            /*
-             lbl_order_picked_on.setVisible(true);
-            lbl_order_picked_on.setText("Picked on: " + pickedDate);
-            btn_undo.setVisible(false);
-            btn_pick_up.setVisible(false);
-            btn_notes.setVisible(false);
-            btn_notes1.setVisible(true);
-            */
-            
-            
             lbl_order_picked_on.setText("Picked on: " + pickedDate);
             lbl_order_picked_on.setVisible(true);
             
@@ -227,7 +217,7 @@ public class OrderFixed extends javax.swing.JInternalFrame {
     public void print()
     {
         new Print(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
-                serialNumber, stringFaults, importantNotes, table_view_products, total, 
+                serialNumber, stringFaults, importantNotes, stringProducts, stringPrices, total, 
                 deposit, due, issueDate).setVisible(true);
     }
     
@@ -1033,10 +1023,27 @@ public class OrderFixed extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btn_notesActionPerformed
 
     private void btn_receiptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_receiptActionPerformed
-        // TODO add your handling code here:
-        Receipt receipt =  new Receipt(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
-                serialNumber, stringProducts, total, deposit, due, pickedDate);
-          receipt.setVisible(true);
+        try {
+            // TODO add your handling code here:
+            dbConnection();
+            double cash = 0, card = 0;
+            String query = "SELECT cash, card FROM completedOrders WHERE orderNo = ?";
+            ps = con.prepareStatement(query);
+            ps.setString(1, orderNo);
+            rs = ps.executeQuery();
+            
+            while (rs.next())
+            {
+                cash = rs.getDouble("cash");
+                card = rs.getDouble("card");
+            }
+            
+            ReceiptOrder receipt =  new ReceiptOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel,
+                    serialNumber, stringProducts, stringPrices, total, deposit, due, pickedDate, cash, card);
+            receipt.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderFixed.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btn_receiptActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -76,9 +76,9 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace min="80" pref="80" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
                   <Component id="lbl_search_icon" min="-2" pref="30" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="txt_search_order" min="-2" pref="860" max="-2" attributes="0"/>
               </Group>
               <Group type="102" attributes="0">
@@ -95,9 +95,9 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace min="30" pref="30" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="lbl_search_icon" min="-2" pref="30" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="txt_search_order" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_search_icon" min="-2" pref="30" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="13" pref="13" max="-2" attributes="0"/>
                   <Component id="label_latest_orders_created" min="-2" max="-2" attributes="0"/>
@@ -196,7 +196,7 @@
                       <Editor/>
                       <Renderer/>
                     </Column>
-                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                    <Column maxWidth="100" minWidth="-1" prefWidth="-1" resizable="true">
                       <Title/>
                       <Editor/>
                       <Renderer/>
@@ -216,7 +216,7 @@
         <Component class="javax.swing.JLabel" name="lbl_search_icon">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/Img/icons-search.png"/>
+              <Image iconType="3" name="/Img/icon_search.png"/>
             </Property>
           </Properties>
         </Component>

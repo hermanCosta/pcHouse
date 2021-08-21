@@ -9,6 +9,7 @@ import InternalForms.NewOrder;
 import InternalForms.OrderList;
 import InternalForms.CloseTill;
 import InternalForms.ProductsList;
+import InternalForms.Sellings;
 import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -893,6 +894,10 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void label_sellingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_sellingsMouseClicked
         // TODO add your handling code here:
+        Sellings sellings = new Sellings();
+        desktop_pane_main_menu.removeAll();
+        desktop_pane_main_menu.add(sellings).setVisible(true);
+        
         panel_add_new.setBackground(defaultColor);
         panel_sellings.setBackground(clickedColor);
     }//GEN-LAST:event_label_sellingsMouseClicked

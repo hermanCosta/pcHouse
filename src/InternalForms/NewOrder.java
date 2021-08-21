@@ -7,9 +7,9 @@ package InternalForms;
 
 import Forms.Print;
 import Forms.MainMenu;
-import Registering.Customer;
-import Registering.Order;
-import Registering.ProductService;
+import Model.Customer;
+import Model.Order;
+import Model.ProductService;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -112,32 +112,79 @@ public class NewOrder extends javax.swing.JInternalFrame {
         }
     }
     
+//    public final void autoID()
+//    {
+//        
+//        try {
+//            dbConnection();
+//            String query = "SELECT Max(orderNo) FROM orderDetails";
+//            ps = con.prepareCall(query);
+//            rs = ps.executeQuery();
+//            
+//            rs.next();
+//             rs.getString("Max(orderNo)");
+//             
+//             if (rs.getString("Max(orderNo)") == null) 
+//             {
+//                lbl_auto_order_no.setText("0000001");
+//             }
+//             else
+//             {
+//                 long id = Long.parseLong(rs.getString("Max(orderNo)").substring(2,
+//                         rs.getString("Max(orderNo)").length()));
+//                 id++;
+//                 lbl_auto_order_no.setText(String.format("%07d", id));            
+//             }
+//            
+//        } catch (SQLException ex) {
+//            Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
+//        }   
+//    }
+    
     public final void autoID()
     {
         
         try {
             dbConnection();
-            String query = "SELECT Max(orderNo) FROM orderDetails";
-            ps = con.prepareCall(query);
+            String queryCheckOrders = "SELECT Max(orderNo) FROM orderDetails";
+            ps = con.prepareStatement(queryCheckOrders);
             rs = ps.executeQuery();
             
             rs.next();
-             rs.getString("Max(orderNo)");
+            Integer maxOrderNo = Integer.parseInt(rs.getString(1));
              
-             if (rs.getString("Max(orderNo)") == null) 
+            //check sellingNo from sellings table
+            String queryCheckSelling = "SELECT Max(sellingNo) FROM sellings";
+            PreparedStatement psSellings = con.prepareStatement(queryCheckSelling);
+            psSellings = con.prepareStatement(queryCheckSelling);
+           
+            ResultSet rsSellings = psSellings.executeQuery();
+            
+            rsSellings.next();
+            Integer maxSellingNo = Integer.parseInt(rsSellings.getString(1));
+            
+             
+             if (maxOrderNo == null || maxSellingNo == null) 
              {
                 lbl_auto_order_no.setText("0000001");
              }
-             else
+             else if (maxOrderNo > maxSellingNo)
              {
                  long id = Long.parseLong(rs.getString("Max(orderNo)").substring(2,
                          rs.getString("Max(orderNo)").length()));
                  id++;
                  lbl_auto_order_no.setText(String.format("%07d", id));            
              }
+             else
+             {
+                 long id = Long.parseLong(rsSellings.getString("Max(sellingNo)").substring(2,
+                         rsSellings.getString("Max(sellingNo)").length()));
+                 id++;
+                 lbl_auto_order_no.setText(String.format("%07d", id)); 
+             }
             
         } catch (SQLException ex) {
-            Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Sellings.class.getName()).log(Level.SEVERE, null, ex);
         }   
     }
     
@@ -345,7 +392,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         panel_order_details.setPreferredSize(new java.awt.Dimension(1049, 700));
 
         lbl_order_no.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
-        lbl_order_no.setText("Order Number");
+        lbl_order_no.setText("Order No.");
 
         lbl_first_name.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         lbl_first_name.setText("First Name");
@@ -541,6 +588,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         btn_save_order.setBackground(new java.awt.Color(21, 76, 121));
         btn_save_order.setFont(new java.awt.Font("Lucida Grande", 1, 22)); // NOI18N
         btn_save_order.setForeground(new java.awt.Color(255, 255, 255));
+        btn_save_order.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_save.png"))); // NOI18N
         btn_save_order.setText("Save");
         btn_save_order.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -551,6 +599,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         btn_cancel.setBackground(new java.awt.Color(21, 76, 121));
         btn_cancel.setFont(new java.awt.Font("Lucida Grande", 1, 22)); // NOI18N
         btn_cancel.setForeground(new java.awt.Color(255, 255, 255));
+        btn_cancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_cancel.png"))); // NOI18N
         btn_cancel.setText("Cancel");
         btn_cancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -905,9 +954,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(this, "New order created successfully!");
 
                  // Send Order to print class as a constructor
-                 new Print(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
-                    serialNumber, stringFaults, importantNotes, table_view_products, total,
-                    deposit, due, issueDate);
+                 new Print(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel,
+                    serialNumber, stringFaults, importantNotes, stringProducts, stringPrices, total,
+                    deposit, due, issueDate).setVisible(true);
 
                 cleanAllFields(table_view_faults);
                 cleanAllFields(table_view_products);
@@ -1259,10 +1308,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     ps.setString(4, customer.getEmail());
                     ps.executeUpdate();
                     txt_brand.requestFocus();
-                    
-//                    rs = ps.getGeneratedKeys();
-//                    if (rs.next())
-//                        customer.setCustomerID(rs.getInt(1));
                 }
                 else
                 {
@@ -1284,8 +1329,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     txt_last_name.setText(rs.getString("lastName"));
                     txt_contact.setText(rs.getString("contactNo"));
                     txt_email.setText(rs.getString("email"));
-                    //int id = rs.getInt("customerID");
-                    //System.out.println("Customer ID: " + id);
                 }
             }
             

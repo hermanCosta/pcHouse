@@ -5,7 +5,7 @@
  */
 package InternalForms;
 
-import Registering.ProductService;
+import Model.ProductService;
 import java.awt.Color;
 import java.awt.Font;
 import java.sql.Connection;
@@ -41,9 +41,9 @@ public class ProductsList extends javax.swing.JInternalFrame {
      Connection con;
      PreparedStatement ps;
      ProductService productService;
-     DefaultTableModel defaultTableModel;
+     DefaultTableModel dtm;
      ResultSet rs;
-     ResultSetMetaData resultSetMetaData;
+     ResultSetMetaData rsmd;
      Vector vector;
      Statement statement;
      String productId;
@@ -70,19 +70,18 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
     public final void displayProductList()
     {
-        dbConnection();
-        
          try {
-             
+            dbConnection();
+            
             String query = "SELECT * FROM products"; 
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
-            resultSetMetaData = rs.getMetaData();
+            rsmd = rs.getMetaData();
             
             int count; 
-            count = resultSetMetaData.getColumnCount();
-            defaultTableModel = (DefaultTableModel)table_view_products_list.getModel();
-            defaultTableModel.setRowCount(0);
+            count = rsmd.getColumnCount();
+            dtm = (DefaultTableModel)table_view_products_list.getModel();
+            dtm.setRowCount(0);
             
             while(rs.next())
             {
@@ -97,7 +96,8 @@ public class ProductsList extends javax.swing.JInternalFrame {
                     vector.add(rs.getString("category"));
                 }
                 
-                defaultTableModel.addRow(vector);
+                
+                dtm.addRow(vector);
             }
         } catch (SQLException ex) {
             Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
@@ -169,12 +169,12 @@ public class ProductsList extends javax.swing.JInternalFrame {
             String query = "SELECT * FROM products WHERE productService LIKE '%" + searchProduct + "%'"; 
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
-            resultSetMetaData = rs.getMetaData();
+            rsmd = rs.getMetaData();
             
             int count; 
-            count = resultSetMetaData.getColumnCount();
-            defaultTableModel = (DefaultTableModel)table_view_products_list.getModel();
-            defaultTableModel .setRowCount(0);
+            count = rsmd.getColumnCount();
+            dtm = (DefaultTableModel)table_view_products_list.getModel();
+            dtm .setRowCount(0);
             
             while(rs.next())
             {
@@ -187,7 +187,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
                     vector.add(rs.getInt("qty"));
                     vector.add(rs.getString("notes"));
                 }
-                defaultTableModel.addRow(vector);
+                dtm.addRow(vector);
             }
         } catch (SQLException ex) {
             Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
@@ -199,10 +199,10 @@ public class ProductsList extends javax.swing.JInternalFrame {
         dbConnection();
         
         int selectedRow = table_view_products_list.getSelectedRow();
-        defaultTableModel = (DefaultTableModel)table_view_products_list.getModel();
-        productId = defaultTableModel.getValueAt(selectedRow, 0).toString();
+        dtm = (DefaultTableModel)table_view_products_list.getModel();
+        productId = dtm.getValueAt(selectedRow, 0).toString();
         
-        String productName = defaultTableModel.getValueAt(selectedRow, 1).toString();
+        String productName = dtm.getValueAt(selectedRow, 1).toString();
         
         
         int confirmDeletion = JOptionPane.showConfirmDialog(null, "Do you really want to delete " 
@@ -214,7 +214,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
                 String query = "DELETE FROM products WHERE productId = '" + productId + "'";
                 ps = con.prepareStatement(query);
                 ps.executeUpdate();
-                defaultTableModel.removeRow(table_view_products_list.getSelectedRow());
+                dtm.removeRow(table_view_products_list.getSelectedRow());
                 displayProductList();
 
             } catch (SQLException ex) {
@@ -551,15 +551,15 @@ public class ProductsList extends javax.swing.JInternalFrame {
         if(count == 2)
         {
             int selectedRow = table_view_products_list.getSelectedRow();
-            defaultTableModel = (DefaultTableModel)table_view_products_list.getModel();
+            dtm = (DefaultTableModel)table_view_products_list.getModel();
             table_view_products_list.getModel().addTableModelListener(table_view_products_list);
-            ID = defaultTableModel.getValueAt(selectedRow, 0).toString();
+            ID = dtm.getValueAt(selectedRow, 0).toString();
 
-            txt_product_service_list.setText(defaultTableModel.getValueAt(selectedRow, 1).toString());
-            txt_add_price.setText(defaultTableModel.getValueAt(selectedRow, 2).toString());
-            txt_add_qty.setText(defaultTableModel.getValueAt(selectedRow, 3).toString());
-            txt_add_notes.setText(defaultTableModel.getValueAt(selectedRow, 4).toString());
-            combo_box_category.setSelectedItem(defaultTableModel.getValueAt(selectedRow, 5).toString());;
+            txt_product_service_list.setText(dtm.getValueAt(selectedRow, 1).toString());
+            txt_add_price.setText(dtm.getValueAt(selectedRow, 2).toString());
+            txt_add_qty.setText(dtm.getValueAt(selectedRow, 3).toString());
+            txt_add_notes.setText(dtm.getValueAt(selectedRow, 4).toString());
+            combo_box_category.setSelectedItem(dtm.getValueAt(selectedRow, 5).toString());;
         }
        
         else

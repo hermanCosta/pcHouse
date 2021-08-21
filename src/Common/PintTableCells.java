@@ -20,20 +20,16 @@ public static final float G = 0.5f;
 public static final float B = 0.8f;
 
 @Override
-//public Component getTableCellRendererComponent
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
- //super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
  super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     
     Color c = Color.WHITE;
-    Object text = table.getValueAt(row, 7);
+    Object text = table.getValueAt(row, column);
     
     if (text != null && "Fixed".equals(text.toString())){
         // RGB
-        //c = new Color(204,255,204);
+        c = new Color(204,255,204);
         //table.getValueAt(row, 7);
-        
-        table.setForeground(Color.green);
         
     }
     if(text != null && "Not Fixed".equals(text.toString())){
@@ -52,6 +48,5 @@ public static final float B = 0.8f;
           setBackground(table.getSelectionBackground());    
   }
     return this;
-   
 }
 }

@@ -5,9 +5,9 @@
  */
 package InternalForms;
 
-import Registering.Customer;
-import Registering.Order;
-import Registering.ProductService;
+import Model.Customer;
+import Model.Order;
+import Model.ProductService;
 import java.awt.Color;
 import java.awt.Font;
 import java.sql.Connection;

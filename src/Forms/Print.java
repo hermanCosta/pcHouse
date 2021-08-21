@@ -5,8 +5,6 @@
  */
 package Forms;
 
-import InternalForms.OrderFixed;
-import InternalForms.OrderList;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
@@ -16,7 +14,6 @@ import java.awt.print.PrinterJob;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 
 /**
  *
@@ -28,17 +25,16 @@ public class Print extends javax.swing.JFrame {
      * Creates new form Print
      */
     
-    JTable tableProducts;
     double deposit, due, total;
     String orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, 
-            importantNotes, faults, issuedDate;
+            importantNotes, stringFaults, stringProducts, stringPrices, issuedDate;
     
     public Print() {
         initComponents();
     }
     
     public Print(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, String _deviceBrand, 
-            String _deviceModel, String _serialNumber, String _faults, String _importantNotes, JTable _tableProducts, 
+            String _deviceModel, String _serialNumber, String _stringFaults, String _importantNotes, String _stringProducts, String _stringPrices, 
             double _total, double _deposit, double _due, String _issuedDate) {
         
         initComponents();
@@ -57,13 +53,15 @@ public class Print extends javax.swing.JFrame {
         this.importantNotes = _importantNotes;
         this.deposit = _deposit;
         this.due = _due;
-        this.faults = _faults;
-        this.tableProducts = _tableProducts;
+        this.stringFaults = _stringFaults;
+        this.stringProducts = _stringProducts;
+        this.stringPrices = _stringPrices;
         this.total = _total;
         this.issuedDate = _issuedDate;
         
         loadOrderToPrint();
     }
+
     
     public void loadOrderToPrint()
     {
@@ -76,17 +74,22 @@ public class Print extends javax.swing.JFrame {
         lbl_print_model.setText("Device model: " + deviceModel);
         lbl_print_sn.setText("S/N: " + serialNumber);
         txt_pane_important_notes.setText(importantNotes);
-        txt_pane_print_faults.setText(faults);
+        txt_pane_print_faults.setText(stringFaults);
         lbl_print_total_products.setText("Total: €" + String.valueOf(total));
         lbl_print_deposit.setText("Deposit paid: €" + String.valueOf(deposit));
         lbl_print_due.setText("Due:     €" + String.valueOf(due));
         
-        for (int i = 0; i < tableProducts.getRowCount(); i++)
+        
+        String[] arrayProducts = stringProducts.split(",");
+        String[] arrayPrices = stringPrices.split(",");
+        for (String s : arrayProducts)
         {
-            String product = tableProducts.getValueAt(i, 0).toString();
-            String price = tableProducts.getValueAt(i, 1).toString();
-            txt_pane_products.setText(txt_pane_products.getText() + " - " + product +"\n");
-            txt_pane_prices.setText(txt_pane_prices.getText()+ " €" + price + "\n");
+            txt_pane_products.setText(txt_pane_products.getText() + " - " + s + " \n");
+        }
+        
+        for (String s : arrayPrices)
+        {
+            txt_pane_prices.setText(txt_pane_prices.getText() + "€" + s + "\n");
         }
     }
 
@@ -135,8 +138,8 @@ public class Print extends javax.swing.JFrame {
         jScrollPane10 = new javax.swing.JScrollPane();
         txt_pane_prices = new javax.swing.JTextPane();
         lbl_price = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        btn_print = new javax.swing.JButton();
+        lbl_order_print_view = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -378,19 +381,19 @@ public class Print extends javax.swing.JFrame {
 
         jScrollPane4.setViewportView(panel_print_order);
 
-        jButton1.setBackground(new java.awt.Color(21, 76, 121));
-        jButton1.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_print.png"))); // NOI18N
-        jButton1.setText("Print");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btn_print.setBackground(new java.awt.Color(21, 76, 121));
+        btn_print.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        btn_print.setForeground(new java.awt.Color(255, 255, 255));
+        btn_print.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_print.png"))); // NOI18N
+        btn_print.setText("Print");
+        btn_print.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btn_printActionPerformed(evt);
             }
         });
 
-        jLabel3.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
-        jLabel3.setText("Order Details Print View");
+        lbl_order_print_view.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
+        lbl_order_print_view.setText("Order Details Print View");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -398,9 +401,9 @@ public class Print extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lbl_order_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(54, 54, 54)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34))
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
@@ -412,18 +415,18 @@ public class Print extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_order_print_view))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 599, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(71, 71, 71))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         PrinterJob printerJob = PrinterJob.getPrinterJob();
         printerJob.setJobName("Printing Order: " + this.orderNo);
@@ -461,7 +464,7 @@ public class Print extends javax.swing.JFrame {
                 Logger.getLogger(Print.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btn_printActionPerformed
 
     /**
      * @param args the command line arguments
@@ -501,10 +504,9 @@ public class Print extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btn_print;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane2;
@@ -517,6 +519,7 @@ public class Print extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_logo_icon;
     private javax.swing.JLabel lbl_mobile;
     private javax.swing.JLabel lbl_mobile_number;
+    private javax.swing.JLabel lbl_order_print_view;
     private javax.swing.JLabel lbl_phone;
     private javax.swing.JLabel lbl_price;
     private javax.swing.JLabel lbl_print_brand;

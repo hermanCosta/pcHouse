@@ -252,7 +252,7 @@ public class Billing extends javax.swing.JFrame {
         panel_deposit2.setBackground(new java.awt.Color(255, 153, 153));
         panel_deposit2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        lbl_change€.setFont(new java.awt.Font("Lucida Grande", 0, 17)); // NOI18N
+        lbl_change€.setFont(new java.awt.Font("Lucida Grande", 1, 17)); // NOI18N
         lbl_change€.setForeground(new java.awt.Color(255, 255, 255));
         lbl_change€.setText("Change €");
 
@@ -267,8 +267,8 @@ public class Billing extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lbl_change€)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_change, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(lbl_change, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_deposit2Layout.setVerticalGroup(
             panel_deposit2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -418,7 +418,7 @@ public class Billing extends javax.swing.JFrame {
           try {
             dbConnection();
 
-            String queryInsert = "INSERT INTO completedOrders VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String queryInsert = "INSERT INTO completedOrders VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = con.prepareStatement(queryInsert);
             ps.setString(1, orderNo);
             ps.setString(2, firstName);
@@ -428,6 +428,9 @@ public class Billing extends javax.swing.JFrame {
             ps.setDouble(6, due);
             ps.setDouble(7, totalPaid);
             ps.setString(8, payDate);
+            ps.setDouble(9, cash);
+            ps.setDouble(10, card);
+            
             ps.executeUpdate();
             
             String pickedDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
@@ -446,8 +449,8 @@ public class Billing extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null,orderNo + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
             
             
-          Receipt receipt =  new Receipt(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
-                serialNumber, stringProducts, total, deposit, due, payDate);
+          ReceiptOrder receipt =  new ReceiptOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
+                serialNumber, stringProducts, stringPrices, total, deposit, due, payDate, cash, card);
           receipt.setVisible(true);
             
           this.dispose();
