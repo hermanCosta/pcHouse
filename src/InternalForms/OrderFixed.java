@@ -8,7 +8,7 @@ package InternalForms;
 import Forms.Print;
 import Forms.OrderPayment;
 import Forms.OrderNotes;
-import Forms.ReceiptOrder;
+import Forms.OrderReceipt;
 import Model.Customer;
 import Model.Order;
 import Model.ProductService;
@@ -1038,7 +1038,7 @@ public class OrderFixed extends javax.swing.JInternalFrame {
                 card = rs.getDouble("card");
             }
             
-            ReceiptOrder receipt =  new ReceiptOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel,
+            OrderReceipt receipt =  new OrderReceipt(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel,
                     serialNumber, stringProducts, stringPrices, total, deposit, due, pickedDate, cash, card);
             receipt.setVisible(true);
         } catch (SQLException ex) {

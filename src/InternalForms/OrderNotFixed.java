@@ -8,7 +8,7 @@ package InternalForms;
 import Forms.Print;
 import Forms.OrderPayment;
 import Forms.OrderNotes;
-import Forms.ReceiptOrder;
+import Forms.OrderReceipt;
 import Model.Customer;
 import Model.Order;
 import Model.ProductService;
