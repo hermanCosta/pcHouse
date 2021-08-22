@@ -380,8 +380,8 @@ public class OrderPayment extends javax.swing.JFrame {
     private void btn_payActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_payActionPerformed
         // TODO add your handling code here:
         Date date = new Date();
-        Timestamp currentDateTime = new Timestamp(date.getTime());
-        payDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
+        Timestamp currentDate = new Timestamp(date.getTime());
+        payDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
         
         
         if (txt_cash.getText().isEmpty() && txt_card.getText().isEmpty())
@@ -431,7 +431,7 @@ public class OrderPayment extends javax.swing.JFrame {
             
             ps.executeUpdate();
             
-            String pickedDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
+            String pickedDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDate);
                 
             String queryUpdate = "UPDATE orderDetails SET pickedDate = ? WHERE orderNo = ?";
             ps = con.prepareStatement(queryUpdate);

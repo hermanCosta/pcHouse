@@ -896,8 +896,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
 
             Date date = new java.util.Date();
-            Timestamp currentDateTime = new Timestamp(date.getTime());
-            issueDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
+            Timestamp currentDate = new Timestamp(date.getTime());
+            issueDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
 
             //pass table items from faults and products table to vector 
             for(int i = 0; i < table_view_faults.getRowCount(); i++)

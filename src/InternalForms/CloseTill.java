@@ -5,7 +5,21 @@
  */
 package InternalForms;
 
+import Common.DBConnection;
+import Model.OrdersReport;
+import Model.SalesReport;
 import java.awt.Color;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 /**
@@ -19,6 +33,15 @@ public class CloseTill extends javax.swing.JInternalFrame {
      */
     
     Color defaultColor, mouseEnteredColor;
+    PreparedStatement ps;
+    Statement st;
+    Connection con;
+    ResultSet rs;
+    OrdersReport ordersReport;
+    SalesReport salesReport;
+    
+    
+    
     public CloseTill() {
         initComponents();
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
@@ -30,6 +53,18 @@ public class CloseTill extends javax.swing.JInternalFrame {
         mouseEnteredColor = new Color(118,181,197);
         
     }
+    
+     public void dbConnection() 
+    {
+        try {
+              Class.forName("com.mysql.cj.jdbc.Driver");
+              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
+              st = con.createStatement();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -40,144 +75,176 @@ public class CloseTill extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panel_today_orders = new javax.swing.JPanel();
-        label_today_orders = new javax.swing.JLabel();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
-        jTextField1 = new javax.swing.JTextField();
+        panel_calendar = new javax.swing.JPanel();
+        lbl_date = new javax.swing.JLabel();
+        lbl_date_selected = new javax.swing.JLabel();
+        date_picker = new com.toedter.calendar.JCalendar();
+        btn_orders = new javax.swing.JButton();
+        btn_full_report = new javax.swing.JButton();
+        btn_sales = new javax.swing.JButton();
 
         setBorder(null);
-        setPreferredSize(new java.awt.Dimension(734, 609));
+        setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
+        setPreferredSize(new java.awt.Dimension(1049, 700));
 
-        panel_today_orders.setBackground(new java.awt.Color(21, 76, 121));
-        panel_today_orders.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        panel_today_orders.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                panel_today_ordersMousePressed(evt);
+        panel_calendar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        panel_calendar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        lbl_date.setText("dd/ mm /");
+        panel_calendar.add(lbl_date, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 10, -1, -1));
+
+        lbl_date_selected.setText("Date Selected:");
+        panel_calendar.add(lbl_date_selected, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 10, -1, -1));
+
+        date_picker.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        date_picker.setDate(new java.util.Date(1629655133000L));
+        date_picker.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                date_pickerPropertyChange(evt);
             }
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                panel_today_ordersMouseClicked(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                panel_today_ordersMouseExited(evt);
+        });
+        panel_calendar.add(date_picker, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 2, -1, 227));
+
+        btn_orders.setBackground(new java.awt.Color(21, 76, 121));
+        btn_orders.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        btn_orders.setForeground(new java.awt.Color(255, 255, 255));
+        btn_orders.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_print.png"))); // NOI18N
+        btn_orders.setText("Orders");
+        btn_orders.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ordersActionPerformed(evt);
             }
         });
 
-        label_today_orders.setBackground(new java.awt.Color(255, 255, 255));
-        label_today_orders.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
-        label_today_orders.setForeground(new java.awt.Color(255, 255, 255));
-        label_today_orders.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_today_orders.png"))); // NOI18N
-        label_today_orders.setText(" Today Orders");
-        label_today_orders.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                label_today_ordersMousePressed(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                label_today_ordersMouseReleased(evt);
-            }
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                label_today_ordersMouseClicked(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                label_today_ordersMouseExited(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                label_today_ordersMouseEntered(evt);
+        btn_full_report.setBackground(new java.awt.Color(21, 76, 121));
+        btn_full_report.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        btn_full_report.setForeground(new java.awt.Color(255, 255, 255));
+        btn_full_report.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_print.png"))); // NOI18N
+        btn_full_report.setText("Print Full Report");
+        btn_full_report.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_full_reportActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout panel_today_ordersLayout = new javax.swing.GroupLayout(panel_today_orders);
-        panel_today_orders.setLayout(panel_today_ordersLayout);
-        panel_today_ordersLayout.setHorizontalGroup(
-            panel_today_ordersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_today_ordersLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(label_today_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(33, Short.MAX_VALUE))
-        );
-        panel_today_ordersLayout.setVerticalGroup(
-            panel_today_ordersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_today_ordersLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(label_today_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 25, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        try {
-            jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(0##) ###-####")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
+        btn_sales.setBackground(new java.awt.Color(21, 76, 121));
+        btn_sales.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        btn_sales.setForeground(new java.awt.Color(255, 255, 255));
+        btn_sales.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_print.png"))); // NOI18N
+        btn_sales.setText("Sales");
+        btn_sales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_salesActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(244, 244, 244)
-                        .addComponent(panel_today_orders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(280, 280, 280)
-                        .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 27, 27)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(181, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(panel_calendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(btn_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btn_full_report, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(598, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(108, 108, 108)
+                .addGap(20, 20, 20)
+                .addComponent(panel_calendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btn_full_report, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(62, 62, 62)
-                .addComponent(panel_today_orders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(358, Short.MAX_VALUE))
+                    .addComponent(btn_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(284, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void label_today_ordersMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMousePressed
+    private void btn_ordersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ordersActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_label_today_ordersMousePressed
+      
+    }//GEN-LAST:event_btn_ordersActionPerformed
 
-    private void label_today_ordersMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMouseReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_label_today_ordersMouseReleased
+    private void btn_full_reportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_full_reportActionPerformed
+        ArrayList<OrdersReport> ordersList = new ArrayList<>();
+        ArrayList<SalesReport> salesList = new ArrayList<>();
+        
+        try {
+            // TODO add your handling code here:
+            dbConnection();
+            Date date = date_picker.getDate();
+            String selectedDate = new SimpleDateFormat("dd/MM/yyyy").format(date);
+            System.out.println("Date for Query: " +selectedDate);
+            
+            String queryOrders = "SELECT * FROM completedOrders WHERE payDate = ?";
+            ps = con.prepareStatement(queryOrders);
+            ps.setString(1, selectedDate);
+            rs = ps.executeQuery();
+            
+            while (rs.next())
+            {
+                //String orderNo, orderFirstName, orderLastName, orderTotal, orderPayDate, orderCash, orderCard;
+               ordersReport = new OrdersReport(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"),
+                       rs.getString("total"), rs.getString("payDate"),rs.getString("cash"), rs.getString("card"));
+               
+               ordersList.add(ordersReport);
+            }
+            
+            String querySale = "SELECT * FROM sales WHERE saleDate = ?";
+            ps = con.prepareStatement(querySale);
+            ps.setString(1, selectedDate);
+            rs = ps.executeQuery();
+            
+            while (rs.next())
+            {
+                salesReport = new SalesReport(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
+                       rs.getString("total"), rs.getString("saleDate"),rs.getString("cash"), rs.getString("card"));
+                
+                salesList.add(salesReport);
+            }
+            
+            
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(CloseTill.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btn_full_reportActionPerformed
 
-    private void label_today_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMouseClicked
+    private void btn_salesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_salesActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_label_today_ordersMouseClicked
+    }//GEN-LAST:event_btn_salesActionPerformed
 
-    private void label_today_ordersMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMouseExited
+    private void date_pickerPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_date_pickerPropertyChange
         // TODO add your handling code here:
-        panel_today_orders.setBackground(defaultColor);
-    }//GEN-LAST:event_label_today_ordersMouseExited
-
-    private void label_today_ordersMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMouseEntered
-        // TODO add your handling code here:
-        panel_today_orders.setBackground(mouseEnteredColor);
-    }//GEN-LAST:event_label_today_ordersMouseEntered
-
-    private void panel_today_ordersMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_today_ordersMousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_panel_today_ordersMousePressed
-
-    private void panel_today_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_today_ordersMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_panel_today_ordersMouseClicked
-
-    private void panel_today_ordersMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_today_ordersMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_panel_today_ordersMouseExited
+        
+        if (date_picker.getDate() != null)
+        {
+            Date date = date_picker.getDate();
+            String selectedDate = new SimpleDateFormat("dd / MM /").format(date);
+            lbl_date.setText(selectedDate);
+        }
+    }//GEN-LAST:event_date_pickerPropertyChange
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JFormattedTextField jFormattedTextField1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JLabel label_today_orders;
-    private javax.swing.JPanel panel_today_orders;
+    private javax.swing.JButton btn_full_report;
+    private javax.swing.JButton btn_orders;
+    private javax.swing.JButton btn_sales;
+    private com.toedter.calendar.JCalendar date_picker;
+    private javax.swing.JLabel lbl_date;
+    private javax.swing.JLabel lbl_date_selected;
+    private javax.swing.JPanel panel_calendar;
     // End of variables declaration//GEN-END:variables
 }

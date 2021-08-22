@@ -110,8 +110,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         this.pickedDate = _pickedDate;
         
         Date date = new Date();
-        Timestamp currentDateTime = new Timestamp(date.getTime());
-        finishedDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
+        Timestamp currentDate = new Timestamp(date.getTime());
+        finishedDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
         
         //Remove borders
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
@@ -1425,8 +1425,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             due = Double.parseDouble(txt_due.getText());
 
             java.util.Date date = new java.util.Date();
-            java.sql.Timestamp currentDateTime = new java.sql.Timestamp(date.getTime());
-            String updateDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
+            java.sql.Timestamp currentDate = new java.sql.Timestamp(date.getTime());
+            String updateDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
 
             //Empty vector before looping, this is useful for comparing values from tableView and database
             vecUpdateFaults.removeAllElements();

@@ -174,8 +174,8 @@ public class OrderNotes extends javax.swing.JFrame {
     private void txt_noteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_noteActionPerformed
         
         Date date = new Date();
-        Timestamp currentDateTime = new Timestamp(date.getTime());
-        noteDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
+        Timestamp currentDate = new Timestamp(date.getTime());
+        noteDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
         note = txt_note.getText();    
         
         int confirmInsertion = JOptionPane.showConfirmDialog(null, "Do you want to add note: " + note + "to the Database ?","Order Notes", JOptionPane.YES_OPTION);

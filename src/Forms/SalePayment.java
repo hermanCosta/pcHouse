@@ -5,8 +5,6 @@
  */
 package Forms;
 
-import InternalForms.CompletedOrder;
-import InternalForms.OrderFixed;
 import InternalForms.NewOrder;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -312,7 +310,7 @@ public class SalePayment extends javax.swing.JFrame {
         // TODO add your handling code here:
         Date date = new Date();
         Timestamp currentDateTime = new Timestamp(date.getTime());
-        saleDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
+        saleDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDateTime);
         
         
         if (txt_cash.getText().isEmpty() && txt_card.getText().isEmpty())

@@ -767,8 +767,8 @@ public class Sales extends javax.swing.JInternalFrame {
             total = Double.parseDouble(txt_total.getText());
 
             Date date = new java.util.Date();
-            Timestamp currentDateTime = new Timestamp(date.getTime());
-            saleDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
+            Timestamp currentDate = new Timestamp(date.getTime());
+            saleDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
 
             for(int j = 0; j < table_view_products.getRowCount(); j++)
             {

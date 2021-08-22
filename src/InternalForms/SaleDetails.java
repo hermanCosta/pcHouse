@@ -288,11 +288,11 @@ public class SaleDetails extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Product | Service", "Price €"
+                "Product | Service"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -306,9 +306,6 @@ public class SaleDetails extends javax.swing.JInternalFrame {
             }
         });
         jScrollPane2.setViewportView(table_view_products);
-        if (table_view_products.getColumnModel().getColumnCount() > 0) {
-            table_view_products.getColumnModel().getColumn(1).setMaxWidth(80);
-        }
 
         jButton1.setBackground(new java.awt.Color(21, 76, 121));
         jButton1.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N

@@ -173,7 +173,7 @@ public class MainMenu extends javax.swing.JFrame {
         panel_add_new = new javax.swing.JPanel();
         label_products_list = new javax.swing.JLabel();
         panel_sellings = new javax.swing.JPanel();
-        label_sellings = new javax.swing.JLabel();
+        label_sales = new javax.swing.JLabel();
         panel_close_till = new javax.swing.JPanel();
         label_close_till = new javax.swing.JLabel();
         panel_today_orders = new javax.swing.JPanel();
@@ -469,26 +469,26 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
 
-        label_sellings.setBackground(new java.awt.Color(255, 255, 255));
-        label_sellings.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
-        label_sellings.setForeground(new java.awt.Color(255, 255, 255));
-        label_sellings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_sellings.png"))); // NOI18N
-        label_sellings.setText("Sellings");
-        label_sellings.addMouseListener(new java.awt.event.MouseAdapter() {
+        label_sales.setBackground(new java.awt.Color(255, 255, 255));
+        label_sales.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        label_sales.setForeground(new java.awt.Color(255, 255, 255));
+        label_sales.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_sellings.png"))); // NOI18N
+        label_sales.setText("Sales");
+        label_sales.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                label_sellingsMousePressed(evt);
+                label_salesMousePressed(evt);
             }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                label_sellingsMouseReleased(evt);
+                label_salesMouseReleased(evt);
             }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                label_sellingsMouseClicked(evt);
+                label_salesMouseClicked(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                label_sellingsMouseExited(evt);
+                label_salesMouseExited(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                label_sellingsMouseEntered(evt);
+                label_salesMouseEntered(evt);
             }
         });
 
@@ -498,11 +498,11 @@ public class MainMenu extends javax.swing.JFrame {
             panel_sellingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_sellingsLayout.createSequentialGroup()
                 .addGap(0, 50, Short.MAX_VALUE)
-                .addComponent(label_sellings, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(label_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panel_sellingsLayout.setVerticalGroup(
             panel_sellingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(label_sellings, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(label_sales, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         panel_close_till.setBackground(new java.awt.Color(21, 76, 121));
@@ -687,7 +687,6 @@ public class MainMenu extends javax.swing.JFrame {
         desktop_pane_main_menu.setBackground(new java.awt.Color(255, 255, 255));
         desktop_pane_main_menu.setMaximumSize(new java.awt.Dimension(1049, 700));
         desktop_pane_main_menu.setSize(new java.awt.Dimension(1049, 700));
-        desktop_pane_main_menu.setLayout(null);
 
         javax.swing.GroupLayout panel_windowLayout = new javax.swing.GroupLayout(panel_window);
         panel_window.setLayout(panel_windowLayout);
@@ -884,15 +883,15 @@ public class MainMenu extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_panel_add_newMouseClicked
 
-    private void label_sellingsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_sellingsMousePressed
+    private void label_salesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_salesMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_label_sellingsMousePressed
+    }//GEN-LAST:event_label_salesMousePressed
 
-    private void label_sellingsMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_sellingsMouseReleased
+    private void label_salesMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_salesMouseReleased
         // TODO add your handling code here:
-    }//GEN-LAST:event_label_sellingsMouseReleased
+    }//GEN-LAST:event_label_salesMouseReleased
 
-    private void label_sellingsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_sellingsMouseClicked
+    private void label_salesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_salesMouseClicked
         // TODO add your handling code here:
         Sales sellings = new Sales();
         desktop_pane_main_menu.removeAll();
@@ -900,15 +899,15 @@ public class MainMenu extends javax.swing.JFrame {
         
         panel_add_new.setBackground(defaultColor);
         panel_sellings.setBackground(clickedColor);
-    }//GEN-LAST:event_label_sellingsMouseClicked
+    }//GEN-LAST:event_label_salesMouseClicked
 
-    private void label_sellingsMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_sellingsMouseExited
+    private void label_salesMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_salesMouseExited
         // TODO add your handling code here:
-    }//GEN-LAST:event_label_sellingsMouseExited
+    }//GEN-LAST:event_label_salesMouseExited
 
-    private void label_sellingsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_sellingsMouseEntered
+    private void label_salesMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_salesMouseEntered
         // TODO add your handling code here:
-    }//GEN-LAST:event_label_sellingsMouseEntered
+    }//GEN-LAST:event_label_salesMouseEntered
 
     private void panel_sellingsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_sellingsMousePressed
         // TODO add your handling code here:
@@ -928,6 +927,10 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void label_close_tillMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_close_tillMouseClicked
         // TODO add your handling code here:
+        CloseTill closeTill = new CloseTill();
+        desktop_pane_main_menu.removeAll();
+        desktop_pane_main_menu.add(closeTill).setVisible(true);
+        
         panel_today_orders.setBackground(defaultColor);
         panel_close_till.setBackground(clickedColor);
     }//GEN-LAST:event_label_close_tillMouseClicked
@@ -959,9 +962,6 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void label_today_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMouseClicked
         // TODO add your handling code here:
-        CloseTill closeTill = new CloseTill();
-        desktop_pane_main_menu.removeAll();
-        desktop_pane_main_menu.add(closeTill).setVisible(true);
         
         panel_today_orders.setBackground(clickedColor);
         panel_close_till.setBackground(defaultColor);
@@ -1054,7 +1054,7 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JLabel label_products;
     private javax.swing.JLabel label_products_list;
     private javax.swing.JLabel label_reports;
-    private javax.swing.JLabel label_sellings;
+    private javax.swing.JLabel label_sales;
     private javax.swing.JLabel label_today_orders;
     private javax.swing.JPanel panel_add_new;
     private javax.swing.JPanel panel_check_existing;
