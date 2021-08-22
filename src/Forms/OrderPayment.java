@@ -5,8 +5,6 @@
  */
 package Forms;
 
-import InternalForms.CompletedOrder;
-import InternalForms.OrderFixed;
 import InternalForms.NewOrder;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,7 +21,7 @@ import javax.swing.JOptionPane;
  *
  * @author user
  */
-public class Billing extends javax.swing.JFrame {
+public class OrderPayment extends javax.swing.JFrame {
 
     Connection con;
     PreparedStatement ps;
@@ -33,11 +31,11 @@ public class Billing extends javax.swing.JFrame {
            stringProducts, stringPrices, issueDate, finishedDate, payDate; 
     double total, deposit, due, cash, card, totalPaid;
     
-    public Billing() {
+    public OrderPayment() {
         initComponents();
     }
 
-    public Billing(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
+    public OrderPayment(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
             String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
             String _stringFaults, String _stringProducts, String _stringPrices, double _total, double _deposit, 
             double _due, String _issueDate, String _finishedDate) {
@@ -443,7 +441,7 @@ public class Billing extends javax.swing.JFrame {
 
             
             } catch (SQLException ex) {
-            Logger.getLogger(Billing.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OrderPayment.class.getName()).log(Level.SEVERE, null, ex);
             }
           
             JOptionPane.showMessageDialog(null,orderNo + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
@@ -518,21 +516,23 @@ public class Billing extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Billing.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OrderPayment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Billing.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OrderPayment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Billing.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OrderPayment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Billing.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(OrderPayment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Billing().setVisible(true);
+                new OrderPayment().setVisible(true);
             }
         });
     }

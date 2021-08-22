@@ -14,7 +14,6 @@ import java.awt.print.PrinterJob;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 
 /**
  *
@@ -35,6 +34,7 @@ public class ReceiptSell extends javax.swing.JFrame {
     
    public ReceiptSell(String _sellingNo, String _firstName, String _lastName, String _contactNo, String _email, 
             String _stringProducts, String _stringPrices, double _total, String _sellingDate, double _cash, double _card) {
+        initComponents();
        
         this.orderNo = _sellingNo;
         this.firstName = _firstName;
@@ -47,6 +47,8 @@ public class ReceiptSell extends javax.swing.JFrame {
         this.sellingDate = _sellingDate;
         this.cash = _cash;
         this.card = _card;
+        
+        loadOrderToPrint();
     }
     
     public void loadOrderToPrint()
@@ -56,6 +58,7 @@ public class ReceiptSell extends javax.swing.JFrame {
         lbl_print_contact.setText("Contact no.: " + contactNo);
         lbl_print_email.setText("Email: " + email);
         lbl_print_total_products.setText("Total: €" + String.valueOf(total));
+        lbl_order_picked_on.setText("Date: " + sellingDate);
         
         if (cash == 0)
         {
@@ -82,10 +85,8 @@ public class ReceiptSell extends javax.swing.JFrame {
         {
             txt_pane_prices.setText(txt_pane_prices.getText() + "€" + s + "\n");
         }
-        
     }
 
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -107,7 +108,6 @@ public class ReceiptSell extends javax.swing.JFrame {
         lbl_print_first_name = new javax.swing.JLabel();
         lbl_print_contact = new javax.swing.JLabel();
         lbl_print_email = new javax.swing.JLabel();
-        lbl_print_brand = new javax.swing.JLabel();
         lbl_print_total_products = new javax.swing.JLabel();
         lbl_product_service = new javax.swing.JLabel();
         lbl_receipt = new javax.swing.JLabel();
@@ -152,8 +152,6 @@ public class ReceiptSell extends javax.swing.JFrame {
 
         lbl_print_email.setText("emailAddress");
 
-        lbl_print_brand.setText("deviceBrand");
-
         lbl_print_total_products.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
         lbl_print_total_products.setText("totalProducts");
 
@@ -167,7 +165,7 @@ public class ReceiptSell extends javax.swing.JFrame {
         lbl_paid_by.setText("paidBy");
 
         lbl_order_picked_on.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
-        lbl_order_picked_on.setText("issueDate");
+        lbl_order_picked_on.setText("orderPickedOn");
 
         jScrollPane8.setBorder(null);
         jScrollPane8.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -208,7 +206,6 @@ public class ReceiptSell extends javax.swing.JFrame {
                         .addComponent(lbl_print_first_name, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lbl_print_contact, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lbl_print_email, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbl_print_brand, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
                             .addComponent(lbl_logo_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(30, 30, 30)
@@ -272,23 +269,21 @@ public class ReceiptSell extends javax.swing.JFrame {
                 .addComponent(lbl_print_contact)
                 .addGap(4, 4, 4)
                 .addComponent(lbl_print_email)
-                .addGap(4, 4, 4)
-                .addComponent(lbl_print_brand)
-                .addGap(30, 30, 30)
+                .addGap(39, 39, 39)
                 .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_product_service)
                     .addComponent(lbl_price))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane11, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
+                    .addComponent(jScrollPane11, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_print_total_products)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_paid_by)
                 .addGap(3, 3, 3)
                 .addComponent(lbl_order_picked_on)
-                .addContainerGap(77, Short.MAX_VALUE))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
 
         jButton1.setBackground(new java.awt.Color(21, 76, 121));
@@ -442,7 +437,6 @@ public class ReceiptSell extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_payment_print_view;
     private javax.swing.JLabel lbl_phone;
     private javax.swing.JLabel lbl_price;
-    private javax.swing.JLabel lbl_print_brand;
     private javax.swing.JLabel lbl_print_contact;
     private javax.swing.JLabel lbl_print_email;
     private javax.swing.JLabel lbl_print_first_name;

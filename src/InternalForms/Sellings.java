@@ -51,10 +51,8 @@ public class Sellings extends javax.swing.JInternalFrame {
      */
     ArrayList firstNames = new ArrayList();
     ArrayList lastNames = new ArrayList();
-    
     Vector vecProducts = new Vector();
     Vector vecPrices = new Vector();
-    
     Connection con;
     PreparedStatement ps;
     Statement stmt;
@@ -79,16 +77,15 @@ public class Sellings extends javax.swing.JInternalFrame {
         txt_contact.setFocusLostBehavior(JFormattedTextField.PERSIST);//avoid auto old value by focus loosing
         
         tableSettings(table_view_products);
+        tableSettings(table_view_sellings);
         autoID();
         checkEmailFormat();
         accessDbColumn(firstNames, "SELECT * FROM customers", "firstName");
         accessDbColumn(lastNames, "SELECT * FROM customers", "lastName");
         listProductService();
-        //loadSellingsTable();
-        showList();
+        showSellingTable();
     }
 
-    
     public void tableSettings (JTable table)
     {
         table.setRowHeight(25);
@@ -107,7 +104,6 @@ public class Sellings extends javax.swing.JInternalFrame {
     
     public final void autoID()
     {
-        
         try {
             dbConnection();
             String queryCheckOrders = "SELECT Max(orderNo) FROM orderDetails";
@@ -151,17 +147,15 @@ public class Sellings extends javax.swing.JInternalFrame {
         }   
     }
     
-    public ArrayList<Selling> loadSellingsTable()
+    public ArrayList<Selling> loadSellingList()
     {
      ArrayList<Selling> sellingList = new ArrayList<>();   
         try {
             dbConnection();
             
-            //ORDER BY sellingNo DESC LIMIT 10
             String query = "SELECT * FROM sellings ORDER BY sellingNo LIMIT 10";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery(query);
-            rsmd = rs.getMetaData();
             
             while (rs.next())
             {
@@ -178,9 +172,9 @@ public class Sellings extends javax.swing.JInternalFrame {
        return sellingList; 
     }
     
-    public void showList()
+    public void showSellingTable()
     {
-        ArrayList<Selling> list = loadSellingsTable();
+        ArrayList<Selling> list = loadSellingList();
         
         DefaultTableModel dtm = (DefaultTableModel)table_view_sellings.getModel();
         dtm.setRowCount(0);
@@ -550,6 +544,7 @@ public class Sellings extends javax.swing.JInternalFrame {
             }
         });
 
+        table_view_sellings.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         table_view_sellings.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
@@ -563,7 +558,7 @@ public class Sellings extends javax.swing.JInternalFrame {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "SellingNo", "First Name", "Last Name", "Contact No.", "Products | Service", "Total"
+                "Sell No", "First Name", "Last Name", "Contact No.", "Products | Service", "Total"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -576,13 +571,23 @@ public class Sellings extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(table_view_sellings);
         if (table_view_sellings.getColumnModel().getColumnCount() > 0) {
-            table_view_sellings.getColumnModel().getColumn(0).setMaxWidth(80);
+            table_view_sellings.getColumnModel().getColumn(0).setMaxWidth(100);
             table_view_sellings.getColumnModel().getColumn(3).setPreferredWidth(50);
             table_view_sellings.getColumnModel().getColumn(4).setPreferredWidth(200);
             table_view_sellings.getColumnModel().getColumn(5).setMaxWidth(80);
         }
 
-        txt_search_selling.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        txt_search_selling.setFont(new java.awt.Font("sansserif", 1, 16)); // NOI18N
+        txt_search_selling.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_search_sellingActionPerformed(evt);
+            }
+        });
+        txt_search_selling.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_search_sellingKeyReleased(evt);
+            }
+        });
 
         lbl_search_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_search_black.png"))); // NOI18N
 
@@ -728,7 +733,6 @@ public class Sellings extends javax.swing.JInternalFrame {
 
     private void btn_save_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save_orderActionPerformed
         // TODO add your handling code here:
-        
        if (txt_first_name.getText().trim().isEmpty() || txt_last_name.getText().trim().isEmpty() || 
                 txt_contact.getText().trim().isEmpty() || table_view_products.getRowCount() == 0)
         {
@@ -992,6 +996,52 @@ public class Sellings extends javax.swing.JInternalFrame {
     private void txt_contactKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_contactKeyReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_contactKeyReleased
+
+    private void txt_search_sellingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_search_sellingActionPerformed
+     
+    }//GEN-LAST:event_txt_search_sellingActionPerformed
+
+    private void txt_search_sellingKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_search_sellingKeyReleased
+        // TODO add your handling code here:
+        ArrayList<Selling> sellingList = new ArrayList<>();   
+        String searchSelling = txt_search_selling.getText();
+        
+        try {
+            dbConnection();
+            
+             String query = "SELECT * FROM sellings WHERE sellingNo LIKE '%" + searchSelling + "%'"
+                     + "OR firstName LIKE '%" + searchSelling + "%' OR lastName LIKE '%" + searchSelling + "%'"
+                     + " OR contactNo LIKE '%" + searchSelling + "%'";
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery(query);
+            
+            while (rs.next())
+            {
+                selling = new Selling(rs.getString("sellingNo"), rs.getString("firstName"), rs.getString("lastName"),
+                rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), rs.getString("price"), 
+                rs.getDouble("total"), rs.getString("sellingDate"));
+                
+                sellingList.add(selling);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Sellings.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        DefaultTableModel dtm = (DefaultTableModel)table_view_sellings.getModel();
+        dtm.setRowCount(0);
+        
+        Object[] row = new Object[6];
+        for (int i = 0 ;i < sellingList.size() ; i++)
+        {
+                row[0] = sellingList.get(i).getSellingNo();
+                row[1] = sellingList.get(i).getFirstName();
+                row[2] = sellingList.get(i).getLastName();
+                row[3] = sellingList.get(i).getContactNo();
+                row[4] = sellingList.get(i).getProductService();
+                row[5] = sellingList.get(i).getTotal();
+            dtm.addRow(row);
+        }
+    }//GEN-LAST:event_txt_search_sellingKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btn_add_table_view;

@@ -6,7 +6,7 @@
 package InternalForms;
 
 import Forms.Print;
-import Forms.Billing;
+import Forms.OrderPayment;
 import Forms.OrderNotes;
 import Forms.ReceiptOrder;
 import Model.Customer;
@@ -984,7 +984,7 @@ public class OrderFixed extends javax.swing.JInternalFrame {
 
     private void btn_payActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_payActionPerformed
         // TODO add your handling code here:
-        Billing billing = new Billing(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
+        OrderPayment billing = new OrderPayment(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
                 serialNumber, importantNotes, stringFaults, stringProducts, stringPrices, total, deposit, due, issueDate, 
                 finishedDate);
         billing.setVisible(true);

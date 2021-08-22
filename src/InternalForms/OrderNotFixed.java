@@ -6,7 +6,7 @@
 package InternalForms;
 
 import Forms.Print;
-import Forms.Billing;
+import Forms.OrderPayment;
 import Forms.OrderNotes;
 import Forms.ReceiptOrder;
 import Model.Customer;

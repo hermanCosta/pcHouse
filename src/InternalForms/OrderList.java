@@ -173,7 +173,9 @@ public class OrderList extends javax.swing.JInternalFrame {
             label_latest_orders_created.setVisible(false);
          
          try {
-            ps = con.prepareStatement("SELECT * FROM orderDetails WHERE orderNo LIKE '%" + searchOrder + "%' OR firstName LIKE '%" + searchOrder + "%' OR lastName LIKE '%" + searchOrder + "%' OR contactNo LIKE '%" + searchOrder + "%' LIMIT 15");
+            ps = con.prepareStatement("SELECT * FROM orderDetails WHERE orderNo LIKE '%" + searchOrder + "%' "
+                    + "OR firstName LIKE '%" + searchOrder + "%' OR lastName LIKE '%" + searchOrder + "%' "
+                            + "OR contactNo LIKE '%" + searchOrder + "%' LIMIT 15");
                                           
             rs = ps.executeQuery();
             
@@ -198,6 +200,7 @@ public class OrderList extends javax.swing.JInternalFrame {
                     vector.add(rs.getString("serialNumber"));
                     vector.add(rs.getString("status"));
                 }
+                
                 defaultTableModel.addRow(vector);
             }
         } catch (SQLException ex) {
