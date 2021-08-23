@@ -166,12 +166,14 @@ public class PrintFullReport extends javax.swing.JFrame {
         lbl_print_total_cash = new javax.swing.JLabel();
         lbl_print_total_card = new javax.swing.JLabel();
         lbl_till_closing_date = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        table_view_sales = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+        lbl_orders_total = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         table_view_orders = new javax.swing.JTable();
-        lbl_orders_total = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
         lbl_sales_total = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        table_view_sales = new javax.swing.JTable();
         btn_print = new javax.swing.JButton();
         lbl_order_print_view = new javax.swing.JLabel();
 
@@ -209,36 +211,12 @@ public class PrintFullReport extends javax.swing.JFrame {
         lbl_till_closing_date.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         lbl_till_closing_date.setText("tillClosingDate");
 
-        jScrollPane2.setEnabled(false);
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
 
-        table_view_sales.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
-        table_view_sales.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Sale", "Full Name", "Product | Service", "Total"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        table_view_sales.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                table_view_salesMouseClicked(evt);
-            }
-        });
-        jScrollPane2.setViewportView(table_view_sales);
-        if (table_view_sales.getColumnModel().getColumnCount() > 0) {
-            table_view_sales.getColumnModel().getColumn(0).setMaxWidth(60);
-            table_view_sales.getColumnModel().getColumn(1).setPreferredWidth(30);
-            table_view_sales.getColumnModel().getColumn(3).setMaxWidth(80);
-        }
+        lbl_orders_total.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
+        lbl_orders_total.setText("ordersTotal");
+        lbl_orders_total.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
         jScrollPane3.setEnabled(false);
 
@@ -272,13 +250,83 @@ public class PrintFullReport extends javax.swing.JFrame {
             table_view_orders.getColumnModel().getColumn(4).setMaxWidth(70);
         }
 
-        lbl_orders_total.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
-        lbl_orders_total.setText("ordersTotal");
-        lbl_orders_total.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbl_orders_total)
+                    .addComponent(jScrollPane3))
+                .addGap(0, 0, 0))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(lbl_orders_total)
+                .addContainerGap())
+        );
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
 
         lbl_sales_total.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
         lbl_sales_total.setText("salesTotal");
         lbl_sales_total.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
+        jScrollPane2.setEnabled(false);
+
+        table_view_sales.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
+        table_view_sales.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Sale", "Full Name", "Product | Service", "Total"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        table_view_sales.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_view_salesMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(table_view_sales);
+        if (table_view_sales.getColumnModel().getColumnCount() > 0) {
+            table_view_sales.getColumnModel().getColumn(0).setMaxWidth(60);
+            table_view_sales.getColumnModel().getColumn(1).setPreferredWidth(30);
+            table_view_sales.getColumnModel().getColumn(3).setMaxWidth(80);
+        }
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbl_sales_total)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(lbl_sales_total)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout panel_print_orderLayout = new javax.swing.GroupLayout(panel_print_order);
         panel_print_order.setLayout(panel_print_orderLayout);
@@ -308,19 +356,17 @@ public class PrintFullReport extends javax.swing.JFrame {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(lbl_land_line_number))
                                             .addComponent(lbl_address, javax.swing.GroupLayout.Alignment.TRAILING))
-                                        .addGap(5, 5, 5)))
-                                .addComponent(lbl_sales_total, javax.swing.GroupLayout.Alignment.TRAILING))
+                                        .addGap(5, 5, 5))))
                             .addGroup(panel_print_orderLayout.createSequentialGroup()
                                 .addGap(1, 1, 1)
-                                .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lbl_orders_total)
-                                    .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
-                                        .addComponent(jScrollPane2))))))
+                                .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(2, 2, 2))))
                     .addGroup(panel_print_orderLayout.createSequentialGroup()
-                        .addGap(201, 201, 201)
+                        .addGap(221, 221, 221)
                         .addComponent(lbl_till_closing_date)))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         panel_print_orderLayout.setVerticalGroup(
             panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -345,21 +391,17 @@ public class PrintFullReport extends javax.swing.JFrame {
                 .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lbl_till_closing_date)
-                .addGap(30, 30, 30)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
-                .addGap(0, 0, 0)
-                .addComponent(lbl_orders_total)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
-                .addGap(0, 0, 0)
-                .addComponent(lbl_sales_total)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(12, 12, 12)
                 .addComponent(lbl_print_gross_total)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lbl_print_total_cash)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lbl_print_total_card)
-                .addGap(40, 40, 40))
+                .addGap(30, 30, 30))
         );
 
         jScrollPane4.setViewportView(panel_print_order);
@@ -497,6 +539,8 @@ public class PrintFullReport extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_print;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
