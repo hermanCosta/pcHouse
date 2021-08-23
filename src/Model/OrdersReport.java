@@ -11,20 +11,22 @@ package Model;
  */
 public class OrdersReport {
     
-    String orderNo, orderFirstName, orderLastName, orderTotal, orderPayDate, orderCash, orderCard;
+    String orderNo, firstName, lastName, productsService, due, cash, card, deposit;
     
-    public OrdersReport(String _orderNo, String _orderFirstName, String _orderLastName, String _orderTotal, 
-            String _orderPayDate, String _orderCash, String _orderCard) {
+    public OrdersReport(String _orderNo, String _orderFirstName, String _orderLastName, String _productsService, String _orderTotal, 
+             String _deposit, String _orderCash, String _orderCard) {
         
         this.orderNo = _orderNo;
-        this.orderFirstName = _orderFirstName;
-        this.orderLastName = _orderLastName;
-        this.orderTotal = _orderTotal;
-        this.orderPayDate = _orderPayDate;
-        this.orderCash = _orderCash;
-        this.orderCard = _orderCard;
+        this.firstName = _orderFirstName;
+        this.lastName = _orderLastName;
+        this.productsService = _productsService;
+        this.due = _orderTotal;
+        this.deposit = _deposit;
+        this.cash = _orderCash;
+        this.card = _orderCard;
+        
     }
-    
+
     public String getOrderNo() {
         return orderNo;
     }
@@ -33,52 +35,59 @@ public class OrdersReport {
         this.orderNo = orderNo;
     }
 
-    public String getOrderFirstName() {
-        return orderFirstName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setOrderFirstName(String orderFirstName) {
-        this.orderFirstName = orderFirstName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getOrderLastName() {
-        return orderLastName;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setOrderLastName(String orderLastName) {
-        this.orderLastName = orderLastName;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public String getOrderTotal() {
-        return orderTotal;
+    public String getProductsService() {
+        return productsService;
     }
 
-    public void setOrderTotal(String orderTotal) {
-        this.orderTotal = orderTotal;
-    }
-
-    public String getOrderPayDate() {
-        return orderPayDate;
-    }
-
-    public void setOrderPayDate(String orderPayDate) {
-        this.orderPayDate = orderPayDate;
-    }
-
-    public String getOrderCash() {
-        return orderCash;
-    }
-
-    public void setOrderCash(String orderCash) {
-        this.orderCash = orderCash;
-    }
-
-    public String getOrderCard() {
-        return orderCard;
-    }
-
-    public void setOrderCard(String orderCard) {
-        this.orderCard = orderCard;
+    public void setProductsService(String productsService) {
+        this.productsService = productsService;
     }
     
+    public String getTotal() {
+        return due;
+    }
+
+    public void setTotal(String total) {
+        this.due = total;
+    }
+
+    public String getCash() {
+        return cash;
+    }
+
+    public void setCash(String cash) {
+        this.cash = cash;
+    }
+
+    public String getCard() {
+        return card;
+    }
+
+    public void setCard(String card) {
+        this.card = card;
+    }
+
+    public String getDeposit() {
+        return deposit;
+    }
+
+    public void setDeposit(String deposit) {
+        this.deposit = deposit;
+    }
 }

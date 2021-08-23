@@ -10,22 +10,21 @@ package Model;
  * @author user
  */
 public class SalesReport {
-    String saleNo, saleFirstName, saleLastName, saleTotal, salePayDate, saleCash, saleCard;
+    String saleNo, firstName, lastName, productsService, due, cash, card;
     
     
-    public SalesReport(String _saleNo, String _saleFirstName, 
-            String _saleLastName, String _saleTotal, String _salePayDate, String _saleCash, String _saleCard) {
+    public SalesReport(String _saleNo, String _saleFirstName, String _saleLastName, 
+            String _productsService,  String _saleTotal, String _saleCash, String _saleCard) {
         
         this.saleNo = _saleNo;
-        this.saleFirstName = _saleFirstName;
-        this.saleLastName = _saleLastName;
-        this.saleTotal = _saleTotal;
-        this.salePayDate = _salePayDate;
-        this.saleCash = _saleCash;
-        this.saleCard = _saleCard;
+        this.firstName = _saleFirstName;
+        this.lastName = _saleLastName;
+        this.productsService = _productsService;
+        this.due = _saleTotal;
+        this.cash = _saleCash;
+        this.card = _saleCard;
     }
-          
-    
+
     public String getSaleNo() {
         return saleNo;
     }
@@ -34,52 +33,53 @@ public class SalesReport {
         this.saleNo = saleNo;
     }
 
-    public String getSaleFirstName() {
-        return saleFirstName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setSaleFirstName(String saleFirstName) {
-        this.saleFirstName = saleFirstName;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getSaleLastName() {
-        return saleLastName;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setSaleLastName(String saleLastName) {
-        this.saleLastName = saleLastName;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public String getSaleTotal() {
-        return saleTotal;
+    public String getProductsService() {
+        return productsService;
     }
 
-    public void setSaleTotal(String saleTotal) {
-        this.saleTotal = saleTotal;
-    }
-
-    public String getSalePayDate() {
-        return salePayDate;
-    }
-
-    public void setSalePayDate(String salePayDate) {
-        this.salePayDate = salePayDate;
-    }
-
-    public String getSaleCash() {
-        return saleCash;
-    }
-
-    public void setSaleCash(String saleCash) {
-        this.saleCash = saleCash;
-    }
-
-    public String getSaleCard() {
-        return saleCard;
-    }
-
-    public void setSaleCard(String saleCard) {
-        this.saleCard = saleCard;
+    public void setProductsService(String productsService) {
+        this.productsService = productsService;
     }
     
+    public String getTotal() {
+        return due;
+    }
+
+    public void setTotal(String total) {
+        this.due = total;
+    }
+
+    
+    public String getCash() {
+        return cash;
+    }
+
+    public void setCash(String cash) {
+        this.cash = cash;
+    }
+
+    public String getCard() {
+        return card;
+    }
+
+    public void setCard(String card) {
+        this.card = card;
+    }
+
 }

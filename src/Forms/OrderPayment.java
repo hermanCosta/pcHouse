@@ -423,7 +423,7 @@ public class OrderPayment extends javax.swing.JFrame {
             ps.setString(3, lastName);
             ps.setString(4, stringProducts);
             ps.setDouble(5, total);
-            ps.setDouble(6, due);
+            ps.setDouble(6, deposit);
             ps.setDouble(7, totalPaid);
             ps.setString(8, payDate);
             ps.setDouble(9, cash);

@@ -7,7 +7,7 @@ package Forms;
 
 import InternalForms.NewOrder;
 import InternalForms.OrderList;
-import InternalForms.CloseTill;
+import InternalForms.TillClosing;
 import InternalForms.ProductsList;
 import InternalForms.Sales;
 import java.awt.Color;
@@ -927,7 +927,7 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void label_close_tillMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_close_tillMouseClicked
         // TODO add your handling code here:
-        CloseTill closeTill = new CloseTill();
+        TillClosing closeTill = new TillClosing();
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(closeTill).setVisible(true);
         

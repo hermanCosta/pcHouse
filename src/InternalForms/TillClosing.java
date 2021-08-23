@@ -6,6 +6,7 @@
 package InternalForms;
 
 import Common.DBConnection;
+import Forms.PrintFullReport;
 import Model.OrdersReport;
 import Model.SalesReport;
 import java.awt.Color;
@@ -26,7 +27,7 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
  *
  * @author user
  */
-public class CloseTill extends javax.swing.JInternalFrame {
+public class TillClosing extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form OrdersMenu
@@ -42,7 +43,7 @@ public class CloseTill extends javax.swing.JInternalFrame {
     
     
     
-    public CloseTill() {
+    public TillClosing() {
         initComponents();
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
@@ -64,7 +65,67 @@ public class CloseTill extends javax.swing.JInternalFrame {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+     
+     public ArrayList<SalesReport> loadSalesList()
+     {
+        ArrayList<SalesReport> salesList = new ArrayList<>();
+         
+         try {
+            // TODO add your handling code here:
+            dbConnection();
+            Date date = date_picker.getDate();
+            String selectedDate = new SimpleDateFormat("dd/MM/yyyy").format(date);
+            
+            String querySale = "SELECT * FROM sales WHERE saleDate = ?";
+            ps = con.prepareStatement(querySale);
+            ps.setString(1, selectedDate);
+            rs = ps.executeQuery();
+            
+            while (rs.next())
+            {
+                salesReport = new SalesReport(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
+                        rs.getString("productService"), rs.getString("total"), rs.getString("cash"), rs.getString("card"));
+                
+                salesList.add(salesReport);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(TillClosing.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         
+         return salesList;
+     }
     
+     public ArrayList<OrdersReport> loadOrdersList()
+     {
+        ArrayList<OrdersReport> ordersList = new ArrayList<>();
+         
+        try {
+            dbConnection();
+            Date date = date_picker.getDate();
+            String selectedDate = new SimpleDateFormat("dd/MM/yyyy").format(date);
+            
+            String queryOrders = "SELECT * FROM completedOrders WHERE payDate = ?";
+            ps = con.prepareStatement(queryOrders);
+            ps.setString(1, selectedDate);
+            rs = ps.executeQuery();
+            
+            while (rs.next())
+            {
+               ordersReport = new OrdersReport(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"),
+                        rs.getString("productService"), rs.getString("total"),rs.getString("cash"), rs.getString("card"), rs.getString("deposit"));
+               
+               ordersList.add(ordersReport);
+            }
+            
+                    
+        } catch (SQLException ex) {
+            Logger.getLogger(TillClosing.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return ordersList;
+     }
+     
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -177,49 +238,15 @@ public class CloseTill extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btn_ordersActionPerformed
 
     private void btn_full_reportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_full_reportActionPerformed
-        ArrayList<OrdersReport> ordersList = new ArrayList<>();
-        ArrayList<SalesReport> salesList = new ArrayList<>();
+        // TODO add your handling code here:
+        ArrayList<SalesReport> listSales = loadSalesList();
+        ArrayList<OrdersReport> listOrders = loadOrdersList();
         
-        try {
-            // TODO add your handling code here:
-            dbConnection();
-            Date date = date_picker.getDate();
-            String selectedDate = new SimpleDateFormat("dd/MM/yyyy").format(date);
-            System.out.println("Date for Query: " +selectedDate);
+        Date date = date_picker.getDate();
+        String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(date);
             
-            String queryOrders = "SELECT * FROM completedOrders WHERE payDate = ?";
-            ps = con.prepareStatement(queryOrders);
-            ps.setString(1, selectedDate);
-            rs = ps.executeQuery();
-            
-            while (rs.next())
-            {
-                //String orderNo, orderFirstName, orderLastName, orderTotal, orderPayDate, orderCash, orderCard;
-               ordersReport = new OrdersReport(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"),
-                       rs.getString("total"), rs.getString("payDate"),rs.getString("cash"), rs.getString("card"));
-               
-               ordersList.add(ordersReport);
-            }
-            
-            String querySale = "SELECT * FROM sales WHERE saleDate = ?";
-            ps = con.prepareStatement(querySale);
-            ps.setString(1, selectedDate);
-            rs = ps.executeQuery();
-            
-            while (rs.next())
-            {
-                salesReport = new SalesReport(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
-                       rs.getString("total"), rs.getString("saleDate"),rs.getString("cash"), rs.getString("card"));
-                
-                salesList.add(salesReport);
-            }
-            
-            
-            
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(CloseTill.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        PrintFullReport printFullReport = new PrintFullReport(tillClosingDate, listSales, listOrders);
+        printFullReport.setVisible(true);
     }//GEN-LAST:event_btn_full_reportActionPerformed
 
     private void btn_salesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_salesActionPerformed
@@ -228,7 +255,6 @@ public class CloseTill extends javax.swing.JInternalFrame {
 
     private void date_pickerPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_date_pickerPropertyChange
         // TODO add your handling code here:
-        
         if (date_picker.getDate() != null)
         {
             Date date = date_picker.getDate();
