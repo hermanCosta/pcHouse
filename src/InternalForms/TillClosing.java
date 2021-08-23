@@ -84,7 +84,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
             while (rs.next())
             {
                 salesReport = new SalesReport(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
-                        rs.getString("productService"), rs.getString("total"), rs.getString("cash"), rs.getString("card"));
+                        rs.getString("productService"), rs.getDouble("total"), rs.getDouble("cash"), rs.getDouble("card"));
                 
                 salesList.add(salesReport);
             }
@@ -112,8 +112,13 @@ public class TillClosing extends javax.swing.JInternalFrame {
             
             while (rs.next())
             {
+                /*
+                    String _orderNo, String _firstName, String _lastName, String _productsService,
+                String _deposit, String _due, double _cash, double _card) {
+                */
+                
                ordersReport = new OrdersReport(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"),
-                        rs.getString("productService"), rs.getString("total"),rs.getString("cash"), rs.getString("card"), rs.getString("deposit"));
+                        rs.getString("productService"), rs.getString("deposit"), rs.getDouble("due"),rs.getDouble("cash"), rs.getDouble("card"));
                
                ordersList.add(ordersReport);
             }

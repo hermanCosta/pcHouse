@@ -333,7 +333,7 @@ public class SaleReceipt extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         PrinterJob printerJob = PrinterJob.getPrinterJob();
-        printerJob.setJobName("Printing Order: " + this.orderNo);
+        printerJob.setJobName("Sale" + this.orderNo);
         
         PageFormat format = printerJob.getPageFormat(null);
         

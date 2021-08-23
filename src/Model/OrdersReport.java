@@ -11,19 +11,20 @@ package Model;
  */
 public class OrdersReport {
     
-    String orderNo, firstName, lastName, productsService, due, cash, card, deposit;
+    String orderNo, firstName, lastName, productsService, deposit;
+    double due, cash, card;
     
-    public OrdersReport(String _orderNo, String _orderFirstName, String _orderLastName, String _productsService, String _orderTotal, 
-             String _deposit, String _orderCash, String _orderCard) {
+    public OrdersReport(String _orderNo, String _firstName, String _lastName, String _productsService,
+                String _deposit, double _due, double _cash, double _card) {
         
         this.orderNo = _orderNo;
-        this.firstName = _orderFirstName;
-        this.lastName = _orderLastName;
+        this.firstName = _firstName;
+        this.lastName = _lastName;
         this.productsService = _productsService;
-        this.due = _orderTotal;
         this.deposit = _deposit;
-        this.cash = _orderCash;
-        this.card = _orderCard;
+        this.due = _due;
+        this.cash = _cash;
+        this.card = _card;
         
     }
 
@@ -58,36 +59,37 @@ public class OrdersReport {
     public void setProductsService(String productsService) {
         this.productsService = productsService;
     }
-    
-    public String getTotal() {
-        return due;
-    }
 
-    public void setTotal(String total) {
-        this.due = total;
-    }
-
-    public String getCash() {
+    public double getCash() {
         return cash;
     }
 
-    public void setCash(String cash) {
+    public void setCash(double cash) {
         this.cash = cash;
     }
 
-    public String getCard() {
+    public double getCard() {
         return card;
     }
 
-    public void setCard(String card) {
+    public void setCard(double card) {
         this.card = card;
     }
 
+    
     public String getDeposit() {
         return deposit;
     }
 
     public void setDeposit(String deposit) {
         this.deposit = deposit;
+    }
+
+    public double getDue() {
+        return due;
+    }
+
+    public void setDue(double due) {
+        this.due = due;
     }
 }

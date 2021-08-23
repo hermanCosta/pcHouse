@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
  *
  * @author user
  */
-public class Print extends javax.swing.JFrame {
+public class PrintOrder extends javax.swing.JFrame {
 
     /**
      * Creates new form Print
@@ -29,11 +29,11 @@ public class Print extends javax.swing.JFrame {
     String orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, 
             importantNotes, stringFaults, stringProducts, stringPrices, issuedDate;
     
-    public Print() {
+    public PrintOrder() {
         initComponents();
     }
     
-    public Print(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, String _deviceBrand, 
+    public PrintOrder(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, String _deviceBrand, 
             String _deviceModel, String _serialNumber, String _stringFaults, String _importantNotes, String _stringProducts, String _stringPrices, 
             double _total, double _deposit, double _due, String _issuedDate) {
         
@@ -429,7 +429,7 @@ public class Print extends javax.swing.JFrame {
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         PrinterJob printerJob = PrinterJob.getPrinterJob();
-        printerJob.setJobName("Printing Order: " + this.orderNo);
+        printerJob.setJobName("Order: " + this.orderNo);
         
         PageFormat format = printerJob.getPageFormat(null);
         
@@ -461,7 +461,7 @@ public class Print extends javax.swing.JFrame {
                 this.dispose();
                 
             } catch (PrinterException ex) {
-                Logger.getLogger(Print.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PrintOrder.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btn_printActionPerformed
@@ -485,20 +485,21 @@ public class Print extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Print.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PrintOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Print.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PrintOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Print.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PrintOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Print.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PrintOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Print().setVisible(true);
+                new PrintOrder().setVisible(true);
             }
         });
     }

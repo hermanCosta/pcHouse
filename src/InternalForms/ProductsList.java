@@ -229,6 +229,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         txt_add_price.setText("");
         txt_add_qty.setText("");
         txt_add_notes.setText("");
+        combo_box_category.setSelectedItem(-1);
         
         displayProductList();
     }

@@ -5,7 +5,7 @@
  */
 package InternalForms;
 
-import Forms.Print;
+import Forms.PrintOrder;
 import Forms.OrderPayment;
 import Forms.OrderNotes;
 import Forms.OrderReceipt;
@@ -216,7 +216,7 @@ public class OrderFixed extends javax.swing.JInternalFrame {
     
     public void print()
     {
-        new Print(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
+        new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
                 serialNumber, stringFaults, importantNotes, stringProducts, stringPrices, total, 
                 deposit, due, issueDate).setVisible(true);
     }

@@ -5,7 +5,7 @@
  */
 package InternalForms;
 
-import Forms.Print;
+import Forms.PrintOrder;
 import Forms.OrderNotes;
 import Model.Customer;
 import Model.Order;
@@ -1366,7 +1366,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         
-        new Print(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
+        new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
                 serialNumber, stringFaults, importantNotes, stringProducts, stringPrices, total, 
                 deposit, due, issueDate).setVisible(true);
     }//GEN-LAST:event_btn_printActionPerformed

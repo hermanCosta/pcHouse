@@ -64,52 +64,83 @@ public class PrintFullReport extends javax.swing.JFrame {
     
     public void loadOrderToPrint()
     {
+        //Lists for holding list from the constructor
         ArrayList<OrdersReport> listOrders = ordersList;
         ArrayList<SalesReport> listSales = salesList;
         
+        // This Lists hold all values paid by cash and card
+        ArrayList<Double> cashList = new ArrayList<>();
+        ArrayList<Double> cardList = new ArrayList<>();
+        
+        //This Lists hold total due of all orders
+        ArrayList<Double> orderDueColumn = new ArrayList<>();
+        ArrayList<Double> salesTotalColumn = new ArrayList<>();
+        
+        // Table models
         DefaultTableModel ordersModel= (DefaultTableModel) table_view_orders.getModel();
         ordersModel.setRowCount(0);
-        
         DefaultTableModel salesModel= (DefaultTableModel) table_view_sales.getModel();
         salesModel.setRowCount(0);
         
-        Object[] rowOrders = new Object[6];
-        
+        // this object holds each range of elements for setting into the table
+        Object[] rowOrders = new Object[5];
         for (int i = 0; i < listOrders.size() ; i++)
         {
             rowOrders[0] = listOrders.get(i).getOrderNo();
-            rowOrders[1] = listOrders.get(i).getFirstName();
-            rowOrders[2] = listOrders.get(i).getLastName();
-            rowOrders[3] = listOrders.get(i).getProductsService();
-            rowOrders[4] = listOrders.get(i).getDeposit();
-            rowOrders[5] = listOrders.get(i).getTotal();
+            rowOrders[1] = listOrders.get(i).getFirstName() + " " + listOrders.get(i).getLastName();;
+            rowOrders[2] = listOrders.get(i).getProductsService();
+            rowOrders[3] = listOrders.get(i).getDeposit();
+            rowOrders[4] = listOrders.get(i).getDue();
             
             ordersModel.addRow(rowOrders);
+            
+            cashList.add(listOrders.get(i).getCash());
+            cardList.add(listOrders.get(i).getCard());
+            orderDueColumn.add(listOrders.get(i).getDue());
         }
         
         
-        Object[] rowSales = new Object[5];
-        
+        Object[] rowSales = new Object[4];
         for (int i = 0 ; i < listSales.size(); i++)
         {
             rowSales[0] = listSales.get(i).getSaleNo();
-            rowSales[1] = listSales.get(i).getFirstName();
-            rowSales[2] = listSales.get(i).getLastName();
-            rowSales[3] = listSales.get(i).getProductsService();
-            rowSales[4] = listSales.get(i).getTotal();
-            
+            rowSales[1] = listSales.get(i).getFirstName() + " " + listSales.get(i).getLastName();
+            rowSales[2] = listSales.get(i).getProductsService();
+            rowSales[3] = listSales.get(i).getTotal();
             salesModel.addRow(rowSales);
+            
+            //cashTotal = Double.parseDouble(listSales.get(i).getTotal());
+           cashList.add(listSales.get(i).getCash());
+           cardList.add(listSales.get(i).getCard());
+           salesTotalColumn.add(listSales.get(i).getTotal());
         }
         
+        //Loop the List and sum Cash payments
+        double cashTotal = 0;
+        for (double d : cashList)
+            cashTotal += d;
         
-            
+        double cardTotal = 0;
+        for (double d : cardList)
+            cardTotal += d;
+        
+        double ordersTotal = 0;
+        for (double d : orderDueColumn)
+            ordersTotal += d;
+        
+        double salesTotal = 0;
+        for (double d : salesTotalColumn)
+            salesTotal += d;
+        
+        //Gross total (cash&card    
+        double grossTotal = cashTotal + cardTotal;
+        
         lbl_till_closing_date.setText("Full Report - " + tillClosingDate);
-        
-//        lbl_print_gross_total.setText("Total: €" + String.valueOf(total));
-//        lbl_print_total_cash.setText("Deposit paid: €" + String.valueOf(deposit));
-//        lbl_print_total_card.setText("Due:     €" + String.valueOf(due));
-        
-        
+        lbl_print_gross_total.setText("Gross Total................ €" + String.valueOf(grossTotal));
+        lbl_print_total_cash.setText("Cash Total.................. €" + String.valueOf(cashTotal));
+        lbl_print_total_card.setText("Card Total.................. €" + String.valueOf(cardTotal));
+        lbl_orders_total.setText("Orders Total.................... €" + ordersTotal);
+        lbl_sales_total.setText("Sales Total...................... €" + salesTotal);
     }
 
     
@@ -139,6 +170,8 @@ public class PrintFullReport extends javax.swing.JFrame {
         table_view_sales = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
         table_view_orders = new javax.swing.JTable();
+        lbl_orders_total = new javax.swing.JLabel();
+        lbl_sales_total = new javax.swing.JLabel();
         btn_print = new javax.swing.JButton();
         lbl_order_print_view = new javax.swing.JLabel();
 
@@ -184,11 +217,11 @@ public class PrintFullReport extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Sale", "First Name", "Last Name", "Product | Service", "Total"
+                "Sale", "Full Name", "Product | Service", "Total"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -202,8 +235,9 @@ public class PrintFullReport extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(table_view_sales);
         if (table_view_sales.getColumnModel().getColumnCount() > 0) {
-            table_view_sales.getColumnModel().getColumn(0).setMaxWidth(80);
-            table_view_sales.getColumnModel().getColumn(4).setMaxWidth(80);
+            table_view_sales.getColumnModel().getColumn(0).setMaxWidth(60);
+            table_view_sales.getColumnModel().getColumn(1).setPreferredWidth(30);
+            table_view_sales.getColumnModel().getColumn(3).setMaxWidth(80);
         }
 
         jScrollPane3.setEnabled(false);
@@ -214,11 +248,11 @@ public class PrintFullReport extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Order", "First Name", "Last Name", "Product | Service", "Deposit", "Total"
+                "Order", "Full Name", "Product | Service", "Deposit", "Due"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -232,10 +266,19 @@ public class PrintFullReport extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(table_view_orders);
         if (table_view_orders.getColumnModel().getColumnCount() > 0) {
-            table_view_orders.getColumnModel().getColumn(0).setMaxWidth(80);
-            table_view_orders.getColumnModel().getColumn(4).setMaxWidth(80);
-            table_view_orders.getColumnModel().getColumn(5).setMaxWidth(80);
+            table_view_orders.getColumnModel().getColumn(0).setMaxWidth(50);
+            table_view_orders.getColumnModel().getColumn(1).setPreferredWidth(30);
+            table_view_orders.getColumnModel().getColumn(3).setMaxWidth(70);
+            table_view_orders.getColumnModel().getColumn(4).setMaxWidth(70);
         }
+
+        lbl_orders_total.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
+        lbl_orders_total.setText("ordersTotal");
+        lbl_orders_total.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
+        lbl_sales_total.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
+        lbl_sales_total.setText("salesTotal");
+        lbl_sales_total.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
         javax.swing.GroupLayout panel_print_orderLayout = new javax.swing.GroupLayout(panel_print_order);
         panel_print_order.setLayout(panel_print_orderLayout);
@@ -265,16 +308,19 @@ public class PrintFullReport extends javax.swing.JFrame {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(lbl_land_line_number))
                                             .addComponent(lbl_address, javax.swing.GroupLayout.Alignment.TRAILING))
-                                        .addGap(5, 5, 5))))
+                                        .addGap(5, 5, 5)))
+                                .addComponent(lbl_sales_total, javax.swing.GroupLayout.Alignment.TRAILING))
                             .addGroup(panel_print_orderLayout.createSequentialGroup()
                                 .addGap(1, 1, 1)
-                                .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
-                                    .addComponent(jScrollPane2)))))
+                                .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lbl_orders_total)
+                                    .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
+                                        .addComponent(jScrollPane2))))))
                     .addGroup(panel_print_orderLayout.createSequentialGroup()
                         .addGap(201, 201, 201)
                         .addComponent(lbl_till_closing_date)))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         panel_print_orderLayout.setVerticalGroup(
             panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -300,16 +346,20 @@ public class PrintFullReport extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lbl_till_closing_date)
                 .addGap(30, 30, 30)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
-                .addGap(31, 31, 31)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(lbl_orders_total)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(lbl_sales_total)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_print_gross_total)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lbl_print_total_cash)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lbl_print_total_card)
-                .addGap(53, 53, 53))
+                .addGap(40, 40, 40))
         );
 
         jScrollPane4.setViewportView(panel_print_order);
@@ -362,7 +412,7 @@ public class PrintFullReport extends javax.swing.JFrame {
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         PrinterJob printerJob = PrinterJob.getPrinterJob();
-        printerJob.setJobName("Printing Till Closing" + this.tillClosingDate);
+        printerJob.setJobName("Till Closing" + this.tillClosingDate);
         
         PageFormat format = printerJob.getPageFormat(null);
         
@@ -390,7 +440,7 @@ public class PrintFullReport extends javax.swing.JFrame {
                 
                 printerJob.print();
                 
-                JOptionPane.showMessageDialog(this, "Till Closing" + tillClosingDate +" Printed Successfully", "Till Closing", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Till Closing " + tillClosingDate +" Printed Successfully", "Till Closing", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
                 
             } catch (PrinterException ex) {
@@ -456,10 +506,12 @@ public class PrintFullReport extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_mobile;
     private javax.swing.JLabel lbl_mobile_number;
     private javax.swing.JLabel lbl_order_print_view;
+    private javax.swing.JLabel lbl_orders_total;
     private javax.swing.JLabel lbl_phone;
     private javax.swing.JLabel lbl_print_gross_total;
     private javax.swing.JLabel lbl_print_total_card;
     private javax.swing.JLabel lbl_print_total_cash;
+    private javax.swing.JLabel lbl_sales_total;
     private javax.swing.JLabel lbl_till_closing_date;
     private javax.swing.JSeparator line_header;
     private javax.swing.JPanel panel_print_order;

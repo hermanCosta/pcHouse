@@ -10,19 +10,20 @@ package Model;
  * @author user
  */
 public class SalesReport {
-    String saleNo, firstName, lastName, productsService, due, cash, card;
+    String saleNo, firstName, lastName, productsService; 
+    double total, cash, card;
     
     
-    public SalesReport(String _saleNo, String _saleFirstName, String _saleLastName, 
-            String _productsService,  String _saleTotal, String _saleCash, String _saleCard) {
+    public SalesReport(String _saleNo, String _firstName, String _lastName, 
+            String _productsService,  double _total, double _cash, double _card) {
         
         this.saleNo = _saleNo;
-        this.firstName = _saleFirstName;
-        this.lastName = _saleLastName;
+        this.firstName = _firstName;
+        this.lastName = _lastName;
         this.productsService = _productsService;
-        this.due = _saleTotal;
-        this.cash = _saleCash;
-        this.card = _saleCard;
+        this.total = _total;
+        this.cash = _cash;
+        this.card = _card;
     }
 
     public String getSaleNo() {
@@ -56,30 +57,34 @@ public class SalesReport {
     public void setProductsService(String productsService) {
         this.productsService = productsService;
     }
-    
-    public String getTotal() {
-        return due;
+
+    public double getTotal() {
+        return total;
     }
 
-    public void setTotal(String total) {
-        this.due = total;
+    public void setTotal(double total) {
+        this.total = total;
     }
 
     
-    public String getCash() {
+    public double getCash() {
         return cash;
     }
 
-    public void setCash(String cash) {
+    public void setCash(double cash) {
         this.cash = cash;
     }
 
-    public String getCard() {
+    public double getCard() {
         return card;
     }
 
-    public void setCard(String card) {
+    public void setCard(double card) {
         this.card = card;
     }
+    
+    
+
+    
 
 }

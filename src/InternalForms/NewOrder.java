@@ -5,7 +5,7 @@
  */
 package InternalForms;
 
-import Forms.Print;
+import Forms.PrintOrder;
 import Forms.MainMenu;
 import Model.Customer;
 import Model.Order;
@@ -954,7 +954,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(this, "New order created successfully!");
 
                  // Send Order to print class as a constructor
-                 new Print(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel,
+                 new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel,
                     serialNumber, stringFaults, importantNotes, stringProducts, stringPrices, total,
                     deposit, due, issueDate).setVisible(true);
 
