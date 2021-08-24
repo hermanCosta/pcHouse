@@ -551,7 +551,7 @@ public class Sales extends javax.swing.JInternalFrame {
             }
         });
 
-        table_view_sales.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        table_view_sales.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         table_view_sales.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
@@ -602,6 +602,11 @@ public class Sales extends javax.swing.JInternalFrame {
         });
 
         lbl_search_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_search_black.png"))); // NOI18N
+        lbl_search_icon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbl_search_iconMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);
@@ -797,7 +802,8 @@ public class Sales extends javax.swing.JInternalFrame {
                     stringUnitPrice, stringPriceTotal, total,saleDate);
 
             SalePayment salePayment =  new SalePayment(saleNo, firstName, lastName, contactNo, email, 
-                       stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total, saleDate, cash, card);
+                       stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total, saleDate, cash, card,
+            table_view_products);
                salePayment.setVisible(true);
        }
     }//GEN-LAST:event_btn_save_orderActionPerformed
@@ -884,15 +890,16 @@ public class Sales extends javax.swing.JInternalFrame {
     private void btn_add_table_viewMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_add_table_viewMousePressed
         // TODO add your handling code here:
         Vector vector = new Vector();
-        String productName = combo_box_product_service.getSelectedItem().toString();
-        String productService = "";
-        String category = "";
+        String selectedItem = combo_box_product_service.getSelectedItem().toString();
+        String productName = "";
         int qty = 0;
+        double unitPrice = 0;
+        String category = "";
         double totalPrice = 0;
         
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
         
-        if(productName.isEmpty() || productName.matches("Select or Type"))
+        if(selectedItem.isEmpty() || selectedItem.matches("Select or Type"))
         {
             JOptionPane.showMessageDialog(null, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
         }
@@ -901,8 +908,8 @@ public class Sales extends javax.swing.JInternalFrame {
             try 
             {
                 dbConnection();
-                double unitPrice = 0;
-                String query = "SELECT * FROM products WHERE productService = '" + productName + "'";
+                
+                String query = "SELECT * FROM products WHERE productService = '" + selectedItem + "'";
                 ps = con.prepareStatement(query);
                 rs = ps.executeQuery();
                 
@@ -914,30 +921,19 @@ public class Sales extends javax.swing.JInternalFrame {
                 {
                     while (rs.next())
                     {
-                        productService = rs.getString("productService");
+                        productName = rs.getString("productService");
                         unitPrice = rs.getDouble("price");
                         category = rs.getString("category");
                     }
                     
-                    if (category.equals("Service"))
-                    {
-                        qty = 1;
-                        totalPrice = unitPrice * qty;
-                        
-                        vector.add(productService);
-                        vector.add(qty);
-                        vector.add(unitPrice);
-                        vector.add(totalPrice);
-                        dtm.addRow(vector);
-                    }
-                    else
+                    if (category.equals("Product"))
                     {
                         boolean valid = false;
                         while (!valid)
                         {
                             try
                             {
-                                qty = Integer.parseInt(JOptionPane.showInputDialog("Enter '" + productName + "' Qty:"));
+                                qty = Integer.parseInt(JOptionPane.showInputDialog("Enter '" + selectedItem + "' Qty:"));
                                 if (qty > 0) valid = true;
                             }
                             catch (NumberFormatException e)
@@ -947,14 +943,24 @@ public class Sales extends javax.swing.JInternalFrame {
                         }
                         
                         totalPrice = unitPrice * qty;
-                        vector.add(productService);
+                        vector.add(productName);
+                        vector.add(qty);
+                        vector.add(unitPrice);
+                        vector.add(totalPrice);
+                        dtm.addRow(vector);
+                        
+                    }
+                    else
+                    {
+                        qty = 1;
+                        totalPrice = unitPrice * qty;
+                        
+                        vector.add(productName);
                         vector.add(qty);
                         vector.add(unitPrice);
                         vector.add(totalPrice);
                         dtm.addRow(vector);
                     }
-                    
-                     
                     
                     combo_box_product_service.setSelectedIndex(-1);
                     
@@ -1163,6 +1169,10 @@ public class Sales extends javax.swing.JInternalFrame {
             }
         }
     }//GEN-LAST:event_table_view_productsMouseClicked
+
+    private void lbl_search_iconMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_search_iconMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbl_search_iconMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btn_add_table_view;

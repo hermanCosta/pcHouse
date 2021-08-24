@@ -10,6 +10,7 @@ import Forms.OrderNotes;
 import Model.Customer;
 import Model.Order;
 import Model.ProductService;
+import Model.TableProductService;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -147,7 +148,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         DefaultTableModel faultsModel = (DefaultTableModel) table_view_faults.getModel();
         faultsModel.setRowCount(0);
         DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
-        TableColumnModel model = table_view_products.getColumnModel();
+        TableColumnModel tableModel = table_view_products.getColumnModel();
        
         lbl_auto_order_no.setText(this.orderNo);
         txt_first_name.setText(this.firstName);
@@ -161,7 +162,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         txt_total.setText(String.valueOf(this.total));
         txt_deposit.setText(String.valueOf(this.deposit));
         txt_due.setText(String.valueOf(this.due));
-        lbl_issued_date_time.setText("created on: " + this.issueDate);
+        lbl_issued_date_time.setText("Created on: " + this.issueDate);
         
         // Array for holding database String 
         String[] arrayFaults = stringFaults.split(",");
@@ -170,36 +171,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         String[] arrayUnitPrice = stringUnitPrice.split(",");
         String[] arrayPriceTotal = stringPriceTotal.split(",");
         
-        //Iterate arrayProducts and pass elements to faults table
-        for (Object objFaults : arrayFaults)
+        for (Object objFault : arrayFaults)
         {
-            //faultsModel.addRow(new Object[] {objFaults});
-            //tableList.add(objFaults);
-        }
-        
-        //Iterate arrayProducts and pass elements to Products table
-        for (Object objProducts : arrayProducts)
-        {
-            ///productsModel.addRow(new Object[] {objProducts});
-            //tableList.add(objProducts);
-        }  
-        
-        for (Object objQty : arrayQty)
-        {
-            //productsModel.addRow(new Object[] {objQty});
-            //tableList.add(objQty);
-        }
-        
-        for (Object objUnitPrice : arrayUnitPrice)
-        {
-            //productsModel.addRow(new Object[] {objUnitPrice});
-            //tableList.add(objUnitPrice);
-        }
-        
-        for (Object objPriceTotal : arrayPriceTotal)
-        {
-            //productsModel.addRow(new Object[] {objPriceTotal});
-            //tableList.add(objPriceTotal);
+           faultsModel.addRow(new Object[] {objFault});
         }
         
         // Pass arrayPrices to a vector and add as a new column
@@ -208,19 +182,21 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         Vector vecUnitPrice = new Vector();
         Vector vecPriceTotal = new Vector();
         
-        
         vecProducts.addAll(Arrays.asList(arrayProducts)); 
         vecQty.addAll(Arrays.asList(arrayQty));
         vecUnitPrice.addAll(Arrays.asList(arrayUnitPrice)); 
         vecPriceTotal.addAll(Arrays.asList(arrayPriceTotal)); 
         
+        //Add New Columns into the table_view_products with data as a vector
         productsModel.addColumn("Product | Service", vecProducts);
         productsModel.addColumn("Qty", vecQty);
         productsModel.addColumn("Unit €", vecUnitPrice);
         productsModel.addColumn("Total €", vecPriceTotal);
         
-        //model.getColumn(1).setMaxWidth(80);
-
+        // Set width size for columns through its index
+        tableModel.getColumn(1).setMaxWidth(40);
+        tableModel.getColumn(2).setMaxWidth(80);
+        tableModel.getColumn(3).setMaxWidth(80);
    }
    
     public void dbConnection() 

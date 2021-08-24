@@ -5,10 +5,7 @@
  */
 package InternalForms;
 
-import Forms.PrintOrder;
-import Forms.OrderPayment;
 import Forms.OrderNotes;
-import Forms.OrderReceipt;
 import Model.Customer;
 import Model.Order;
 import Model.ProductService;
@@ -142,7 +139,7 @@ public class OrderNotFixed extends javax.swing.JInternalFrame {
         DefaultTableModel faultsModel = (DefaultTableModel) table_view_faults.getModel();
         faultsModel.setRowCount(0);
         DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
-        TableColumnModel model = table_view_products.getColumnModel();
+        TableColumnModel tableModel = table_view_products.getColumnModel();
 
         if (pickedDate != null && !pickedDate.trim().isEmpty())
         {
@@ -180,14 +177,12 @@ public class OrderNotFixed extends javax.swing.JInternalFrame {
         txt_deposit.setText(String.valueOf(this.deposit));
         txt_due.setText(String.valueOf(this.due));
         
-        
-        
-        
-        // Array for holding database String 
+       // Array for holding database String 
         String[] arrayFaults = stringFaults.split(",");
         String[] arrayProducts = stringProducts.split(",");
-        String[] arrayPrices = stringPriceTotal.split(",");
-        Vector vecPrices = new Vector();
+        String[] arrayQty = stringQty.split(",");
+        String[] arrayUnitPrice = stringUnitPrice.split(",");
+        String[] arrayPriceTotal = stringPriceTotal.split(",");
         
         //Iterate arrayProducts and pass elements to faults table
         for (Object objFaults : arrayFaults)
@@ -195,17 +190,27 @@ public class OrderNotFixed extends javax.swing.JInternalFrame {
             faultsModel.addRow(new Object[] {objFaults});
         }
         
-        //Iterate arrayProducts and pass elements to Products table
-        for (Object objProducts : arrayProducts)
-        {
-            productsModel.addRow(new Object[] {objProducts});
-        }  
+         // Pass arrayPrices to a vector and add as a new column
+        Vector vecProducts = new Vector();
+        Vector vecQty = new Vector();
+        Vector vecUnitPrice = new Vector();
+        Vector vecPriceTotal = new Vector();
         
-        // Pass arrayPrices to a vector and add as a new column
-        vecPrices.addAll(Arrays.asList(arrayPrices)); 
-        productsModel.addColumn("Price", vecPrices);
-            
-        model.getColumn(1).setMaxWidth(80);
+        vecProducts.addAll(Arrays.asList(arrayProducts)); 
+        vecQty.addAll(Arrays.asList(arrayQty));
+        vecUnitPrice.addAll(Arrays.asList(arrayUnitPrice)); 
+        vecPriceTotal.addAll(Arrays.asList(arrayPriceTotal)); 
+        
+        //Add New Columns into the table_view_products with data as a vector
+        productsModel.addColumn("Product | Service", vecProducts);
+        productsModel.addColumn("Qty", vecQty);
+        productsModel.addColumn("Unit €", vecUnitPrice);
+        productsModel.addColumn("Total €", vecPriceTotal);
+        
+        // Set width size for columns through its index
+        tableModel.getColumn(1).setMaxWidth(40);
+        tableModel.getColumn(2).setMaxWidth(80);
+        tableModel.getColumn(3).setMaxWidth(80);
    }
    
     public void dbConnection() 
@@ -288,7 +293,6 @@ public class OrderNotFixed extends javax.swing.JInternalFrame {
         btn_notes1.setForeground(new java.awt.Color(255, 255, 255));
         btn_notes1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_notes.png"))); // NOI18N
         btn_notes1.setText("Notes");
-        btn_notes1.setActionCommand("Notes");
         btn_notes1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_notes1ActionPerformed(evt);
@@ -487,17 +491,9 @@ public class OrderNotFixed extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Product | Service"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false
-            };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
             }
-        });
+        ));
         table_view_products.setEnabled(false);
         table_view_products.setFocusable(false);
         table_view_products.addMouseListener(new java.awt.event.MouseAdapter() {

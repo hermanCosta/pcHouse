@@ -73,7 +73,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
          try {
             dbConnection();
             
-            String query = "SELECT * FROM products"; 
+            String query = "SELECT * FROM products ORDER BY productService ASC"; 
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
             rsmd = rs.getMetaData();
@@ -106,7 +106,6 @@ public class ProductsList extends javax.swing.JInternalFrame {
     
     public void addNewProductService()
     {
-        
         String addProductService = txt_product_service_list.getText();
         double addPrice = Double.parseDouble(txt_add_price.getText());
         int addQty =  Integer.parseInt(txt_add_qty.getText());
@@ -121,11 +120,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         {
             productService = new ProductService(addProductService, addQty, addPrice, addNotes, addCategory);
 
-
-
             try {
-                
-                
                 dbConnection();
                  String queryCheck = "SELECT productService FROM products WHERE productService = '" + addProductService + "'";
                     ps = con.prepareStatement(queryCheck);
@@ -137,7 +132,6 @@ public class ProductsList extends javax.swing.JInternalFrame {
                     }
                     else
                     {
-
                         String queryInsert = "INSERT INTO products(productService, price, qty, notes, category) VALUES(?, ?, ?, ?, ?)";
                         ps = con.prepareStatement(queryInsert);
 
@@ -166,7 +160,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         String searchProduct = txt_product_service_list.getText();
          
          try {
-            String query = "SELECT * FROM products WHERE productService LIKE '%" + searchProduct + "%'"; 
+            String query = "SELECT * FROM products WHERE productService LIKE '%" + searchProduct + "%' ORDER BY productService ASC"; 
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
             rsmd = rs.getMetaData();
@@ -186,6 +180,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
                     vector.add(rs.getDouble("price"));
                     vector.add(rs.getInt("qty"));
                     vector.add(rs.getString("notes"));
+                    vector.add(rs.getString("category"));
                 }
                 dtm.addRow(vector);
             }
@@ -615,8 +610,6 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
     public void editProductService()
     {
-        
-        
         String productName = txt_product_service_list.getText();
         double price = Double.parseDouble(txt_add_price.getText());
         int qty = Integer.parseInt(txt_add_qty.getText());

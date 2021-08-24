@@ -9,13 +9,16 @@ import InternalForms.NewOrder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 
 /**
  *
@@ -25,6 +28,9 @@ public class SalePayment extends javax.swing.JFrame {
 
     Connection con;
     PreparedStatement ps;
+    ResultSet rs;
+    
+    JTable tableViewProducts;
     
     double deposit, total, cash, card, totalPaid;
     String saleNo, firstName, lastName, contactNo, email, stringProducts, stringQty, stringUnitprice, 
@@ -36,7 +42,7 @@ public class SalePayment extends javax.swing.JFrame {
 
    public SalePayment(String _saleNo, String _firstName, String _lastName, String _contactNo, String _email, 
             String _stringProducts, String _stringQty, String _stringUnitPrice, String _stringPriceTotal,
-            double _total, String _saleDate, double _cash, double _card) {
+            double _total, String _saleDate, double _cash, double _card, JTable _tableViewProducts) {
         initComponents();
        
         this.saleNo = _saleNo;
@@ -51,9 +57,11 @@ public class SalePayment extends javax.swing.JFrame {
         this.total = _total;
         this.saleDate = _saleDate;
         this.cash = _cash;
+        this.tableViewProducts = _tableViewProducts;
 
         lbl_sale_no.setText(this.saleNo);
         lbl_total.setText(String.valueOf(this.total));
+        
     }
     
     public void dbConnection() 
@@ -66,6 +74,41 @@ public class SalePayment extends javax.swing.JFrame {
         }
     }
 
+    public void updateProductQty()
+    {
+         for (int i = 0; i < tableViewProducts.getRowCount() ; i++)
+        {
+            String cellProduct = tableViewProducts.getValueAt(i, 0).toString();
+            int cellQty = (int) tableViewProducts.getValueAt(i, 1);
+
+            try {
+                dbConnection();
+                String queryCheck = "SELECT * FROM products WHERE productService = ?";
+                ps = con.prepareStatement(queryCheck);
+                ps.setString(1, cellProduct);
+                rs = ps.executeQuery();
+                
+                while(rs.next())
+                {
+                    if (rs.getString("category").equals("Product"))
+                    {
+                        int qty = rs.getInt("qty");
+                        int updateQty = qty - cellQty;
+
+                        String queryUpdate = "UPDATE products SET qty = ? WHERE productService = ?";
+                        ps = con.prepareStatement(queryUpdate);
+                        ps.setInt(1, updateQty);
+                        ps.setString(2, cellProduct);
+                        ps.executeUpdate();
+                    }
+                }
+                
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -379,6 +422,8 @@ public class SalePayment extends javax.swing.JFrame {
               }
 
               JOptionPane.showMessageDialog(null,saleNo + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
+              
+              updateProductQty();
             
             
             SaleReceipt saleReceipt =  new SaleReceipt(saleNo, firstName, lastName, contactNo, email,

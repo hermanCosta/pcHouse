@@ -163,7 +163,7 @@ public class OrderFixed extends javax.swing.JInternalFrame {
         DefaultTableModel faultsModel = (DefaultTableModel) table_view_faults.getModel();
         faultsModel.setRowCount(0);
         DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
-        TableColumnModel model = table_view_products.getColumnModel();
+        TableColumnModel tableModel = table_view_products.getColumnModel();
         
         lbl_order_status.setText("Order Fixed Successfully");
         lbl_date.setText("date: " + this.finishedDate);
@@ -185,8 +185,9 @@ public class OrderFixed extends javax.swing.JInternalFrame {
         // Array for holding database String 
         String[] arrayFaults = stringFaults.split(",");
         String[] arrayProducts = stringProducts.split(",");
-        String[] arrayPrices = stringPriceTotal.split(",");
-        Vector vecPrices = new Vector();
+        String[] arrayQty = stringQty.split(",");
+        String[] arrayUnitPrice = stringUnitPrice.split(",");
+        String[] arrayPriceTotal = stringPriceTotal.split(",");
         
         //Iterate arrayProducts and pass elements to faults table
         for (Object objFaults : arrayFaults)
@@ -194,17 +195,27 @@ public class OrderFixed extends javax.swing.JInternalFrame {
             faultsModel.addRow(new Object[] {objFaults});
         }
         
-        //Iterate arrayProducts and pass elements to Products table
-        for (Object objProducts : arrayProducts)
-        {
-            productsModel.addRow(new Object[] {objProducts});
-        }  
+         // Pass arrayPrices to a vector and add as a new column
+        Vector vecProducts = new Vector();
+        Vector vecQty = new Vector();
+        Vector vecUnitPrice = new Vector();
+        Vector vecPriceTotal = new Vector();
         
-        // Pass arrayPrices to a vector and add as a new column
-        vecPrices.addAll(Arrays.asList(arrayPrices)); 
-        productsModel.addColumn("Price", vecPrices);
-            
-        model.getColumn(1).setMaxWidth(80);
+        vecProducts.addAll(Arrays.asList(arrayProducts)); 
+        vecQty.addAll(Arrays.asList(arrayQty));
+        vecUnitPrice.addAll(Arrays.asList(arrayUnitPrice)); 
+        vecPriceTotal.addAll(Arrays.asList(arrayPriceTotal)); 
+        
+        //Add New Columns into the table_view_products with data as a vector
+        productsModel.addColumn("Product | Service", vecProducts);
+        productsModel.addColumn("Qty", vecQty);
+        productsModel.addColumn("Unit €", vecUnitPrice);
+        productsModel.addColumn("Total €", vecPriceTotal);
+        
+        // Set width size for columns through its index
+        tableModel.getColumn(1).setMaxWidth(40);
+        tableModel.getColumn(2).setMaxWidth(80);
+        tableModel.getColumn(3).setMaxWidth(80);
    }
    
     public void dbConnection() 
@@ -492,17 +503,9 @@ public class OrderFixed extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Product | Service"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false
-            };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
             }
-        });
+        ));
         table_view_products.setEnabled(false);
         table_view_products.setFocusable(false);
         table_view_products.addMouseListener(new java.awt.event.MouseAdapter() {

@@ -1169,15 +1169,16 @@ public class NewOrder extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         // Add selected items to the products table
         Vector vector = new Vector();
-        String productName = combo_box_product_service.getSelectedItem().toString();
-        String productService = "";
-        String category = "";
+        String selectedItem = combo_box_product_service.getSelectedItem().toString();
+        String productName = "";
         int qty = 0;
+        double unitPrice = 0;
+        String category = "";
         double totalPrice = 0;
         
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
         
-        if(productName.isEmpty() || productName.matches("Select or Type"))
+        if(selectedItem.isEmpty() || selectedItem.matches("Select or Type"))
         {
             JOptionPane.showMessageDialog(null, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
         }
@@ -1186,8 +1187,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
             try 
             {
                 dbConnection();
-                double unitPrice = 0;
-                String query = "SELECT * FROM products WHERE productService = '" + productName + "'";
+                
+                String query = "SELECT * FROM products WHERE productService = '" + selectedItem + "'";
                 ps = con.prepareStatement(query);
                 rs = ps.executeQuery();
                 
@@ -1199,30 +1200,19 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 {
                     while (rs.next())
                     {
-                        productService = rs.getString("productService");
+                        productName = rs.getString("productService");
                         unitPrice = rs.getDouble("price");
                         category = rs.getString("category");
                     }
                     
-                    if (category.equals("Service"))
-                    {
-                        qty = 1;
-                        totalPrice = unitPrice * qty;
-                        
-                        vector.add(productService);
-                        vector.add(qty);
-                        vector.add(unitPrice);
-                        vector.add(totalPrice);
-                        dtm.addRow(vector);
-                    }
-                    else
+                    if (category.equals("Product"))
                     {
                         boolean valid = false;
                         while (!valid)
                         {
                             try
                             {
-                                qty = Integer.parseInt(JOptionPane.showInputDialog("Enter '" + productName + "' Qty:"));
+                                qty = Integer.parseInt(JOptionPane.showInputDialog("Enter '" + selectedItem + "' Qty:"));
                                 if (qty > 0) valid = true;
                             }
                             catch (NumberFormatException e)
@@ -1232,17 +1222,26 @@ public class NewOrder extends javax.swing.JInternalFrame {
                         }
                         
                         totalPrice = unitPrice * qty;
-                        vector.add(productService);
+                        vector.add(productName);
+                        vector.add(qty);
+                        vector.add(unitPrice);
+                        vector.add(totalPrice);
+                        dtm.addRow(vector);
+                        
+                    }
+                    else
+                    {
+                        qty = 1;
+                        totalPrice = unitPrice * qty;
+                        
+                        vector.add(productName);
                         vector.add(qty);
                         vector.add(unitPrice);
                         vector.add(totalPrice);
                         dtm.addRow(vector);
                     }
                     
-                     
-                    
                     combo_box_product_service.setSelectedIndex(-1);
-                    
                     // Sum price column and set into total textField
                     getPriceSum();
                 }
