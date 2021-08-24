@@ -11,16 +11,18 @@ package Model;
  */
 public class Sale extends Customer {
     
-    String sellingNo, productService, prices, sellingDate;
+    String sellingNo, productService, qty, unitPrice, priceTotal, sellingDate;
     double total;
     
-    public Sale(String _sellingNo, String _firstName, String _lastName, String _contactNo, String _email, String _productService,
-                    String _prices, double _total, String _sellingDate) {
+    public Sale(String _sellingNo, String _firstName, String _lastName, String _contactNo, String _email,
+            String _productService, String _qty, String _unitPrice, String _priceTotal, 
+            double _total, String _sellingDate) {
         super(_firstName, _lastName, _contactNo, _email);
         
         this.sellingNo = _sellingNo;
         this.productService = _productService;
-        this.prices = _prices;
+        this.qty = _qty;
+        this.unitPrice = _unitPrice;
         this.total = _total;
         this.sellingDate = _sellingDate;
         
@@ -42,12 +44,28 @@ public class Sale extends Customer {
         this.productService = productService;
     }
 
-    public String getPrices() {
-        return prices;
+    public String getQty() {
+        return qty;
     }
 
-    public void setPrices(String price) {
-        this.prices = price;
+    public void setQty(String qty) {
+        this.qty = qty;
+    }
+
+    public String getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(String unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+    
+    public String getPriceTotal() {
+        return priceTotal;
+    }
+
+    public void setPriceTotal(String price) {
+        this.priceTotal = price;
     }
 
     public double getTotal() {
@@ -65,9 +83,4 @@ public class Sale extends Customer {
     public void setSellingDate(String sellingDate) {
         this.sellingDate = sellingDate;
     }
-    
-    
-    
-    
-    
 }

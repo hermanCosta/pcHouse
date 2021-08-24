@@ -63,7 +63,8 @@ public class OrderFixed extends javax.swing.JInternalFrame {
     
     String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
            deviceModel,  serialNumber, importantNotes, stringFaults, 
-           stringProducts, stringPrices, status, issueDate, finishedDate, pickedDate; 
+           stringProducts, stringQty, stringUnitPrice, stringPriceTotal, 
+            status, issueDate, finishedDate, pickedDate; 
 
     double total, deposit, due;
     
@@ -75,8 +76,9 @@ public class OrderFixed extends javax.swing.JInternalFrame {
 
     public OrderFixed(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
             String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
-            String _stringFaults, String _stringProducts, String _stringPrices, double _total, double _deposit, 
-            double _due,String _status, String _issueDate, String _finishedDate, String _pickedDate) {
+            String _stringFaults, String _stringProducts, String _stringQty, String _stringUnitPrice, 
+            String _stringPriceTotal, double _total, double _deposit, double _due,String _status, 
+            String _issueDate, String _finishedDate, String _pickedDate) {
         
         initComponents();
         
@@ -92,7 +94,9 @@ public class OrderFixed extends javax.swing.JInternalFrame {
         this.issueDate = _issueDate;
         this.stringFaults = _stringFaults;
         this.stringProducts = _stringProducts;
-        this.stringPrices = _stringPrices;
+        this.stringQty = _stringQty;
+        this.stringUnitPrice = _stringUnitPrice;
+        this.stringPriceTotal = _stringPriceTotal;
         this.total = _total;
         this.deposit = _deposit;
         this.due = _due;
@@ -181,7 +185,7 @@ public class OrderFixed extends javax.swing.JInternalFrame {
         // Array for holding database String 
         String[] arrayFaults = stringFaults.split(",");
         String[] arrayProducts = stringProducts.split(",");
-        String[] arrayPrices = stringPrices.split(",");
+        String[] arrayPrices = stringPriceTotal.split(",");
         Vector vecPrices = new Vector();
         
         //Iterate arrayProducts and pass elements to faults table
@@ -217,7 +221,7 @@ public class OrderFixed extends javax.swing.JInternalFrame {
     public void print()
     {
         new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
-                serialNumber, stringFaults, importantNotes, stringProducts, stringPrices, total, 
+                serialNumber, stringFaults, importantNotes, stringProducts, stringPriceTotal, total, 
                 deposit, due, issueDate).setVisible(true);
     }
     
@@ -985,7 +989,7 @@ public class OrderFixed extends javax.swing.JInternalFrame {
     private void btn_payActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_payActionPerformed
         // TODO add your handling code here:
         OrderPayment billing = new OrderPayment(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
-                serialNumber, importantNotes, stringFaults, stringProducts, stringPrices, total, deposit, due, issueDate, 
+                serialNumber, importantNotes, stringFaults, stringProducts, stringPriceTotal, total, deposit, due, issueDate, 
                 finishedDate);
         billing.setVisible(true);
     }//GEN-LAST:event_btn_payActionPerformed
@@ -1006,7 +1010,7 @@ public class OrderFixed extends javax.swing.JInternalFrame {
                 
                 OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, 
                         email, deviceBrand, deviceModel, serialNumber, importantNotes, stringFaults, stringProducts,
-                        stringPrices, total, deposit, due, status, issueDate, pickedDate);
+                        stringQty, stringUnitPrice, stringPriceTotal, total, deposit, due, status, issueDate, pickedDate);
             
                 desktop_pane_fixed_order.removeAll();
                 desktop_pane_fixed_order.add(orderDetails).setVisible(true);
@@ -1039,7 +1043,7 @@ public class OrderFixed extends javax.swing.JInternalFrame {
             }
             
             OrderReceipt receipt =  new OrderReceipt(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel,
-                    serialNumber, stringProducts, stringPrices, total, deposit, due, pickedDate, cash, card);
+                    serialNumber, stringProducts, stringPriceTotal, total, deposit, due, pickedDate, cash, card);
             receipt.setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(OrderFixed.class.getName()).log(Level.SEVERE, null, ex);

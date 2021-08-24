@@ -42,8 +42,8 @@ public class SaleDetails extends javax.swing.JInternalFrame {
      */
     ArrayList firstNames = new ArrayList();
     ArrayList lastNames = new ArrayList();
-    Vector vecProducts = new Vector();
-    Vector vecPrices = new Vector();
+    //Vector vecProducts = new Vector();
+    //Vector vecPrices = new Vector();
     Connection con;
     PreparedStatement ps;
     Statement stmt;
@@ -53,7 +53,8 @@ public class SaleDetails extends javax.swing.JInternalFrame {
     ResultSet rs;
     ResultSetMetaData rsmd;
     
-    String saleNo, firstName,  lastName, contactNo, email, stringProducts, stringPrices, saleDate; 
+    String saleNo, firstName,  lastName, contactNo, email, stringProducts, stringQty, 
+            stringUnitPrice, stringPriceTotal, saleDate; 
     double total, cash = 0, card = 0;
     
     
@@ -62,7 +63,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
     }
 
     SaleDetails(String _saleNo, String _firstName, String _lastName, String _contactNo, String _email, 
-            String _stringProducts, String _stringPrices, String _saleDate, double _total, double _cash, double _card) {
+            String _stringProducts, String _stringQty, String _stringUnitPrice, String _stringPriceTotal, String _saleDate, double _total, double _cash, double _card) {
         initComponents();
         
         this.saleNo = _saleNo;
@@ -71,7 +72,9 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         this.contactNo = _contactNo;
         this.email = _email;
         this.stringProducts = _stringProducts;
-        this.stringPrices = _stringPrices;
+        this.stringQty = _stringQty;
+        this.stringUnitPrice = _stringUnitPrice;
+        this.stringPriceTotal = _stringPriceTotal;
         this.saleDate = _saleDate;
         this.total = _total;
         this.cash = _cash;
@@ -132,16 +135,30 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         }
         
         String[] arrayProducts = stringProducts.split(",");
-        String[] arrayPrices = stringPrices.split(",");
+        String[] arrayQty = stringQty.split(",");
+        String[] arrayUnitPrice = stringUnitPrice.split(",");
+        String[] arrayPriceTotal = stringPriceTotal.split(",");
         
         for (Object objProducts : arrayProducts)
         {
             dtm.addRow(new Object[] {objProducts});
         }  
         
-        // Pass arrayPrices to a vector and add as a new column
-        vecPrices.addAll(Arrays.asList(arrayPrices)); 
-        dtm.addColumn("Price", vecPrices);
+        Vector vecProducts = new Vector();
+        Vector vecQty = new Vector();
+        Vector vecUnitPrice = new Vector();
+        Vector vecPriceTotal = new Vector();
+        
+        
+        vecProducts.addAll(Arrays.asList(arrayProducts)); 
+        vecQty.addAll(Arrays.asList(arrayQty));
+        vecUnitPrice.addAll(Arrays.asList(arrayUnitPrice)); 
+        vecPriceTotal.addAll(Arrays.asList(arrayPriceTotal)); 
+        
+        dtm.addColumn("Product | Service", vecProducts);
+        dtm.addColumn("Qty", vecQty);
+        dtm.addColumn("Unit €", vecUnitPrice);
+        dtm.addColumn("Total €", vecPriceTotal);
             
         model.getColumn(1).setMaxWidth(80);
     }
@@ -288,17 +305,9 @@ public class SaleDetails extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Product | Service"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false
-            };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
             }
-        });
+        ));
         table_view_products.setEnabled(false);
         table_view_products.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -436,7 +445,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panel_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 12, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -503,7 +512,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         SaleReceipt saleReceipt =  new SaleReceipt(saleNo, firstName, lastName, contactNo, email,
-                              stringProducts, stringPrices, total, saleDate, cash, card);
+                              stringProducts, stringPriceTotal, total, saleDate, cash, card);
             saleReceipt.setVisible(true);
             
         

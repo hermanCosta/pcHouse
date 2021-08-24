@@ -73,7 +73,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     
     String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
            deviceModel,  serialNumber, importantNotes, stringFaults, 
-           stringProducts, stringPrices, status, issueDate, finishedDate, pickedDate; 
+           stringProducts, stringQty, stringUnitPrice, stringPriceTotal, status, issueDate, finishedDate, pickedDate; 
 
     double total, deposit, due;
     
@@ -85,8 +85,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
     public OrderDetails(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
             String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
-            String _stringFaults, String _stringProducts, String _stringPrices, double _total, double _deposit, 
-            double _due, String _status, String _issueDate, String _pickedDate) {
+            String _stringFaults, String _stringProducts, String _stringQty, String _stringUnitPrice,
+            String _stringPriceTotal, double _total, double _deposit, double _due, String _status, 
+            String _issueDate, String _pickedDate) {
         
         initComponents();
         
@@ -102,7 +103,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         this.issueDate = _issueDate;
         this.stringFaults = _stringFaults;
         this.stringProducts = _stringProducts;
-        this.stringPrices = _stringPrices;
+        this.stringQty = _stringQty;
+        this.stringUnitPrice = _stringUnitPrice;
+        this.stringPriceTotal = _stringPriceTotal;
         this.total = _total;
         this.deposit = _deposit;
         this.due = _due;
@@ -163,26 +166,61 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         // Array for holding database String 
         String[] arrayFaults = stringFaults.split(",");
         String[] arrayProducts = stringProducts.split(",");
-        String[] arrayPrices = stringPrices.split(",");
-        Vector vecPrices = new Vector();
+        String[] arrayQty = stringQty.split(",");
+        String[] arrayUnitPrice = stringUnitPrice.split(",");
+        String[] arrayPriceTotal = stringPriceTotal.split(",");
         
         //Iterate arrayProducts and pass elements to faults table
         for (Object objFaults : arrayFaults)
         {
-            faultsModel.addRow(new Object[] {objFaults});
+            //faultsModel.addRow(new Object[] {objFaults});
+            //tableList.add(objFaults);
         }
         
         //Iterate arrayProducts and pass elements to Products table
         for (Object objProducts : arrayProducts)
         {
-            productsModel.addRow(new Object[] {objProducts});
+            ///productsModel.addRow(new Object[] {objProducts});
+            //tableList.add(objProducts);
         }  
         
+        for (Object objQty : arrayQty)
+        {
+            //productsModel.addRow(new Object[] {objQty});
+            //tableList.add(objQty);
+        }
+        
+        for (Object objUnitPrice : arrayUnitPrice)
+        {
+            //productsModel.addRow(new Object[] {objUnitPrice});
+            //tableList.add(objUnitPrice);
+        }
+        
+        for (Object objPriceTotal : arrayPriceTotal)
+        {
+            //productsModel.addRow(new Object[] {objPriceTotal});
+            //tableList.add(objPriceTotal);
+        }
+        
         // Pass arrayPrices to a vector and add as a new column
-        vecPrices.addAll(Arrays.asList(arrayPrices)); 
-        productsModel.addColumn("Price", vecPrices);
-            
-        model.getColumn(1).setMaxWidth(80);
+        Vector vecProducts = new Vector();
+        Vector vecQty = new Vector();
+        Vector vecUnitPrice = new Vector();
+        Vector vecPriceTotal = new Vector();
+        
+        
+        vecProducts.addAll(Arrays.asList(arrayProducts)); 
+        vecQty.addAll(Arrays.asList(arrayQty));
+        vecUnitPrice.addAll(Arrays.asList(arrayUnitPrice)); 
+        vecPriceTotal.addAll(Arrays.asList(arrayPriceTotal)); 
+        
+        productsModel.addColumn("Product | Service", vecProducts);
+        productsModel.addColumn("Qty", vecQty);
+        productsModel.addColumn("Unit €", vecUnitPrice);
+        productsModel.addColumn("Total €", vecPriceTotal);
+        
+        //model.getColumn(1).setMaxWidth(80);
+
    }
    
     public void dbConnection() 
@@ -347,8 +385,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         combo_box_product_service = new javax.swing.JComboBox<>();
         txt_deposit = new javax.swing.JTextField();
         txt_total = new javax.swing.JTextField();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        table_view_products = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
         table_view_faults = new javax.swing.JTable();
         icon_add_table_view = new javax.swing.JLabel();
@@ -362,6 +398,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         btn_notes = new javax.swing.JButton();
         jScrollPane_notes = new javax.swing.JScrollPane();
         editor_pane_notes = new javax.swing.JEditorPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        table_view_products = new javax.swing.JTable();
 
         jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
@@ -590,30 +628,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             }
         });
 
-        table_view_products.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
-        table_view_products.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Product | Service"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        table_view_products.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                table_view_productsMouseClicked(evt);
-            }
-        });
-        jScrollPane2.setViewportView(table_view_products);
-
         table_view_faults.setFont(new java.awt.Font("Lucida Grande", 0, 17)); // NOI18N
         table_view_faults.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -734,7 +748,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_buttonsLayout.setVerticalGroup(
             panel_buttonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -757,6 +771,22 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         editor_pane_notes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Important Notes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 16))); // NOI18N
         editor_pane_notes.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
         jScrollPane_notes.setViewportView(editor_pane_notes);
+
+        table_view_products.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        table_view_products.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        table_view_products.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_view_productsMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(table_view_products);
 
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);
@@ -810,15 +840,14 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                                         .addGap(11, 11, 11)
                                         .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(30, 30, 30)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 575, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane3)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_service_product)
                                 .addGap(6, 6, 6)
                                 .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(10, 10, 10)
                                 .addComponent(icon_add_table_view))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 575, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_due)
                                 .addGap(0, 0, 0)
@@ -830,7 +859,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(lbl_price)
                                 .addGap(0, 0, 0)
-                                .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_order_detailsLayout.setVerticalGroup(
             panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -900,8 +931,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                                 .addComponent(lbl_service_product))
                             .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(icon_add_table_view))
-                        .addGap(6, 6, 6)
+                        .addGap(3, 3, 3)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addGap(6, 6, 6)
@@ -1202,23 +1234,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_icon_add_table_viewMousePressed
 
-    private void table_view_productsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_productsMouseClicked
-        // TODO add your handling code here:
-        //Delete products|Service item of the selected row (Function is called with 2 clicks) 
-        DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
-        
-        if(evt.getClickCount() == 2)
-        {
-          int confirmDeletion = JOptionPane.showConfirmDialog(null, "Delete This Item ?", "Delete Product|Service", JOptionPane.YES_NO_OPTION);
-          if(confirmDeletion == 0)
-          {
-              dtm.removeRow(table_view_products.getSelectedRow());
-              // Sum price column and set into total textField
-              getPriceSum();
-          }
-        }
-    }//GEN-LAST:event_table_view_productsMouseClicked
-
     private void table_view_faultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_faultsMouseClicked
         // TODO add your handling code here:
         //Delete fault item of the selected row (Function is called with 2 clicks) 
@@ -1351,8 +1366,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 ps.executeUpdate();
                 
                 OrderFixed fixedOrder = new OrderFixed(orderNo, firstName, lastName, contactNo, email, deviceBrand,
-                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringPrices, total,
-                        deposit, due, status, issueDate, finishedDate, pickedDate);
+                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
+                         stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, pickedDate);
                 
                 desktop_pane_order_details.removeAll();
                 desktop_pane_order_details.add(fixedOrder).setVisible(true);
@@ -1366,9 +1381,10 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         
-        new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
-                serialNumber, stringFaults, importantNotes, stringProducts, stringPrices, total, 
-                deposit, due, issueDate).setVisible(true);
+        PrintOrder printOrder = new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
+                serialNumber, stringFaults, importantNotes, stringProducts, stringPriceTotal, total, 
+                deposit, due, issueDate);
+        printOrder.setVisible(true);
     }//GEN-LAST:event_btn_printActionPerformed
 
     private void btn_not_fixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_not_fixActionPerformed
@@ -1388,8 +1404,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 ps.executeUpdate();
                 
                 OrderNotFixed orderNotFixed = new OrderNotFixed(orderNo, firstName, lastName, contactNo, email, deviceBrand,
-                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringPrices, total,
-                        deposit, due, status, issueDate, finishedDate, pickedDate);
+                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
+                         stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, pickedDate);
                 
                 desktop_pane_order_details.removeAll();
                 desktop_pane_order_details.add(orderNotFixed).setVisible(true);
@@ -1449,11 +1465,11 @@ public class OrderDetails extends javax.swing.JInternalFrame {
               //Remove Brackets from the vector to pass to Database  
              stringFaults = vecUpdateFaults.toString().replace("[", "").replace("]", "");
              stringProducts = vecUpdateProducts.toString().replace("[", "").replace("]", "");
-             stringPrices = vecUpdatePrices.toString().replace("[", "").replace("]", "");
+             stringPriceTotal = vecUpdatePrices.toString().replace("[", "").replace("]", "");
 
             String tableFaults = stringFaults.replace(",","").replace(" ", "");
             String tableProducts = stringProducts.replace(",", "").replace(" ", "");
-            String tablePrices = stringPrices.replace(",", "").replace(" ", "");
+            String tablePrices = stringPriceTotal.replace(",", "").replace(" ", "");
 
             try 
             {
@@ -1493,7 +1509,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                                     +"email ='" + email + "', deviceBrand ='" + this.deviceBrand +"'," 
                                     +"deviceModel ='" + deviceModel + "', serialNumber ='" + serialNumber + "',"
                                     +"fault = '" + stringFaults + "', importantNotes = '" + importantNotes +"'," 
-                                    +"productService ='" + stringProducts + "', price ='" + stringPrices +"',"
+                                    +"productService ='" + stringProducts + "', price ='" + stringPriceTotal +"',"
                                     +"deposit = '" + this.deposit +"', total ='" + this.total + "',"
                                     +"due = '" + this.due + "',issuedDate ='" + updateDate + "'"
                                     + " WHERE orderNo = '" + this.orderNo + "'";
@@ -1518,6 +1534,23 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         orderNotes.setVisible(true);
         
     }//GEN-LAST:event_btn_notesActionPerformed
+
+    private void table_view_productsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_productsMouseClicked
+        // TODO add your handling code here:
+        //Delete products|Service item of the selected row (Function is called with 2 clicks)
+        DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
+
+        if(evt.getClickCount() == 2)
+        {
+            int confirmDeletion = JOptionPane.showConfirmDialog(null, "Delete This Item ?", "Delete Product|Service", JOptionPane.YES_NO_OPTION);
+            if(confirmDeletion == 0)
+            {
+                dtm.removeRow(table_view_products.getSelectedRow());
+                // Sum price column and set into total textField
+                getPriceSum();
+            }
+        }
+    }//GEN-LAST:event_table_view_productsMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_fix;

@@ -62,9 +62,10 @@ public class OrderNotFixed extends javax.swing.JInternalFrame {
     ResultSet rs;
     ResultSetMetaData rsmd;
     
-    String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
+     String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
            deviceModel,  serialNumber, importantNotes, stringFaults, 
-           stringProducts, stringPrices, status, issueDate, finishedDate, pickedDate; 
+           stringProducts, stringQty, stringUnitPrice, stringPriceTotal, 
+            status, issueDate, finishedDate, pickedDate; 
 
     double total, deposit, due;
     
@@ -76,8 +77,9 @@ public class OrderNotFixed extends javax.swing.JInternalFrame {
 
     public OrderNotFixed(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
             String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
-            String _stringFaults, String _stringProducts, String _stringPrices, double _total, double _deposit, 
-            double _due,String _status, String _issueDate, String _finishedDate, String _pickedDate) {
+            String _stringFaults, String _stringProducts, String _stringQty, String _stringUnitPrice, 
+            String _stringPriceTotal, double _total, double _deposit, double _due,String _status, 
+            String _issueDate, String _finishedDate, String _pickedDate) {
         
         initComponents();
         
@@ -93,7 +95,9 @@ public class OrderNotFixed extends javax.swing.JInternalFrame {
         this.issueDate = _issueDate;
         this.stringFaults = _stringFaults;
         this.stringProducts = _stringProducts;
-        this.stringPrices = _stringPrices;
+        this.stringQty = _stringQty;
+        this.stringUnitPrice = _stringUnitPrice;
+        this.stringPriceTotal = _stringPriceTotal;
         this.total = _total;
         this.deposit = _deposit;
         this.due = _due;
@@ -182,7 +186,7 @@ public class OrderNotFixed extends javax.swing.JInternalFrame {
         // Array for holding database String 
         String[] arrayFaults = stringFaults.split(",");
         String[] arrayProducts = stringProducts.split(",");
-        String[] arrayPrices = stringPrices.split(",");
+        String[] arrayPrices = stringPriceTotal.split(",");
         Vector vecPrices = new Vector();
         
         //Iterate arrayProducts and pass elements to faults table
@@ -806,35 +810,7 @@ public class OrderNotFixed extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameActionPerformed
 
     private void txt_first_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_first_nameActionPerformed
-//        try {
-//            // TODO add your handling code here:
-//            dbConnection();
-//            String fName = txt_first_name.getText();
-//            
-//            String checkQuery = "SELECT * FROM customers WHERE firstName = '" +fName+ "'";
-//            ps = con.prepareStatement(checkQuery);
-//            rs = ps.executeQuery();
-//            
-//            if (!rs.isBeforeFirst())
-//            {
-//                int confirmInsertion = JOptionPane.showConfirmDialog(null, "Do you want to add a new costumer First Name ?", "First Name", JOptionPane.YES_NO_OPTION);
-//                if(confirmInsertion == 0)
-//                {
-//                    String query = "INSERT INTO customers (firstName) VALUES(?)";
-//                    ps = con.prepareStatement(query);
-//                    ps.setString(1, fName);
-//                    ps.executeUpdate();
-//                    txt_first_name.setText("");
-//                }
-//                else
-//                {
-//                    txt_first_name.setText("");
-//                }
-//            }    
-//            
-//        } catch (SQLException ex) {
-//            Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+
     }//GEN-LAST:event_txt_first_nameActionPerformed
 
     private void txt_brandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_brandActionPerformed
@@ -1025,7 +1001,7 @@ public class OrderNotFixed extends javax.swing.JInternalFrame {
                 
                 OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, 
                         email, deviceBrand, deviceModel, serialNumber, importantNotes, stringFaults, stringProducts,
-                        stringPrices, total, deposit, due, status, issueDate, pickedDate);
+                        stringQty, stringUnitPrice, stringPriceTotal, total, deposit, due, status, issueDate, pickedDate);
             
                 desktop_pane_fixed_order.removeAll();
                 desktop_pane_fixed_order.add(orderDetails).setVisible(true);

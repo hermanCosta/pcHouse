@@ -52,7 +52,11 @@ public class Sales extends javax.swing.JInternalFrame {
     ArrayList firstNames = new ArrayList();
     ArrayList lastNames = new ArrayList();
     Vector vecProducts = new Vector();
-    Vector vecPrices = new Vector();
+    Vector vecPriceTotal = new Vector();
+    Vector vecQty = new Vector();
+    Vector vecUnitPrice = new Vector();
+    Vector vecpriceTotal = new Vector();
+    
     Connection con;
     PreparedStatement ps;
     Statement stmt;
@@ -62,7 +66,8 @@ public class Sales extends javax.swing.JInternalFrame {
     ResultSet rs;
     ResultSetMetaData rsmd;
     
-    String saleNo, firstName,  lastName, contactNo, email, stringProducts, stringPrices, saleDate; 
+    String saleNo, firstName,  lastName, contactNo, email, stringProducts, stringQty, 
+            stringUnitPrice, stringPriceTotal, saleDate; 
     double total, cash = 0, card = 0;
     
     
@@ -153,15 +158,15 @@ public class Sales extends javax.swing.JInternalFrame {
         try {
             dbConnection();
             
-            String query = "SELECT * FROM sales ORDER BY saleNo LIMIT 10";
+            String query = "SELECT * FROM sales ORDER BY saleNo DESC LIMIT 8";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery(query);
             
             while (rs.next())
             {
                 sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
-                rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), rs.getString("price"), 
-                rs.getDouble("total"), rs.getString("saleDate"));
+                rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), rs.getString("qty"),  
+                        rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getString("saleDate"));
                 
                 salesList.add(sale);
             }
@@ -179,15 +184,16 @@ public class Sales extends javax.swing.JInternalFrame {
         DefaultTableModel dtm = (DefaultTableModel)table_view_sales.getModel();
         dtm.setRowCount(0);
         
-        Object[] row = new Object[6];
+        Object[] row = new Object[7];
         for (int i = 0; i <list.size() ; i++)
         {
             row[0] = list.get(i).getSaleNo();
-            row[1] = list.get(i).getFirstName();
-            row[2] = list.get(i).getLastName();
-            row[3] = list.get(i).getContactNo();
-            row[4] = list.get(i).getProductService();
-            row[5] = list.get(i).getTotal();
+            row[1] = list.get(i).getFirstName() + " " + list.get(i).getLastName();
+            row[2] = list.get(i).getContactNo();
+            row[3] = list.get(i).getProductService();
+            row[4] = list.get(i).getQty();
+            row[5] = list.get(i).getUnitPrice();
+            row[6] = list.get(i).getTotal();
             dtm.addRow(row);
         }
     }
@@ -242,7 +248,7 @@ public class Sales extends javax.swing.JInternalFrame {
         double sum = 0;
         for(int i = 0; i < table_view_products.getRowCount(); i++)
         {
-            sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 1).toString());
+            sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 3).toString());
         }
         
         txt_total.setText(Double.toString(sum));
@@ -515,11 +521,11 @@ public class Sales extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Product | Service", "Price €"
+                "Product | Service", "Qty", "Unit €", "Total €"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -533,7 +539,9 @@ public class Sales extends javax.swing.JInternalFrame {
         });
         jScrollPane2.setViewportView(table_view_products);
         if (table_view_products.getColumnModel().getColumnCount() > 0) {
-            table_view_products.getColumnModel().getColumn(1).setMaxWidth(80);
+            table_view_products.getColumnModel().getColumn(1).setMaxWidth(40);
+            table_view_products.getColumnModel().getColumn(2).setMaxWidth(80);
+            table_view_products.getColumnModel().getColumn(3).setMaxWidth(80);
         }
 
         btn_add_table_view.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_add_to_product_table.png"))); // NOI18N
@@ -546,22 +554,22 @@ public class Sales extends javax.swing.JInternalFrame {
         table_view_sales.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         table_view_sales.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Sale No", "First Name", "Last Name", "Contact No.", "Products | Service", "Total"
+                "Sale No", "Full Name", "Contact No.", "Products | Service", "Qty €", "Unit €", "Total"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -576,9 +584,9 @@ public class Sales extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(table_view_sales);
         if (table_view_sales.getColumnModel().getColumnCount() > 0) {
             table_view_sales.getColumnModel().getColumn(0).setMaxWidth(100);
-            table_view_sales.getColumnModel().getColumn(3).setPreferredWidth(50);
-            table_view_sales.getColumnModel().getColumn(4).setPreferredWidth(200);
-            table_view_sales.getColumnModel().getColumn(5).setMaxWidth(80);
+            table_view_sales.getColumnModel().getColumn(2).setPreferredWidth(50);
+            table_view_sales.getColumnModel().getColumn(3).setPreferredWidth(200);
+            table_view_sales.getColumnModel().getColumn(6).setMaxWidth(80);
         }
 
         txt_search_sale.setFont(new java.awt.Font("sansserif", 1, 16)); // NOI18N
@@ -773,18 +781,23 @@ public class Sales extends javax.swing.JInternalFrame {
             for(int j = 0; j < table_view_products.getRowCount(); j++)
             {
                vecProducts.add(table_view_products.getValueAt(j, 0));
-               vecPrices.add(table_view_products.getValueAt(j, 1));
+               vecQty.add(table_view_products.getValueAt(j, 1));
+               vecUnitPrice.add(table_view_products.getValueAt(j, 2));
+               vecPriceTotal.add(table_view_products.getValueAt(j, 3));
             }
 
             // pass vector elemnets to a String splitted by a comma,
             // in order to save into DB
             stringProducts = vecProducts.toString().replace("[", " ").replace("]", "");
-            stringPrices = vecPrices.toString().replace("[", " ").replace("]", "");
+            stringQty = vecQty.toString().replace("[", " ").replace("]", "");
+            stringUnitPrice = vecUnitPrice.toString().replace("[", " ").replace("]", "");
+            stringPriceTotal = vecPriceTotal.toString().replace("[", " ").replace("]", "");
 
-            sale = new Sale(saleNo, firstName, lastName, contactNo, email, stringProducts, stringPrices, total,saleDate);
+            sale = new Sale(saleNo, firstName, lastName, contactNo, email, stringProducts, stringQty, 
+                    stringUnitPrice, stringPriceTotal, total,saleDate);
 
             SalePayment salePayment =  new SalePayment(saleNo, firstName, lastName, contactNo, email, 
-                       stringProducts, stringPrices, total, saleDate, cash, card);
+                       stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total, saleDate, cash, card);
                salePayment.setVisible(true);
        }
     }//GEN-LAST:event_btn_save_orderActionPerformed
@@ -795,7 +808,7 @@ public class Sales extends javax.swing.JInternalFrame {
         double sum = 0;
         for(int i = 0; i < table_view_products.getRowCount(); i++)
         {
-            sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 1).toString());
+            sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 3).toString());
         }
         
         txt_total.setText(Double.toString(sum));
@@ -870,9 +883,13 @@ public class Sales extends javax.swing.JInternalFrame {
 
     private void btn_add_table_viewMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_add_table_viewMousePressed
         // TODO add your handling code here:
-        // Add selected items to the products table
         Vector vector = new Vector();
         String productName = combo_box_product_service.getSelectedItem().toString();
+        String productService = "";
+        String category = "";
+        int qty = 0;
+        double totalPrice = 0;
+        
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
         
         if(productName.isEmpty() || productName.matches("Select or Type"))
@@ -884,51 +901,71 @@ public class Sales extends javax.swing.JInternalFrame {
             try 
             {
                 dbConnection();
-                
+                double unitPrice = 0;
                 String query = "SELECT * FROM products WHERE productService = '" + productName + "'";
                 ps = con.prepareStatement(query);
                 rs = ps.executeQuery();
                 
                 if (!rs.isBeforeFirst())
                 {
-                   JOptionPane.showMessageDialog(null, "Item not found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
+                   JOptionPane.showMessageDialog(null, "Item not Found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
                 }
                 else
                 {
                     while (rs.next())
                     {
-                        vector.add(rs.getString("productService"));
-                        vector.add(rs.getDouble("price"));
+                        productService = rs.getString("productService");
+                        unitPrice = rs.getDouble("price");
+                        category = rs.getString("category");
                     }
-
-                    dtm.addRow(vector);
+                    
+                    if (category.equals("Service"))
+                    {
+                        qty = 1;
+                        totalPrice = unitPrice * qty;
+                        
+                        vector.add(productService);
+                        vector.add(qty);
+                        vector.add(unitPrice);
+                        vector.add(totalPrice);
+                        dtm.addRow(vector);
+                    }
+                    else
+                    {
+                        boolean valid = false;
+                        while (!valid)
+                        {
+                            try
+                            {
+                                qty = Integer.parseInt(JOptionPane.showInputDialog("Enter '" + productName + "' Qty:"));
+                                if (qty > 0) valid = true;
+                            }
+                            catch (NumberFormatException e)
+                            {
+                                JOptionPane.showMessageDialog(this, "Qty must be an Integer!", "New Order", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                        
+                        totalPrice = unitPrice * qty;
+                        vector.add(productService);
+                        vector.add(qty);
+                        vector.add(unitPrice);
+                        vector.add(totalPrice);
+                        dtm.addRow(vector);
+                    }
+                    
+                     
+                    
                     combo_box_product_service.setSelectedIndex(-1);
                     
                     // Sum price column and set into total textField
                     getPriceSum();
                 }
             } catch (SQLException ex) {
-                    Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btn_add_table_viewMousePressed
-
-    private void table_view_productsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_productsMouseClicked
-        // TODO add your handling code here:
-        //Delete products|Service item of the selected row (Function is called with 2 clicks) 
-        DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
-        
-        if(evt.getClickCount() == 2)
-        {
-          int confirmDeletion = JOptionPane.showConfirmDialog(null, "Delete This Item ?", "Delete Product|Service", JOptionPane.YES_NO_OPTION);
-          if(confirmDeletion == 0)
-          {
-              dtm.removeRow(table_view_products.getSelectedRow());
-              // Sum price column and set into total textField
-              getPriceSum();
-          }
-        }
-    }//GEN-LAST:event_table_view_productsMouseClicked
 
     private void txt_last_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_last_nameKeyPressed
         // TODO add your handling code here:
@@ -1037,8 +1074,8 @@ public class Sales extends javax.swing.JInternalFrame {
             while (rs.next())
             {
                 sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
-                rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), rs.getString("price"), 
-                rs.getDouble("total"), rs.getString("saleDate"));
+                rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), rs.getString("qty"), 
+                rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getString("saleDate"));
                 
                 salesList.add(sale);
             }
@@ -1049,15 +1086,16 @@ public class Sales extends javax.swing.JInternalFrame {
         DefaultTableModel dtm = (DefaultTableModel)table_view_sales.getModel();
         dtm.setRowCount(0);
         
-        Object[] row = new Object[6];
+        Object[] row = new Object[7];
         for (int i = 0 ;i < salesList.size() ; i++)
         {
                 row[0] = salesList.get(i).getSaleNo();
-                row[1] = salesList.get(i).getFirstName();
-                row[2] = salesList.get(i).getLastName();
-                row[3] = salesList.get(i).getContactNo();
-                row[4] = salesList.get(i).getProductService();
-                row[5] = salesList.get(i).getTotal();
+                row[1] = salesList.get(i).getFirstName() + " " + salesList.get(i).getLastName();
+                row[2] = salesList.get(i).getContactNo();
+                row[3] = salesList.get(i).getProductService();
+                row[4] = salesList.get(i).getQty();
+                row[5] = salesList.get(i).getUnitPrice();
+                row[6] = salesList.get(i).getTotal();
             dtm.addRow(row);
         }
     }//GEN-LAST:event_txt_search_saleKeyReleased
@@ -1086,16 +1124,19 @@ public class Sales extends javax.swing.JInternalFrame {
                     contactNo = rs.getString("contactNo");
                     email = rs.getString("email");
                     stringProducts = rs.getString("productService");
-                    stringPrices = rs.getString("price");
+                    stringQty = rs.getString("qty");
+                    stringUnitPrice = rs.getString("unitPrice");
+                    stringPriceTotal = rs.getString("priceTotal");
                     saleDate = rs.getString("saleDate");
                     total = rs.getDouble("total");
                     cash = rs.getDouble("cash");
                     card = rs.getDouble("card");
-                            
+                    
                 }
                 
                 SaleDetails saleDetails = new SaleDetails(saleNo, firstName, lastName, contactNo, email,
-                        stringProducts, stringPrices, saleDate,total, cash, card);
+                        stringProducts, stringQty, stringUnitPrice, stringPriceTotal, saleDate,total, cash, card);
+                
                 
                 //desktop_pane_sales.removeAll();
                 desktop_pane_sales.add(saleDetails).setVisible(true);
@@ -1105,6 +1146,23 @@ public class Sales extends javax.swing.JInternalFrame {
             
         }
     }//GEN-LAST:event_table_view_salesMouseClicked
+
+    private void table_view_productsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_productsMouseClicked
+        // TODO add your handling code here:
+        //Delete products|Service item of the selected row (Function is called with 2 clicks)
+        DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
+
+        if(evt.getClickCount() == 2)
+        {
+            int confirmDeletion = JOptionPane.showConfirmDialog(null, "Delete This Item ?", "Delete Product|Service", JOptionPane.YES_NO_OPTION);
+            if(confirmDeletion == 0)
+            {
+                dtm.removeRow(table_view_products.getSelectedRow());
+                // Sum price column and set into total textField
+                getPriceSum();
+            }
+        }
+    }//GEN-LAST:event_table_view_productsMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btn_add_table_view;

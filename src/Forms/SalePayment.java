@@ -27,15 +27,16 @@ public class SalePayment extends javax.swing.JFrame {
     PreparedStatement ps;
     
     double deposit, total, cash, card, totalPaid;
-    String saleNo, firstName, lastName, contactNo, email, 
-            stringProducts, stringPrices, saleDate;
+    String saleNo, firstName, lastName, contactNo, email, stringProducts, stringQty, stringUnitprice, 
+            stringPriceTotal, saleDate;
     
     public SalePayment() {
         initComponents();
     }
 
    public SalePayment(String _saleNo, String _firstName, String _lastName, String _contactNo, String _email, 
-            String _stringProducts, String _stringPrices, double _total, String _saleDate, double _cash, double _card) {
+            String _stringProducts, String _stringQty, String _stringUnitPrice, String _stringPriceTotal,
+            double _total, String _saleDate, double _cash, double _card) {
         initComponents();
        
         this.saleNo = _saleNo;
@@ -44,7 +45,9 @@ public class SalePayment extends javax.swing.JFrame {
         this.contactNo = _contactNo;
         this.email = _email;
         this.stringProducts = _stringProducts;
-        this.stringPrices = _stringPrices;
+        this.stringQty =_stringQty;
+        this.stringUnitprice = _stringUnitPrice;
+        this.stringPriceTotal = _stringPriceTotal;
         this.total = _total;
         this.saleDate = _saleDate;
         this.cash = _cash;
@@ -351,8 +354,8 @@ public class SalePayment extends javax.swing.JFrame {
               dbConnection();
 
                    String query = "INSERT INTO sales(saleNo, firstName, lastName, contactNo, "
-                          + "email, productService, price, total, saleDate, cash, card)"
-                          + "VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                          + "email, productService, qty, unitPrice, priceTotal, total, saleDate, cash, card)"
+                          + "VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                   ps = con.prepareStatement(query);
                   ps.setString(1, saleNo);
@@ -361,23 +364,25 @@ public class SalePayment extends javax.swing.JFrame {
                   ps.setString(4, contactNo);
                   ps.setString(5, email);
                   ps.setString(6, stringProducts);
-                  ps.setString(7, stringPrices);
-                  ps.setDouble(8, total);
-                  ps.setString(9, saleDate);
-                  ps.setDouble(10, cash);
-                  ps.setDouble(11, card);
+                  ps.setString(7, stringQty);
+                  ps.setString(8, stringUnitprice);
+                  ps.setString(9, stringPriceTotal);
+                  ps.setDouble(10, total);
+                  ps.setString(11, saleDate);
+                  ps.setDouble(12, cash);
+                  ps.setDouble(13, card);
 
               ps.executeUpdate();
 
               } catch (SQLException ex) {
-              Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
               }
 
               JOptionPane.showMessageDialog(null,saleNo + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
             
             
             SaleReceipt saleReceipt =  new SaleReceipt(saleNo, firstName, lastName, contactNo, email,
-                              stringProducts, stringPrices, total, saleDate, cash, card);
+                              stringProducts, stringPriceTotal, total, saleDate, cash, card);
             saleReceipt.setVisible(true);
             
             this.dispose();

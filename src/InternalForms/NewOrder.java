@@ -57,6 +57,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
     Vector vecFaults = new Vector();
     Vector vecProducts = new Vector();
     Vector vecPrices = new Vector();
+    Vector vecQty = new Vector();
+    Vector vecUnitPrice = new Vector();
     
     Connection con;
     PreparedStatement ps;
@@ -69,7 +71,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
     
     String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
            deviceModel,  serialNumber, importantNotes, stringFaults, 
-           stringProducts, stringPrices, issueDate, status; 
+           stringProducts, stringPriceTotal, stringQty, stringUnitPrice, issueDate, status; 
 
     double total, deposit, due;
     
@@ -82,8 +84,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
         ui.setNorthPane(null);
         
         txt_contact.setFocusLostBehavior(JFormattedTextField.PERSIST);//avoid auto old value by focus loosing
-        jScrollPane_notes.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        jScrollPane_notes.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        //jScrollPane_notes.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        //jScrollPane_notes.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         
         tableSettings(table_view_faults);
         tableSettings(table_view_products);
@@ -111,35 +113,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
             Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-//    public final void autoID()
-//    {
-//        
-//        try {
-//            dbConnection();
-//            String query = "SELECT Max(orderNo) FROM orderDetails";
-//            ps = con.prepareCall(query);
-//            rs = ps.executeQuery();
-//            
-//            rs.next();
-//             rs.getString("Max(orderNo)");
-//             
-//             if (rs.getString("Max(orderNo)") == null) 
-//             {
-//                lbl_auto_order_no.setText("0000001");
-//             }
-//             else
-//             {
-//                 long id = Long.parseLong(rs.getString("Max(orderNo)").substring(2,
-//                         rs.getString("Max(orderNo)").length()));
-//                 id++;
-//                 lbl_auto_order_no.setText(String.format("%07d", id));            
-//             }
-//            
-//        } catch (SQLException ex) {
-//            Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
-//        }   
-//    }
     
     public final void autoID()
     {
@@ -240,7 +213,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         double sum = 0;
         for(int i = 0; i < table_view_products.getRowCount(); i++)
         {
-            sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 1).toString());
+            sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 3).toString());
         }
         
         txt_total.setText(Double.toString(sum));
@@ -343,6 +316,72 @@ public class NewOrder extends javax.swing.JInternalFrame {
         }
         return true;
     }
+    
+     public ArrayList<Order> loadOrderList()
+    {
+        ArrayList<Order> orderList = new ArrayList<>();
+        
+        if (txt_first_name.getText().trim().isEmpty() | txt_last_name.getText().trim().isEmpty() | 
+                txt_contact.getText().trim().isEmpty() | txt_brand.getText().trim().isEmpty() | 
+                txt_model.getText().trim().isEmpty() | txt_serial_number.getText().trim().isEmpty() | 
+                table_view_products.getRowCount() == 0 | table_view_faults.getRowCount() == 0)  
+        {
+            JOptionPane.showMessageDialog(null, "Please, check Empty fields", "New Order", JOptionPane.ERROR_MESSAGE);
+        }
+         else
+        {
+            orderNo = lbl_auto_order_no.getText();
+            firstName = txt_first_name.getText();
+            lastName = txt_last_name.getText();
+            contactNo = txt_contact.getText();
+            email = txt_email.getText();
+            deviceBrand = txt_brand.getText();
+            deviceModel = txt_model.getText();
+            serialNumber = txt_serial_number.getText();
+            importantNotes = editor_pane_notes.getText();
+            deposit = Double.parseDouble(txt_deposit.getText());
+            due = Double.parseDouble(txt_due.getText());
+            total = Double.parseDouble(txt_total.getText());
+            status = "In Progress";
+
+
+            Date date = new java.util.Date();
+            Timestamp currentDate = new Timestamp(date.getTime());
+            issueDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
+
+            //pass table items from faults and products table to vector 
+            for(int i = 0; i < table_view_faults.getRowCount(); i++)
+            {
+               vecFaults.add(table_view_faults.getValueAt(i, 0));
+            }
+
+            for(int j = 0; j < table_view_products.getRowCount(); j++)
+            {
+               vecProducts.add(table_view_products.getValueAt(j, 0));
+               vecQty.add(table_view_products.getValueAt(j, 1));
+               vecUnitPrice.add(table_view_products.getValueAt(j, 2));
+               vecPrices.add(table_view_products.getValueAt(j, 3));
+            }
+            
+            // pass vector elemnets to a String splitted by a comma,
+            // in order to save into DB
+            stringFaults = vecFaults.toString().replace("[", " ").replace("]", "");
+            stringProducts = vecProducts.toString().replace("[", " ").replace("]", "");
+            stringQty = vecQty.toString().replace("[", " ").replace("]", "");
+            stringUnitPrice = vecUnitPrice.toString().replace("[", " ").replace("]", "");
+            stringPriceTotal = vecPrices.toString().replace("[", " ").replace("]", "");
+            
+            order = new Order(orderNo, firstName, lastName, contactNo, email, deviceBrand, 
+                    deviceModel, serialNumber,importantNotes, stringFaults, stringProducts, 
+                    stringQty, stringUnitPrice, stringPriceTotal, total, deposit, due, status, issueDate);
+            
+            orderList.add(order);
+        }
+        
+        return orderList;
+    }
+    
+    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -613,11 +652,11 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Product | Service", "Price €"
+                "Product | Service", "Qty", "Unit €", "Total €"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -631,7 +670,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
         });
         jScrollPane2.setViewportView(table_view_products);
         if (table_view_products.getColumnModel().getColumnCount() > 0) {
-            table_view_products.getColumnModel().getColumn(1).setMaxWidth(80);
+            table_view_products.getColumnModel().getColumn(1).setMaxWidth(40);
+            table_view_products.getColumnModel().getColumn(2).setMaxWidth(80);
+            table_view_products.getColumnModel().getColumn(3).setMaxWidth(80);
         }
 
         table_view_faults.setFont(new java.awt.Font("Lucida Grande", 0, 17)); // NOI18N
@@ -681,6 +722,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
             }
         });
 
+        jScrollPane_notes.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane_notes.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         jScrollPane_notes.setVerifyInputWhenFocusTarget(false);
 
         editor_pane_notes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Important Notes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 16))); // NOI18N
@@ -871,64 +914,14 @@ public class NewOrder extends javax.swing.JInternalFrame {
     private void btn_save_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save_orderActionPerformed
         // TODO add your handling code here:
         
-        if (txt_first_name.getText().trim().isEmpty() | txt_last_name.getText().trim().isEmpty() | 
-                txt_contact.getText().trim().isEmpty() | txt_brand.getText().trim().isEmpty() | 
-                txt_model.getText().trim().isEmpty() | txt_serial_number.getText().trim().isEmpty() | 
-                table_view_products.getRowCount() == 0 | table_view_faults.getRowCount() == 0)  
-        {
-            JOptionPane.showMessageDialog(null, "Please, check Empty fields", "New Order", JOptionPane.ERROR_MESSAGE);
-        }
-        else
-        {
-            orderNo = lbl_auto_order_no.getText();
-            firstName = txt_first_name.getText();
-            lastName = txt_last_name.getText();
-            contactNo = txt_contact.getText();
-            email = txt_email.getText();
-            deviceBrand = txt_brand.getText();
-            deviceModel = txt_model.getText();
-            serialNumber = txt_serial_number.getText();
-            importantNotes = editor_pane_notes.getText();
-            deposit = Double.parseDouble(txt_deposit.getText());
-            due = Double.parseDouble(txt_due.getText());
-            total = Double.parseDouble(txt_total.getText());
-            status = "In Progress";
-
-
-            Date date = new java.util.Date();
-            Timestamp currentDate = new Timestamp(date.getTime());
-            issueDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
-
-            //pass table items from faults and products table to vector 
-            for(int i = 0; i < table_view_faults.getRowCount(); i++)
-            {
-               vecFaults.add(table_view_faults.getValueAt(i, 0));
-            }
-
-            for(int j = 0; j < table_view_products.getRowCount(); j++)
-            {
-               vecProducts.add(table_view_products.getValueAt(j, 0));
-               vecPrices.add(table_view_products.getValueAt(j, 1));
-            }
-
-            // pass vector elemnets to a String splitted by a comma,
-            // in order to save into DB
-            stringFaults = vecFaults.toString().replace("[", " ").replace("]", "");
-            stringProducts = vecProducts.toString().replace("[", " ").replace("]", "");
-            stringPrices = vecPrices.toString().replace("[", " ").replace("]", "");
-
-
-            order = new Order(orderNo, firstName, lastName, contactNo, email, deviceBrand, 
-                    deviceModel, serialNumber,importantNotes, stringFaults, stringProducts, 
-                    stringPrices, total, deposit, due, status, issueDate);
-
-            dbConnection();
+            loadOrderList();
 
             try {
+                dbConnection();
                 String query = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
                         + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
-                        + "productService, price, total, deposit, due, status, issuedDate)"
-                        + "VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        + "productService, qty, unitPrice, priceTotal, total, deposit, due, status, issuedDate)"
+                        + "VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                 ps = con.prepareStatement(query);
                 ps.setString(1, order.getOrderNo());
@@ -942,20 +935,21 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 ps.setString(9, order.getImportantNotes());
                 ps.setString(10, order.getFault());
                 ps.setString(11, order.getProductService());
-                ps.setString(12, order.getPrices());
-                ps.setDouble(13, order.getTotal());
-                ps.setDouble(14, order.getDeposit());
-                ps.setDouble(15, order.getDue());
-                ps.setString(16, order.getStatus());
-                ps.setString(17, order.getIssuedDate());
-
+                ps.setString(12, order.getQty());
+                ps.setString(13, order.getUnitPrice());
+                ps.setString(14, order.getPriceTotal());
+                ps.setDouble(15, order.getTotal());
+                ps.setDouble(16, order.getDeposit());
+                ps.setDouble(17, order.getDue());
+                ps.setString(18, order.getStatus());
+                ps.setString(19, order.getIssuedDate());
                 ps.executeUpdate();
 
                 JOptionPane.showMessageDialog(this, "New order created successfully!");
 
                  // Send Order to print class as a constructor
                  new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel,
-                    serialNumber, stringFaults, importantNotes, stringProducts, stringPrices, total,
+                    serialNumber, stringFaults, importantNotes, stringProducts, stringPriceTotal, total,
                     deposit, due, issueDate).setVisible(true);
 
                 cleanAllFields(table_view_faults);
@@ -967,7 +961,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
             } catch (SQLException ex) {
                 Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
            }
-       }
     }//GEN-LAST:event_btn_save_orderActionPerformed
 
     private void txt_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_totalActionPerformed
@@ -976,7 +969,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         double sum = 0;
         for(int i = 0; i < table_view_products.getRowCount(); i++)
         {
-            sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 1).toString());
+            sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 3).toString());
         }
         
         txt_total.setText(Double.toString(sum));
@@ -1177,6 +1170,11 @@ public class NewOrder extends javax.swing.JInternalFrame {
         // Add selected items to the products table
         Vector vector = new Vector();
         String productName = combo_box_product_service.getSelectedItem().toString();
+        String productService = "";
+        String category = "";
+        int qty = 0;
+        double totalPrice = 0;
+        
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
         
         if(productName.isEmpty() || productName.matches("Select or Type"))
@@ -1188,23 +1186,61 @@ public class NewOrder extends javax.swing.JInternalFrame {
             try 
             {
                 dbConnection();
+                double unitPrice = 0;
                 String query = "SELECT * FROM products WHERE productService = '" + productName + "'";
                 ps = con.prepareStatement(query);
                 rs = ps.executeQuery();
                 
                 if (!rs.isBeforeFirst())
                 {
-                   JOptionPane.showMessageDialog(null, "Item not found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
+                   JOptionPane.showMessageDialog(null, "Item not Found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
                 }
                 else
                 {
                     while (rs.next())
                     {
-                        vector.add(rs.getString("productService"));
-                        vector.add(rs.getDouble("price"));
+                        productService = rs.getString("productService");
+                        unitPrice = rs.getDouble("price");
+                        category = rs.getString("category");
                     }
-
-                    dtm.addRow(vector);
+                    
+                    if (category.equals("Service"))
+                    {
+                        qty = 1;
+                        totalPrice = unitPrice * qty;
+                        
+                        vector.add(productService);
+                        vector.add(qty);
+                        vector.add(unitPrice);
+                        vector.add(totalPrice);
+                        dtm.addRow(vector);
+                    }
+                    else
+                    {
+                        boolean valid = false;
+                        while (!valid)
+                        {
+                            try
+                            {
+                                qty = Integer.parseInt(JOptionPane.showInputDialog("Enter '" + productName + "' Qty:"));
+                                if (qty > 0) valid = true;
+                            }
+                            catch (NumberFormatException e)
+                            {
+                                JOptionPane.showMessageDialog(this, "Qty must be an Integer!", "New Order", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                        
+                        totalPrice = unitPrice * qty;
+                        vector.add(productService);
+                        vector.add(qty);
+                        vector.add(unitPrice);
+                        vector.add(totalPrice);
+                        dtm.addRow(vector);
+                    }
+                    
+                     
+                    
                     combo_box_product_service.setSelectedIndex(-1);
                     
                     // Sum price column and set into total textField

@@ -10,17 +10,22 @@ package Model;
  * @author user
  */
 public class Order extends Device {
-    String orderNo, importantNotes,status, issuedDate, fault, productService, prices;
+    String orderNo, importantNotes, fault, productService, qty, unitPrice, priceTotal, status, issuedDate;
     double deposit, due, total;
     
     
-    public Order(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, String _brand, String _model, String _serialNumber, String _importantNotes, String _fault, String _productService, String _prices, double _total, double _deposit, double _due, String _status, String _issuedDate) {
+    public Order(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
+            String _brand, String _model, String _serialNumber, String _importantNotes, String _fault, 
+            String _productService, String _qty, String _unitPrice, String _priceTotal, double _total, double _deposit, double _due, String _status, 
+            String _issuedDate) {
         super(_brand, _model, _serialNumber, _firstName, _lastName, _contactNo, _email);
         this.orderNo = _orderNo;
         this.fault = _fault;
         this.importantNotes = _importantNotes;
         this.productService = _productService;
-        this.prices = _prices;
+        this.qty = _qty;
+        this.unitPrice = _unitPrice;
+        this.priceTotal = _priceTotal;
         this.total = _total;
         this.deposit = _deposit;
         this.due = _due;
@@ -44,6 +49,23 @@ public class Order extends Device {
     public void setProductService(String productService) {
         this.productService = productService;
     }
+
+    public String getQty() {
+        return qty;
+    }
+
+    public void setQty(String qty) {
+        this.qty = qty;
+    }
+
+    public String getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(String unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+    
     
      public String getFault() {
         return fault;
@@ -53,12 +75,12 @@ public class Order extends Device {
         this.fault = fault;
     }
 
-    public String getPrices() {
-        return prices;
+    public String getPriceTotal() {
+        return priceTotal;
     }
 
-    public void setPrices(String prices) {
-        this.prices = prices;
+    public void setPriceTotal(String priceTotal) {
+        this.priceTotal = priceTotal;
     }
     
     public double getDeposit() {
@@ -93,8 +115,6 @@ public class Order extends Device {
         this.total = total;
     }
     
-    
-
     public String getStatus() {
         return status;
     }
