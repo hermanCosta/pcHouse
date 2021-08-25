@@ -55,7 +55,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
     
     String saleNo, firstName,  lastName, contactNo, email, stringProducts, stringQty, 
             stringUnitPrice, stringPriceTotal, saleDate; 
-    double total, cash = 0, card = 0;
+    double total, cash = 0, card = 0, change;
     
     
     public SaleDetails() {
@@ -63,7 +63,8 @@ public class SaleDetails extends javax.swing.JInternalFrame {
     }
 
     SaleDetails(String _saleNo, String _firstName, String _lastName, String _contactNo, String _email, 
-            String _stringProducts, String _stringQty, String _stringUnitPrice, String _stringPriceTotal, String _saleDate, double _total, double _cash, double _card) {
+            String _stringProducts, String _stringQty, String _stringUnitPrice, String _stringPriceTotal, 
+            String _saleDate, double _total, double _cash, double _card,  double _change) {
         initComponents();
         
         this.saleNo = _saleNo;
@@ -79,6 +80,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         this.total = _total;
         this.cash = _cash;
         this.card = _card;
+        this.change = _change;
         
         //Remove borders
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
@@ -120,6 +122,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         txt_email.setText(this.email);
         txt_total.setText(String.valueOf(this.total));
         lbl_sale_date.setText("Sale Date: " + saleDate);
+        lbl_change.setText("Change: €" + change);
         
         if (cash == 0)
         {
@@ -186,6 +189,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         lbl_paid_by = new javax.swing.JLabel();
         lbl_sale_date = new javax.swing.JLabel();
         btn_notes = new javax.swing.JButton();
+        lbl_change = new javax.swing.JLabel();
 
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -347,6 +351,10 @@ public class SaleDetails extends javax.swing.JInternalFrame {
             }
         });
 
+        lbl_change.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        lbl_change.setText("change");
+        lbl_change.setEnabled(false);
+
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);
         panel_order_detailsLayout.setHorizontalGroup(
@@ -354,45 +362,47 @@ public class SaleDetails extends javax.swing.JInternalFrame {
             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                            .addComponent(lbl_order_no)
-                            .addGap(18, 18, 18)
-                            .addComponent(lbl_auto_order_no))
-                        .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                            .addComponent(lbl_email)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbl_sale_date)
+                    .addComponent(lbl_change)
+                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
-                                .addComponent(lbl_first_name)
-                                .addGap(18, 18, 18)
-                                .addComponent(txt_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
+                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                    .addComponent(lbl_order_no)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(lbl_auto_order_no))
+                                .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                    .addComponent(lbl_email)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
-                                        .addComponent(lbl_last_name)
-                                        .addGap(20, 20, 20))
-                                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                        .addComponent(lbl_contact)
-                                        .addGap(11, 11, 11)))
-                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txt_contact, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                                    .addComponent(txt_last_name))))
-                        .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                            .addComponent(lbl_total)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txt_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(lbl_paid_by))
-                .addGap(30, 30, 30)
-                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_sale_date)
-                    .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 571, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                            .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(36, 36, 36)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(lbl_first_name)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txt_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
+                                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
+                                                .addComponent(lbl_last_name)
+                                                .addGap(20, 20, 20))
+                                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                                .addComponent(lbl_contact)
+                                                .addGap(11, 11, 11)))
+                                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txt_contact, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                                            .addComponent(txt_last_name))))
+                                .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                    .addComponent(lbl_total)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txt_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(lbl_paid_by))
+                        .addGap(30, 30, 30)
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 571, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(36, 36, 36)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(0, 22, Short.MAX_VALUE))
         );
         panel_order_detailsLayout.setVerticalGroup(
@@ -433,9 +443,11 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                             .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_paid_by)
-                    .addComponent(lbl_sale_date))
+                .addComponent(lbl_paid_by)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lbl_change)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lbl_sale_date)
                 .addContainerGap())
         );
 
@@ -512,7 +524,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         SaleReceipt saleReceipt =  new SaleReceipt(saleNo, firstName, lastName, contactNo, email,
-                              stringProducts, stringPriceTotal, total, saleDate, cash, card);
+                              stringProducts, stringPriceTotal, total, saleDate, cash, card, change);
             saleReceipt.setVisible(true);
             
         
@@ -529,6 +541,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lbl_auto_order_no;
+    private javax.swing.JLabel lbl_change;
     private javax.swing.JLabel lbl_contact;
     private javax.swing.JLabel lbl_email;
     private javax.swing.JLabel lbl_first_name;

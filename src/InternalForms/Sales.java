@@ -68,7 +68,7 @@ public class Sales extends javax.swing.JInternalFrame {
     
     String saleNo, firstName,  lastName, contactNo, email, stringProducts, stringQty, 
             stringUnitPrice, stringPriceTotal, saleDate; 
-    double total, cash = 0, card = 0;
+    double total, cash = 0, card = 0, change;
     
     
     public Sales() {
@@ -565,7 +565,7 @@ public class Sales extends javax.swing.JInternalFrame {
                 {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Sale No", "Full Name", "Contact No.", "Products | Service", "Qty €", "Unit €", "Total"
+                "Sale No", "Full Name", "Contact No.", "Products | Service", "Qty", "Unit €", "Total €"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -586,6 +586,7 @@ public class Sales extends javax.swing.JInternalFrame {
             table_view_sales.getColumnModel().getColumn(0).setMaxWidth(100);
             table_view_sales.getColumnModel().getColumn(2).setPreferredWidth(50);
             table_view_sales.getColumnModel().getColumn(3).setPreferredWidth(200);
+            table_view_sales.getColumnModel().getColumn(4).setMaxWidth(40);
             table_view_sales.getColumnModel().getColumn(6).setMaxWidth(80);
         }
 
@@ -1137,11 +1138,12 @@ public class Sales extends javax.swing.JInternalFrame {
                     total = rs.getDouble("total");
                     cash = rs.getDouble("cash");
                     card = rs.getDouble("card");
+                    change = rs.getDouble("change");
                     
                 }
                 
                 SaleDetails saleDetails = new SaleDetails(saleNo, firstName, lastName, contactNo, email,
-                        stringProducts, stringQty, stringUnitPrice, stringPriceTotal, saleDate,total, cash, card);
+                        stringProducts, stringQty, stringUnitPrice, stringPriceTotal, saleDate,total, cash, card, change);
                 
                 
                 //desktop_pane_sales.removeAll();

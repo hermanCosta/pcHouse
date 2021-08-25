@@ -408,14 +408,14 @@ public class OrderList extends javax.swing.JInternalFrame {
                     break;
                 case "Not Fixed":
 //                    OrderNotFixed orderNotFixed = new OrderNotFixed(orderNo, firstName, lastName, contactNo,
-                    OrderNotFixed orderNotFixed = new OrderNotFixed(orderNo, firstName, lastName, contactNo,
+                    NotFixedOrder orderNotFixed = new NotFixedOrder(orderNo, firstName, lastName, contactNo,
                             email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService, qty,
                              unitPrice, priceTotal, total, deposit, due, status, issueDate, finishedDate, pickedDate);
                     desktop_pane_order_list.removeAll();
                     desktop_pane_order_list.add(orderNotFixed).setVisible(true);
                     break;
                 default:
-                    OrderFixed fixedOrder = new OrderFixed(orderNo, firstName, lastName, contactNo,
+                    FixedOrder fixedOrder = new FixedOrder(orderNo, firstName, lastName, contactNo,
                             email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService, qty,
                             unitPrice, priceTotal, total, deposit, due, status, issueDate, finishedDate, pickedDate);
                     desktop_pane_order_list.removeAll();

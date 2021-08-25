@@ -56,9 +56,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
     
     Vector vecFaults = new Vector();
     Vector vecProducts = new Vector();
-    Vector vecPrices = new Vector();
     Vector vecQty = new Vector();
     Vector vecUnitPrice = new Vector();
+    Vector vecPriceTotal = new Vector();
     
     Connection con;
     PreparedStatement ps;
@@ -317,7 +317,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         return true;
     }
     
-     public ArrayList<Order> loadOrderList()
+    public ArrayList<Order> loadOrderList()
     {
         ArrayList<Order> orderList = new ArrayList<>();
         
@@ -360,7 +360,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
                vecProducts.add(table_view_products.getValueAt(j, 0));
                vecQty.add(table_view_products.getValueAt(j, 1));
                vecUnitPrice.add(table_view_products.getValueAt(j, 2));
-               vecPrices.add(table_view_products.getValueAt(j, 3));
+               vecPriceTotal.add(table_view_products.getValueAt(j, 3));
             }
             
             // pass vector elemnets to a String splitted by a comma,
@@ -369,7 +369,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             stringProducts = vecProducts.toString().replace("[", " ").replace("]", "");
             stringQty = vecQty.toString().replace("[", " ").replace("]", "");
             stringUnitPrice = vecUnitPrice.toString().replace("[", " ").replace("]", "");
-            stringPriceTotal = vecPrices.toString().replace("[", " ").replace("]", "");
+            stringPriceTotal = vecPriceTotal.toString().replace("[", " ").replace("]", "");
             
             order = new Order(orderNo, firstName, lastName, contactNo, email, deviceBrand, 
                     deviceModel, serialNumber,importantNotes, stringFaults, stringProducts, 
@@ -949,7 +949,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
                  // Send Order to print class as a constructor
                  new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel,
-                    serialNumber, stringFaults, importantNotes, stringProducts, stringPriceTotal, total,
+                    serialNumber, stringFaults, importantNotes, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total,
                     deposit, due, issueDate).setVisible(true);
 
                 cleanAllFields(table_view_faults);

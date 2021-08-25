@@ -25,7 +25,7 @@ public class SaleReceipt extends javax.swing.JFrame {
      * Creates new form Print
      */
     
-    double deposit, due, total, cash, card;
+    double deposit, due, total, cash, card, change;
     String orderNo, firstName, lastName, contactNo, email, stringProducts, stringPrices, saleDate;
     
     public SaleReceipt() {
@@ -33,7 +33,7 @@ public class SaleReceipt extends javax.swing.JFrame {
     }
     
    public SaleReceipt(String _saleNo, String _firstName, String _lastName, String _contactNo, String _email, 
-            String _stringProducts, String _stringPrices, double _total, String _saleDate, double _cash, double _card) {
+            String _stringProducts, String _stringPrices, double _total, String _saleDate, double _cash, double _card, double _change) {
         initComponents();
        
         this.orderNo = _saleNo;
@@ -47,6 +47,7 @@ public class SaleReceipt extends javax.swing.JFrame {
         this.saleDate = _saleDate;
         this.cash = _cash;
         this.card = _card;
+        this.change = _change;
         
         loadOrderToPrint();
     }
@@ -59,6 +60,7 @@ public class SaleReceipt extends javax.swing.JFrame {
         lbl_print_email.setText("Email: " + email);
         lbl_print_total_products.setText("Total: €" + String.valueOf(total));
         lbl_order_picked_on.setText("Date: " + saleDate);
+        lbl_change.setText("Change: €" + change);
         
         if (cash == 0)
         {
@@ -105,7 +107,7 @@ public class SaleReceipt extends javax.swing.JFrame {
         lbl_product_service = new javax.swing.JLabel();
         lbl_receipt = new javax.swing.JLabel();
         lbl_paid_by = new javax.swing.JLabel();
-        lbl_order_picked_on = new javax.swing.JLabel();
+        lbl_change = new javax.swing.JLabel();
         jScrollPane8 = new javax.swing.JScrollPane();
         txt_pane_products = new javax.swing.JTextPane();
         jScrollPane11 = new javax.swing.JScrollPane();
@@ -117,6 +119,7 @@ public class SaleReceipt extends javax.swing.JFrame {
         lbl_mobile_number1 = new javax.swing.JLabel();
         lbl_address1 = new javax.swing.JLabel();
         line_header = new javax.swing.JSeparator();
+        lbl_order_picked_on = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         lbl_payment_print_view = new javax.swing.JLabel();
 
@@ -146,8 +149,8 @@ public class SaleReceipt extends javax.swing.JFrame {
         lbl_paid_by.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
         lbl_paid_by.setText("paidBy");
 
-        lbl_order_picked_on.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
-        lbl_order_picked_on.setText("orderPickedOn");
+        lbl_change.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
+        lbl_change.setText("change");
 
         jScrollPane8.setBorder(null);
         jScrollPane8.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -195,16 +198,17 @@ public class SaleReceipt extends javax.swing.JFrame {
         panel_headerLayout.setHorizontalGroup(
             panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_headerLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(panel_headerLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_headerLayout.createSequentialGroup()
                         .addComponent(lbl_logo_icon1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_mobile_number1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lbl_land_line_number1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lbl_address1, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lbl_address1, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_headerLayout.setVerticalGroup(
@@ -214,14 +218,18 @@ public class SaleReceipt extends javax.swing.JFrame {
                 .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_logo_icon1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panel_headerLayout.createSequentialGroup()
+                        .addGap(11, 11, 11)
                         .addComponent(lbl_land_line_number1)
-                        .addGap(5, 5, 5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbl_mobile_number1)
-                        .addGap(5, 5, 5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbl_address1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        lbl_order_picked_on.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
+        lbl_order_picked_on.setText("orderPickedOn");
 
         javax.swing.GroupLayout panel_print_orderLayout = new javax.swing.GroupLayout(panel_print_order);
         panel_print_order.setLayout(panel_print_orderLayout);
@@ -236,7 +244,7 @@ public class SaleReceipt extends javax.swing.JFrame {
                     .addComponent(lbl_print_email, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_print_total_products, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_paid_by, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_order_picked_on, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_change, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
                         .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane8)
@@ -245,7 +253,8 @@ public class SaleReceipt extends javax.swing.JFrame {
                                 .addGap(283, 283, 283)))
                         .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_price)
-                            .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lbl_order_picked_on, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
                 .addContainerGap(19, Short.MAX_VALUE)
@@ -285,8 +294,10 @@ public class SaleReceipt extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_paid_by)
                 .addGap(3, 3, 3)
+                .addComponent(lbl_change)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_order_picked_on)
-                .addContainerGap(85, Short.MAX_VALUE))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
 
         jButton1.setBackground(new java.awt.Color(21, 76, 121));
@@ -447,6 +458,7 @@ public class SaleReceipt extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JLabel lbl_address1;
+    private javax.swing.JLabel lbl_change;
     private javax.swing.JLabel lbl_land_line_number1;
     private javax.swing.JLabel lbl_logo_icon1;
     private javax.swing.JLabel lbl_mobile_number1;

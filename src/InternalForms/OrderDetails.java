@@ -10,7 +10,6 @@ import Forms.OrderNotes;
 import Model.Customer;
 import Model.Order;
 import Model.ProductService;
-import Model.TableProductService;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -61,7 +60,10 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     Vector faultsTable;
     Vector vecUpdateFaults = new Vector();
     Vector vecUpdateProducts = new Vector();
-    Vector vecUpdatePrices = new Vector();
+    Vector vecUpdateQty = new Vector();
+    Vector vecUpdatePriceTotal = new Vector();
+    Vector vecUpdateUnitPrice = new Vector();
+    
     
     Connection con;
     PreparedStatement ps;
@@ -145,11 +147,13 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
    public void loadSelectedOrder()
    {
-        DefaultTableModel faultsModel = (DefaultTableModel) table_view_faults.getModel();
-        faultsModel.setRowCount(0);
-        DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
-        TableColumnModel tableModel = table_view_products.getColumnModel();
+       DefaultTableModel faultsModel = (DefaultTableModel) table_view_faults.getModel();
+       faultsModel.setRowCount(0);
        
+       DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
+
+        TableColumnModel tableModel = table_view_products.getColumnModel();
+        
         lbl_auto_order_no.setText(this.orderNo);
         txt_first_name.setText(this.firstName);
         txt_last_name.setText(this.lastName);
@@ -197,7 +201,10 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         tableModel.getColumn(1).setMaxWidth(40);
         tableModel.getColumn(2).setMaxWidth(80);
         tableModel.getColumn(3).setMaxWidth(80);
+        
+        table_view_products.setDefaultEditor(Object.class, null);
    }
+   
    
     public void dbConnection() 
     {
@@ -260,7 +267,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         double sum = 0;
         for(int i = 0; i < table_view_products.getRowCount(); i++)
         {
-            sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 1).toString());
+            sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 3).toString());
         }
         
         txt_total.setText(Double.toString(sum));
@@ -322,7 +329,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             }
         });
     }
-    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -980,7 +986,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         double sum = 0;
         for(int i = 0; i < table_view_products.getRowCount(); i++)
         {
-            sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 1).toString());
+            sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 3).toString());
         }
         
         txt_total.setText(Double.toString(sum));
@@ -1170,10 +1176,16 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     private void icon_add_table_viewMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_icon_add_table_viewMousePressed
         // TODO add your handling code here:
         Vector vector = new Vector();
-        String productName = combo_box_product_service.getSelectedItem().toString();
+        String selectedItem = combo_box_product_service.getSelectedItem().toString();
+        String productName = "";
+        int qty = 0;
+        double unitPrice = 0;
+        String category = "";
+        double totalPrice = 0;
+        
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
         
-        if(productName.isEmpty() || productName.matches("Select or Type"))
+        if(selectedItem.isEmpty() || selectedItem.matches("Select or Type"))
         {
             JOptionPane.showMessageDialog(null, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
         }
@@ -1182,30 +1194,66 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             try 
             {
                 dbConnection();
-                String query = "SELECT * FROM products WHERE productService = '" + productName + "'";
+                
+                String query = "SELECT * FROM products WHERE productService = '" + selectedItem + "'";
                 ps = con.prepareStatement(query);
                 rs = ps.executeQuery();
                 
                 if (!rs.isBeforeFirst())
                 {
-                   JOptionPane.showMessageDialog(null, "Item not found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
+                   JOptionPane.showMessageDialog(null, "Item not Found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
                 }
                 else
                 {
                     while (rs.next())
                     {
-                        vector.add(rs.getString("productService"));
-                        vector.add(rs.getDouble("price"));
+                        productName = rs.getString("productService");
+                        unitPrice = rs.getDouble("price");
+                        category = rs.getString("category");
                     }
-
-                    dtm.addRow(vector);
-                    combo_box_product_service.setSelectedIndex(-1);
                     
+                    if (category.equals("Product"))
+                    {
+                        boolean valid = false;
+                        while (!valid)
+                        {
+                            try
+                            {
+                                qty = Integer.parseInt(JOptionPane.showInputDialog("Enter '" + selectedItem + "' Qty:"));
+                                if (qty > 0) valid = true;
+                            }
+                            catch (NumberFormatException e)
+                            {
+                                JOptionPane.showMessageDialog(this, "Qty must be an Integer!", "New Order", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                        
+                        totalPrice = unitPrice * qty;
+                        vector.add(productName);
+                        vector.add(qty);
+                        vector.add(unitPrice);
+                        vector.add(totalPrice);
+                        dtm.addRow(vector);
+                        
+                    }
+                    else
+                    {
+                        qty = 1;
+                        totalPrice = unitPrice * qty;
+                        
+                        vector.add(productName);
+                        vector.add(qty);
+                        vector.add(unitPrice);
+                        vector.add(totalPrice);
+                        dtm.addRow(vector);
+                    }
+                    
+                    combo_box_product_service.setSelectedIndex(-1);
                     // Sum price column and set into total textField
                     getPriceSum();
                 }
             } catch (SQLException ex) {
-                    Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_icon_add_table_viewMousePressed
@@ -1341,7 +1389,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 ps = con.prepareStatement(query);
                 ps.executeUpdate();
                 
-                OrderFixed fixedOrder = new OrderFixed(orderNo, firstName, lastName, contactNo, email, deviceBrand,
+                FixedOrder fixedOrder = new FixedOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
                         deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
                          stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, pickedDate);
                 
@@ -1357,9 +1405,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         
-        PrintOrder printOrder = new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
-                serialNumber, stringFaults, importantNotes, stringProducts, stringPriceTotal, total, 
-                deposit, due, issueDate);
+        PrintOrder printOrder = new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, 
+                deviceModel, serialNumber, stringFaults, importantNotes, stringProducts, stringQty, stringUnitPrice,
+                stringPriceTotal, total, deposit, due, issueDate);
         printOrder.setVisible(true);
     }//GEN-LAST:event_btn_printActionPerformed
 
@@ -1379,7 +1427,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 ps = con.prepareStatement(query);
                 ps.executeUpdate();
                 
-                OrderNotFixed orderNotFixed = new OrderNotFixed(orderNo, firstName, lastName, contactNo, email, deviceBrand,
+                NotFixedOrder orderNotFixed = new NotFixedOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
                         deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
                          stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, pickedDate);
                 
@@ -1403,7 +1451,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         }
         else
         {
-        
             firstName = txt_first_name.getText();
             lastName = txt_last_name.getText();
             contactNo = txt_contact.getText();
@@ -1420,10 +1467,14 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             java.sql.Timestamp currentDate = new java.sql.Timestamp(date.getTime());
             String updateDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
 
-            //Empty vector before looping, this is useful for comparing values from tableView and database
+            //Empty vector before looping, this avoids values in the vector in case the camparison 
+            // between tableView and database
             vecUpdateFaults.removeAllElements();
             vecUpdateProducts.removeAllElements();
-            vecUpdatePrices.removeAllElements();
+            vecUpdateQty.removeAllElements();
+            vecUpdateUnitPrice.removeAllElements();
+            vecUpdatePriceTotal.removeAllElements();
+            
 
              //pass table items from faults and products table to vector 
             for(int i = 0; i < table_view_faults.getRowCount(); i++)
@@ -1434,25 +1485,32 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             for(int j = 0; j < table_view_products.getRowCount(); j++)
             {
                 vecUpdateProducts.add(table_view_products.getValueAt(j, 0));
-                vecUpdatePrices.add(table_view_products.getValueAt(j, 1));
+                vecUpdateQty.add(table_view_products.getValueAt(j, 1));
+                vecUpdateUnitPrice.add(table_view_products.getValueAt(j, 2));
+                vecUpdatePriceTotal.add(table_view_products.getValueAt(j, 3));
             }
-
 
               //Remove Brackets from the vector to pass to Database  
              stringFaults = vecUpdateFaults.toString().replace("[", "").replace("]", "");
              stringProducts = vecUpdateProducts.toString().replace("[", "").replace("]", "");
-             stringPriceTotal = vecUpdatePrices.toString().replace("[", "").replace("]", "");
+             stringQty  = vecUpdateQty.toString().replace("[", "").replace("]", "");
+             stringUnitPrice = vecUpdateUnitPrice.toString().replace("[", "").replace("]", "");
+             stringPriceTotal = vecUpdatePriceTotal.toString().replace("[", "").replace("]", "");
 
+             // Remove all commas, and set as range of Char indor to campare data to th DB
             String tableFaults = stringFaults.replace(",","").replace(" ", "");
             String tableProducts = stringProducts.replace(",", "").replace(" ", "");
-            String tablePrices = stringPriceTotal.replace(",", "").replace(" ", "");
+            String tableQty = stringQty.replace(",", "").replace(" ", "");
+            String tableUnitPrice = stringUnitPrice.replace(",", "").replace(" ", "");
+            String tablePriceTotal = stringPriceTotal.replace(",", "").replace(" ", "");
 
             try 
             {
                 dbConnection();
 
-                String queryCheck = "SELECT * FROM orderDetails WHERE orderNo = '" + orderNo + "'";
+                String queryCheck = "SELECT * FROM orderDetails WHERE orderNo = ? ";
                 ps = con.prepareStatement(queryCheck);
+                ps.setString(1, orderNo);
                 rs = ps.executeQuery();
 
                 while (rs.next())
@@ -1460,7 +1518,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                     // Get DB strings convert into range of characters for comparing to the tableView ones
                     String dbStringFaults = rs.getString("fault").replace(",", "").replace(" ","");
                     String dbStringProducts = rs.getString("productService").replace(",", "").replace(" ","");
-                    String dbStringPrices = rs.getString("price").replace(",", "").replace(" ","");
+                    String dbStringQty = rs.getString("qty").replace(",", "").replace(" ","");
+                    String dbStringUnitPrice = rs.getString("unitPrice").replace(",", "").replace(" ","");
+                    String dbStringPriceTotal = rs.getString("priceTotal").replace(",", "").replace(" ","");
 
                     // IF all values are the same, dont do update
                     if(firstName.equals(rs.getString("firstName")) && lastName.equals(rs.getString("lastName"))
@@ -1468,8 +1528,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                             && deviceBrand.equals(rs.getString("deviceBrand")) && deviceModel.equals(rs.getString("deviceModel"))
                             && serialNumber.equals(rs.getString("serialNumber")) && tableFaults.equals(dbStringFaults)
                             && importantNotes.equals(rs.getString("importantNotes")) && tableProducts.equals(dbStringProducts) 
-                            && deposit == rs.getDouble("deposit") && total == rs.getDouble("total") && tablePrices.equals(dbStringPrices) 
-                            && deposit == rs.getDouble("deposit") && total == rs.getDouble("total") && due == rs.getDouble("due"))
+                            && tableQty.equals(dbStringQty) && tableUnitPrice.equals(dbStringUnitPrice) 
+                            && tablePriceTotal.equals(dbStringPriceTotal) && deposit == rs.getDouble("deposit") 
+                            && total == rs.getDouble("total") && due == rs.getDouble("due"))
                     {
                        JOptionPane.showMessageDialog(null, "No changes to be Updated", "Update Order Details", JOptionPane.ERROR_MESSAGE);
                     }
@@ -1480,17 +1541,29 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
                         if (confirmUpdate == 0)
                         {
-                            String queryUpdate = "UPDATE orderDetails SET firstName ='" + firstName + "',"
-                                    + "lastName ='" + lastName + "', contactNo ='" + contactNo + "',"
-                                    +"email ='" + email + "', deviceBrand ='" + this.deviceBrand +"'," 
-                                    +"deviceModel ='" + deviceModel + "', serialNumber ='" + serialNumber + "',"
-                                    +"fault = '" + stringFaults + "', importantNotes = '" + importantNotes +"'," 
-                                    +"productService ='" + stringProducts + "', price ='" + stringPriceTotal +"',"
-                                    +"deposit = '" + this.deposit +"', total ='" + this.total + "',"
-                                    +"due = '" + this.due + "',issuedDate ='" + updateDate + "'"
-                                    + " WHERE orderNo = '" + this.orderNo + "'";
-
+                            String queryUpdate = "UPDATE orderDetails SET firstName = ?, lastName = ? , contactNo = ?, email = ?,"
+                                    + " deviceBrand = ?, deviceModel = ?, serialNumber = ?, fault = ?, importantNotes = ?, "
+                                    +"productService = ?, qty = ?, unitPrice = ?, priceTotal = ?, deposit = ?, total = ?, due = ?, "
+                                    + "issuedDate = ? WHERE orderNo = ?";
                             ps = con.prepareStatement(queryUpdate);
+                            ps.setString(1, firstName);
+                            ps.setString(2, lastName);
+                            ps.setString(3, contactNo);
+                            ps.setString(4, email);
+                            ps.setString(5, deviceBrand);
+                            ps.setString(6, deviceModel);
+                            ps.setString(7, serialNumber);
+                            ps.setString(8, stringFaults);
+                            ps.setString(9, importantNotes);
+                            ps.setString(10, stringProducts);
+                            ps.setString(11, stringQty);
+                            ps.setString(12, stringUnitPrice);
+                            ps.setString(13, stringPriceTotal);
+                            ps.setDouble(14, deposit);
+                            ps.setDouble(15, total);
+                            ps.setDouble(16, due);
+                            ps.setString(17, updateDate);
+                            ps.setString(18, orderNo);
                             ps.executeUpdate();
 
                             JOptionPane.showMessageDialog(this,  "Order " + orderNo + " Updated Successfully!");

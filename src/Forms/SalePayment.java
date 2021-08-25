@@ -383,10 +383,11 @@ public class SalePayment extends javax.swing.JFrame {
         }
 
         totalPaid = cash + card;
+        double change = totalPaid - total;
         
         if ((total - totalPaid) <= 0)
         {
-            lbl_change.setText(String.valueOf(totalPaid - total));
+            lbl_change.setText(String.valueOf(change));
             
          int confirmPayment = JOptionPane.showConfirmDialog(this, "Do you want to Pay Order: " 
                  + saleNo + "?", "Payment", JOptionPane.YES_NO_OPTION);
@@ -396,10 +397,15 @@ public class SalePayment extends javax.swing.JFrame {
             try {
               dbConnection();
 
+              /*
+                String query = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
+                        + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
+                        + "productService, qty, unitPrice, priceTotal, total, deposit, due, status, issuedDate)"
+                        + "VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+              */
                    String query = "INSERT INTO sales(saleNo, firstName, lastName, contactNo, "
-                          + "email, productService, qty, unitPrice, priceTotal, total, saleDate, cash, card)"
-                          + "VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
+                           + "email, productService, qty, unitPrice, priceTotal, total, saleDate, cash, card, change) "
+                           + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                   ps = con.prepareStatement(query);
                   ps.setString(1, saleNo);
                   ps.setString(2, firstName);
@@ -414,25 +420,26 @@ public class SalePayment extends javax.swing.JFrame {
                   ps.setString(11, saleDate);
                   ps.setDouble(12, cash);
                   ps.setDouble(13, card);
-
-              ps.executeUpdate();
-
-              } catch (SQLException ex) {
-                Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
-              }
-
-              JOptionPane.showMessageDialog(null,saleNo + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
+                  ps.setDouble(14, change);
+                  ps.executeUpdate();
+                  
+                  
+                 
+                  JOptionPane.showMessageDialog(null,saleNo + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
               
-              updateProductQty();
-            
+                updateProductQty();
             
             SaleReceipt saleReceipt =  new SaleReceipt(saleNo, firstName, lastName, contactNo, email,
-                              stringProducts, stringPriceTotal, total, saleDate, cash, card);
+                              stringProducts, stringPriceTotal, total, saleDate, cash, card, change);
             saleReceipt.setVisible(true);
             
             this.dispose();
+
+              } catch (SQLException ex) {
+                Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
+                
+              }
           }
-          
         }
         else
         {

@@ -9,6 +9,7 @@ import InternalForms.NewOrder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 
 /**
  *
@@ -25,10 +27,12 @@ public class OrderPayment extends javax.swing.JFrame {
 
     Connection con;
     PreparedStatement ps;
+    ResultSet rs;
+    JTable tableViewProducts;
     
     String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
            deviceModel,  serialNumber, importantNotes, stringFaults, 
-           stringProducts, stringPrices, issueDate, finishedDate, payDate; 
+           stringProducts, stringQty, stringUnitPrice, stringPriceTotal, issueDate, finishedDate, payDate; 
     double total, deposit, due, cash, card, totalPaid;
     
     public OrderPayment() {
@@ -37,8 +41,9 @@ public class OrderPayment extends javax.swing.JFrame {
 
     public OrderPayment(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
             String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
-            String _stringFaults, String _stringProducts, String _stringPrices, double _total, double _deposit, 
-            double _due, String _issueDate, String _finishedDate) {
+            String _stringFaults, String _stringProducts, String _stringQty, String _stringUnitPrice,
+            String _stringPriceTotal, double _total, double _deposit, double _due, String _issueDate, 
+            String _finishedDate, JTable _tableViewProducts) {
 
         initComponents();
 
@@ -54,11 +59,14 @@ public class OrderPayment extends javax.swing.JFrame {
         this.issueDate = _issueDate;
         this.stringFaults = _stringFaults;
         this.stringProducts = _stringProducts;
-        this.stringPrices = _stringPrices;
+        this.stringQty = _stringQty;
+        this.stringUnitPrice = _stringUnitPrice;
+        this.stringPriceTotal = _stringPriceTotal;
         this.total = _total;
         this.deposit = _deposit;
         this.due = _due;
         this.finishedDate = _finishedDate;
+        this.tableViewProducts = _tableViewProducts;
 
         lbl_order_no.setText(this.orderNo);
         lbl_total.setText(String.valueOf(this.total));
@@ -76,8 +84,40 @@ public class OrderPayment extends javax.swing.JFrame {
         }
     }
 
-    public void completeOrder() {
-        
+     public void updateProductQty()
+    {
+         for (int i = 0; i < tableViewProducts.getRowCount() ; i++)
+        {
+            String cellProduct = tableViewProducts.getValueAt(i, 0).toString();
+            int cellQty = (int) tableViewProducts.getValueAt(i, 1);
+
+            try {
+                dbConnection();
+                String queryCheck = "SELECT * FROM products WHERE productService = ?";
+                ps = con.prepareStatement(queryCheck);
+                ps.setString(1, cellProduct);
+                rs = ps.executeQuery();
+                
+                while(rs.next())
+                {
+                    if (rs.getString("category").equals("Product"))
+                    {
+                        int qty = rs.getInt("qty");
+                        int updateQty = qty - cellQty;
+
+                        String queryUpdate = "UPDATE products SET qty = ? WHERE productService = ?";
+                        ps = con.prepareStatement(queryUpdate);
+                        ps.setInt(1, updateQty);
+                        ps.setString(2, cellProduct);
+                        ps.executeUpdate();
+                    }
+                }
+                
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
     
     @SuppressWarnings("unchecked")
@@ -448,7 +488,7 @@ public class OrderPayment extends javax.swing.JFrame {
             
             
           OrderReceipt receipt =  new OrderReceipt(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
-                serialNumber, stringProducts, stringPrices, total, deposit, due, payDate, cash, card);
+                serialNumber, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total, deposit, due, payDate, cash, card);
           receipt.setVisible(true);
             
           this.dispose();

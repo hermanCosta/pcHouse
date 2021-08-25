@@ -75,7 +75,7 @@
                       <Component id="lbl_print_email" alignment="0" max="32767" attributes="0"/>
                       <Component id="lbl_print_total_products" alignment="0" max="32767" attributes="0"/>
                       <Component id="lbl_paid_by" alignment="1" max="32767" attributes="0"/>
-                      <Component id="lbl_order_picked_on" alignment="1" max="32767" attributes="0"/>
+                      <Component id="lbl_change" alignment="1" max="32767" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jScrollPane8" max="32767" attributes="0"/>
@@ -89,6 +89,7 @@
                               <Component id="jScrollPane11" min="-2" pref="149" max="-2" attributes="0"/>
                           </Group>
                       </Group>
+                      <Component id="lbl_order_picked_on" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
@@ -137,8 +138,10 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="lbl_paid_by" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                  <Component id="lbl_change" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="lbl_order_picked_on" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="85" max="32767" attributes="0"/>
+                  <EmptySpace pref="65" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -199,12 +202,12 @@
             <Property name="text" type="java.lang.String" value="paidBy"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="lbl_order_picked_on">
+        <Component class="javax.swing.JLabel" name="lbl_change">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Lucida Grande" size="11" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="orderPickedOn"/>
+            <Property name="text" type="java.lang.String" value="change"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane8">
@@ -285,18 +288,20 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="line_header" min="-2" pref="552" max="-2" attributes="0"/>
+                          </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="lbl_logo_icon1" min="-2" pref="300" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="lbl_mobile_number1" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="lbl_land_line_number1" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="lbl_address1" alignment="1" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <Component id="line_header" alignment="0" min="-2" pref="552" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -309,10 +314,11 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="lbl_logo_icon1" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                               <Component id="lbl_land_line_number1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="lbl_mobile_number1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="lbl_address1" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -364,6 +370,14 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JLabel" name="lbl_order_picked_on">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Lucida Grande" size="11" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="orderPickedOn"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
     <Component class="javax.swing.JButton" name="jButton1">
