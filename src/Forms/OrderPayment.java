@@ -33,7 +33,7 @@ public class OrderPayment extends javax.swing.JFrame {
     String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
            deviceModel,  serialNumber, importantNotes, stringFaults, 
            stringProducts, stringQty, stringUnitPrice, stringPriceTotal, issueDate, finishedDate, payDate; 
-    double total, deposit, due, cash, card, totalPaid;
+    double total, deposit, due, cash, card, change, totalPaid;
     
     public OrderPayment() {
         initComponents();
@@ -447,16 +447,19 @@ public class OrderPayment extends javax.swing.JFrame {
             card = Double.parseDouble(txt_card.getText());
         }
 
+        
         totalPaid = cash + card;
+        double change = totalPaid - total;
         
         if ((due - totalPaid) <= 0)
         {
-            lbl_change.setText(String.valueOf(totalPaid - due));
+            lbl_change.setText(String.valueOf(change));
             
           try {
             dbConnection();
 
-            String queryInsert = "INSERT INTO completedOrders VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, stringProducts,"
+                    + "total, deposit, due, payDate, cash, card) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = con.prepareStatement(queryInsert);
             ps.setString(1, orderNo);
             ps.setString(2, firstName);
@@ -473,26 +476,25 @@ public class OrderPayment extends javax.swing.JFrame {
             
             String pickedDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDate);
                 
-            String queryUpdate = "UPDATE orderDetails SET pickedDate = ? WHERE orderNo = ?";
+            String queryUpdate = "UPDATE orderDetails SET pickedDate = ?, status = ?, WHERE orderNo = ?";
             ps = con.prepareStatement(queryUpdate);
             ps.setString(1, pickedDate);
-            ps.setString(2, orderNo);
+            ps.setString(2, "Paid");
+            ps.setString(3, orderNo);
             ps.executeUpdate();
-
+            
+            JOptionPane.showMessageDialog(null,orderNo + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
+            
+            
+            OrderReceipt receipt =  new OrderReceipt(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
+                serialNumber, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total, deposit, due, payDate, cash, card, change);
+            receipt.setVisible(true);
+            
+            this.dispose();
             
             } catch (SQLException ex) {
             Logger.getLogger(OrderPayment.class.getName()).log(Level.SEVERE, null, ex);
             }
-          
-            JOptionPane.showMessageDialog(null,orderNo + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
-            
-            
-          OrderReceipt receipt =  new OrderReceipt(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
-                serialNumber, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total, deposit, due, payDate, cash, card);
-          receipt.setVisible(true);
-            
-          this.dispose();
-          
         }
         else
         {

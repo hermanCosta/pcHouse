@@ -95,6 +95,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         accessDbColumn(lastNames, "SELECT * FROM customers", "lastName");
         accessDbColumn(faults, "SELECT * FROM faults","faultName");
         listProductService();
+        
     }
 
     

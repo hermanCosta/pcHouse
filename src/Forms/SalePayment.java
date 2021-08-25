@@ -383,11 +383,11 @@ public class SalePayment extends javax.swing.JFrame {
         }
 
         totalPaid = cash + card;
-        double change = totalPaid - total;
+        double changeTotal = totalPaid - total;
         
         if ((total - totalPaid) <= 0)
         {
-            lbl_change.setText(String.valueOf(change));
+            lbl_change.setText(String.valueOf(changeTotal));
             
          int confirmPayment = JOptionPane.showConfirmDialog(this, "Do you want to Pay Order: " 
                  + saleNo + "?", "Payment", JOptionPane.YES_NO_OPTION);
@@ -397,14 +397,8 @@ public class SalePayment extends javax.swing.JFrame {
             try {
               dbConnection();
 
-              /*
-                String query = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
-                        + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
-                        + "productService, qty, unitPrice, priceTotal, total, deposit, due, status, issuedDate)"
-                        + "VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-              */
                    String query = "INSERT INTO sales(saleNo, firstName, lastName, contactNo, "
-                           + "email, productService, qty, unitPrice, priceTotal, total, saleDate, cash, card, change) "
+                           + "email, productService, qty, unitPrice, priceTotal, total, saleDate, cash, card, changeTotal) "
                            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                   ps = con.prepareStatement(query);
                   ps.setString(1, saleNo);
@@ -420,7 +414,7 @@ public class SalePayment extends javax.swing.JFrame {
                   ps.setString(11, saleDate);
                   ps.setDouble(12, cash);
                   ps.setDouble(13, card);
-                  ps.setDouble(14, change);
+                  ps.setDouble(14, changeTotal);
                   ps.executeUpdate();
                   
                   
@@ -430,7 +424,8 @@ public class SalePayment extends javax.swing.JFrame {
                 updateProductQty();
             
             SaleReceipt saleReceipt =  new SaleReceipt(saleNo, firstName, lastName, contactNo, email,
-                              stringProducts, stringPriceTotal, total, saleDate, cash, card, change);
+                                    stringProducts, stringQty, stringUnitprice, stringPriceTotal, total, saleDate, 
+                    cash, card, changeTotal);
             saleReceipt.setVisible(true);
             
             this.dispose();

@@ -1138,7 +1138,7 @@ public class Sales extends javax.swing.JInternalFrame {
                     total = rs.getDouble("total");
                     cash = rs.getDouble("cash");
                     card = rs.getDouble("card");
-                    change = rs.getDouble("change");
+                    change = rs.getDouble("changeTotal");
                     
                 }
                 

@@ -78,7 +78,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
            deviceModel,  serialNumber, importantNotes, stringFaults, 
            stringProducts, stringQty, stringUnitPrice, stringPriceTotal, status, issueDate, finishedDate, pickedDate; 
 
-    double total, deposit, due;
+    double total, deposit, due, cash, card;
     
     
     public OrderDetails() {
@@ -90,7 +90,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
             String _stringFaults, String _stringProducts, String _stringQty, String _stringUnitPrice,
             String _stringPriceTotal, double _total, double _deposit, double _due, String _status, 
-            String _issueDate, String _pickedDate) {
+            String _issueDate, double _cash, double _card, String _pickedDate) {
         
         initComponents();
         
@@ -103,7 +103,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         this.deviceModel = _deviceModel;
         this.serialNumber = _serialNumber;
         this.importantNotes = _importantNotes;
-        this.issueDate = _issueDate;
         this.stringFaults = _stringFaults;
         this.stringProducts = _stringProducts;
         this.stringQty = _stringQty;
@@ -113,6 +112,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         this.deposit = _deposit;
         this.due = _due;
         this.status = _status;
+        this.issueDate = _issueDate;
+        this.cash = _cash;
+        this.card = -card;
         this.pickedDate = _pickedDate;
         
         Date date = new Date();
@@ -1383,15 +1385,17 @@ public class OrderDetails extends javax.swing.JInternalFrame {
            
             try {
                 dbConnection();
-                String query = "UPDATE orderDetails SET status = '" + status +"', finishedDate = '" 
-                        + finishedDate +"' WHERE orderNo = '"+ orderNo + "'";
-                
+                String query = "UPDATE orderDetails SET status ?, finishedDate = ? WHERE orderNo = ?";
                 ps = con.prepareStatement(query);
+                ps.setString(1, status);
+                ps.setString(2, finishedDate);
+                ps.setString(3, orderNo);
+                
                 ps.executeUpdate();
                 
                 FixedOrder fixedOrder = new FixedOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
                         deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
-                         stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, pickedDate);
+                         stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, cash, card, pickedDate);
                 
                 desktop_pane_order_details.removeAll();
                 desktop_pane_order_details.add(fixedOrder).setVisible(true);
@@ -1429,7 +1433,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 
                 NotFixedOrder orderNotFixed = new NotFixedOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
                         deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
-                         stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, pickedDate);
+                         stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, cash, card, pickedDate);
                 
                 desktop_pane_order_details.removeAll();
                 desktop_pane_order_details.add(orderNotFixed).setVisible(true);

@@ -340,11 +340,11 @@ public class OrderList extends javax.swing.JInternalFrame {
             String deviceModel = "";
             String serialNumber = "";
             String importantNotes ="";
-            String faults = "";
-            String productService = "";
-            String qty = "";
-            String unitPrice = "";
-            String priceTotal = "";
+            String stringFaults = "";
+            String stringProducts = "";
+            String stringQty = "";
+            String stringUnitPrice = "";
+            String stringPriceTotal = "";
             double total = 0;
             double deposit = 0;
             double due = 0;
@@ -353,6 +353,11 @@ public class OrderList extends javax.swing.JInternalFrame {
             String finishedDate = "";
             String pickedDate = "";
             String payDate = "";
+            String refundDate = "";
+            double cash = 0;
+            double card = 0;
+            
+            
 
             dbConnection();
             DefaultTableModel dtm = (DefaultTableModel)table_view_orders.getModel();
@@ -360,8 +365,9 @@ public class OrderList extends javax.swing.JInternalFrame {
             String selectedOrderNo = dtm.getValueAt(orderSelected, 0).toString();
         
             try {
-                String query = "SELECT * FROM orderDetails WHERE orderNo ='" + selectedOrderNo + "'";
+                String query = "SELECT * FROM orderDetails WHERE orderNo = ?";
                 ps = con.prepareStatement(query);
+                ps.setString(1, selectedOrderNo);
                 rs = ps.executeQuery();
                 
                 while(rs.next())
@@ -375,11 +381,11 @@ public class OrderList extends javax.swing.JInternalFrame {
                    deviceModel = rs.getString("deviceModel");
                    serialNumber = rs.getString("serialNumber");
                    importantNotes = rs.getString("importantNotes");
-                   faults = rs.getString("fault");
-                   productService = rs.getString("productService");
-                   qty = rs.getString("qty");
-                   unitPrice = rs.getString("unitPrice");
-                   priceTotal = rs.getString("priceTotal");
+                   stringFaults = rs.getString("fault");
+                   stringProducts = rs.getString("productService");
+                   stringQty = rs.getString("qty");
+                   stringUnitPrice = rs.getString("unitPrice");
+                   stringPriceTotal = rs.getString("priceTotal");
                    total = rs.getDouble("total");
                    deposit = rs.getDouble("deposit");
                    due = rs.getDouble("due");
@@ -387,40 +393,56 @@ public class OrderList extends javax.swing.JInternalFrame {
                    status = rs.getString("status");
                    finishedDate = rs.getString("finishedDate");
                    pickedDate = rs.getString("pickedDate");
+                   refundDate = rs.getString("refundDate");
                 }
-                String queryPayDate = "SELECT payDate FROM completedOrders WHERE orderNo ='" + selectedOrderNo + "'";
-                ps = con.prepareStatement(queryPayDate);
-                rs = ps.executeQuery();
-                while (rs.next())
-                payDate = rs.getString("payDate");
                 
-            } catch (SQLException ex) {
-                Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                String queryPayDate = "SELECT * FROM completedOrders WHERE orderNo = ? ";
+                ps = con.prepareStatement(queryPayDate);
+                ps.setString(1, selectedOrderNo);
+                rs = ps.executeQuery();
+                
+                while (rs.next())
+                {
+                    payDate = rs.getString("payDate");
+                    cash = rs.getDouble("cash");
+                    card = rs.getDouble("card");
+                }
+                
             
             switch (status) {
                 case "In Progress":
                     OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo,
-                            email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService,
-                            qty, unitPrice, priceTotal, total, deposit, due, status, issueDate, pickedDate);
+                            email, deviceBrand, deviceModel, serialNumber, importantNotes, stringFaults, stringProducts,
+                            stringQty, stringUnitPrice, stringPriceTotal, total, deposit, due, status, issueDate, cash, card, pickedDate);
                     desktop_pane_order_list.removeAll();
                     desktop_pane_order_list.add(orderDetails).setVisible(true);
                     break;
                 case "Not Fixed":
 //                    OrderNotFixed orderNotFixed = new OrderNotFixed(orderNo, firstName, lastName, contactNo,
                     NotFixedOrder orderNotFixed = new NotFixedOrder(orderNo, firstName, lastName, contactNo,
-                            email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService, qty,
-                             unitPrice, priceTotal, total, deposit, due, status, issueDate, finishedDate, pickedDate);
+                            email, deviceBrand, deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty,
+                             stringUnitPrice, stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, cash, card, pickedDate);
                     desktop_pane_order_list.removeAll();
                     desktop_pane_order_list.add(orderNotFixed).setVisible(true);
                     break;
+                    
+                case "Refunded":
+                   RefundOrder refundOrder = new RefundOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
+                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
+                        stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, pickedDate, cash, card, refundDate);
+                   desktop_pane_order_list.removeAll();
+                   desktop_pane_order_list.add(refundOrder).setVisible(true);
+                   break;
                 default:
                     FixedOrder fixedOrder = new FixedOrder(orderNo, firstName, lastName, contactNo,
-                            email, deviceBrand, deviceModel, serialNumber, importantNotes, faults, productService, qty,
-                            unitPrice, priceTotal, total, deposit, due, status, issueDate, finishedDate, pickedDate);
+                            email, deviceBrand, deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty,
+                            stringUnitPrice, stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, cash, card, pickedDate);
                     desktop_pane_order_list.removeAll();
                     desktop_pane_order_list.add(fixedOrder).setVisible(true);
                     break;
+            }
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_table_view_ordersMouseClicked

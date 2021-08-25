@@ -64,7 +64,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
            stringProducts, stringQty, stringUnitPrice, stringPriceTotal, 
             status, issueDate, finishedDate, pickedDate; 
 
-    double total, deposit, due;
+    double total, deposit, due, cash, card;
     
     
     public NotFixedOrder() {
@@ -76,7 +76,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
             String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
             String _stringFaults, String _stringProducts, String _stringQty, String _stringUnitPrice, 
             String _stringPriceTotal, double _total, double _deposit, double _due,String _status, 
-            String _issueDate, String _finishedDate, String _pickedDate) {
+            String _issueDate, String _finishedDate, double _cash, double _card, String _pickedDate) {
         
         initComponents();
         
@@ -100,6 +100,8 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         this.due = _due;
         this.status = _status;
         this.finishedDate = _finishedDate;
+        this.cash = _cash;
+        this.card = _card;
         this.pickedDate = _pickedDate;
         
         //Remove borders
@@ -587,7 +589,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
 
         lbl_date.setForeground(java.awt.Color.white);
         lbl_date.setText("date");
-        panel_order_status.add(lbl_date, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 32, -1, -1));
+        panel_order_status.add(lbl_date, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 29, -1, -1));
 
         lbl_order_picked_on.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
         lbl_order_picked_on.setForeground(new java.awt.Color(255, 255, 255));
@@ -997,7 +999,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 
                 OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, 
                         email, deviceBrand, deviceModel, serialNumber, importantNotes, stringFaults, stringProducts,
-                        stringQty, stringUnitPrice, stringPriceTotal, total, deposit, due, status, issueDate, pickedDate);
+                        stringQty, stringUnitPrice, stringPriceTotal, total, deposit, due, status, issueDate, cash, card, pickedDate);
             
                 desktop_pane_fixed_order.removeAll();
                 desktop_pane_fixed_order.add(orderDetails).setVisible(true);

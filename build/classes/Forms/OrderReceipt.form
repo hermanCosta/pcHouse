@@ -80,6 +80,7 @@
                       <Component id="lbl_paid_by" alignment="1" max="32767" attributes="0"/>
                       <Component id="lbl_order_picked_on" alignment="1" max="32767" attributes="0"/>
                       <Component id="panel_products" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lbl_change" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="0" pref="10" max="32767" attributes="0"/>
               </Group>
@@ -126,8 +127,10 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="lbl_paid_by" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                  <Component id="lbl_change" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                   <Component id="lbl_order_picked_on" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="58" max="32767" attributes="0"/>
+                  <EmptySpace pref="41" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -334,7 +337,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="lbl_product_service" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lbl_qty" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lbl_unit_price" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -512,6 +515,14 @@
             </Container>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JLabel" name="lbl_change">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Lucida Grande" size="11" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="change"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
     <Component class="javax.swing.JButton" name="jButton1">

@@ -426,6 +426,11 @@ public class TillClosing extends javax.swing.JInternalFrame {
             }
         });
         scroll_pane_table_orders.setViewportView(table_view_orders);
+        if (table_view_orders.getColumnModel().getColumnCount() > 0) {
+            table_view_orders.getColumnModel().getColumn(0).setMaxWidth(80);
+            table_view_orders.getColumnModel().getColumn(3).setMaxWidth(80);
+            table_view_orders.getColumnModel().getColumn(4).setMaxWidth(80);
+        }
 
         javax.swing.GroupLayout panel_ordersLayout = new javax.swing.GroupLayout(panel_orders);
         panel_orders.setLayout(panel_ordersLayout);
@@ -481,6 +486,10 @@ public class TillClosing extends javax.swing.JInternalFrame {
             }
         });
         scroll_pane_table_sales.setViewportView(table_view_sales);
+        if (table_view_sales.getColumnModel().getColumnCount() > 0) {
+            table_view_sales.getColumnModel().getColumn(0).setMaxWidth(80);
+            table_view_sales.getColumnModel().getColumn(3).setMaxWidth(80);
+        }
 
         javax.swing.GroupLayout panel_salesLayout = new javax.swing.GroupLayout(panel_sales);
         panel_sales.setLayout(panel_salesLayout);

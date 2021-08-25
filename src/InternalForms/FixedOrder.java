@@ -21,8 +21,11 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,6 +70,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
             status, issueDate, finishedDate, pickedDate; 
 
     double total, deposit, due;
+    double cash, card, change;
     
     
     public FixedOrder() {
@@ -78,7 +82,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
             String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
             String _stringFaults, String _stringProducts, String _stringQty, String _stringUnitPrice, 
             String _stringPriceTotal, double _total, double _deposit, double _due,String _status, 
-            String _issueDate, String _finishedDate, String _pickedDate) {
+            String _issueDate, String _finishedDate, double _cash, double _card, String _pickedDate) {
         
         initComponents();
         
@@ -102,14 +106,14 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         this.due = _due;
         this.status = _status;
         this.finishedDate = _finishedDate;
+        this.cash = _cash;
+        this.card = _card;
         this.pickedDate = _pickedDate;
         
         //Remove borders
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
-        
-        txt_contact.setFocusLostBehavior(JFormattedTextField.PERSIST);//avoid auto old value by focus loosing
         
         loadSelectedOrder();
         tableSettings();
@@ -138,7 +142,9 @@ public class FixedOrder extends javax.swing.JInternalFrame {
     
    public void loadSelectedOrder()
    {
-        
+       
+       
+       
        if (pickedDate != null && !pickedDate.trim().isEmpty())
         {
             lbl_order_picked_on.setText("Picked on: " + pickedDate);
@@ -148,17 +154,27 @@ public class FixedOrder extends javax.swing.JInternalFrame {
             btn_notes.setVisible(true);
             btn_receipt.setVisible(true);
             btn_undo.setVisible(false);
-            btn_refund.setVisible(false);
+            btn_refund.setVisible(true);
+            
+            if (cash == 0)
+            lbl_paid_by.setText("Paid by Card: €" + card);
+            else if (card == 0)
+            lbl_paid_by.setText("Paid by Cash: €" + cash);
+            else
+            lbl_paid_by.setText("Paid by Cash: €" + cash + " | Card: €" +card);
+            
+            lbl_paid_by.setVisible(true);
         }
         else
         {
             lbl_order_picked_on.setVisible(false);
+            lbl_paid_by.setVisible(false);
             
             btn_pay.setEnabled(true);
             btn_notes.setVisible(true);
             btn_receipt.setVisible(false);
             btn_undo.setEnabled(true);
-            btn_refund.setEnabled(true);
+            btn_refund.setEnabled(false);
             
         }
        
@@ -271,6 +287,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         panel_order_status = new javax.swing.JPanel();
         lbl_order_status = new javax.swing.JLabel();
         lbl_date = new javax.swing.JLabel();
+        lbl_paid_by = new javax.swing.JLabel();
         lbl_order_picked_on = new javax.swing.JLabel();
         jScrollPane_notes = new javax.swing.JScrollPane();
         editor_pane_notes = new javax.swing.JEditorPane();
@@ -636,17 +653,24 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         lbl_order_status.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         lbl_order_status.setForeground(java.awt.Color.white);
         lbl_order_status.setText("orderStatus");
-        panel_order_status.add(lbl_order_status, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 4, 385, -1));
+        panel_order_status.add(lbl_order_status, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 0, 385, -1));
 
+        lbl_date.setFont(new java.awt.Font("sansserif", 0, 13)); // NOI18N
         lbl_date.setForeground(java.awt.Color.white);
         lbl_date.setText("date");
-        panel_order_status.add(lbl_date, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 32, -1, -1));
+        panel_order_status.add(lbl_date, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 27, -1, -1));
 
-        lbl_order_picked_on.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
+        lbl_paid_by.setFont(new java.awt.Font("Lucida Grande", 0, 13)); // NOI18N
+        lbl_paid_by.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_paid_by.setText("paidBy");
+        lbl_paid_by.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        panel_order_status.add(lbl_paid_by, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 24, 329, 20));
+
+        lbl_order_picked_on.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         lbl_order_picked_on.setForeground(new java.awt.Color(255, 255, 255));
         lbl_order_picked_on.setText("orderPickedOn");
-        lbl_order_picked_on.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        panel_order_status.add(lbl_order_picked_on, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 10, 329, -1));
+        lbl_order_picked_on.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        panel_order_status.add(lbl_order_picked_on, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 0, 329, -1));
 
         panel_order_details.add(panel_order_status, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 6, 1010, -1));
 
@@ -698,35 +722,6 @@ public class FixedOrder extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameActionPerformed
 
     private void txt_first_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_first_nameActionPerformed
-//        try {
-//            // TODO add your handling code here:
-//            dbConnection();
-//            String fName = txt_first_name.getText();
-//            
-//            String checkQuery = "SELECT * FROM customers WHERE firstName = '" +fName+ "'";
-//            ps = con.prepareStatement(checkQuery);
-//            rs = ps.executeQuery();
-//            
-//            if (!rs.isBeforeFirst())
-//            {
-//                int confirmInsertion = JOptionPane.showConfirmDialog(null, "Do you want to add a new costumer First Name ?", "First Name", JOptionPane.YES_NO_OPTION);
-//                if(confirmInsertion == 0)
-//                {
-//                    String query = "INSERT INTO customers (firstName) VALUES(?)";
-//                    ps = con.prepareStatement(query);
-//                    ps.setString(1, fName);
-//                    ps.executeUpdate();
-//                    txt_first_name.setText("");
-//                }
-//                else
-//                {
-//                    txt_first_name.setText("");
-//                }
-//            }    
-//            
-//        } catch (SQLException ex) {
-//            Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
-//        }
     }//GEN-LAST:event_txt_first_nameActionPerformed
 
     private void txt_brandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_brandActionPerformed
@@ -735,33 +730,10 @@ public class FixedOrder extends javax.swing.JInternalFrame {
 
     private void txt_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_totalActionPerformed
         // TODO add your handling code here:
-        
-        double sum = 0;
-        for(int i = 0; i < table_view_products.getRowCount(); i++)
-        {
-            sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 1).toString());
-        }
-        
-        txt_total.setText(Double.toString(sum));
     }//GEN-LAST:event_txt_totalActionPerformed
 
     private void txt_depositKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_depositKeyReleased
         // TODO add your handling code here:
-
-        //Calculate deposit paid and display due value
-        if (txt_deposit.getText() == null || txt_deposit.getText().trim().isEmpty())
-        {
-            txt_due.setText(txt_total.getText());
-            txt_deposit.setText(Double.toString(0));
-        }
-        else
-        {
-            double priceTotal = Double.parseDouble(txt_total.getText());
-            double deposit = Double.parseDouble(txt_deposit.getText());
-            double total = priceTotal - deposit;
-
-            txt_due.setText(Double.toString(total));
-        }
     }//GEN-LAST:event_txt_depositKeyReleased
 
     private void txt_snActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_snActionPerformed
@@ -783,58 +755,22 @@ public class FixedOrder extends javax.swing.JInternalFrame {
 
     private void txt_snKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_snKeyReleased
         // TODO add your handling code here:
-        txt_sn.setText(txt_sn.getText().toUpperCase());
     }//GEN-LAST:event_txt_snKeyReleased
 
     private void txt_first_nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_first_nameKeyReleased
         // TODO add your handling code here:
-        
-        //Set the first Letter to UpperCase
-//        String firstName = txt_first_name.getText();
-//        StringBuilder sb = new StringBuilder(firstName);
-//        sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-//        firstName = sb.toString();
-//        txt_first_name.setText(firstName);
-//        
     }//GEN-LAST:event_txt_first_nameKeyReleased
 
     private void txt_last_nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_last_nameKeyReleased
         // TODO add your handling code here:
-        
-        //Set the first Letter to Uppercase
-//        String lastName = txt_last_name.getText();
-//        StringBuilder sb = new StringBuilder(lastName);
-//        sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-//        lastName = sb.toString();
-//        txt_last_name.setText(lastName);
     }//GEN-LAST:event_txt_last_nameKeyReleased
 
     private void txt_totalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_totalKeyPressed
          // TODO add your handling code here:
-        char c = evt.getKeyChar();
-        
-        if (Character.isLetter(c)) {
-            
-            txt_total.setEditable(false);
-        }
-        else
-        {
-            txt_total.setEditable(true);
-        }       
     }//GEN-LAST:event_txt_totalKeyPressed
 
     private void txt_depositKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_depositKeyPressed
         // TODO add your handling code here:
-        char c = evt.getKeyChar();
-        
-        if(Character.isLetter(c))
-        {
-            txt_deposit.setEditable(false);
-        }
-        else
-        {
-            txt_deposit.setEditable(true);
-        }
     }//GEN-LAST:event_txt_depositKeyPressed
 
     private void table_view_productsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_productsMouseClicked
@@ -892,7 +828,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 
                 OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, 
                         email, deviceBrand, deviceModel, serialNumber, importantNotes, stringFaults, stringProducts,
-                        stringQty, stringUnitPrice, stringPriceTotal, total, deposit, due, status, issueDate, pickedDate);
+                        stringQty, stringUnitPrice, stringPriceTotal, total, deposit, due, status, issueDate, cash, card, pickedDate);
             
                 desktop_pane_fixed_order.removeAll();
                 desktop_pane_fixed_order.add(orderDetails).setVisible(true);
@@ -912,8 +848,8 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         try {
             // TODO add your handling code here:
             dbConnection();
-            double cash = 0, card = 0;
-            String query = "SELECT cash, card FROM completedOrders WHERE orderNo = ?";
+            
+            String query = "SELECT cash, card, changeTotal FROM completedOrders WHERE orderNo = ?";
             ps = con.prepareStatement(query);
             ps.setString(1, orderNo);
             rs = ps.executeQuery();
@@ -922,10 +858,12 @@ public class FixedOrder extends javax.swing.JInternalFrame {
             {
                 cash = rs.getDouble("cash");
                 card = rs.getDouble("card");
+                change = rs.getDouble("changeTotal");
             }
             
             OrderReceipt receipt =  new OrderReceipt(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel,
-                    serialNumber, stringProducts, stringQty, stringUnitPrice,  stringPriceTotal, total, deposit, due, pickedDate, cash, card);
+                    serialNumber, stringProducts, stringQty, stringUnitPrice,  stringPriceTotal, total, deposit, due, pickedDate,
+                    cash, card, change);
             receipt.setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
@@ -939,11 +877,53 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 
         if (confirmRefund == 0)
         {
-            RefundOrder
+            try {
+                Date date = new Date();
+                Timestamp currentDate = new Timestamp(date.getTime());
+                String refundDate = new SimpleDateFormat("dd/MM/yyy").format(currentDate);
+                
+                dbConnection();
+                String queryUpdate = "UPDATE orderDetails SET status = ?, refundDate = ? WHERE orderNo = ?";
+                ps = con.prepareStatement(queryUpdate);
+                ps.setString(1, "Refunded");
+                ps.setString(2, refundDate);
+                ps.setString(3, orderNo);
+                ps.executeUpdate();
+                
+                double negativeTotal = total *= -1;
+                double negativeDeposit = deposit *= -1;
+                double negativeDue = due *= -1;
+                double negativeCash = cash *= -1;
+                double negativeCard = card *= -1;
+                        
+                String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, productService, total,"
+                        + "deposit, due, payDate, cash, card) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                ps = con.prepareStatement(queryInsert);
+                ps.setString(1, orderNo);
+                ps.setString(2, firstName);
+                ps.setString(3, lastName);
+                ps.setString(4, stringProducts);
+                ps.setDouble(5, negativeTotal);
+                ps.setDouble(6, negativeDeposit);
+                ps.setDouble(7, negativeDue);
+                ps.setString(8, refundDate);
+                ps.setDouble(9, negativeCash);
+                ps.setDouble(10, negativeCard);
+                ps.executeUpdate();
+                
+                
+                JOptionPane.showMessageDialog(this, "Order " + orderNo + " Refunded Successfully!", 
+                        "Refund Order", JOptionPane.INFORMATION_MESSAGE);
+                
+                RefundOrder refundOrder = new RefundOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
+                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
+                        stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, pickedDate, cash, card, refundDate);
+                desktop_pane_fixed_order.removeAll();
+                desktop_pane_fixed_order.add(refundOrder).setVisible(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-       
-        
-        
     }//GEN-LAST:event_btn_refundActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -971,6 +951,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lbl_order_no;
     private javax.swing.JLabel lbl_order_picked_on;
     private javax.swing.JLabel lbl_order_status;
+    private javax.swing.JLabel lbl_paid_by;
     private javax.swing.JLabel lbl_price;
     private javax.swing.JLabel lbl_sn;
     private javax.swing.JPanel panel_order_details;

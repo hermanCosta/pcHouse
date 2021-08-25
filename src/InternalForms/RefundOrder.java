@@ -64,7 +64,7 @@ public class RefundOrder extends javax.swing.JInternalFrame {
            stringProducts, stringQty, stringUnitPrice, stringPriceTotal, 
             status, issueDate, finishedDate, pickedDate, refundDate; 
 
-    double total, deposit, due;
+    double total, deposit, due, cash, card;
     
     
     public RefundOrder() {
@@ -76,7 +76,7 @@ public class RefundOrder extends javax.swing.JInternalFrame {
             String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
             String _stringFaults, String _stringProducts, String _stringQty, String _stringUnitPrice, 
             String _stringPriceTotal, double _total, double _deposit, double _due,String _status, 
-            String _issueDate, String _finishedDate, String _pickedDate, String refundDate) {
+            String _issueDate, String _finishedDate, String _pickedDate, double _cash, double _card, String _refundDate) {
         
         initComponents();
         
@@ -101,6 +101,9 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         this.status = _status;
         this.finishedDate = _finishedDate;
         this.pickedDate = _pickedDate;
+        this.cash = _cash;
+        this.card = _card;
+        this.refundDate = _refundDate;
         
         //Remove borders
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
@@ -112,8 +115,6 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         tableSettings();
     }
 
-
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -133,7 +134,6 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         
     } 
     
-    
    public void loadSelectedOrder()
    {
         
@@ -142,29 +142,23 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
         TableColumnModel tableModel = table_view_products.getColumnModel();
 
-        if (pickedDate != null && !pickedDate.trim().isEmpty())
+        if (cash == 0)
         {
-            lbl_order_refunded.setVisible(true);
-            lbl_order_refunded.setText("Picked on: " + pickedDate);
-            btn_undo.setVisible(false);
-            btn_pick_up.setVisible(false);
-            btn_notes.setVisible(false);
-            btn_print.setVisible(true);
+            lbl_refunded_by.setText("Refunded by Card: €" + (card + deposit));
+        }
+        else if (card == 0)
+        {
+            lbl_refunded_by.setText("Refunded by Cash: €" + (cash + deposit));
         }
         else
         {
-            lbl_order_refunded.setVisible(false);
-            btn_undo.setVisible(true);
-            btn_pick_up.setVisible(true);
-            btn_notes.setVisible(true);
-            btn_print.setVisible(false);
-            
-            
+            lbl_refunded_by.setText("Refunded by Cash: €" + (cash + deposit) + " | Card: €" + (card + deposit));
         }
         
-        lbl_order_status.setText("Order Not Fixed");
-        lbl_date.setText("date: " + this.finishedDate);
+        lbl_order_status.setText("Order Refunded");
+        lbl_date.setText("date: " + this.refundDate);
         lbl_order_created_on.setText("Created on: " + this.issueDate);
+        lbl_order_paid_on.setText("Paid on: " + this.finishedDate);
         lbl_auto_order_no.setText(this.orderNo);
         txt_first_name.setText(this.firstName);
         txt_last_name.setText(this.lastName);
@@ -262,9 +256,10 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         panel_order_status = new javax.swing.JPanel();
         lbl_order_status = new javax.swing.JLabel();
         lbl_date = new javax.swing.JLabel();
-        lbl_order_refunded = new javax.swing.JLabel();
+        lbl_refunded_by = new javax.swing.JLabel();
         jScrollPane_notes = new javax.swing.JScrollPane();
         editor_pane_notes = new javax.swing.JEditorPane();
+        lbl_order_paid_on = new javax.swing.JLabel();
 
         setMaximumSize(new java.awt.Dimension(1049, 827));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -563,11 +558,11 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         lbl_date.setText("date");
         panel_order_status.add(lbl_date, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 32, -1, -1));
 
-        lbl_order_refunded.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
-        lbl_order_refunded.setForeground(new java.awt.Color(255, 255, 255));
-        lbl_order_refunded.setText("orderRefunded");
-        lbl_order_refunded.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        panel_order_status.add(lbl_order_refunded, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 10, 329, -1));
+        lbl_refunded_by.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        lbl_refunded_by.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_refunded_by.setText("refundedBy");
+        lbl_refunded_by.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        panel_order_status.add(lbl_refunded_by, new org.netbeans.lib.awtextra.AbsoluteConstraints(538, 10, 450, -1));
 
         jScrollPane_notes.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane_notes.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -579,24 +574,19 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         editor_pane_notes.setEnabled(false);
         jScrollPane_notes.setViewportView(editor_pane_notes);
 
+        lbl_order_paid_on.setBackground(new java.awt.Color(204, 204, 204));
+        lbl_order_paid_on.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        lbl_order_paid_on.setText("orderPaidOn");
+        lbl_order_paid_on.setEnabled(false);
+
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);
         panel_order_detailsLayout.setHorizontalGroup(
             panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                 .addGap(21, 21, 21)
-                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panel_order_status, javax.swing.GroupLayout.PREFERRED_SIZE, 1010, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(136, 136, 136)
-                        .addComponent(lbl_auto_order_no)
-                        .addGap(411, 411, 411)
-                        .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lbl_order_no)
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(829, 829, 829)
-                        .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lbl_order_created_on, javax.swing.GroupLayout.PREFERRED_SIZE, 1010, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
@@ -646,7 +636,24 @@ public class RefundOrder extends javax.swing.JInternalFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(lbl_price)
                                 .addGap(0, 0, 0)
-                                .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbl_order_no)
+                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                        .addGap(136, 136, 136)
+                                        .addComponent(lbl_auto_order_no))
+                                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                        .addComponent(lbl_order_created_on, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(29, 29, 29)
+                                        .addComponent(lbl_order_paid_on, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(85, 85, 85)
+                                .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_order_detailsLayout.setVerticalGroup(
             panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -660,14 +667,15 @@ public class RefundOrder extends javax.swing.JInternalFrame {
                         .addComponent(lbl_auto_order_no, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGap(2, 2, 2)
-                        .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGap(27, 27, 27)
                         .addComponent(lbl_order_no))
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lbl_order_created_on))
+                    .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lbl_order_created_on)
+                        .addComponent(lbl_order_paid_on)))
                 .addGap(7, 7, 7)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
@@ -779,33 +787,10 @@ public class RefundOrder extends javax.swing.JInternalFrame {
 
     private void txt_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_totalActionPerformed
         // TODO add your handling code here:
-        
-        double sum = 0;
-        for(int i = 0; i < table_view_products.getRowCount(); i++)
-        {
-            sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 1).toString());
-        }
-        
-        txt_total.setText(Double.toString(sum));
     }//GEN-LAST:event_txt_totalActionPerformed
 
     private void txt_depositKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_depositKeyReleased
         // TODO add your handling code here:
-
-        //Calculate deposit paid and display due value
-        if (txt_deposit.getText() == null || txt_deposit.getText().trim().isEmpty())
-        {
-            txt_due.setText(txt_total.getText());
-            txt_deposit.setText(Double.toString(0));
-        }
-        else
-        {
-            double priceTotal = Double.parseDouble(txt_total.getText());
-            double deposit = Double.parseDouble(txt_deposit.getText());
-            double total = priceTotal - deposit;
-
-            txt_due.setText(Double.toString(total));
-        }
     }//GEN-LAST:event_txt_depositKeyReleased
 
     private void txt_snActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_snActionPerformed
@@ -827,30 +812,14 @@ public class RefundOrder extends javax.swing.JInternalFrame {
 
     private void txt_snKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_snKeyReleased
         // TODO add your handling code here:
-        txt_sn.setText(txt_sn.getText().toUpperCase());
     }//GEN-LAST:event_txt_snKeyReleased
 
     private void txt_first_nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_first_nameKeyReleased
         // TODO add your handling code here:
-        
-        //Set the first Letter to UpperCase
-//        String firstName = txt_first_name.getText();
-//        StringBuilder sb = new StringBuilder(firstName);
-//        sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-//        firstName = sb.toString();
-//        txt_first_name.setText(firstName);
-//        
     }//GEN-LAST:event_txt_first_nameKeyReleased
 
     private void txt_last_nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_last_nameKeyReleased
-        // TODO add your handling code here:
-        
-        //Set the first Letter to Uppercase
-//        String lastName = txt_last_name.getText();
-//        StringBuilder sb = new StringBuilder(lastName);
-//        sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-//        lastName = sb.toString();
-//        txt_last_name.setText(lastName);
+        // TODO add your handling code here:        
     }//GEN-LAST:event_txt_last_nameKeyReleased
 
     private void txt_totalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_totalKeyPressed
@@ -944,9 +913,10 @@ public class RefundOrder extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lbl_model;
     private javax.swing.JLabel lbl_order_created_on;
     private javax.swing.JLabel lbl_order_no;
-    private javax.swing.JLabel lbl_order_refunded;
+    private javax.swing.JLabel lbl_order_paid_on;
     private javax.swing.JLabel lbl_order_status;
     private javax.swing.JLabel lbl_price;
+    private javax.swing.JLabel lbl_refunded_by;
     private javax.swing.JLabel lbl_sn;
     private javax.swing.JPanel panel_order_details;
     private javax.swing.JPanel panel_order_status;

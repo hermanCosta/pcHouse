@@ -524,7 +524,8 @@ public class SaleDetails extends javax.swing.JInternalFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         SaleReceipt saleReceipt =  new SaleReceipt(saleNo, firstName, lastName, contactNo, email,
-                              stringProducts, stringPriceTotal, total, saleDate, cash, card, change);
+                              stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total, saleDate, 
+                cash, card, change);
             saleReceipt.setVisible(true);
             
         
