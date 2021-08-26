@@ -64,7 +64,6 @@ public class OrderReceipt extends javax.swing.JFrame {
     
     public void loadOrderToPrint()
     {
-        System.out.println("Prices: " +stringPriceTotal);
         lbl_print_order_no.setText("Order: " + orderNo);
         lbl_print_first_name.setText("Customer name: " + firstName + " " + lastName);
         lbl_print_contact.setText("Contact no.: " + contactNo);

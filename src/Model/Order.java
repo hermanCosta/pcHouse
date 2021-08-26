@@ -10,20 +10,20 @@ package Model;
  * @author user
  */
 public class Order extends Device {
-    String orderNo, importantNotes, fault, productService, qty, unitPrice, priceTotal, status, issuedDate;
+    String orderNo, importantNotes, stringFaults, stringProducts, stringQty, unitPrice, priceTotal, status, issuedDate;
     double deposit, due, total;
     
     
     public Order(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
-            String _brand, String _model, String _serialNumber, String _importantNotes, String _fault, 
-            String _productService, String _qty, String _unitPrice, String _priceTotal, double _total, double _deposit, double _due, String _status, 
-            String _issuedDate) {
+            String _brand, String _model, String _serialNumber, String _importantNotes, String _stringFaults, 
+            String _stringProducts, String _stringQty, String _unitPrice, String _priceTotal, double _total, 
+            double _deposit, double _due, String _status, String _issuedDate) {
         super(_brand, _model, _serialNumber, _firstName, _lastName, _contactNo, _email);
         this.orderNo = _orderNo;
-        this.fault = _fault;
+        this.stringFaults = _stringFaults;
         this.importantNotes = _importantNotes;
-        this.productService = _productService;
-        this.qty = _qty;
+        this.stringProducts = _stringProducts;
+        this.stringQty = _stringQty;
         this.unitPrice = _unitPrice;
         this.priceTotal = _priceTotal;
         this.total = _total;
@@ -42,20 +42,20 @@ public class Order extends Device {
         this.orderNo = orderNo;
     }
 
-    public String getProductService() {
-        return productService;
+    public String getStringProducts() {
+        return stringProducts;
     }
 
-    public void setProductService(String productService) {
-        this.productService = productService;
+    public void setStringProducts(String stringProducts) {
+        this.stringProducts = stringProducts;
     }
 
-    public String getQty() {
-        return qty;
+    public String getStringQty() {
+        return stringQty;
     }
 
-    public void setQty(String qty) {
-        this.qty = qty;
+    public void setStringQty(String stringQty) {
+        this.stringQty = stringQty;
     }
 
     public String getUnitPrice() {
@@ -67,12 +67,12 @@ public class Order extends Device {
     }
     
     
-     public String getFault() {
-        return fault;
+     public String getStringFaults() {
+        return stringFaults;
     }
 
-    public void setFault(String fault) {
-        this.fault = fault;
+    public void setStringFaults(String stringFaults) {
+        this.stringFaults = stringFaults;
     }
 
     public String getPriceTotal() {

@@ -572,7 +572,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
         txt_deposit.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         txt_deposit.setForeground(new java.awt.Color(51, 51, 255));
-        txt_deposit.setText("0");
         txt_deposit.setPreferredSize(new java.awt.Dimension(63, 20));
         txt_deposit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -965,12 +964,12 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
     private void txt_depositKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_depositKeyReleased
         // TODO add your handling code here:
-
-        //Calculate deposit paid and display due value
+          //Calculate deposit paid and display due value
         if (txt_deposit.getText() == null || txt_deposit.getText().trim().isEmpty())
         {
             txt_due.setText(txt_total.getText());
-            txt_deposit.setText(Double.toString(0));
+            //txt_deposit.setText(Double.toString(0));
+            deposit = 0;
         }
         else
         {
@@ -978,7 +977,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             deposit = Double.parseDouble(txt_deposit.getText());
             total = priceTotal - deposit;
 
-            txt_due.setText(Double.toString(total));
+            txt_due.setText(String.valueOf(total));
         }
     }//GEN-LAST:event_txt_depositKeyReleased
 
@@ -1244,7 +1243,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
     private void txt_depositActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_depositActionPerformed
         // TODO add your handling code here:
-                //Calculate deposit paid and display due value
+       
     }//GEN-LAST:event_txt_depositActionPerformed
 
     private void txt_dueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_dueActionPerformed

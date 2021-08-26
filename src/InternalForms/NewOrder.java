@@ -5,6 +5,7 @@
  */
 package InternalForms;
 
+import Forms.DepositPayment;
 import Forms.PrintOrder;
 import Forms.MainMenu;
 import Model.Customer;
@@ -73,7 +74,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
            deviceModel,  serialNumber, importantNotes, stringFaults, 
            stringProducts, stringPriceTotal, stringQty, stringUnitPrice, issueDate, status; 
 
-    double total, deposit, due;
+    double total, deposit, cashDeposit, cardDeposit, due;
     
     public NewOrder() {
         initComponents();
@@ -340,7 +341,15 @@ public class NewOrder extends javax.swing.JInternalFrame {
             deviceModel = txt_model.getText();
             serialNumber = txt_serial_number.getText();
             importantNotes = editor_pane_notes.getText();
-            deposit = Double.parseDouble(txt_deposit.getText());
+            
+            if (txt_deposit.getText().trim().isEmpty())
+            {
+                deposit = 0;
+                
+            } else {
+                deposit = Double.parseDouble(txt_deposit.getText());
+            }
+            
             due = Double.parseDouble(txt_due.getText());
             total = Double.parseDouble(txt_total.getText());
             status = "In Progress";
@@ -596,7 +605,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
         txt_deposit.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         txt_deposit.setForeground(new java.awt.Color(51, 51, 255));
-        txt_deposit.setText("0");
         txt_deposit.setPreferredSize(new java.awt.Dimension(63, 20));
         txt_deposit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -914,56 +922,81 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void btn_save_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save_orderActionPerformed
         // TODO add your handling code here:
-            loadOrderList();
+        loadOrderList();
+        
+        if (order.getDeposit() <= 0)
+        {
+            cashDeposit = 0;
+            cardDeposit = 0;
+            
+            int confirmNewOrder = JOptionPane.showConfirmDialog(this, "Do you Want to Save this new order " + order.getOrderNo() +" ?");
+            if (confirmNewOrder == 0)
+            {
+                try {
+                    dbConnection();
+                    String query = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
+                            + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
+                            + "productService, qty, unitPrice, priceTotal, total, cashDeposit, cardDeposit, "
+                            + "due, status, issuedDate) VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            try {
-                dbConnection();
-                String query = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
-                        + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
-                        + "productService, qty, unitPrice, priceTotal, total, deposit, due, status, issuedDate)"
-                        + "VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-                ps = con.prepareStatement(query);
-                ps.setString(1, order.getOrderNo());
-                ps.setString(2, order.getFirstName());
-                ps.setString(3, order.getLastName()); 
-                ps.setString(4, order.getContactNo());
-                ps.setString(5, order.getEmail());
-                ps.setString(6, order.getBrand());
-                ps.setString(7, order.getModel());
-                ps.setString(8, order.getSerialNumber());
-                ps.setString(9, order.getImportantNotes());
-                ps.setString(10, order.getFault());
-                ps.setString(11, order.getProductService());
-                ps.setString(12, order.getQty());
-                ps.setString(13, order.getUnitPrice());
-                ps.setString(14, order.getPriceTotal());
-                ps.setDouble(15, order.getTotal());
-                ps.setDouble(16, order.getDeposit());
-                ps.setDouble(17, order.getDue());
-                ps.setString(18, order.getStatus());
-                ps.setString(19, order.getIssuedDate());
-                ps.executeUpdate();
-
-                 String removeSpace = "UPDATE orderDetails SET fault = REPLACE (fault, '  ', ' ')";
-                    ps = con.prepareStatement(removeSpace);
+                    ps = con.prepareStatement(query);
+                    ps.setString(1, order.getOrderNo());
+                    ps.setString(2, order.getFirstName());
+                    ps.setString(3, order.getLastName()); 
+                    ps.setString(4, order.getContactNo());
+                    ps.setString(5, order.getEmail());
+                    ps.setString(6, order.getBrand());
+                    ps.setString(7, order.getModel());
+                    ps.setString(8, order.getSerialNumber());
+                    ps.setString(9, order.getImportantNotes());
+                    ps.setString(10, order.getStringFaults());
+                    ps.setString(11, order.getStringProducts());
+                    ps.setString(12, order.getStringQty());
+                    ps.setString(13, order.getUnitPrice());
+                    ps.setString(14, order.getPriceTotal());
+                    ps.setDouble(15, order.getTotal());
+                    ps.setDouble(16, cashDeposit);
+                    ps.setDouble(17, cardDeposit);
+                    ps.setDouble(18, order.getDue());
+                    ps.setString(19, order.getStatus());
+                    ps.setString(20, order.getIssuedDate());
                     ps.executeUpdate();
-                            
-                JOptionPane.showMessageDialog(this, "New order created successfully!");
 
-                cleanAllFields(table_view_faults);
-                cleanAllFields(table_view_products);
-                //Generate new OrderNo.
-                autoID();
-                
-                 // Send Order to print class as a constructor
-                 new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel,
-                    serialNumber, stringFaults, importantNotes, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total,
-                    deposit, due, issueDate).setVisible(true);
-                 
-            } catch (SQLException ex) {
-                Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
-           }
+                     String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "
+                                        + "productService = REPLACE(productService, '  ', ' '), "
+                                        + "qty = REPLACE(qty, '  ', ' '), "
+                                        + "unitPrice = REPLACE(unitPrice, '  ', ' '), "
+                                        + "total = REPLACE(total, '  ', ' ')";
+                        ps = con.prepareStatement(removeSpace);
+                        ps.executeUpdate();
+
+                    JOptionPane.showMessageDialog(this, "New order created successfully!");
+
+                    cleanAllFields(table_view_faults);
+                    cleanAllFields(table_view_products);
+                    //Generate new OrderNo.
+                    autoID();
+
+
+                    PrintOrder printOrder = new PrintOrder(order, order.getDeposit());
+                        printOrder.setVisible(true);
+
+                     // Send Order to print class as a constructor
+    //                 new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel,
+    //                    serialNumber, stringFaults, importantNotes, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total,
+    //                    deposit, due, issueDate).setVisible(true);
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
+               }
+            }
+        }
+        
+        else
+        {
+             DepositPayment depositPayment = new DepositPayment(order);
+            depositPayment.setVisible(true);
+        }
     }//GEN-LAST:event_btn_save_orderActionPerformed
 
     private void txt_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_totalActionPerformed

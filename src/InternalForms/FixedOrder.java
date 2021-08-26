@@ -340,7 +340,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         });
         panel_order_details.add(btn_undo, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 70, 180, 50));
 
-        btn_refund.setBackground(new java.awt.Color(255, 51, 51));
+        btn_refund.setBackground(new java.awt.Color(0, 0, 0));
         btn_refund.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
         btn_refund.setForeground(new java.awt.Color(255, 255, 255));
         btn_refund.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_refund.png"))); // NOI18N

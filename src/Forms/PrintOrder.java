@@ -5,6 +5,7 @@
  */
 package Forms;
 
+import Model.Order;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
@@ -24,6 +25,9 @@ public class PrintOrder extends javax.swing.JFrame {
     /**
      * Creates new form Print
      */
+    Order order;
+    double cardDeposit, cashDeposit;
+    
     
     double deposit, due, total;
     String orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, 
@@ -65,28 +69,78 @@ public class PrintOrder extends javax.swing.JFrame {
         loadOrderToPrint();
     }
 
+    public PrintOrder(Order _order, double _cardDeposit) {
+        this.order = _order;
+        
+        initComponents();
+        loadOrderToPrint();
+    }
+
+    
+//    public void loadOrderToPrint()
+//    {
+//        lbl_print_issued_date.setText("Date: " + issuedDate);
+//        lbl_print_order_no.setText("Order: " + orderNo);
+//        lbl_print_first_name.setText("Customer name: " + firstName + " " + lastName);
+//        lbl_print_contact.setText("Contact no.: " + contactNo);
+//        lbl_print_email.setText("Email: " + email);
+//        lbl_print_brand.setText("Device brand: " + deviceBrand);
+//        lbl_print_model.setText("Device model: " + deviceModel);
+//        lbl_print_sn.setText("S/N: " + serialNumber);
+//        txt_pane_important_notes.setText(importantNotes);
+//        txt_pane_print_faults.setText(stringFaults);
+//        lbl_print_total_products.setText("Total: €" + String.valueOf(total));
+//        lbl_print_deposit.setText("Deposit paid: €" + String.valueOf(deposit));
+//        lbl_print_due.setText("Due:     €" + String.valueOf(due));
+//        
+//        
+//        String[] arrayProducts = stringProducts.split(",");
+//        String[] arrayQty = stringQty.split(",");
+//        String[] arrayUnitPrice = stringUnitPrice.split(",");
+//        String[] arrayPriceTotal = stringPriceTotal.split(",");
+//        
+//        for (String s : arrayProducts)
+//            txt_pane_products.setText(txt_pane_products.getText() + " - " + s + "\n");
+//        
+//        for (String s : arrayQty)
+//            txt_pane_qty.setText(txt_pane_qty.getText() + s + "\n");
+//        
+//        for (String s : arrayUnitPrice)
+//            txt_pane_unit_price.setText(txt_pane_unit_price.getText() + "€" + s + "\n");
+//        
+//        for (String s : arrayPriceTotal)
+//            txt_pane_total.setText(txt_pane_total.getText() + "€" + s + "\n");
+//    }
     
     public void loadOrderToPrint()
     {
-        lbl_print_issued_date.setText("Date: " + issuedDate);
-        lbl_print_order_no.setText("Order: " + orderNo);
-        lbl_print_first_name.setText("Customer name: " + firstName + " " + lastName);
-        lbl_print_contact.setText("Contact no.: " + contactNo);
-        lbl_print_email.setText("Email: " + email);
-        lbl_print_brand.setText("Device brand: " + deviceBrand);
-        lbl_print_model.setText("Device model: " + deviceModel);
-        lbl_print_sn.setText("S/N: " + serialNumber);
-        txt_pane_important_notes.setText(importantNotes);
-        txt_pane_print_faults.setText(stringFaults);
-        lbl_print_total_products.setText("Total: €" + String.valueOf(total));
-        lbl_print_deposit.setText("Deposit paid: €" + String.valueOf(deposit));
-        lbl_print_due.setText("Due:     €" + String.valueOf(due));
+        lbl_print_issued_date.setText("Date: " + order.getIssuedDate());
+        lbl_print_order_no.setText("Order: " + order.getOrderNo());
+        lbl_print_first_name.setText("Customer name: " + order.getFirstName() + " " + order.getLastName());
+        lbl_print_contact.setText("Contact no.: " + order.getContactNo());
+        lbl_print_email.setText("Email: " + order.getEmail());
+        lbl_print_brand.setText("Device brand: " + order.getBrand());
+        lbl_print_model.setText("Device model: " + order.getModel());
+        lbl_print_sn.setText("S/N: " + order.getSerialNumber());
+        txt_pane_important_notes.setText(order.getImportantNotes());
+        txt_pane_print_faults.setText(order.getStringFaults());
+        lbl_print_total_products.setText("Total: €" + String.valueOf(order.getTotal()));
+        lbl_print_due.setText("Due:     €" + String.valueOf(order.getDue()));
+        
+        if (cashDeposit == 0)
+        {
+            lbl_print_deposit.setText("Deposit paid: €" + String.valueOf(order.getDeposit()) + " by Card");
+        }
+        else
+        {
+            lbl_print_deposit.setText("Deposit paid: €" + String.valueOf(order.getDeposit()) + " by Cash ");
+        }
         
         
-        String[] arrayProducts = stringProducts.split(",");
-        String[] arrayQty = stringQty.split(",");
-        String[] arrayUnitPrice = stringUnitPrice.split(",");
-        String[] arrayPriceTotal = stringPriceTotal.split(",");
+        String[] arrayProducts = order.getStringProducts().split(",");
+        String[] arrayQty = order.getStringQty().split(",");
+        String[] arrayUnitPrice = order.getUnitPrice().split(",");
+        String[] arrayPriceTotal = order.getPriceTotal().split(",");
         
         for (String s : arrayProducts)
             txt_pane_products.setText(txt_pane_products.getText() + " - " + s + "\n");
@@ -550,7 +604,7 @@ public class PrintOrder extends javax.swing.JFrame {
                 
                 printerJob.print();
                 
-                JOptionPane.showMessageDialog(this, "Order: " + orderNo + " Printed Successfully", "Print Order", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Order: " + order.getOrderNo() + " Printed Successfully", "Print Order", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
                 
             } catch (PrinterException ex) {
