@@ -33,7 +33,7 @@ public class OrderPayment extends javax.swing.JFrame {
     String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
            deviceModel,  serialNumber, importantNotes, stringFaults, 
            stringProducts, stringQty, stringUnitPrice, stringPriceTotal, issueDate, finishedDate, payDate; 
-    double total, deposit, due, cash, card, change, totalPaid;
+    double total, deposit, due, cash, card, changeTotal, totalPaid;
     
     public OrderPayment() {
         initComponents();
@@ -432,8 +432,15 @@ public class OrderPayment extends javax.swing.JFrame {
         
         else if(txt_cash.getText().isEmpty() && !txt_card.getText().isEmpty())
         {
-            card = Double.parseDouble(txt_card.getText());
-            cash = 0;
+            if (Double.parseDouble(txt_card.getText()) > due) {
+                JOptionPane.showMessageDialog(null, "Payment by Card can't be greater than Total Due !", "Payment",  JOptionPane.ERROR_MESSAGE); 
+                return;
+            }
+            
+            else {
+                card = Double.parseDouble(txt_card.getText());
+                cash = 0;
+            }
         }
         else if (txt_card.getText().isEmpty() && !txt_cash.getText().isEmpty())
         {
@@ -441,65 +448,73 @@ public class OrderPayment extends javax.swing.JFrame {
             card = 0;
         }
         
-        else
+        else if (txt_card.getText().isEmpty() && txt_cash.getText().isEmpty())
         {
+            if (Double.parseDouble(txt_card.getText()) > due) {
+                JOptionPane.showMessageDialog(null, "Payment by Card can't be greater than Total Due !", "Payment",  JOptionPane.ERROR_MESSAGE); 
+                return;
+            }
+            else {
             cash = Double.parseDouble(txt_cash.getText());
             card = Double.parseDouble(txt_card.getText());
+            }
         }
-
-        
+       
         totalPaid = cash + card;
-        double change = totalPaid - total;
+        changeTotal = totalPaid - total;
         
         if ((due - totalPaid) <= 0)
         {
-            lbl_change.setText(String.valueOf(change));
+            lbl_change.setText(String.valueOf(changeTotal));
+            double cashInput = cash - changeTotal;
+            System.out.println("Cash paid: " +cashInput);
+            System.out.println("Card paid: " +card);
+                    
             
-          try {
-            dbConnection();
-
-            String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, stringProducts,"
-                    + "total, deposit, due, payDate, cash, card) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            ps = con.prepareStatement(queryInsert);
-            ps.setString(1, orderNo);
-            ps.setString(2, firstName);
-            ps.setString(3, lastName);
-            ps.setString(4, stringProducts);
-            ps.setDouble(5, total);
-            ps.setDouble(6, deposit);
-            ps.setDouble(7, due);
-            ps.setString(8, payDate);
-            ps.setDouble(9, cash);
-            ps.setDouble(10, card);
-            
-            ps.executeUpdate();
-            
-            String pickedDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDate);
-                
-            String queryUpdate = "UPDATE orderDetails SET pickedDate = ?, status = ?, WHERE orderNo = ?";
-            ps = con.prepareStatement(queryUpdate);
-            ps.setString(1, pickedDate);
-            ps.setString(2, "Paid");
-            ps.setString(3, orderNo);
-            ps.executeUpdate();
-            
-            JOptionPane.showMessageDialog(null,orderNo + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
-            
-            
-            OrderReceipt receipt =  new OrderReceipt(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
-                serialNumber, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total, deposit, due, payDate, cash, card, change);
-            receipt.setVisible(true);
-            
-            this.dispose();
-            
-            } catch (SQLException ex) {
-            Logger.getLogger(OrderPayment.class.getName()).log(Level.SEVERE, null, ex);
-            }
+//          try {
+//            dbConnection();
+//
+//            String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, productService,"
+//                    + "total, deposit, due, payDate, cash, card) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+//            ps = con.prepareStatement(queryInsert);
+//            ps.setString(1, orderNo);
+//            ps.setString(2, firstName);
+//            ps.setString(3, lastName);
+//            ps.setString(4, stringProducts);
+//            ps.setDouble(5, total);
+//            ps.setDouble(6, deposit);
+//            ps.setDouble(7, due);
+//            ps.setString(8, payDate);
+//            ps.setDouble(9, cash);
+//            ps.setDouble(10, card);
+//            
+//            ps.executeUpdate();
+//            
+//            String pickedDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDate);
+//                
+//            String queryUpdate = "UPDATE orderDetails SET pickedDate = ?, status = ? WHERE orderNo = ?";
+//            ps = con.prepareStatement(queryUpdate);
+//            ps.setString(1, pickedDate);
+//            ps.setString(2, "Paid");
+//            ps.setString(3, orderNo);
+//            ps.executeUpdate();
+//            
+//            JOptionPane.showMessageDialog(null,orderNo + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
+//            
+//            
+//            OrderReceipt receipt =  new OrderReceipt(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
+//                serialNumber, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total, deposit, due, payDate, cash, card, changeTotal);
+//            receipt.setVisible(true);
+//            
+//            this.dispose();
+//            
+//            } catch (SQLException ex) {
+//            Logger.getLogger(OrderPayment.class.getName()).log(Level.SEVERE, null, ex);
+//            }
         }
         else
         {
            JOptionPane.showMessageDialog(null, "Values don't match! please, check !", "Order Payment",  JOptionPane.ERROR_MESSAGE);
-           System.out.println("Due after calc: " + (due - totalPaid));
         }
     }//GEN-LAST:event_btn_payActionPerformed
 

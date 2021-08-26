@@ -68,7 +68,7 @@ public class Sales extends javax.swing.JInternalFrame {
     
     String saleNo, firstName,  lastName, contactNo, email, stringProducts, stringQty, 
             stringUnitPrice, stringPriceTotal, saleDate; 
-    double total, cash = 0, card = 0, change;
+    double total, cash = 0, card = 0, changeTotal;
     
     
     public Sales() {
@@ -1138,12 +1138,12 @@ public class Sales extends javax.swing.JInternalFrame {
                     total = rs.getDouble("total");
                     cash = rs.getDouble("cash");
                     card = rs.getDouble("card");
-                    change = rs.getDouble("changeTotal");
+                    changeTotal = rs.getDouble("changeTotal");
                     
                 }
                 
                 SaleDetails saleDetails = new SaleDetails(saleNo, firstName, lastName, contactNo, email,
-                        stringProducts, stringQty, stringUnitPrice, stringPriceTotal, saleDate,total, cash, card, change);
+                        stringProducts, stringQty, stringUnitPrice, stringPriceTotal, saleDate,total, cash, card, changeTotal);
                 
                 
                 //desktop_pane_sales.removeAll();

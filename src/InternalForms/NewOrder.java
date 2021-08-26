@@ -914,7 +914,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void btn_save_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save_orderActionPerformed
         // TODO add your handling code here:
-        
             loadOrderList();
 
             try {
@@ -946,19 +945,22 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 ps.setString(19, order.getIssuedDate());
                 ps.executeUpdate();
 
+                 String removeSpace = "UPDATE orderDetails SET fault = REPLACE (fault, '  ', ' ')";
+                    ps = con.prepareStatement(removeSpace);
+                    ps.executeUpdate();
+                            
                 JOptionPane.showMessageDialog(this, "New order created successfully!");
 
+                cleanAllFields(table_view_faults);
+                cleanAllFields(table_view_products);
+                //Generate new OrderNo.
+                autoID();
+                
                  // Send Order to print class as a constructor
                  new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel,
                     serialNumber, stringFaults, importantNotes, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total,
                     deposit, due, issueDate).setVisible(true);
-
-                cleanAllFields(table_view_faults);
-                cleanAllFields(table_view_products);
-
-                //Generate new OrderNo.
-                autoID();
-
+                 
             } catch (SQLException ex) {
                 Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
            }
@@ -983,7 +985,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
         if (txt_deposit.getText() == null || txt_deposit.getText().trim().isEmpty())
         {
             txt_due.setText(txt_total.getText());
-            txt_deposit.setText(Double.toString(0));
+            //txt_deposit.setText(Double.toString(0));
+            deposit = 0;
         }
         else
         {
@@ -1345,13 +1348,13 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     ps.executeUpdate();
                     txt_brand.requestFocus();
                 }
-                else
-                {
-                    txt_first_name.setText("");
-                    txt_last_name.setText("");
-                    txt_contact.setText("");
-                    txt_email.setText("");
-                }
+//                else
+//                {
+//                    txt_first_name.setText("");
+//                    txt_last_name.setText("");
+//                    txt_contact.setText("");
+//                    txt_email.setText("");
+//                }
             } 
             else
             {

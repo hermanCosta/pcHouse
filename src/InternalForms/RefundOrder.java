@@ -6,6 +6,7 @@
 package InternalForms;
 
 import Forms.OrderNotes;
+import Forms.RefundReceipt;
 import Model.Customer;
 import Model.Order;
 import Model.ProductService;
@@ -26,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -101,8 +103,8 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         this.status = _status;
         this.finishedDate = _finishedDate;
         this.pickedDate = _pickedDate;
-        this.cash = _cash;
-        this.card = _card;
+        this.cash = Math.abs(_cash);
+        this.card = Math.abs(_card);
         this.refundDate = _refundDate;
         
         //Remove borders
@@ -114,6 +116,7 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         loadSelectedOrder();
         tableSettings();
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -136,6 +139,7 @@ public class RefundOrder extends javax.swing.JInternalFrame {
     
    public void loadSelectedOrder()
    {
+       //lbl_refunded_by.setHorizontalTextPosition(SwingConstants.RIGHT);
         
         DefaultTableModel faultsModel = (DefaultTableModel) table_view_faults.getModel();
         faultsModel.setRowCount(0);
@@ -222,7 +226,7 @@ public class RefundOrder extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        desktop_pane_fixed_order = new javax.swing.JDesktopPane();
+        desktop_pane_refund_order = new javax.swing.JDesktopPane();
         panel_order_details = new javax.swing.JPanel();
         btn_print = new javax.swing.JButton();
         lbl_order_no = new javax.swing.JLabel();
@@ -265,7 +269,7 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         setPreferredSize(new java.awt.Dimension(1049, 700));
         setSize(new java.awt.Dimension(1049, 700));
 
-        desktop_pane_fixed_order.setPreferredSize(new java.awt.Dimension(1049, 700));
+        desktop_pane_refund_order.setPreferredSize(new java.awt.Dimension(1049, 700));
 
         panel_order_details.setPreferredSize(new java.awt.Dimension(1049, 700));
 
@@ -561,8 +565,9 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         lbl_refunded_by.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         lbl_refunded_by.setForeground(new java.awt.Color(255, 255, 255));
         lbl_refunded_by.setText("refundedBy");
+        lbl_refunded_by.setToolTipText("");
         lbl_refunded_by.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        panel_order_status.add(lbl_refunded_by, new org.netbeans.lib.awtextra.AbsoluteConstraints(538, 10, 450, -1));
+        panel_order_status.add(lbl_refunded_by, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 10, 410, -1));
 
         jScrollPane_notes.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane_notes.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -742,16 +747,16 @@ public class RefundOrder extends javax.swing.JInternalFrame {
                                     .addComponent(lbl_price)))))))
         );
 
-        desktop_pane_fixed_order.setLayer(panel_order_details, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktop_pane_refund_order.setLayer(panel_order_details, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        javax.swing.GroupLayout desktop_pane_fixed_orderLayout = new javax.swing.GroupLayout(desktop_pane_fixed_order);
-        desktop_pane_fixed_order.setLayout(desktop_pane_fixed_orderLayout);
-        desktop_pane_fixed_orderLayout.setHorizontalGroup(
-            desktop_pane_fixed_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout desktop_pane_refund_orderLayout = new javax.swing.GroupLayout(desktop_pane_refund_order);
+        desktop_pane_refund_order.setLayout(desktop_pane_refund_orderLayout);
+        desktop_pane_refund_orderLayout.setHorizontalGroup(
+            desktop_pane_refund_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panel_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, 1037, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
-        desktop_pane_fixed_orderLayout.setVerticalGroup(
-            desktop_pane_fixed_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        desktop_pane_refund_orderLayout.setVerticalGroup(
+            desktop_pane_refund_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panel_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
@@ -759,11 +764,11 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktop_pane_fixed_order, javax.swing.GroupLayout.DEFAULT_SIZE, 1037, Short.MAX_VALUE)
+            .addComponent(desktop_pane_refund_order, javax.swing.GroupLayout.DEFAULT_SIZE, 1037, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktop_pane_fixed_order, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
+            .addComponent(desktop_pane_refund_order, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
         );
 
         pack();
@@ -883,8 +888,10 @@ public class RefundOrder extends javax.swing.JInternalFrame {
 
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
-        OrderNotes orderNotes = new OrderNotes(orderNo);
-        orderNotes.setVisible(true);
+         RefundReceipt refundReceipt = new RefundReceipt(orderNo, firstName, lastName, contactNo, email, deviceBrand,
+                        deviceModel, serialNumber, stringProducts, stringQty, stringUnitPrice,stringPriceTotal, total, cash,
+                        card, refundDate);
+                refundReceipt.setVisible(true);
     }//GEN-LAST:event_btn_printActionPerformed
 
     private void btn_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notesActionPerformed
@@ -896,7 +903,7 @@ public class RefundOrder extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_notes;
     private javax.swing.JButton btn_print;
-    private javax.swing.JDesktopPane desktop_pane_fixed_order;
+    private javax.swing.JDesktopPane desktop_pane_refund_order;
     private javax.swing.JEditorPane editor_pane_notes;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

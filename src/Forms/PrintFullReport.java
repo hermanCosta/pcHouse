@@ -83,14 +83,30 @@ public class PrintFullReport extends javax.swing.JFrame {
             rowOrders[0] = listOrders.get(i).getOrderNo();
             rowOrders[1] = listOrders.get(i).getFirstName() + " " + listOrders.get(i).getLastName();;
             rowOrders[2] = listOrders.get(i).getProductsService();
-            rowOrders[3] = listOrders.get(i).getDeposit();
-            rowOrders[4] = listOrders.get(i).getDue();
+
+            // check if there's negative values, pass due + deposit if true, else, pass as normal to the list
+            if (listOrders.get(i).getDeposit() < 0 && listOrders.get(i).getDue() < 0)
+            {
+                rowOrders[4] = listOrders.get(i).getDue() + listOrders.get(i).getDeposit();
+                orderDueColumn.add(listOrders.get(i).getDue() + listOrders.get(i).getDeposit());
+                
+                cashList.add(listOrders.get(i).getDeposit());
+                cashList.add(listOrders.get(i).getCash());
+                cardList.add(listOrders.get(i).getCard());
+                rowOrders[3] = 0.0;
+            }
+            else
+            {
+                rowOrders[3] = listOrders.get(i).getDeposit();
+                rowOrders[4] = listOrders.get(i).getDue();
+                orderDueColumn.add(listOrders.get(i).getDue());
+                cashList.add(listOrders.get(i).getCash());
+                cardList.add(listOrders.get(i).getCard());
+                //cashList.add(listOrders.get(i).getCash() - listOrders.get(i).getChangeTotal());
+                
+            }
             
             ordersModel.addRow(rowOrders);
-            
-            cashList.add(listOrders.get(i).getCash());
-            cardList.add(listOrders.get(i).getCard());
-            orderDueColumn.add(listOrders.get(i).getDue());
         }
         
         
@@ -103,7 +119,6 @@ public class PrintFullReport extends javax.swing.JFrame {
             rowSales[3] = listSales.get(i).getTotal();
             salesModel.addRow(rowSales);
             
-            //cashTotal = Double.parseDouble(listSales.get(i).getTotal());
            cashList.add(listSales.get(i).getCash());
            cardList.add(listSales.get(i).getCard());
            salesTotalColumn.add(listSales.get(i).getTotal());
@@ -127,14 +142,15 @@ public class PrintFullReport extends javax.swing.JFrame {
             salesTotal += d;
         
         //Gross total (cash&card    
-        double grossTotal = cashTotal + cardTotal;
+        double grossTotal = ordersTotal + salesTotal;
         
         lbl_full_report.setText("Full Report - " + tillClosingDate);
+        lbl_orders_total.setText("Orders Total ............................... €" + ordersTotal);
+        lbl_sales_total.setText("Sales Total ................................. €" + salesTotal);
         lbl_print_gross_total.setText("Gross Total ................ €" + String.valueOf(grossTotal));
         lbl_print_total_cash.setText("Cash Total .................. €" + String.valueOf(cashTotal));
         lbl_print_total_card.setText("Card Total .................. €" + String.valueOf(cardTotal));
-        lbl_orders_total.setText("Orders Total ............................... €" + ordersTotal);
-        lbl_sales_total.setText("Sales Total ................................. €" + salesTotal);
+        
     }
 
     

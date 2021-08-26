@@ -452,10 +452,7 @@
                           </Group>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jScrollPane12" min="-2" pref="78" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="lbl_unit_price" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="lbl_unit_price" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
@@ -472,7 +469,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="lbl_product_service" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lbl_qty" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="lbl_unit_price" alignment="0" min="-2" max="-2" attributes="0"/>

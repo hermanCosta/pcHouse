@@ -19,29 +19,26 @@ import javax.swing.JOptionPane;
  *
  * @author user
  */
-public class PrintOrder extends javax.swing.JFrame {
+public class RefundReceipt extends javax.swing.JFrame {
 
     /**
      * Creates new form Print
      */
     
-    double deposit, due, total;
+    double total, cash, card;
     String orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, 
-            importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, issuedDate;
+            stringProducts, stringQty, stringUnitPrice, stringPriceTotal, refundDate;
     
-    public PrintOrder() {
+    public RefundReceipt() {
         initComponents();
     }
     
-    public PrintOrder(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, String _deviceBrand, 
-            String _deviceModel, String _serialNumber, String _stringFaults, String _importantNotes, String _stringProducts, 
-            String _stringQty, String _stringUnitPrice, String _stringPriceTotal, 
-            double _total, double _deposit, double _due, String _issuedDate) {
+    public RefundReceipt(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, String _deviceBrand, 
+            String _deviceModel, String _serialNumber, String _stringProducts, String _stringQty, String _stringUnitPrice, 
+            String _stringPriceTotal, double _total,double _cash, double _card, String _refundDate) {
         
         initComponents();
         
-        //txt_area_product_service.setBorder(null);
-        txt_pane_print_faults.setCaretPosition(0);
         
         this.orderNo = _orderNo;
         this.firstName = _firstName;
@@ -51,16 +48,14 @@ public class PrintOrder extends javax.swing.JFrame {
         this.deviceBrand = _deviceBrand;
         this.deviceModel = _deviceModel;
         this.serialNumber = _serialNumber;
-        this.importantNotes = _importantNotes;
-        this.deposit = _deposit;
-        this.due = _due;
-        this.stringFaults = _stringFaults;
         this.stringProducts = _stringProducts;
         this.stringQty = _stringQty;
         this.stringUnitPrice = _stringUnitPrice;
         this.stringPriceTotal = _stringPriceTotal;
         this.total = _total;
-        this.issuedDate = _issuedDate;
+        this.cash = _cash;
+        this.card = _card;
+        this.refundDate = _refundDate;
         
         loadOrderToPrint();
     }
@@ -68,7 +63,14 @@ public class PrintOrder extends javax.swing.JFrame {
     
     public void loadOrderToPrint()
     {
-        lbl_print_issued_date.setText("Date: " + issuedDate);
+         if (cash == 0)
+            lbl_paid_by.setText("Refunded by Card: €" + card);
+        else if (card == 0)
+            lbl_paid_by.setText("Refunded by Cash: €" + cash);
+        else
+            lbl_paid_by.setText("Refunded by Cash: €" + cash + " | Card: €" + card);
+        
+        lbl_refund_date.setText("Date: " + refundDate);
         lbl_print_order_no.setText("Order: " + orderNo);
         lbl_print_first_name.setText("Customer name: " + firstName + " " + lastName);
         lbl_print_contact.setText("Contact no.: " + contactNo);
@@ -76,11 +78,7 @@ public class PrintOrder extends javax.swing.JFrame {
         lbl_print_brand.setText("Device brand: " + deviceBrand);
         lbl_print_model.setText("Device model: " + deviceModel);
         lbl_print_sn.setText("S/N: " + serialNumber);
-        txt_pane_important_notes.setText(importantNotes);
-        txt_pane_print_faults.setText(stringFaults);
         lbl_print_total_products.setText("Total: €" + String.valueOf(total));
-        lbl_print_deposit.setText("Deposit paid: €" + String.valueOf(deposit));
-        lbl_print_due.setText("Due:     €" + String.valueOf(due));
         
         
         String[] arrayProducts = stringProducts.split(",");
@@ -121,18 +119,9 @@ public class PrintOrder extends javax.swing.JFrame {
         lbl_print_model = new javax.swing.JLabel();
         lbl_print_sn = new javax.swing.JLabel();
         lbl_print_total_products = new javax.swing.JLabel();
-        lbl_print_issued_date = new javax.swing.JLabel();
-        lbl_important_notes = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        txt_pane_important_notes = new javax.swing.JTextPane();
-        lbl_faults = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        txt_pane_print_faults = new javax.swing.JTextPane();
-        lbl_print_deposit = new javax.swing.JLabel();
-        lbl_print_due = new javax.swing.JLabel();
         line_customer_signature = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        lbl_refund_receipt = new javax.swing.JLabel();
         panel_header = new javax.swing.JPanel();
         lbl_logo_icon1 = new javax.swing.JLabel();
         lbl_land_line_number1 = new javax.swing.JLabel();
@@ -152,6 +141,8 @@ public class PrintOrder extends javax.swing.JFrame {
         txt_pane_products = new javax.swing.JTextPane();
         jScrollPane10 = new javax.swing.JScrollPane();
         txt_pane_total = new javax.swing.JTextPane();
+        lbl_paid_by = new javax.swing.JLabel();
+        lbl_refund_date = new javax.swing.JLabel();
         btn_print = new javax.swing.JButton();
         lbl_order_print_view = new javax.swing.JLabel();
 
@@ -178,47 +169,10 @@ public class PrintOrder extends javax.swing.JFrame {
         lbl_print_total_products.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
         lbl_print_total_products.setText("totalProducts");
 
-        lbl_print_issued_date.setFont(new java.awt.Font("Lucida Grande", 0, 9)); // NOI18N
-        lbl_print_issued_date.setText("issuedDate ");
-        lbl_print_issued_date.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-
-        lbl_important_notes.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
-        lbl_important_notes.setText("Important Notes:");
-
-        jScrollPane1.setBorder(null);
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        jScrollPane1.setEnabled(false);
-
-        txt_pane_important_notes.setEditable(false);
-        txt_pane_important_notes.setBorder(null);
-        txt_pane_important_notes.setFont(new java.awt.Font("Lucida Grande", 0, 9)); // NOI18N
-        txt_pane_important_notes.setFocusable(false);
-        jScrollPane1.setViewportView(txt_pane_important_notes);
-
-        lbl_faults.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
-        lbl_faults.setText("Fault:");
-
-        jScrollPane2.setBorder(null);
-        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        jScrollPane2.setEnabled(false);
-
-        txt_pane_print_faults.setEditable(false);
-        txt_pane_print_faults.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
-        txt_pane_print_faults.setRequestFocusEnabled(false);
-        jScrollPane2.setViewportView(txt_pane_print_faults);
-
-        lbl_print_deposit.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
-        lbl_print_deposit.setText("deposit");
-
-        lbl_print_due.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
-        lbl_print_due.setText("due");
-
         jLabel1.setText("Customer Signature");
 
-        jLabel2.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
-        jLabel2.setText("Repair Order");
+        lbl_refund_receipt.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        lbl_refund_receipt.setText("Refund Receipt");
 
         panel_header.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -378,6 +332,12 @@ public class PrintOrder extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        lbl_paid_by.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
+        lbl_paid_by.setText("paidBy");
+
+        lbl_refund_date.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
+        lbl_refund_date.setText("refundDate");
+
         javax.swing.GroupLayout panel_print_orderLayout = new javax.swing.GroupLayout(panel_print_order);
         panel_print_order.setLayout(panel_print_orderLayout);
         panel_print_orderLayout.setHorizontalGroup(
@@ -389,15 +349,7 @@ public class PrintOrder extends javax.swing.JFrame {
                         .addGap(10, 10, 10)
                         .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_print_orderLayout.createSequentialGroup()
-                                .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lbl_print_total_products, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lbl_print_deposit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lbl_print_due, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap())
-                            .addGroup(panel_print_orderLayout.createSequentialGroup()
                                 .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(lbl_faults, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane1)
                                     .addComponent(lbl_print_model, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(lbl_print_order_no, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lbl_print_first_name, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -405,16 +357,18 @@ public class PrintOrder extends javax.swing.JFrame {
                                     .addComponent(lbl_print_email, javax.swing.GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE)
                                     .addComponent(lbl_print_brand, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(lbl_print_sn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lbl_important_notes, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane2)
                                     .addComponent(panel_products, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(0, 16, Short.MAX_VALUE))))
-                    .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(lbl_print_issued_date)
-                        .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(0, 16, Short.MAX_VALUE))
+                            .addGroup(panel_print_orderLayout.createSequentialGroup()
+                                .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lbl_print_total_products, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lbl_paid_by, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lbl_refund_date, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap())))
+                    .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(panel_print_orderLayout.createSequentialGroup()
                 .addGap(236, 236, 236)
-                .addComponent(jLabel2)
+                .addComponent(lbl_refund_receipt)
                 .addGap(10, 10, 10))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -432,11 +386,9 @@ public class PrintOrder extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
-                .addComponent(jLabel2)
+                .addComponent(lbl_refund_receipt)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_print_order_no, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_print_issued_date))
+                .addComponent(lbl_print_order_no, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(4, 4, 4)
                 .addComponent(lbl_print_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(4, 4, 4)
@@ -450,22 +402,14 @@ public class PrintOrder extends javax.swing.JFrame {
                 .addGap(4, 4, 4)
                 .addComponent(lbl_print_sn)
                 .addGap(18, 18, 18)
-                .addComponent(lbl_important_notes)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_faults)
-                .addGap(0, 0, 0)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(panel_products, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lbl_print_total_products)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_print_deposit)
+                .addComponent(lbl_paid_by)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_print_due)
-                .addGap(52, 52, 52)
+                .addComponent(lbl_refund_date)
+                .addGap(100, 100, 100)
                 .addComponent(line_customer_signature, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(jLabel1)
@@ -522,7 +466,7 @@ public class PrintOrder extends javax.swing.JFrame {
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         PrinterJob printerJob = PrinterJob.getPrinterJob();
-        printerJob.setJobName("Order: " + this.orderNo);
+        printerJob.setJobName("RefundReceipt" + this.orderNo);
         
         PageFormat format = printerJob.getPageFormat(null);
         
@@ -550,11 +494,11 @@ public class PrintOrder extends javax.swing.JFrame {
                 
                 printerJob.print();
                 
-                JOptionPane.showMessageDialog(this, "Order: " + orderNo + " Printed Successfully", "Print Order", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Refund Receipt " + orderNo + " Printed Successfully", "Print Refund", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
                 
             } catch (PrinterException ex) {
-                Logger.getLogger(PrintOrder.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(RefundReceipt.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btn_printActionPerformed
@@ -578,21 +522,23 @@ public class PrintOrder extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PrintOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RefundReceipt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PrintOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RefundReceipt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PrintOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RefundReceipt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PrintOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RefundReceipt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PrintOrder().setVisible(true);
+                new RefundReceipt().setVisible(true);
             }
         });
     }
@@ -600,34 +546,29 @@ public class PrintOrder extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_print;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane12;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JLabel lbl_address1;
-    private javax.swing.JLabel lbl_faults;
-    private javax.swing.JLabel lbl_important_notes;
     private javax.swing.JLabel lbl_land_line_number1;
     private javax.swing.JLabel lbl_logo_icon1;
     private javax.swing.JLabel lbl_mobile_number1;
     private javax.swing.JLabel lbl_order_print_view;
+    private javax.swing.JLabel lbl_paid_by;
     private javax.swing.JLabel lbl_print_brand;
     private javax.swing.JLabel lbl_print_contact;
-    private javax.swing.JLabel lbl_print_deposit;
-    private javax.swing.JLabel lbl_print_due;
     private javax.swing.JLabel lbl_print_email;
     private javax.swing.JLabel lbl_print_first_name;
-    private javax.swing.JLabel lbl_print_issued_date;
     private javax.swing.JLabel lbl_print_model;
     private javax.swing.JLabel lbl_print_order_no;
     private javax.swing.JLabel lbl_print_sn;
     private javax.swing.JLabel lbl_print_total_products;
     private javax.swing.JLabel lbl_product_service;
     private javax.swing.JLabel lbl_qty;
+    private javax.swing.JLabel lbl_refund_date;
+    private javax.swing.JLabel lbl_refund_receipt;
     private javax.swing.JLabel lbl_total;
     private javax.swing.JLabel lbl_unit_price;
     private javax.swing.JSeparator line_customer_signature;
@@ -635,8 +576,6 @@ public class PrintOrder extends javax.swing.JFrame {
     private javax.swing.JPanel panel_header;
     private javax.swing.JPanel panel_print_order;
     private javax.swing.JPanel panel_products;
-    private javax.swing.JTextPane txt_pane_important_notes;
-    private javax.swing.JTextPane txt_pane_print_faults;
     private javax.swing.JTextPane txt_pane_products;
     private javax.swing.JTextPane txt_pane_qty;
     private javax.swing.JTextPane txt_pane_total;

@@ -9,6 +9,7 @@ import Forms.PrintOrder;
 import Forms.OrderPayment;
 import Forms.OrderNotes;
 import Forms.OrderReceipt;
+import Forms.RefundReceipt;
 import Model.Customer;
 import Model.Order;
 import Model.ProductService;
@@ -915,11 +916,11 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(this, "Order " + orderNo + " Refunded Successfully!", 
                         "Refund Order", JOptionPane.INFORMATION_MESSAGE);
                 
-                RefundOrder refundOrder = new RefundOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
-                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
-                        stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, pickedDate, cash, card, refundDate);
-                desktop_pane_fixed_order.removeAll();
-                desktop_pane_fixed_order.add(refundOrder).setVisible(true);
+                RefundReceipt refundReceipt = new RefundReceipt(orderNo, firstName, lastName, contactNo, email, deviceBrand,
+                        deviceModel, serialNumber, stringProducts, stringQty, stringUnitPrice,stringPriceTotal, total, cash,
+                        card, refundDate);
+                refundReceipt.setVisible(true);
+                
             } catch (SQLException ex) {
                 Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -137,13 +137,13 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
                         ps.setString(1, productService.getProductService());
                         ps.setDouble(2, productService.getPrice());
-                        ps.setInt(3, productService.getQty());
+                        ps.setInt(3,  productService.getQty());
                         ps.setString(4, productService.getNotes());
                         ps.setString(5, productService.getCategory());
-
                         ps.executeUpdate();
 
                         JOptionPane.showMessageDialog(this, "Item added successfully!");
+                        
 
                         displayProductList();
                         clearFields();

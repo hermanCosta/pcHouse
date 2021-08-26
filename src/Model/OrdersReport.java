@@ -11,11 +11,11 @@ package Model;
  */
 public class OrdersReport {
     
-    String orderNo, firstName, lastName, productsService, deposit;
-    double due, cash, card;
+    String orderNo, firstName, lastName, productsService;
+    double deposit, due, cash, card, changeTotal;
     
     public OrdersReport(String _orderNo, String _firstName, String _lastName, String _productsService,
-                String _deposit, double _due, double _cash, double _card) {
+                double _deposit, double _due, double _cash, double _card, double _changeTotal) {
         
         this.orderNo = _orderNo;
         this.firstName = _firstName;
@@ -25,6 +25,7 @@ public class OrdersReport {
         this.due = _due;
         this.cash = _cash;
         this.card = _card;
+        this.changeTotal = _changeTotal;
         
     }
 
@@ -77,11 +78,11 @@ public class OrdersReport {
     }
 
     
-    public String getDeposit() {
+    public double getDeposit() {
         return deposit;
     }
 
-    public void setDeposit(String deposit) {
+    public void setDeposit(double deposit) {
         this.deposit = deposit;
     }
 
@@ -92,4 +93,14 @@ public class OrdersReport {
     public void setDue(double due) {
         this.due = due;
     }
+
+    public double getChangeTotal() {
+        return changeTotal;
+    }
+
+    public void setChangeTotal(double changeTotal) {
+        this.changeTotal = changeTotal;
+    }
+    
+    
 }

@@ -149,13 +149,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
    public void loadSelectedOrder()
    {
-       DefaultTableModel faultsModel = (DefaultTableModel) table_view_faults.getModel();
-       faultsModel.setRowCount(0);
-       
-       DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
-
-        TableColumnModel tableModel = table_view_products.getColumnModel();
-        
         lbl_auto_order_no.setText(this.orderNo);
         txt_first_name.setText(this.firstName);
         txt_last_name.setText(this.lastName);
@@ -170,30 +163,25 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         txt_due.setText(String.valueOf(this.due));
         lbl_issued_date_time.setText("Created on: " + this.issueDate);
         
-        // Array for holding database String 
-        String[] arrayFaults = stringFaults.split(",");
-        String[] arrayProducts = stringProducts.split(",");
-        String[] arrayQty = stringQty.split(",");
-        String[] arrayUnitPrice = stringUnitPrice.split(",");
-        String[] arrayPriceTotal = stringPriceTotal.split(",");
-        
-        for (Object objFault : arrayFaults)
-        {
-           faultsModel.addRow(new Object[] {objFault});
-        }
-        
         // Pass arrayPrices to a vector and add as a new column
+        Vector vecFaults = new Vector();
         Vector vecProducts = new Vector();
         Vector vecQty = new Vector();
         Vector vecUnitPrice = new Vector();
         Vector vecPriceTotal = new Vector();
         
-        vecProducts.addAll(Arrays.asList(arrayProducts)); 
-        vecQty.addAll(Arrays.asList(arrayQty));
-        vecUnitPrice.addAll(Arrays.asList(arrayUnitPrice)); 
-        vecPriceTotal.addAll(Arrays.asList(arrayPriceTotal)); 
+        vecFaults.addAll(Arrays.asList(stringFaults.split(",")));
+        vecProducts.addAll(Arrays.asList(stringProducts.replaceAll("   " , " ").split(",")));
+        vecQty.addAll(Arrays.asList(stringQty.replaceAll("  " , " ").split(",")));
+        vecUnitPrice.addAll(Arrays.asList(stringUnitPrice.replaceAll("  " , " ").split(",")));
+        vecPriceTotal.addAll(Arrays.asList(stringPriceTotal.replaceAll("  " , " ").split(",")));
+        
+       DefaultTableModel faultsModel = (DefaultTableModel) table_view_faults.getModel();
+       DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
+       TableColumnModel tableModel = table_view_products.getColumnModel();
         
         //Add New Columns into the table_view_products with data as a vector
+        faultsModel.addColumn("Faults Description", vecFaults);
         productsModel.addColumn("Product | Service", vecProducts);
         productsModel.addColumn("Qty", vecQty);
         productsModel.addColumn("Unit €", vecUnitPrice);
@@ -204,7 +192,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         tableModel.getColumn(2).setMaxWidth(80);
         tableModel.getColumn(3).setMaxWidth(80);
         
+        // Disable editing
         table_view_products.setDefaultEditor(Object.class, null);
+        table_view_faults.setDefaultEditor(Object.class, null);
    }
    
    
@@ -414,7 +404,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         setPreferredSize(new java.awt.Dimension(1049, 700));
         setSize(new java.awt.Dimension(1049, 700));
 
-        desktop_pane_order_details.setBackground(new java.awt.Color(255, 255, 255));
         desktop_pane_order_details.setPreferredSize(new java.awt.Dimension(1049, 700));
 
         panel_order_details.setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -618,24 +607,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Fault Description"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false
-            };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
             }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        ));
         table_view_faults.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 table_view_faultsMouseClicked(evt);
@@ -952,16 +926,11 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(desktop_pane_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, 1037, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(desktop_pane_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, 1037, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(desktop_pane_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE))
+            .addComponent(desktop_pane_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
         );
 
         pack();
@@ -1385,7 +1354,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
            
             try {
                 dbConnection();
-                String query = "UPDATE orderDetails SET status ?, finishedDate = ? WHERE orderNo = ?";
+                String query = "UPDATE orderDetails SET status = ?, finishedDate = ? WHERE orderNo = ?";
                 ps = con.prepareStatement(query);
                 ps.setString(1, status);
                 ps.setString(2, finishedDate);
@@ -1417,8 +1386,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
     private void btn_not_fixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_not_fixActionPerformed
         // TODO add your handling code here:
-       int confirmFixing = JOptionPane.showConfirmDialog(null, "Do you really want to Tag Order: "
-               + orderNo + " as 'NOT FIXABLE ORDER' ?", "Update Order", JOptionPane.YES_NO_OPTION);
+       int confirmFixing = JOptionPane.showConfirmDialog(this, "Do you really want to Tag Order: "
+               + orderNo + " as 'NOT FIXED ORDER' ?", "Update Order", JOptionPane.YES_NO_OPTION);
        
        if (confirmFixing == 0)
        {
@@ -1493,7 +1462,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 vecUpdateUnitPrice.add(table_view_products.getValueAt(j, 2));
                 vecUpdatePriceTotal.add(table_view_products.getValueAt(j, 3));
             }
-
+            
               //Remove Brackets from the vector to pass to Database  
              stringFaults = vecUpdateFaults.toString().replace("[", "").replace("]", "");
              stringProducts = vecUpdateProducts.toString().replace("[", "").replace("]", "");
@@ -1501,7 +1470,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
              stringUnitPrice = vecUpdateUnitPrice.toString().replace("[", "").replace("]", "");
              stringPriceTotal = vecUpdatePriceTotal.toString().replace("[", "").replace("]", "");
 
-             // Remove all commas, and set as range of Char indor to campare data to th DB
+             // Remove all commas, and set as range of Char in order to campare data to DB
             String tableFaults = stringFaults.replace(",","").replace(" ", "");
             String tableProducts = stringProducts.replace(",", "").replace(" ", "");
             String tableQty = stringQty.replace(",", "").replace(" ", "");
@@ -1548,7 +1517,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                             String queryUpdate = "UPDATE orderDetails SET firstName = ?, lastName = ? , contactNo = ?, email = ?,"
                                     + " deviceBrand = ?, deviceModel = ?, serialNumber = ?, fault = ?, importantNotes = ?, "
                                     +"productService = ?, qty = ?, unitPrice = ?, priceTotal = ?, deposit = ?, total = ?, due = ?, "
-                                    + "issuedDate = ? WHERE orderNo = ?";
+                                    + "issuedDate = ? WHERE orderNo = ? ";
                             ps = con.prepareStatement(queryUpdate);
                             ps.setString(1, firstName);
                             ps.setString(2, lastName);
@@ -1569,8 +1538,21 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                             ps.setString(17, updateDate);
                             ps.setString(18, orderNo);
                             ps.executeUpdate();
+                            
+                            String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "
+                                    + "productService = REPLACE(productService, '  ', ' '), "
+                                    + "qty = REPLACE(qty, '  ', ' '), "
+                                    + "unitPrice = REPLACE(unitPrice, '  ', ' '), "
+                                    + "total = REPLACE(total, '  ', ' ')";
+                            ps = con.prepareStatement(removeSpace);
+                            ps.executeUpdate();
 
                             JOptionPane.showMessageDialog(this,  "Order " + orderNo + " Updated Successfully!");
+                            
+                            this.dispose();
+                            this.setVisible(true);
+                            
+                            
                         }
                     } 
                 }
@@ -1603,6 +1585,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 getPriceSum();
             }
         }
+        
     }//GEN-LAST:event_table_view_productsMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -99,8 +99,10 @@ public class TillClosing extends javax.swing.JInternalFrame {
             
             while (rs.next())
             {
+                // Before adding to the list take the changeTotal deducted from cash
+//                double cash = rs.getDouble("cash") - rs.getDouble("changeTotal");
                 salesReport = new SalesReport(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
-                        rs.getString("productService"), rs.getDouble("total"), rs.getDouble("cash"), rs.getDouble("card"));
+                        rs.getString("productService"), rs.getDouble("total"), rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"));
                 
                 salesList.add(salesReport);
             }
@@ -127,8 +129,10 @@ public class TillClosing extends javax.swing.JInternalFrame {
             
                 while (rs.next())
                 {
+                   //double cash = rs.getDouble("cash") - rs.getDouble("changeTotal");
                    ordersReport = new OrdersReport(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"),
-                            rs.getString("productService"), rs.getString("deposit"), rs.getDouble("due"),rs.getDouble("cash"), rs.getDouble("card"));
+                            rs.getString("productService"), rs.getDouble("deposit"), rs.getDouble("due"), rs.getDouble("cash"), 
+                           rs.getDouble("card"), rs.getDouble("changeTotal"));
 
                    ordersList.add(ordersReport);
                 }
@@ -143,6 +147,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
       {
         panel_orders.setVisible(true);
         panel_sales.setVisible(false);
+        
+        
         
         // Get Current date for checking cash entries
          Date pickedDate = pickedDate = date_picker.getDate();
@@ -161,22 +167,42 @@ public class TillClosing extends javax.swing.JInternalFrame {
         DefaultTableModel ordersModel= (DefaultTableModel) table_view_orders.getModel();
         ordersModel.setRowCount(0);
             
+        
+        
             // this object holds each range of elements for setting into the table
             Object[] rowOrders = new Object[5];
             for (int i = 0; i < listOrders.size() ; i++)
+        {
+            rowOrders[0] = listOrders.get(i).getOrderNo();
+            rowOrders[1] = listOrders.get(i).getFirstName() + " " + listOrders.get(i).getLastName();;
+            rowOrders[2] = listOrders.get(i).getProductsService();
+            
+
+            // check if there's negative values, pass due + deposit if true, else, pass as normal to the list
+            // set deposit row = 0, and dont get changeTotal for calculation
+            if (listOrders.get(i).getDeposit() < 0 && listOrders.get(i).getDue() < 0)
             {
-                rowOrders[0] = listOrders.get(i).getOrderNo();
-                rowOrders[1] = listOrders.get(i).getFirstName() + " " + listOrders.get(i).getLastName();;
-                rowOrders[2] = listOrders.get(i).getProductsService();
-                rowOrders[3] = listOrders.get(i).getDeposit();
-                rowOrders[4] = listOrders.get(i).getDue();
-
-                ordersModel.addRow(rowOrders);
-
+                rowOrders[4] = listOrders.get(i).getDue() + listOrders.get(i).getDeposit();
+                orderDueColumn.add(listOrders.get(i).getDue() + listOrders.get(i).getDeposit());
+                
+                cashList.add(listOrders.get(i).getDeposit());
                 cashList.add(listOrders.get(i).getCash());
                 cardList.add(listOrders.get(i).getCard());
-                orderDueColumn.add(listOrders.get(i).getDue());
+                rowOrders[3] = 0.0;
             }
+            else
+            {
+                rowOrders[3] = listOrders.get(i).getDeposit();
+                rowOrders[4] = listOrders.get(i).getDue();
+                orderDueColumn.add(listOrders.get(i).getDue());
+                cashList.add(listOrders.get(i).getCash());
+                cardList.add(listOrders.get(i).getCard());
+                //cashList.add(listOrders.get(i).getCash() - listOrders.get(i).getChangeTotal());
+                
+            }
+            
+            ordersModel.addRow(rowOrders);
+        }
 
             //Loop the List and sum Cash payments
             double cashTotal = 0;
@@ -192,7 +218,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 ordersTotal += d;
 
             //Gross total (cash&card    
-            double grossTotal = cashTotal + cardTotal;
+            double grossTotal = ordersTotal;
 
             lbl_till_closing_date.setText("Orders Report - " + tillClosingDate);
             lbl_orders_total.setText("Orders Total ............................... €" + ordersTotal);
@@ -236,7 +262,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
         scroll_pane_table_orders = new javax.swing.JScrollPane();
         table_view_orders = new javax.swing.JTable();
         panel_sales = new javax.swing.JPanel();
-        lbl_sales_total = new javax.swing.JLabel();
         scroll_pane_table_sales = new javax.swing.JScrollPane();
         table_view_sales = new javax.swing.JTable();
         lbl_till_closing_date = new javax.swing.JLabel();
@@ -457,10 +482,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
         panel_sales.setBackground(new java.awt.Color(255, 255, 255));
         panel_sales.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
 
-        lbl_sales_total.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
-        lbl_sales_total.setText("salesTotal");
-        lbl_sales_total.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-
         scroll_pane_table_sales.setEnabled(false);
 
         table_view_sales.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
@@ -496,18 +517,12 @@ public class TillClosing extends javax.swing.JInternalFrame {
         panel_salesLayout.setHorizontalGroup(
             panel_salesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(scroll_pane_table_sales, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_salesLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbl_sales_total)
-                .addGap(20, 20, 20))
         );
         panel_salesLayout.setVerticalGroup(
             panel_salesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_salesLayout.createSequentialGroup()
                 .addComponent(scroll_pane_table_sales, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_sales_total)
-                .addContainerGap())
+                .addGap(29, 29, 29))
         );
 
         panel_orders_sales.add(panel_sales, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 530, 520));
@@ -684,6 +699,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
             DefaultTableModel salesModel= (DefaultTableModel) table_view_sales.getModel();
             salesModel.setRowCount(0);
 
+            
 
             Object[] rowSales = new Object[4];
             for (int i = 0 ; i < listSales.size(); i++)
@@ -693,9 +709,12 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 rowSales[2] = listSales.get(i).getProductsService();
                 rowSales[3] = listSales.get(i).getTotal();
                 salesModel.addRow(rowSales);
-
-                //cashTotal = Double.parseDouble(listSales.get(i).getTotal());
-               cashList.add(listSales.get(i).getCash());
+                
+                if (listSales.get(i).getTotal() < 0)
+                    cashList.add(listSales.get(i).getCash());
+                else
+                    cashList.add(listSales.get(i).getCash() - listSales.get(i).getChangeTotal());
+               
                cardList.add(listSales.get(i).getCard());
                salesTotalColumn.add(listSales.get(i).getTotal());
             }
@@ -714,7 +733,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 salesTotal += d;
 
             //Gross total (cash&card    
-            double grossTotal = cashTotal + cardTotal;
+            double grossTotal = salesTotal;
 
             lbl_till_closing_date.setText("Sales Report - " + tillClosingDate);
             lbl_orders_total.setText("Sales Total ............................... €" + salesTotal);
@@ -796,7 +815,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lbl_print_gross_total;
     private javax.swing.JLabel lbl_print_total_card;
     private javax.swing.JLabel lbl_print_total_cash;
-    private javax.swing.JLabel lbl_sales_total;
     private javax.swing.JLabel lbl_till_closing_date;
     private javax.swing.JSeparator line_header;
     private javax.swing.JPanel panel_calendar;

@@ -73,7 +73,7 @@ public class OrderReceipt extends javax.swing.JFrame {
         lbl_print_model.setText("Device model: " + deviceModel);
         lbl_print_sn.setText("S/N: " + serialNumber);
         lbl_print_total_products.setText("Total: €" + String.valueOf(total));
-        lbl_order_picked_on.setText("Order picked on: " + payDate);
+        lbl_date.setText("Date: " + payDate);
         lbl_change.setText("Change: €" + changeTotal);
         
         
@@ -125,7 +125,7 @@ public class OrderReceipt extends javax.swing.JFrame {
         lbl_print_total_products = new javax.swing.JLabel();
         lbl_receipt = new javax.swing.JLabel();
         lbl_paid_by = new javax.swing.JLabel();
-        lbl_order_picked_on = new javax.swing.JLabel();
+        lbl_date = new javax.swing.JLabel();
         panel_header = new javax.swing.JPanel();
         lbl_logo_icon1 = new javax.swing.JLabel();
         lbl_land_line_number1 = new javax.swing.JLabel();
@@ -178,8 +178,8 @@ public class OrderReceipt extends javax.swing.JFrame {
         lbl_paid_by.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
         lbl_paid_by.setText("paidBy");
 
-        lbl_order_picked_on.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
-        lbl_order_picked_on.setText("issueDate");
+        lbl_date.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
+        lbl_date.setText("date");
 
         panel_header.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -357,7 +357,7 @@ public class OrderReceipt extends javax.swing.JFrame {
                     .addComponent(lbl_print_sn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_print_total_products, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
                     .addComponent(lbl_paid_by, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_order_picked_on, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_date, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panel_products, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_change, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 10, Short.MAX_VALUE))
@@ -401,7 +401,7 @@ public class OrderReceipt extends javax.swing.JFrame {
                 .addGap(3, 3, 3)
                 .addComponent(lbl_change)
                 .addGap(3, 3, 3)
-                .addComponent(lbl_order_picked_on)
+                .addComponent(lbl_date)
                 .addContainerGap(41, Short.MAX_VALUE))
         );
 
@@ -550,10 +550,10 @@ public class OrderReceipt extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JLabel lbl_address1;
     private javax.swing.JLabel lbl_change;
+    private javax.swing.JLabel lbl_date;
     private javax.swing.JLabel lbl_land_line_number1;
     private javax.swing.JLabel lbl_logo_icon1;
     private javax.swing.JLabel lbl_mobile_number1;
-    private javax.swing.JLabel lbl_order_picked_on;
     private javax.swing.JLabel lbl_paid_by;
     private javax.swing.JLabel lbl_payment_print_view;
     private javax.swing.JLabel lbl_print_brand;

@@ -11,11 +11,11 @@ package Model;
  */
 public class SalesReport {
     String saleNo, firstName, lastName, productsService; 
-    double total, cash, card;
+    double total, cash, card, changeTotal;
     
     
     public SalesReport(String _saleNo, String _firstName, String _lastName, 
-            String _productsService,  double _total, double _cash, double _card) {
+            String _productsService,  double _total, double _cash, double _card, double _changeTotal) {
         
         this.saleNo = _saleNo;
         this.firstName = _firstName;
@@ -24,6 +24,8 @@ public class SalesReport {
         this.total = _total;
         this.cash = _cash;
         this.card = _card;
+        this.changeTotal = _changeTotal;
+        
     }
 
     public String getSaleNo() {
@@ -82,9 +84,12 @@ public class SalesReport {
     public void setCard(double card) {
         this.card = card;
     }
-    
-    
 
-    
+    public double getChangeTotal() {
+        return changeTotal;
+    }
 
+    public void setChangeTotal(double changeTotal) {
+        this.changeTotal = changeTotal;
+    }
 }
