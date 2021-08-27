@@ -72,9 +72,10 @@ public class NewOrder extends javax.swing.JInternalFrame {
     
     String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
            deviceModel,  serialNumber, importantNotes, stringFaults, 
-           stringProducts, stringPriceTotal, stringQty, stringUnitPrice, issueDate, status; 
+           stringProducts, stringPriceTotal, stringQty, stringUnitPrice, issueDate, status,
+           finishDate = "", pickDate = "", refundDate = ""; 
 
-    double total, deposit, cashDeposit, cardDeposit, due;
+    double total, deposit, cashDeposit = 0, cardDeposit = 0, due;
     
     public NewOrder() {
         initComponents();
@@ -319,10 +320,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
         return true;
     }
     
-    public ArrayList<Order> loadOrderList()
+    public void loadOrderList()
     {
-        ArrayList<Order> orderList = new ArrayList<>();
-        
         if (txt_first_name.getText().trim().isEmpty() | txt_last_name.getText().trim().isEmpty() | 
                 txt_contact.getText().trim().isEmpty() | txt_brand.getText().trim().isEmpty() | 
                 txt_model.getText().trim().isEmpty() | txt_serial_number.getText().trim().isEmpty() | 
@@ -342,12 +341,12 @@ public class NewOrder extends javax.swing.JInternalFrame {
             serialNumber = txt_serial_number.getText();
             importantNotes = editor_pane_notes.getText();
             
-            if (txt_deposit.getText().trim().isEmpty())
+            if (txt_deposit != null || !txt_deposit.getText().trim().isEmpty())
             {
-                deposit = 0;
+                deposit = Double.parseDouble(txt_deposit.getText());
                 
             } else {
-                deposit = Double.parseDouble(txt_deposit.getText());
+                deposit = 0;
             }
             
             due = Double.parseDouble(txt_due.getText());
@@ -383,12 +382,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
             
             order = new Order(orderNo, firstName, lastName, contactNo, email, deviceBrand, 
                     deviceModel, serialNumber,importantNotes, stringFaults, stringProducts, 
-                    stringQty, stringUnitPrice, stringPriceTotal, total, deposit, due, status, issueDate);
-            
-            orderList.add(order);
+                    stringQty, stringUnitPrice, stringPriceTotal, total, deposit, cashDeposit, 
+                    cardDeposit, due, status, issueDate, finishDate, pickDate, refundDate);
         }
-        
-        return orderList;
     }
     
     
@@ -926,9 +922,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
         
         if (order.getDeposit() <= 0)
         {
-            cashDeposit = 0;
-            cardDeposit = 0;
-            
             int confirmNewOrder = JOptionPane.showConfirmDialog(this, "Do you Want to Save this new order " + order.getOrderNo() +" ?");
             if (confirmNewOrder == 0)
             {
@@ -936,8 +929,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     dbConnection();
                     String query = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
                             + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
-                            + "productService, qty, unitPrice, priceTotal, total, cashDeposit, cardDeposit, "
-                            + "due, status, issuedDate) VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                            + "productService, qty, unitPrice, priceTotal, total, deposit, cashDeposit, cardDeposit, "
+                            + "due, status, issueDate) VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                     ps = con.prepareStatement(query);
                     ps.setString(1, order.getOrderNo());
@@ -955,11 +948,10 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     ps.setString(13, order.getUnitPrice());
                     ps.setString(14, order.getPriceTotal());
                     ps.setDouble(15, order.getTotal());
-                    ps.setDouble(16, cashDeposit);
-                    ps.setDouble(17, cardDeposit);
-                    ps.setDouble(18, order.getDue());
-                    ps.setString(19, order.getStatus());
-                    ps.setString(20, order.getIssuedDate());
+                    ps.setDouble(16, order.getDeposit());
+                    ps.setDouble(17, order.getDue());
+                    ps.setString(18, order.getStatus());
+                    ps.setString(19, order.getIssueDate());
                     ps.executeUpdate();
 
                      String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "
@@ -978,13 +970,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     autoID();
 
 
-                    PrintOrder printOrder = new PrintOrder(order, order.getDeposit());
+                    PrintOrder printOrder = new PrintOrder(order);
                         printOrder.setVisible(true);
-
-                     // Send Order to print class as a constructor
-    //                 new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel,
-    //                    serialNumber, stringFaults, importantNotes, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total,
-    //                    deposit, due, issueDate).setVisible(true);
 
                 } catch (SQLException ex) {
                     Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);

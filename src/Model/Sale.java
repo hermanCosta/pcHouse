@@ -11,12 +11,12 @@ package Model;
  */
 public class Sale extends Customer {
     
-    String saleNo, productService, qty, unitPrice, priceTotal, sellingDate;
+    String saleNo, productService, qty, unitPrice, priceTotal, saleDate;
     double total;
     
     public Sale(String _saleNo, String _firstName, String _lastName, String _contactNo, String _email,
             String _productService, String _qty, String _unitPrice, String _priceTotal, 
-            double _total, String _sellingDate) {
+            double _total, String _saleDate) {
         super(_firstName, _lastName, _contactNo, _email);
         
         this.saleNo = _saleNo;
@@ -24,7 +24,7 @@ public class Sale extends Customer {
         this.qty = _qty;
         this.unitPrice = _unitPrice;
         this.total = _total;
-        this.sellingDate = _sellingDate;
+        this.saleDate = _saleDate;
         
     }
 
@@ -32,7 +32,7 @@ public class Sale extends Customer {
         return saleNo;
     }
 
-    public void setSellingNo(String sellingNo) {
+    public void setSaleNo(String sellingNo) {
         this.saleNo = sellingNo;
     }
 
@@ -76,11 +76,11 @@ public class Sale extends Customer {
         this.total = total;
     }
 
-    public String getSellingDate() {
-        return sellingDate;
+    public String getSaleDate() {
+        return saleDate;
     }
 
-    public void setSellingDate(String sellingDate) {
-        this.sellingDate = sellingDate;
+    public void setSaleDate(String sellingDate) {
+        this.saleDate = sellingDate;
     }
 }

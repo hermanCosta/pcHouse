@@ -26,95 +26,22 @@ public class PrintOrder extends javax.swing.JFrame {
      * Creates new form Print
      */
     Order order;
-    double cardDeposit, cashDeposit;
-    
-    
-    double deposit, due, total;
-    String orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, 
-            importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, issuedDate;
     
     public PrintOrder() {
         initComponents();
     }
     
-    public PrintOrder(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, String _deviceBrand, 
-            String _deviceModel, String _serialNumber, String _stringFaults, String _importantNotes, String _stringProducts, 
-            String _stringQty, String _stringUnitPrice, String _stringPriceTotal, 
-            double _total, double _deposit, double _due, String _issuedDate) {
-        
-        initComponents();
-        
-        //txt_area_product_service.setBorder(null);
-        txt_pane_print_faults.setCaretPosition(0);
-        
-        this.orderNo = _orderNo;
-        this.firstName = _firstName;
-        this.lastName = _lastName;
-        this.contactNo = _contactNo;
-        this.email = _email;
-        this.deviceBrand = _deviceBrand;
-        this.deviceModel = _deviceModel;
-        this.serialNumber = _serialNumber;
-        this.importantNotes = _importantNotes;
-        this.deposit = _deposit;
-        this.due = _due;
-        this.stringFaults = _stringFaults;
-        this.stringProducts = _stringProducts;
-        this.stringQty = _stringQty;
-        this.stringUnitPrice = _stringUnitPrice;
-        this.stringPriceTotal = _stringPriceTotal;
-        this.total = _total;
-        this.issuedDate = _issuedDate;
-        
-        loadOrderToPrint();
-    }
-
-    public PrintOrder(Order _order, double _cardDeposit) {
+    public PrintOrder(Order _order) {
         this.order = _order;
         
         initComponents();
+        
         loadOrderToPrint();
     }
 
-    
-//    public void loadOrderToPrint()
-//    {
-//        lbl_print_issued_date.setText("Date: " + issuedDate);
-//        lbl_print_order_no.setText("Order: " + orderNo);
-//        lbl_print_first_name.setText("Customer name: " + firstName + " " + lastName);
-//        lbl_print_contact.setText("Contact no.: " + contactNo);
-//        lbl_print_email.setText("Email: " + email);
-//        lbl_print_brand.setText("Device brand: " + deviceBrand);
-//        lbl_print_model.setText("Device model: " + deviceModel);
-//        lbl_print_sn.setText("S/N: " + serialNumber);
-//        txt_pane_important_notes.setText(importantNotes);
-//        txt_pane_print_faults.setText(stringFaults);
-//        lbl_print_total_products.setText("Total: €" + String.valueOf(total));
-//        lbl_print_deposit.setText("Deposit paid: €" + String.valueOf(deposit));
-//        lbl_print_due.setText("Due:     €" + String.valueOf(due));
-//        
-//        
-//        String[] arrayProducts = stringProducts.split(",");
-//        String[] arrayQty = stringQty.split(",");
-//        String[] arrayUnitPrice = stringUnitPrice.split(",");
-//        String[] arrayPriceTotal = stringPriceTotal.split(",");
-//        
-//        for (String s : arrayProducts)
-//            txt_pane_products.setText(txt_pane_products.getText() + " - " + s + "\n");
-//        
-//        for (String s : arrayQty)
-//            txt_pane_qty.setText(txt_pane_qty.getText() + s + "\n");
-//        
-//        for (String s : arrayUnitPrice)
-//            txt_pane_unit_price.setText(txt_pane_unit_price.getText() + "€" + s + "\n");
-//        
-//        for (String s : arrayPriceTotal)
-//            txt_pane_total.setText(txt_pane_total.getText() + "€" + s + "\n");
-//    }
-    
     public void loadOrderToPrint()
     {
-        lbl_print_issued_date.setText("Date: " + order.getIssuedDate());
+        lbl_print_issue_date.setText("Date: " + order.getIssueDate());
         lbl_print_order_no.setText("Order: " + order.getOrderNo());
         lbl_print_first_name.setText("Customer name: " + order.getFirstName() + " " + order.getLastName());
         lbl_print_contact.setText("Contact no.: " + order.getContactNo());
@@ -122,21 +49,28 @@ public class PrintOrder extends javax.swing.JFrame {
         lbl_print_brand.setText("Device brand: " + order.getBrand());
         lbl_print_model.setText("Device model: " + order.getModel());
         lbl_print_sn.setText("S/N: " + order.getSerialNumber());
-        txt_pane_important_notes.setText(order.getImportantNotes());
+        
+        if (order.getImportantNotes().trim().isEmpty())
+        {
+            lbl_important_notes.setVisible(false);
+            scroll_pane_important_notes.setVisible(false);
+        }
+        else 
+        {
+            lbl_important_notes.setVisible(true);
+            scroll_pane_important_notes.setVisible(true);
+            txt_pane_important_notes.setText(order.getImportantNotes());
+        }
+        
         txt_pane_print_faults.setText(order.getStringFaults());
         lbl_print_total_products.setText("Total: €" + String.valueOf(order.getTotal()));
-        lbl_print_due.setText("Due:     €" + String.valueOf(order.getDue()));
+        lbl_print_due.setText("Due: €" + String.valueOf(order.getDue()));
         
-        if (cashDeposit == 0)
-        {
+        if (order.getCashDeposit()== 0)
             lbl_print_deposit.setText("Deposit paid: €" + String.valueOf(order.getDeposit()) + " by Card");
-        }
-        else
-        {
+        else 
             lbl_print_deposit.setText("Deposit paid: €" + String.valueOf(order.getDeposit()) + " by Cash ");
-        }
-        
-        
+       
         String[] arrayProducts = order.getStringProducts().split(",");
         String[] arrayQty = order.getStringQty().split(",");
         String[] arrayUnitPrice = order.getUnitPrice().split(",");
@@ -155,12 +89,7 @@ public class PrintOrder extends javax.swing.JFrame {
             txt_pane_total.setText(txt_pane_total.getText() + "€" + s + "\n");
     }
 
-    
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -175,9 +104,9 @@ public class PrintOrder extends javax.swing.JFrame {
         lbl_print_model = new javax.swing.JLabel();
         lbl_print_sn = new javax.swing.JLabel();
         lbl_print_total_products = new javax.swing.JLabel();
-        lbl_print_issued_date = new javax.swing.JLabel();
+        lbl_print_issue_date = new javax.swing.JLabel();
         lbl_important_notes = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        scroll_pane_important_notes = new javax.swing.JScrollPane();
         txt_pane_important_notes = new javax.swing.JTextPane();
         lbl_faults = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -232,23 +161,23 @@ public class PrintOrder extends javax.swing.JFrame {
         lbl_print_total_products.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
         lbl_print_total_products.setText("totalProducts");
 
-        lbl_print_issued_date.setFont(new java.awt.Font("Lucida Grande", 0, 9)); // NOI18N
-        lbl_print_issued_date.setText("issuedDate ");
-        lbl_print_issued_date.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        lbl_print_issue_date.setFont(new java.awt.Font("Lucida Grande", 0, 9)); // NOI18N
+        lbl_print_issue_date.setText("issueDate ");
+        lbl_print_issue_date.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
         lbl_important_notes.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
         lbl_important_notes.setText("Important Notes:");
 
-        jScrollPane1.setBorder(null);
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        jScrollPane1.setEnabled(false);
+        scroll_pane_important_notes.setBorder(null);
+        scroll_pane_important_notes.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll_pane_important_notes.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+        scroll_pane_important_notes.setEnabled(false);
 
         txt_pane_important_notes.setEditable(false);
         txt_pane_important_notes.setBorder(null);
         txt_pane_important_notes.setFont(new java.awt.Font("Lucida Grande", 0, 9)); // NOI18N
         txt_pane_important_notes.setFocusable(false);
-        jScrollPane1.setViewportView(txt_pane_important_notes);
+        scroll_pane_important_notes.setViewportView(txt_pane_important_notes);
 
         lbl_faults.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
         lbl_faults.setText("Fault:");
@@ -451,7 +380,7 @@ public class PrintOrder extends javax.swing.JFrame {
                             .addGroup(panel_print_orderLayout.createSequentialGroup()
                                 .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(lbl_faults, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane1)
+                                    .addComponent(scroll_pane_important_notes)
                                     .addComponent(lbl_print_model, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(lbl_print_order_no, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lbl_print_first_name, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -464,7 +393,7 @@ public class PrintOrder extends javax.swing.JFrame {
                                     .addComponent(panel_products, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(0, 16, Short.MAX_VALUE))))
                     .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(lbl_print_issued_date)
+                        .addComponent(lbl_print_issue_date)
                         .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
             .addGroup(panel_print_orderLayout.createSequentialGroup()
                 .addGap(236, 236, 236)
@@ -490,7 +419,7 @@ public class PrintOrder extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_print_order_no, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_print_issued_date))
+                    .addComponent(lbl_print_issue_date))
                 .addGap(4, 4, 4)
                 .addComponent(lbl_print_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(4, 4, 4)
@@ -506,7 +435,7 @@ public class PrintOrder extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(lbl_important_notes)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scroll_pane_important_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_faults)
                 .addGap(0, 0, 0)
@@ -576,7 +505,7 @@ public class PrintOrder extends javax.swing.JFrame {
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         PrinterJob printerJob = PrinterJob.getPrinterJob();
-        printerJob.setJobName("Order: " + this.orderNo);
+        printerJob.setJobName("Order: " + order.getOrderNo());
         
         PageFormat format = printerJob.getPageFormat(null);
         
@@ -655,7 +584,6 @@ public class PrintOrder extends javax.swing.JFrame {
     private javax.swing.JButton btn_print;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane12;
@@ -675,7 +603,7 @@ public class PrintOrder extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_print_due;
     private javax.swing.JLabel lbl_print_email;
     private javax.swing.JLabel lbl_print_first_name;
-    private javax.swing.JLabel lbl_print_issued_date;
+    private javax.swing.JLabel lbl_print_issue_date;
     private javax.swing.JLabel lbl_print_model;
     private javax.swing.JLabel lbl_print_order_no;
     private javax.swing.JLabel lbl_print_sn;
@@ -689,6 +617,7 @@ public class PrintOrder extends javax.swing.JFrame {
     private javax.swing.JPanel panel_header;
     private javax.swing.JPanel panel_print_order;
     private javax.swing.JPanel panel_products;
+    private javax.swing.JScrollPane scroll_pane_important_notes;
     private javax.swing.JTextPane txt_pane_important_notes;
     private javax.swing.JTextPane txt_pane_print_faults;
     private javax.swing.JTextPane txt_pane_products;

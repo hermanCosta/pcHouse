@@ -199,7 +199,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lbl_total_due" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_deposit€" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lbl_deposit" pref="166" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -211,7 +211,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lbl_total_due" max="32767" attributes="0"/>
+                          <Component id="lbl_deposit€" max="32767" attributes="0"/>
                           <Component id="lbl_deposit" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
@@ -220,7 +220,7 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="lbl_total_due">
+            <Component class="javax.swing.JLabel" name="lbl_deposit&#x20ac;">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Lucida Grande" size="17" style="0"/>

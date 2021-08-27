@@ -64,7 +64,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
            stringProducts, stringQty, stringUnitPrice, stringPriceTotal, 
             status, issueDate, finishedDate, pickedDate; 
 
-    double total, deposit, due, cash, card;
+    double total, deposit, cashDeposit, cardDeposit, due, cash, card;
     
     
     public NotFixedOrder() {
@@ -75,8 +75,8 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
     public NotFixedOrder(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
             String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
             String _stringFaults, String _stringProducts, String _stringQty, String _stringUnitPrice, 
-            String _stringPriceTotal, double _total, double _deposit, double _due,String _status, 
-            String _issueDate, String _finishedDate, double _cash, double _card, String _pickedDate) {
+            String _stringPriceTotal, double _total, double _deposit, double _cashDeposit, double _cardDeposit,
+            double _due, String _status, String _issueDate, String _finishedDate, double _cash, double _card, String _pickedDate) {
         
         initComponents();
         
@@ -97,6 +97,8 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         this.stringPriceTotal = _stringPriceTotal;
         this.total = _total;
         this.deposit = _deposit;
+        this.cashDeposit = _cashDeposit;
+        this.cardDeposit = _cardDeposit;
         this.due = _due;
         this.status = _status;
         this.finishedDate = _finishedDate;
@@ -112,6 +114,10 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         
         loadSelectedOrder();
         tableSettings();
+    }
+
+    NotFixedOrder(Order order) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     
@@ -999,7 +1005,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 
                 OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, 
                         email, deviceBrand, deviceModel, serialNumber, importantNotes, stringFaults, stringProducts,
-                        stringQty, stringUnitPrice, stringPriceTotal, total, deposit, due, status, issueDate, cash, card, pickedDate);
+                        stringQty, stringUnitPrice, stringPriceTotal, total, deposit, cashDeposit, cardDeposit, due, status, issueDate, cash, card, pickedDate);
             
                 desktop_pane_fixed_order.removeAll();
                 desktop_pane_fixed_order.add(orderDetails).setVisible(true);

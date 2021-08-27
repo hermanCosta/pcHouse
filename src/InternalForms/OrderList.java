@@ -5,10 +5,8 @@
  */
 package InternalForms;
 
-import Common.PintTableCells;
 import Model.Order;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,14 +18,8 @@ import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -86,8 +78,10 @@ public class OrderList extends javax.swing.JInternalFrame {
             {
                order = new Order(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"),
                     rs.getString("email"), rs.getString("deviceBrand"), rs.getString("deviceModel"), rs.getString("serialNumber"), 
-                       rs.getString("importantNotes"), rs.getString("fault"), rs.getString("productService"), rs.getString("qty"), rs.getString("unitPrice"),
-               rs.getString("priceTotal"), rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("due"), rs.getString("status"),rs.getString("issuedDate"));
+                       rs.getString("importantNotes"), rs.getString("fault"), rs.getString("productService"), rs.getString("qty"),
+                       rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getDouble("deposit"), 
+                       rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"), rs.getString("status"),
+                       rs.getString("issueDate"), rs.getString("finishDate"), rs.getString("pickDate"), rs.getString("refundDate"));
                 
                orderList.add(order);
             }
@@ -146,7 +140,6 @@ public class OrderList extends javax.swing.JInternalFrame {
             ps = con.prepareStatement("SELECT * FROM orderDetails WHERE orderNo LIKE '%" + searchOrder + "%' "
                     + "OR firstName LIKE '%" + searchOrder + "%' OR lastName LIKE '%" + searchOrder + "%' "
                             + "OR contactNo LIKE '%" + searchOrder + "%' LIMIT 15");
-                                          
             rs = ps.executeQuery();
             
             ResultSetMetaData rsd = rs.getMetaData();
@@ -331,34 +324,8 @@ public class OrderList extends javax.swing.JInternalFrame {
 
         if(evt.getClickCount() == 2)
         {
-            String orderNo = "";
-            String firstName = "";
-            String lastName = "";
-            String contactNo = "";
-            String email = "";
-            String deviceBrand = "";
-            String deviceModel = "";
-            String serialNumber = "";
-            String importantNotes ="";
-            String stringFaults = "";
-            String stringProducts = "";
-            String stringQty = "";
-            String stringUnitPrice = "";
-            String stringPriceTotal = "";
-            double total = 0;
-            double deposit = 0;
-            double due = 0;
-            String issueDate = "";
-            String status = "";
-            String finishedDate = "";
-            String pickedDate = "";
-            String payDate = "";
-            String refundDate = "";
-            double cash = 0;
-            double card = 0;
+            double cash = 0, card = 0, changeTotal = 0;
             
-            
-
             dbConnection();
             DefaultTableModel dtm = (DefaultTableModel)table_view_orders.getModel();
             int orderSelected = table_view_orders.getSelectedRow();
@@ -372,28 +339,13 @@ public class OrderList extends javax.swing.JInternalFrame {
                 
                 while(rs.next())
                 {
-                   orderNo = rs.getString("orderNo");
-                   firstName = rs.getString("firstName");
-                   lastName = rs.getString("lastName");
-                   contactNo = rs.getString("contactNo");
-                   email = rs.getString("email");
-                   deviceBrand = rs.getString("deviceBrand");
-                   deviceModel = rs.getString("deviceModel");
-                   serialNumber = rs.getString("serialNumber");
-                   importantNotes = rs.getString("importantNotes");
-                   stringFaults = rs.getString("fault");
-                   stringProducts = rs.getString("productService");
-                   stringQty = rs.getString("qty");
-                   stringUnitPrice = rs.getString("unitPrice");
-                   stringPriceTotal = rs.getString("priceTotal");
-                   total = rs.getDouble("total");
-                   deposit = rs.getDouble("deposit");
-                   due = rs.getDouble("due");
-                   issueDate = rs.getString("issuedDate");
-                   status = rs.getString("status");
-                   finishedDate = rs.getString("finishedDate");
-                   pickedDate = rs.getString("pickedDate");
-                   refundDate = rs.getString("refundDate");
+                   order  = new Order(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"),
+                   rs.getString("email"), rs.getString("deviceBrand"), rs.getString("deviceModel"), rs.getString("serialNumber"), rs.getString("importantNotes"),
+                   rs.getString("fault"), rs.getString("productService"), rs.getString("qty"),rs.getString("unitPrice"), rs.getString("priceTotal"),
+                   rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"),
+                   rs.getString("status"), rs.getString("issueDate"), rs.getString("finishDate"), rs.getString("pickDate"),
+                   rs.getString("refundDate"));
+                   
                 }
                 
                 String queryPayDate = "SELECT * FROM completedOrders WHERE orderNo = ? ";
@@ -403,40 +355,38 @@ public class OrderList extends javax.swing.JInternalFrame {
                 
                 while (rs.next())
                 {
-                    payDate = rs.getString("payDate");
                     cash = rs.getDouble("cash");
                     card = rs.getDouble("card");
+                    changeTotal = rs.getDouble("changeTotal");
                 }
                 
             
-            switch (status) {
+            switch (order.getStatus()) {
                 case "In Progress":
-                    OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo,
-                            email, deviceBrand, deviceModel, serialNumber, importantNotes, stringFaults, stringProducts,
-                            stringQty, stringUnitPrice, stringPriceTotal, total, deposit, due, status, issueDate, cash, card, pickedDate);
+                    OrderDetails orderDetails = new OrderDetails(order, cash, card, changeTotal);
                     desktop_pane_order_list.removeAll();
                     desktop_pane_order_list.add(orderDetails).setVisible(true);
                     break;
                 case "Not Fixed":
 //                    OrderNotFixed orderNotFixed = new OrderNotFixed(orderNo, firstName, lastName, contactNo,
-                    NotFixedOrder orderNotFixed = new NotFixedOrder(orderNo, firstName, lastName, contactNo,
-                            email, deviceBrand, deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty,
-                             stringUnitPrice, stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, cash, card, pickedDate);
+//                    NotFixedOrder orderNotFixed = new NotFixedOrder(orderNo, firstName, lastName, contactNo,
+//                            email, deviceBrand, deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty,
+//                             stringUnitPrice, stringPriceTotal, total, deposit, cashDeposit, cardDeposit, due, status, issueDate, finishedDate, cash, card, pickedDate);
+                     NotFixedOrder orderNotFixed = new NotFixedOrder(order);
                     desktop_pane_order_list.removeAll();
                     desktop_pane_order_list.add(orderNotFixed).setVisible(true);
                     break;
                     
                 case "Refunded":
-                   RefundOrder refundOrder = new RefundOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
-                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
-                        stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, pickedDate, cash, card, refundDate);
+//                   RefundOrder refundOrder = new RefundOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
+//                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
+//                        stringPriceTotal, total, deposit, cashDeposit, cardDeposit, due, status, issueDate, finishedDate, pickedDate, cash, card, refundDate);
+                   RefundOrder refundOrder = new RefundOrder(order);
                    desktop_pane_order_list.removeAll();
                    desktop_pane_order_list.add(refundOrder).setVisible(true);
                    break;
                 default:
-                    FixedOrder fixedOrder = new FixedOrder(orderNo, firstName, lastName, contactNo,
-                            email, deviceBrand, deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty,
-                            stringUnitPrice, stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, cash, card, pickedDate);
+                    FixedOrder fixedOrder = new FixedOrder(order, cash, card, changeTotal);
                     desktop_pane_order_list.removeAll();
                     desktop_pane_order_list.add(fixedOrder).setVisible(true);
                     break;

@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -35,7 +36,6 @@ public class OrderNotes extends javax.swing.JFrame {
     Statement st;
     ResultSet rs;
     String orderNo, noteDate, note, user;
-    DefaultTableModel dtm;
     
     public OrderNotes() {
         initComponents();
@@ -46,7 +46,6 @@ public class OrderNotes extends javax.swing.JFrame {
         
         this.orderNo = _orderNo;
         
-        dtm = (DefaultTableModel) table_view_notes.getModel();
         loadTableNotes();
     }
 
@@ -63,12 +62,15 @@ public class OrderNotes extends javax.swing.JFrame {
     
     public void loadTableNotes()
     {
-        lbl_notes_from_order.setText("Notes From Order " + orderNo);
+        DefaultTableModel dtm = (DefaultTableModel) table_view_notes.getModel();
         dtm.setColumnCount(0);
         dtm.setRowCount(0);
+        TableColumnModel tableModel = (TableColumnModel) table_view_notes.getColumnModel();
         
         try {
             dbConnection();
+            
+            lbl_notes_from_order.setText("Notes From Order " + orderNo);
             
             String query = "SELECT * FROM orderNotes WHERE noteId IN (SELECT noteId FROM orderNotes WHERE orderNo = ?) ";
             ps = con.prepareStatement(query);
@@ -90,6 +92,9 @@ public class OrderNotes extends javax.swing.JFrame {
             dtm.addColumn("Date",dates);
             dtm.addColumn("Notes",notes);
             dtm.addColumn("User",users);
+            
+            tableModel.getColumn(0).setMaxWidth(160);
+            tableModel.getColumn(2).setMaxWidth(90);
 
             rs.close();
             ps.close();

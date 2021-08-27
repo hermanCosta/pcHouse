@@ -5,6 +5,7 @@
  */
 package InternalForms;
 
+import Forms.DepositPayment;
 import Forms.PrintOrder;
 import Forms.OrderNotes;
 import Model.Customer;
@@ -78,7 +79,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
            deviceModel,  serialNumber, importantNotes, stringFaults, 
            stringProducts, stringQty, stringUnitPrice, stringPriceTotal, status, issueDate, finishedDate, pickedDate; 
 
-    double total, deposit, due, cash, card;
+    double total, deposit, cashDeposit, cardDeposit, due;
+    double cash, card, changeTotal;
     
     
     public OrderDetails() {
@@ -89,7 +91,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     public OrderDetails(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
             String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
             String _stringFaults, String _stringProducts, String _stringQty, String _stringUnitPrice,
-            String _stringPriceTotal, double _total, double _deposit, double _due, String _status, 
+            String _stringPriceTotal, double _total, double _deposit, double _cashDeposit, double _cardDeposit, double _due, String _status, 
             String _issueDate, double _cash, double _card, String _pickedDate) {
         
         initComponents();
@@ -110,6 +112,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         this.stringPriceTotal = _stringPriceTotal;
         this.total = _total;
         this.deposit = _deposit;
+        this.cashDeposit = _cashDeposit;
+        this.cardDeposit = _cardDeposit;
         this.due = _due;
         this.status = _status;
         this.issueDate = _issueDate;
@@ -117,9 +121,19 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         this.card = -card;
         this.pickedDate = _pickedDate;
         
+    }
+
+    OrderDetails(Order _order, double _cash, double _card, double _changeTotal) {
+        initComponents();
+        this.order = _order;
+        this.cash = _cash;
+        this.card = _card;
+        this.changeTotal = _changeTotal;
+        
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
         finishedDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
+        order.setFinishDate(finishedDate);
         
         //Remove borders
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
@@ -138,8 +152,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         accessDbColumn(faults, "SELECT * FROM faults","faultName");
         listProductService();
         loadSelectedOrder();
-        
     }
+    
     
     public void tableSettings (JTable table)
     {
@@ -149,19 +163,19 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
    public void loadSelectedOrder()
    {
-        lbl_auto_order_no.setText(this.orderNo);
-        txt_first_name.setText(this.firstName);
-        txt_last_name.setText(this.lastName);
-        txt_contact.setText(this.contactNo);
-        txt_email.setText(this.email);
-        txt_brand.setText(this.deviceBrand);
-        txt_model.setText(this.deviceModel);
-        txt_serial_number.setText(this.serialNumber);
-        editor_pane_notes.setText(this.importantNotes);
-        txt_total.setText(String.valueOf(this.total));
-        txt_deposit.setText(String.valueOf(this.deposit));
-        txt_due.setText(String.valueOf(this.due));
-        lbl_issued_date_time.setText("Created on: " + this.issueDate);
+        lbl_auto_order_no.setText(order.getOrderNo());
+        txt_first_name.setText(order.getFirstName());
+        txt_last_name.setText(order.getLastName());
+        txt_contact.setText(order.getContactNo());
+        txt_email.setText(order.getEmail());
+        txt_brand.setText(order.getBrand());
+        txt_model.setText(order.getModel());
+        txt_serial_number.setText(order.getSerialNumber());
+        editor_pane_notes.setText(order.getImportantNotes());
+        txt_total.setText(String.valueOf(order.getTotal()));
+        txt_deposit.setText(String.valueOf(order.getDeposit()));
+        txt_due.setText(String.valueOf(order.getDue()));
+        lbl_issued_date_time.setText("Created on: " + order.getIssueDate());
         
         // Pass arrayPrices to a vector and add as a new column
         Vector vecFaults = new Vector();
@@ -170,11 +184,11 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         Vector vecUnitPrice = new Vector();
         Vector vecPriceTotal = new Vector();
         
-        vecFaults.addAll(Arrays.asList(stringFaults.split(",")));
-        vecProducts.addAll(Arrays.asList(stringProducts.replaceAll("   " , " ").split(",")));
-        vecQty.addAll(Arrays.asList(stringQty.replaceAll("  " , " ").split(",")));
-        vecUnitPrice.addAll(Arrays.asList(stringUnitPrice.replaceAll("  " , " ").split(",")));
-        vecPriceTotal.addAll(Arrays.asList(stringPriceTotal.replaceAll("  " , " ").split(",")));
+        vecFaults.addAll(Arrays.asList(order.getStringFaults().split(",")));
+        vecProducts.addAll(Arrays.asList(order.getStringProducts().replaceAll("   " , " ").split(",")));
+        vecQty.addAll(Arrays.asList(order.getStringQty().replaceAll("  " , " ").split(",")));
+        vecUnitPrice.addAll(Arrays.asList(order.getUnitPrice().replaceAll("  " , " ").split(",")));
+        vecPriceTotal.addAll(Arrays.asList(order.getPriceTotal().replaceAll("  " , " ").split(",")));
         
        DefaultTableModel faultsModel = (DefaultTableModel) table_view_faults.getModel();
        DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
@@ -246,8 +260,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             {
                 combo_box_product_service.addItem(rs.getString("productService"));
             }
-            con.close();
-            ps.close();
+            //con.close();
+            
             
         } catch (SQLException ex) {
             Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
@@ -1345,26 +1359,27 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         
        int confirmFixing = JOptionPane.showConfirmDialog(null, "Do you really want to Tag Order: " 
-               + orderNo + " as Fixed Order", "Update Order", JOptionPane.YES_NO_OPTION);
+               + order.getOrderNo() + " as Fixed Order", "Update Order", JOptionPane.YES_NO_OPTION);
        
        if (confirmFixing == 0)
        {
-           status = "Fixed";
+           order.setStatus("Fixed");;
            
             try {
                 dbConnection();
-                String query = "UPDATE orderDetails SET status = ?, finishedDate = ? WHERE orderNo = ?";
+                String query = "UPDATE orderDetails SET status = ?, finishDate = ? WHERE orderNo = ?";
                 ps = con.prepareStatement(query);
-                ps.setString(1, status);
-                ps.setString(2, finishedDate);
-                ps.setString(3, orderNo);
+                ps.setString(1, order.getStatus());
+                ps.setString(2, order.getFinishDate());
+                ps.setString(3, order.getOrderNo());
                 
                 ps.executeUpdate();
                 
-                FixedOrder fixedOrder = new FixedOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
-                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
-                         stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, cash, card, pickedDate);
-                
+//                FixedOrder fixedOrder = new FixedOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
+//                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
+//                         stringPriceTotal, total, deposit, cashDeposit, cardDeposit, due, status, issueDate, finishedDate, 
+//                        cash, card, pickedDate);
+                FixedOrder fixedOrder = new FixedOrder(order, cash, card, changeTotal);
                 desktop_pane_order_details.removeAll();
                 desktop_pane_order_details.add(fixedOrder).setVisible(true);
                 
@@ -1377,32 +1392,37 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         
-        PrintOrder printOrder = new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, 
-                deviceModel, serialNumber, stringFaults, importantNotes, stringProducts, stringQty, stringUnitPrice,
-                stringPriceTotal, total, deposit, due, issueDate);
+//        PrintOrder printOrder = new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, 
+//                deviceModel, serialNumber, stringFaults, importantNotes, stringProducts, stringQty, stringUnitPrice,
+//                stringPriceTotal, total, deposit, due, issueDate);
+        PrintOrder printOrder = new PrintOrder(order);
         printOrder.setVisible(true);
     }//GEN-LAST:event_btn_printActionPerformed
 
     private void btn_not_fixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_not_fixActionPerformed
         // TODO add your handling code here:
        int confirmFixing = JOptionPane.showConfirmDialog(this, "Do you really want to Tag Order: "
-               + orderNo + " as 'NOT FIXED ORDER' ?", "Update Order", JOptionPane.YES_NO_OPTION);
+               + order.getOrderNo() + " as 'NOT FIXED ORDER' ?", "Update Order", JOptionPane.YES_NO_OPTION);
        
        if (confirmFixing == 0)
        {
-           status = "Not Fixed";
+           order.setStatus("Not Fixed");
             try {
                 dbConnection();
-                String query = "UPDATE orderDetails SET status = '" + status + "', finishedDate = '" + finishedDate +"'"
-                        + "WHERE orderNo = '"+ orderNo + "'";
-                
+//                String query = "UPDATE orderDetails SET status = '" + status + "', finishDate = '" + finishedDate +"'"
+//                        + "WHERE orderNo = '"+ orderNo + "'";
+                String query = "UPDATE orderDetails SET status = ?, finishDate = ? WHERE orderNo = ?";
                 ps = con.prepareStatement(query);
+                ps.setString(1, order.getStatus());
+                ps.setString(2, order.getFinishDate());
+                ps.setString(3, order.getOrderNo());
                 ps.executeUpdate();
                 
-                NotFixedOrder orderNotFixed = new NotFixedOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
-                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
-                         stringPriceTotal, total, deposit, due, status, issueDate, finishedDate, cash, card, pickedDate);
+//                NotFixedOrder orderNotFixed = new NotFixedOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
+//                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
+//                         stringPriceTotal, total, deposit, cashDeposit, cardDeposit, due, status, issueDate, finishedDate, cash, card, pickedDate);
                 
+                NotFixedOrder orderNotFixed = new NotFixedOrder(order);
                 desktop_pane_order_details.removeAll();
                 desktop_pane_order_details.add(orderNotFixed).setVisible(true);
                 
@@ -1420,25 +1440,13 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 table_view_products.getRowCount() == 0 | table_view_faults.getRowCount() == 0)  
         {
             JOptionPane.showMessageDialog(null, "Please, check Empty fields", "Update Order", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-        else
-        {
-            firstName = txt_first_name.getText();
-            lastName = txt_last_name.getText();
-            contactNo = txt_contact.getText();
-            email = txt_email.getText();
-            deviceBrand = txt_brand.getText();
-            deviceModel = txt_model.getText();
-            serialNumber = txt_serial_number.getText();
-            importantNotes = editor_pane_notes.getText();
-            total = Double.parseDouble(txt_total.getText());
-            deposit = Double.parseDouble(txt_deposit.getText());
-            due = Double.parseDouble(txt_due.getText());
-
-            java.util.Date date = new java.util.Date();
-            java.sql.Timestamp currentDate = new java.sql.Timestamp(date.getTime());
+     
+            Date date = new Date();
+            Timestamp currentDate = new Timestamp(date.getTime());
             String updateDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
-
+            
             //Empty vector before looping, this avoids values in the vector in case the camparison 
             // between tableView and database
             vecUpdateFaults.removeAllElements();
@@ -1469,102 +1477,105 @@ public class OrderDetails extends javax.swing.JInternalFrame {
              stringUnitPrice = vecUpdateUnitPrice.toString().replace("[", "").replace("]", "");
              stringPriceTotal = vecUpdatePriceTotal.toString().replace("[", "").replace("]", "");
 
-             // Remove all commas, and set as range of Char in order to campare data to DB
-            String tableFaults = stringFaults.replace(",","").replace(" ", "");
-            String tableProducts = stringProducts.replace(",", "").replace(" ", "");
-            String tableQty = stringQty.replace(",", "").replace(" ", "");
-            String tableUnitPrice = stringUnitPrice.replace(",", "").replace(" ", "");
-            String tablePriceTotal = stringPriceTotal.replace(",", "").replace(" ", "");
+             
+             if (order.getFirstName().equals(txt_first_name.getText()) && order.getLastName().equals(txt_last_name.getText()) 
+                 && order.getContactNo().equals(txt_contact.getText()) && order.getEmail().equals(txt_email.getText()) 
+                 && order.getBrand().equals(txt_brand.getText()) && order.getModel().equals(txt_model.getText()) 
+                 && order.getSerialNumber().equals(txt_serial_number.getText()) && order.getStringFaults().equals(stringFaults)
+                 && order.getImportantNotes().equals(editor_pane_notes.getText()) && order.getStringProducts().equals(stringProducts)
+                 && order.getStringQty().equals(stringQty) && order.getUnitPrice().equals(stringUnitPrice) 
+                 && order.getPriceTotal().equals(stringPriceTotal) && order.getTotal() == Double.parseDouble(txt_total.getText()) 
+                 && order.getDeposit() == Double.parseDouble(txt_deposit.getText()) && order.getDue() == Double.parseDouble(txt_due.getText()))
+             {
+                JOptionPane.showMessageDialog(null, "No changes to be Updated", "Update Order Details", JOptionPane.ERROR_MESSAGE);
+             }
 
-            try 
-            {
-                dbConnection();
+             else
+             {
+                double oldDeposit = order.getDeposit();
+                 
+                order.setFirstName(txt_first_name.getText());
+                order.setLastName(txt_last_name.getText());
+                order.setContactNo(txt_contact.getText());
+                order.setEmail(txt_email.getText());
+                order.setBrand(txt_brand.getText());
+                order.setModel(txt_model.getText());
+                order.setSerialNumber(txt_serial_number.getText());
+                order.setStringFaults(stringFaults);
+                order.setImportantNotes(editor_pane_notes.getText());
+                order.setStringProducts(stringProducts);
+                order.setStringQty(stringQty);
+                order.setUnitPrice(stringUnitPrice);
+                order.setPriceTotal(stringPriceTotal);
+                order.setTotal(Double.parseDouble(txt_total.getText()));
+                order.setDeposit(Double.parseDouble(txt_deposit.getText()));
+                order.setDue(Double.parseDouble(txt_due.getText()));
+                order.setIssueDate(updateDate);
+                
+                 
+                 int confirmUpdate = JOptionPane.showConfirmDialog(null, "Save changes on order " 
+                        + order.getOrderNo() + " ?", "Update Order Details", JOptionPane.YES_NO_OPTION);
 
-                String queryCheck = "SELECT * FROM orderDetails WHERE orderNo = ? ";
-                ps = con.prepareStatement(queryCheck);
-                ps.setString(1, orderNo);
-                rs = ps.executeQuery();
-
-                while (rs.next())
-                {
-                    // Get DB strings convert into range of characters for comparing to the tableView ones
-                    String dbStringFaults = rs.getString("fault").replace(",", "").replace(" ","");
-                    String dbStringProducts = rs.getString("productService").replace(",", "").replace(" ","");
-                    String dbStringQty = rs.getString("qty").replace(",", "").replace(" ","");
-                    String dbStringUnitPrice = rs.getString("unitPrice").replace(",", "").replace(" ","");
-                    String dbStringPriceTotal = rs.getString("priceTotal").replace(",", "").replace(" ","");
-
-                    // IF all values are the same, dont do update
-                    if(firstName.equals(rs.getString("firstName")) && lastName.equals(rs.getString("lastName"))
-                            && contactNo.equals(rs.getString("contactNo")) && email.equals(rs.getString("email"))
-                            && deviceBrand.equals(rs.getString("deviceBrand")) && deviceModel.equals(rs.getString("deviceModel"))
-                            && serialNumber.equals(rs.getString("serialNumber")) && tableFaults.equals(dbStringFaults)
-                            && importantNotes.equals(rs.getString("importantNotes")) && tableProducts.equals(dbStringProducts) 
-                            && tableQty.equals(dbStringQty) && tableUnitPrice.equals(dbStringUnitPrice) 
-                            && tablePriceTotal.equals(dbStringPriceTotal) && deposit == rs.getDouble("deposit") 
-                            && total == rs.getDouble("total") && due == rs.getDouble("due"))
+                    if (confirmUpdate == 0)
                     {
-                       JOptionPane.showMessageDialog(null, "No changes to be Updated", "Update Order Details", JOptionPane.ERROR_MESSAGE);
-                    }
-                    else
-                    {
-                        int confirmUpdate = JOptionPane.showConfirmDialog(null, "Do you really want to save changes on order " 
-                                + this.orderNo + " ?", "Update Order Details", JOptionPane.YES_NO_OPTION);
-
-                        if (confirmUpdate == 0)
+                        if (order.getDeposit() > oldDeposit)
                         {
-                            String queryUpdate = "UPDATE orderDetails SET firstName = ?, lastName = ? , contactNo = ?, email = ?,"
-                                    + " deviceBrand = ?, deviceModel = ?, serialNumber = ?, fault = ?, importantNotes = ?, "
-                                    +"productService = ?, qty = ?, unitPrice = ?, priceTotal = ?, deposit = ?, total = ?, due = ?, "
-                                    + "issuedDate = ? WHERE orderNo = ? ";
-                            ps = con.prepareStatement(queryUpdate);
-                            ps.setString(1, firstName);
-                            ps.setString(2, lastName);
-                            ps.setString(3, contactNo);
-                            ps.setString(4, email);
-                            ps.setString(5, deviceBrand);
-                            ps.setString(6, deviceModel);
-                            ps.setString(7, serialNumber);
-                            ps.setString(8, stringFaults);
-                            ps.setString(9, importantNotes);
-                            ps.setString(10, stringProducts);
-                            ps.setString(11, stringQty);
-                            ps.setString(12, stringUnitPrice);
-                            ps.setString(13, stringPriceTotal);
-                            ps.setDouble(14, deposit);
-                            ps.setDouble(15, total);
-                            ps.setDouble(16, due);
-                            ps.setString(17, updateDate);
-                            ps.setString(18, orderNo);
-                            ps.executeUpdate();
-                            
-                            String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "
-                                    + "productService = REPLACE(productService, '  ', ' '), "
-                                    + "qty = REPLACE(qty, '  ', ' '), "
-                                    + "unitPrice = REPLACE(unitPrice, '  ', ' '), "
-                                    + "total = REPLACE(total, '  ', ' ')";
-                            ps = con.prepareStatement(removeSpace);
-                            ps.executeUpdate();
-
-                            JOptionPane.showMessageDialog(this,  "Order " + orderNo + " Updated Successfully!");
-                            
-                            this.dispose();
-                            this.setVisible(true);
-                            
-                            
+                            DepositPayment depositPayment = new DepositPayment(order);
+                            depositPayment.setVisible(true);
                         }
-                    } 
+                        else
+                        {
+                            try
+                            {
+                                String queryUpdate = "UPDATE orderDetails SET firstName = ?, lastName = ? , contactNo = ?, email = ?,"
+                                        + " deviceBrand = ?, deviceModel = ?, serialNumber = ?, fault = ?, importantNotes = ?, "
+                                        +"productService = ?, qty = ?, unitPrice = ?, priceTotal = ?, total = ?, due = ?, "
+                                        + "issueDate = ? WHERE orderNo = ? ";
+                                ps = con.prepareStatement(queryUpdate);
+                                ps.setString(1, order.getFirstName());
+                                ps.setString(2, order.getLastName());
+                                ps.setString(3, order.getContactNo());
+                                ps.setString(4, order.getEmail());
+                                ps.setString(5, order.getBrand());
+                                ps.setString(6, order.getModel());
+                                ps.setString(7, order.getSerialNumber());
+                                ps.setString(8, order.getStringFaults());
+                                ps.setString(9, order.getImportantNotes());
+                                ps.setString(10, order.getStringProducts());
+                                ps.setString(11, order.getStringQty());
+                                ps.setString(12, order.getUnitPrice());
+                                ps.setString(13, order.getPriceTotal());
+                                //ps.setDouble(14, order.getDeposit());
+                                ps.setDouble(14, order.getTotal());
+                                ps.setDouble(15, order.getDue());
+                                ps.setString(16, order.getIssueDate());
+                                ps.setString(17, order.getOrderNo());
+                                ps.executeUpdate();
+
+                                String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "
+                                        + "productService = REPLACE(productService, '  ', ' '), "
+                                        + "qty = REPLACE(qty, '  ', ' '), "
+                                        + "unitPrice = REPLACE(unitPrice, '  ', ' '), "
+                                        + "total = REPLACE(total, '  ', ' ')";
+                                ps = con.prepareStatement(removeSpace);
+                                ps.executeUpdate();
+
+                                //this.dispose();
+                                //this.setVisible(true);
+                                JOptionPane.showMessageDialog(this, "Order " + order.getOrderNo() + " Updated successfully!");
+                            } 
+                            catch (SQLException ex) 
+                            {
+                                Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }
                 }
-            } catch (SQLException ex) 
-            {
-                Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
     }//GEN-LAST:event_btn_save_changesActionPerformed
 
     private void btn_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notesActionPerformed
         // TODO add your handling code here:
-        OrderNotes orderNotes = new OrderNotes(orderNo);
+        OrderNotes orderNotes = new OrderNotes(order.getOrderNo());
         orderNotes.setVisible(true);
         
     }//GEN-LAST:event_btn_notesActionPerformed

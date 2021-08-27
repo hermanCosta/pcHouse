@@ -87,7 +87,7 @@
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                           <Component id="lbl_faults" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jScrollPane1" alignment="1" max="32767" attributes="0"/>
+                                          <Component id="scroll_pane_important_notes" alignment="1" max="32767" attributes="0"/>
                                           <Component id="lbl_print_model" alignment="1" max="32767" attributes="0"/>
                                           <Component id="lbl_print_order_no" alignment="0" min="-2" pref="286" max="-2" attributes="0"/>
                                           <Component id="lbl_print_first_name" alignment="1" max="32767" attributes="0"/>
@@ -104,7 +104,7 @@
                               </Group>
                           </Group>
                           <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                              <Component id="lbl_print_issued_date" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_print_issue_date" min="-2" max="-2" attributes="0"/>
                               <Component id="panel_header" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -139,7 +139,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="lbl_print_order_no" alignment="3" min="-2" pref="19" max="-2" attributes="0"/>
-                          <Component id="lbl_print_issued_date" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbl_print_issue_date" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                       <Component id="lbl_print_first_name" min="-2" pref="16" max="-2" attributes="0"/>
@@ -156,7 +156,7 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="lbl_important_notes" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" min="-2" pref="86" max="-2" attributes="0"/>
+                      <Component id="scroll_pane_important_notes" min="-2" pref="86" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lbl_faults" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
@@ -225,12 +225,12 @@
                 <Property name="text" type="java.lang.String" value="totalProducts"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="lbl_print_issued_date">
+            <Component class="javax.swing.JLabel" name="lbl_print_issue_date">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Lucida Grande" size="9" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="issuedDate "/>
+                <Property name="text" type="java.lang.String" value="issueDate "/>
                 <Property name="horizontalTextPosition" type="int" value="4"/>
               </Properties>
             </Component>
@@ -242,7 +242,7 @@
                 <Property name="text" type="java.lang.String" value="Important Notes:"/>
               </Properties>
             </Component>
-            <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+            <Container class="javax.swing.JScrollPane" name="scroll_pane_important_notes">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="null"/>

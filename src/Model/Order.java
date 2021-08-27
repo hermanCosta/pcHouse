@@ -10,15 +10,18 @@ package Model;
  * @author user
  */
 public class Order extends Device {
-    String orderNo, importantNotes, stringFaults, stringProducts, stringQty, unitPrice, priceTotal, status, issuedDate;
-    double deposit, due, total;
+    String orderNo, importantNotes, stringFaults, stringProducts, stringQty, unitPrice, priceTotal, status, 
+            issueDate, finishDate, pickDate, refundDate;
+    double deposit, cashDeposit, cardDeposit, due, total ;
     
     
     public Order(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
             String _brand, String _model, String _serialNumber, String _importantNotes, String _stringFaults, 
             String _stringProducts, String _stringQty, String _unitPrice, String _priceTotal, double _total, 
-            double _deposit, double _due, String _status, String _issuedDate) {
+            double _deposit, double _cashDeposit, double _cardDeposit,double _due, String _status, String _issuedDate, 
+            String _finishDate, String _pickDate, String _refundDate) {
         super(_brand, _model, _serialNumber, _firstName, _lastName, _contactNo, _email);
+        
         this.orderNo = _orderNo;
         this.stringFaults = _stringFaults;
         this.importantNotes = _importantNotes;
@@ -28,10 +31,14 @@ public class Order extends Device {
         this.priceTotal = _priceTotal;
         this.total = _total;
         this.deposit = _deposit;
+        this.cashDeposit = _cashDeposit;
+        this.cardDeposit = _cardDeposit;
         this.due = _due;
         this.status = _status;
-        this.issuedDate = _issuedDate;
-        
+        this.issueDate = _issuedDate;
+        this.finishDate = _finishDate;
+        this.pickDate = _pickDate;
+        this.refundDate = _refundDate;
     }
     
     public String getOrderNo() {
@@ -90,6 +97,24 @@ public class Order extends Device {
     public void setDeposit(double deposit) {
         this.deposit = deposit;
     }
+
+    public double getCashDeposit() {
+        return cashDeposit;
+    }
+
+    public void setCashDeposit(double cashDeposit) {
+        this.cashDeposit = cashDeposit;
+    }
+
+    public double getCardDeposit() {
+        return cardDeposit;
+    }
+
+    public void setCardDeposit(double cardDeposit) {
+        this.cardDeposit = cardDeposit;
+    }
+    
+    
     
     public String getImportantNotes() {
         return importantNotes;
@@ -123,11 +148,36 @@ public class Order extends Device {
         this.status = status;
     }
     
-    public String getIssuedDate() {
-        return issuedDate;
+    public String getIssueDate() {
+        return issueDate;
     }
 
-    public void setIssuedDate(String issuedDate) {
-        this.issuedDate = issuedDate;
+    public void setIssueDate(String issuedDate) {
+        this.issueDate = issuedDate;
     }
+
+    public String getFinishDate() {
+        return finishDate;
+    }
+
+    public void setFinishDate(String finishDate) {
+        this.finishDate = finishDate;
+    }
+
+    public String getPickDate() {
+        return pickDate;
+    }
+
+    public void setPickDate(String pickDate) {
+        this.pickDate = pickDate;
+    }
+
+    public String getRefundDate() {
+        return refundDate;
+    }
+
+    public void setRefundDate(String refundDate) {
+        this.refundDate = refundDate;
+    }
+    
 }

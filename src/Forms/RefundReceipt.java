@@ -5,6 +5,8 @@
  */
 package Forms;
 
+import Model.CompletedOrders;
+import Model.Order;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
@@ -28,6 +30,9 @@ public class RefundReceipt extends javax.swing.JFrame {
     double total, cash, card;
     String orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, 
             stringProducts, stringQty, stringUnitPrice, stringPriceTotal, refundDate;
+    
+    Order order;
+    CompletedOrders completedOrders;
     
     public RefundReceipt() {
         initComponents();
@@ -57,28 +62,36 @@ public class RefundReceipt extends javax.swing.JFrame {
         this.card = _card;
         this.refundDate = _refundDate;
         
+        
+    }
+
+    public RefundReceipt(Order _order, CompletedOrders _completedOrders) {
+        initComponents();
+        this.order = _order;
+        this.completedOrders = _completedOrders;
+        
         loadOrderToPrint();
     }
 
     
     public void loadOrderToPrint()
     {
-         if (cash == 0)
-            lbl_paid_by.setText("Refunded by Card: €" + card);
-        else if (card == 0)
-            lbl_paid_by.setText("Refunded by Cash: €" + cash);
+         if (completedOrders.getCash() == 0)
+            lbl_paid_by.setText("Refunded by Card: €" + completedOrders.getCard());
+        else if (completedOrders.getCard() == 0)
+            lbl_paid_by.setText("Refunded by Cash: €" + completedOrders.getCash());
         else
-            lbl_paid_by.setText("Refunded by Cash: €" + cash + " | Card: €" + card);
+            lbl_paid_by.setText("Refunded by Cash: €" + completedOrders.getCash() + " | Card: €" + completedOrders.getCard());
         
-        lbl_refund_date.setText("Date: " + refundDate);
-        lbl_print_order_no.setText("Order: " + orderNo);
-        lbl_print_first_name.setText("Customer name: " + firstName + " " + lastName);
-        lbl_print_contact.setText("Contact no.: " + contactNo);
-        lbl_print_email.setText("Email: " + email);
-        lbl_print_brand.setText("Device brand: " + deviceBrand);
-        lbl_print_model.setText("Device model: " + deviceModel);
-        lbl_print_sn.setText("S/N: " + serialNumber);
-        lbl_print_total_products.setText("Total: €" + String.valueOf(total));
+        lbl_refund_date.setText("Date: " + completedOrders.getPayDate());
+        lbl_print_order_no.setText("Order: " + order.getOrderNo());
+        lbl_print_first_name.setText("Customer name: " + order.getFirstName() + " " + order.getLastName());
+        lbl_print_contact.setText("Contact no.: " + order.getContactNo());
+        lbl_print_email.setText("Email: " + order.getEmail());
+        lbl_print_brand.setText("Device brand: " + order.getBrand());
+        lbl_print_model.setText("Device model: " + order.getModel());
+        lbl_print_sn.setText("S/N: " + order.getSerialNumber());
+        lbl_print_total_products.setText("Total: €" + String.valueOf(order.getTotal()));
         
         
         String[] arrayProducts = stringProducts.split(",");

@@ -66,7 +66,7 @@ public class RefundOrder extends javax.swing.JInternalFrame {
            stringProducts, stringQty, stringUnitPrice, stringPriceTotal, 
             status, issueDate, finishedDate, pickedDate, refundDate; 
 
-    double total, deposit, due, cash, card;
+    double total, deposit, cashDeposit, cardDeposit, due, cash, card;
     
     
     public RefundOrder() {
@@ -77,7 +77,7 @@ public class RefundOrder extends javax.swing.JInternalFrame {
     public RefundOrder(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
             String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
             String _stringFaults, String _stringProducts, String _stringQty, String _stringUnitPrice, 
-            String _stringPriceTotal, double _total, double _deposit, double _due,String _status, 
+            String _stringPriceTotal, double _total, double _deposit, double _cashDeposit, double _cardDeposit, double _due,String _status, 
             String _issueDate, String _finishedDate, String _pickedDate, double _cash, double _card, String _refundDate) {
         
         initComponents();
@@ -99,6 +99,8 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         this.stringPriceTotal = _stringPriceTotal;
         this.total = _total;
         this.deposit = _deposit;
+        this.cashDeposit = _cashDeposit;
+        this.cardDeposit = _cardDeposit;
         this.due = _due;
         this.status = _status;
         this.finishedDate = _finishedDate;
@@ -115,6 +117,10 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         
         loadSelectedOrder();
         tableSettings();
+    }
+
+    RefundOrder(Order order) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 

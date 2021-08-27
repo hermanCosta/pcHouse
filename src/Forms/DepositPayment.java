@@ -30,53 +30,14 @@ public class DepositPayment extends javax.swing.JFrame {
     Order order;
     double cashDeposit, cardDeposit;
     
-    String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
-           deviceModel, serialNumber, importantNotes, stringFaults,
-           stringProducts, stringQty, stringUnitPrice, stringPriceTotal, status, issueDate; 
-    double total, deposit, due;
-    
     public DepositPayment() {
         initComponents();
     }
-
-//    public DepositPayment(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
-//            String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
-//            String _stringFaults, String _stringProducts, String _stringQty, String _stringUnitPrice,
-//            String _stringPriceTotal, double _total, double _deposit, double _due, String _status, String _issueDate) {
-//
-//        initComponents();
-//
-//        this.orderNo = _orderNo;
-//        this.firstName = _firstName;
-//        this.lastName = _lastName;
-//        this.contactNo = _contactNo;
-//        this.email = _email;
-//        this.deviceBrand = _deviceBrand;
-//        this.deviceModel = _deviceModel;
-//        this.serialNumber = _serialNumber;
-//        this.importantNotes = _importantNotes;
-//        this.issueDate = _issueDate;
-//        this.stringFaults = _stringFaults;
-//        this.stringProducts = _stringProducts;
-//        this.stringQty = _stringQty;
-//        this.stringUnitPrice = _stringUnitPrice;
-//        this.stringPriceTotal = _stringPriceTotal;
-//        this.total = _total;
-//        this.deposit = _deposit;
-//        this.due = _due;
-//        this.status = _status;
-//        this.issueDate = _issueDate;
-//
-//        lbl_order_no.setText(this.orderNo);
-//        lbl_total.setText(String.valueOf(this.total));
-//        lbl_deposit.setText(String.valueOf(this.deposit));
-//    }
 
     public DepositPayment(Order _order) {
         initComponents();
         
         this.order = _order;
-        
         
         lbl_order_no.setText(this.order.getOrderNo());
         lbl_total.setText(String.valueOf(this.order.getTotal()));
@@ -94,6 +55,30 @@ public class DepositPayment extends javax.swing.JFrame {
         }
     }
     
+    public void addDepositNote( String payMethod)
+    {
+        try {
+            dbConnection();
+            
+            String depositNote = "€" + order.getDeposit() + " Deposit, paid by " + payMethod;
+            String user = "System";
+            String query = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
+            
+            ps = con.prepareStatement(query);
+            ps.setString(1, order.getOrderNo());
+            ps.setString(2, order.getIssueDate());
+            ps.setString(3, depositNote);
+            ps.setString(4, user);
+            ps.executeUpdate();
+            
+            ps.close();
+            con.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -106,7 +91,7 @@ public class DepositPayment extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         lbl_order_no = new javax.swing.JLabel();
         panel_deposit = new javax.swing.JPanel();
-        lbl_total_due = new javax.swing.JLabel();
+        lbl_deposit€ = new javax.swing.JLabel();
         lbl_deposit = new javax.swing.JLabel();
         btn_pay_by_card = new javax.swing.JButton();
 
@@ -153,9 +138,9 @@ public class DepositPayment extends javax.swing.JFrame {
         panel_deposit.setBackground(new java.awt.Color(255, 102, 102));
         panel_deposit.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        lbl_total_due.setFont(new java.awt.Font("Lucida Grande", 0, 17)); // NOI18N
-        lbl_total_due.setForeground(new java.awt.Color(255, 255, 255));
-        lbl_total_due.setText("Deposit €");
+        lbl_deposit€.setFont(new java.awt.Font("Lucida Grande", 0, 17)); // NOI18N
+        lbl_deposit€.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_deposit€.setText("Deposit €");
 
         lbl_deposit.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         lbl_deposit.setForeground(new java.awt.Color(255, 255, 255));
@@ -167,7 +152,7 @@ public class DepositPayment extends javax.swing.JFrame {
             panel_depositLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_depositLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lbl_total_due)
+                .addComponent(lbl_deposit€)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_deposit, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
                 .addContainerGap())
@@ -177,7 +162,7 @@ public class DepositPayment extends javax.swing.JFrame {
             .addGroup(panel_depositLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panel_depositLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_total_due, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_deposit€, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_deposit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(8, 8, 8))
         );
@@ -275,55 +260,101 @@ public class DepositPayment extends javax.swing.JFrame {
         int confirmCardDeposit = JOptionPane.showConfirmDialog(this, "Confirm €" + order.getDeposit() + " Deposit Payment by CASH ?", "Confirm Payment", JOptionPane.YES_NO_OPTION);
         if (confirmCardDeposit == 0)
         {
-            try {
+            order.setCashDeposit(order.getDeposit());
+            try 
+            {
+                dbConnection();
+                    
+                String queryCheck = "SELECT orderNo FROM orderDetails WHERE orderNo = ?";
+                ps = con.prepareStatement(queryCheck);
+                ps.setString(1, order.getOrderNo());
+                rs = ps.executeQuery();
+                  
+                while (rs.next())
+                {
+                    if (rs.getString("orderNo").equals(order.getOrderNo()))
+                    {
+                          String queryUpdate = "UPDATE orderDetails SET firstName =?, lastName =?, contactNo =?, "
+                        + "email =?, deviceBrand =?, deviceModel =?, serialNumber =?, importantNotes =?, fault =?, "
+                        + "productService =?, qty =?, unitPrice =?, priceTotal =?, total =?, deposit =?, cashDeposit =?, "
+                        + "cardDeposit =?, due =?, status =?, issueDate =? WHERE orderNo = ?";
+                        ps = con.prepareStatement(queryUpdate);
 
-                cashDeposit = order.getDeposit();
-                cardDeposit = 0;
-                    dbConnection();
-                    String query = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
-                            + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
-                            + "productService, qty, unitPrice, priceTotal, total, cashDeposit, cardDeposit, "
-                            + "due, status, issuedDate) VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        ps.setString(1, order.getFirstName());
+                        ps.setString(2, order.getLastName());
+                        ps.setString(3, order.getContactNo());
+                        ps.setString(4, order.getEmail());
+                        ps.setString(5, order.getBrand());
+                        ps.setString(6, order.getModel());
+                        ps.setString(7, order.getSerialNumber());
+                        ps.setString(8, order.getImportantNotes());
+                        ps.setString(9, order.getStringFaults());
+                        ps.setString(10, order.getStringProducts());
+                        ps.setString(11, order.getStringQty());
+                        ps.setString(12, order.getUnitPrice());
+                        ps.setString(13, order.getPriceTotal());
+                        ps.setDouble(14, order.getTotal());
+                        ps.setDouble(15, order.getDeposit());
+                        ps.setDouble(16, order.getCashDeposit());
+                        ps.setDouble(17, order.getCardDeposit());
+                        ps.setDouble(18, order.getDue());
+                        ps.setString(19, order.getStatus());
+                        ps.setString(20, order.getIssueDate());
+                        ps.setString(21, order.getOrderNo());
+                        ps.executeUpdate();
 
-                    ps = con.prepareStatement(query);
-                    ps.setString(1, order.getOrderNo());
-                    ps.setString(2, order.getFirstName());
-                    ps.setString(3, order.getLastName()); 
-                    ps.setString(4, order.getContactNo());
-                    ps.setString(5, order.getEmail());
-                    ps.setString(6, order.getBrand());
-                    ps.setString(7, order.getModel());
-                    ps.setString(8, order.getSerialNumber());
-                    ps.setString(9, order.getImportantNotes());
-                    ps.setString(10, order.getStringFaults());
-                    ps.setString(11, order.getStringProducts());
-                    ps.setString(12, order.getStringQty());
-                    ps.setString(13, order.getUnitPrice());
-                    ps.setString(14, order.getPriceTotal());
-                    ps.setDouble(15, order.getTotal());
-                    ps.setDouble(16, order.getDeposit());
-                    ps.setDouble(17, cardDeposit);
-                    ps.setDouble(18, order.getDue());
-                    ps.setString(19, order.getStatus());
-                    ps.setString(20, order.getIssuedDate());
-                    ps.executeUpdate();
+                        JOptionPane.showMessageDialog(this, "Order " + order.getOrderNo() + " Updated successfully!");
+                    }
+                    else 
+                    {
+                        String queryInsert = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
+                                + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
+                                + "productService, qty, unitPrice, priceTotal, total, deposit, cashDeposit, cardDeposit, "
+                                + "due, status, issueDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                     String removeSpace = "UPDATE orderDetails SET fault = REPLACE (fault, '  ', ' ')";
+                        ps = con.prepareStatement(queryInsert);
+                        ps.setString(1, order.getOrderNo());
+                        ps.setString(2, order.getFirstName());
+                        ps.setString(3, order.getLastName()); 
+                        ps.setString(4, order.getContactNo());
+                        ps.setString(5, order.getEmail());
+                        ps.setString(6, order.getBrand());
+                        ps.setString(7, order.getModel());
+                        ps.setString(8, order.getSerialNumber());
+                        ps.setString(9, order.getImportantNotes());
+                        ps.setString(10, order.getStringFaults());
+                        ps.setString(11, order.getStringProducts());
+                        ps.setString(12, order.getStringQty());
+                        ps.setString(13, order.getUnitPrice());
+                        ps.setString(14, order.getPriceTotal());
+                        ps.setDouble(15, order.getTotal());
+                        ps.setDouble(16, order.getDeposit());
+                        ps.setDouble(17, order.getCashDeposit());
+                        ps.setDouble(18, order.getCardDeposit());
+                        ps.setDouble(19, order.getDue());
+                        ps.setString(20, order.getStatus());
+                        ps.setString(21, order.getIssueDate());
+                        ps.executeUpdate();
+
+                        JOptionPane.showMessageDialog(this, "order " +order.getOrderNo() + " created successfully!");
+                    }
+                }
+                    String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "
+                                        + "productService = REPLACE(productService, '  ', ' '), "
+                                        + "qty = REPLACE(qty, '  ', ' '), "
+                                        + "unitPrice = REPLACE(unitPrice, '  ', ' '), "
+                                        + "total = REPLACE(total, '  ', ' ')";
                         ps = con.prepareStatement(removeSpace);
                         ps.executeUpdate();
 
-                    JOptionPane.showMessageDialog(this, "New order created successfully!");
+                    
                     this.dispose();
                     //new NewOrder ().setVisible(true);
-                    //Generate new OrderNo.
-
-                    PrintOrder printOrder = new PrintOrder(order, cardDeposit);
+                    
+                    addDepositNote("Cash");
+                    
+                    PrintOrder printOrder = new PrintOrder(order);
                     printOrder.setVisible(true);
-                     // Send Order to print class as a constructor
-    //                 new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel,
-    //                    serialNumber, stringFaults, importantNotes, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total,
-    //                    deposit, due, issueDate).setVisible(true);
-
             } 
             catch (SQLException ex) 
             {
@@ -341,116 +372,124 @@ public class DepositPayment extends javax.swing.JFrame {
         int confirmCardDeposit = JOptionPane.showConfirmDialog(this, "Confirm €" + order.getDeposit() + " Deposit Payment by CARD ?", "Confirm Payment", JOptionPane.YES_NO_OPTION);
         if (confirmCardDeposit == 0)
         {
+            order.setCardDeposit(order.getDeposit());
+            
             try {
+                dbConnection();
+                    
+                String queryCheck = "SELECT orderNo FROM orderDetails WHERE orderNo = ?";
+                ps = con.prepareStatement(queryCheck);
+                ps.setString(1, order.getOrderNo());
+                rs = ps.executeQuery();
+                  
+                while (rs.next())
+                {
+                    if (rs.getString("orderNo").equals(order.getOrderNo()))
+                    {
+                          String queryUpdate = "UPDATE orderDetails SET firstName =?, lastName =?, contactNo =?, "
+                        + "email =?, deviceBrand =?, deviceModel =?, serialNumber =?, importantNotes =?, fault =?, "
+                        + "productService =?, qty =?, unitPrice =?, priceTotal =?, total =?, deposit =?, cashDeposit =?, "
+                        + "cardDeposit =?, due =?, status =?, issueDate =? WHERE orderNo = ?";
+                        ps = con.prepareStatement(queryUpdate);
 
-               cardDeposit = order.getDeposit();
-               cashDeposit = 0;
-                   dbConnection();
-                   String query = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
-                           + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
-                           + "productService, qty, unitPrice, priceTotal, total, cashDeposit, cardDeposit, "
-                           + "due, status, issuedDate) VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        ps.setString(1, order.getFirstName());
+                        ps.setString(2, order.getLastName());
+                        ps.setString(3, order.getContactNo());
+                        ps.setString(4, order.getEmail());
+                        ps.setString(5, order.getBrand());
+                        ps.setString(6, order.getModel());
+                        ps.setString(7, order.getSerialNumber());
+                        ps.setString(8, order.getImportantNotes());
+                        ps.setString(9, order.getStringFaults());
+                        ps.setString(10, order.getStringProducts());
+                        ps.setString(11, order.getStringQty());
+                        ps.setString(12, order.getUnitPrice());
+                        ps.setString(13, order.getPriceTotal());
+                        ps.setDouble(14, order.getTotal());
+                        ps.setDouble(15, order.getDeposit());
+                        ps.setDouble(16, order.getCashDeposit());
+                        ps.setDouble(17, order.getCardDeposit());
+                        ps.setDouble(18, order.getDue());
+                        ps.setString(19, order.getStatus());
+                        ps.setString(20, order.getIssueDate());
+                        ps.setString(21, order.getOrderNo());
+                        ps.executeUpdate();
 
-                   ps = con.prepareStatement(query);
-                   ps.setString(1, order.getOrderNo());
-                   ps.setString(2, order.getFirstName());
-                   ps.setString(3, order.getLastName()); 
-                   ps.setString(4, order.getContactNo());
-                   ps.setString(5, order.getEmail());
-                   ps.setString(6, order.getBrand());
-                   ps.setString(7, order.getModel());
-                   ps.setString(8, order.getSerialNumber());
-                   ps.setString(9, order.getImportantNotes());
-                   ps.setString(10, order.getStringFaults());
-                   ps.setString(11, order.getStringProducts());
-                   ps.setString(12, order.getStringQty());
-                   ps.setString(13, order.getUnitPrice());
-                   ps.setString(14, order.getPriceTotal());
-                   ps.setDouble(15, order.getTotal());
-                   ps.setDouble(16, cashDeposit);
-                   ps.setDouble(17, order.getDeposit());
-                   ps.setDouble(18, order.getDue());
-                   ps.setString(19, order.getStatus());
-                   ps.setString(20, order.getIssuedDate());
-                   ps.executeUpdate();
+                        JOptionPane.showMessageDialog(this, "Order " + order.getOrderNo() + " Updated successfully!");
+                    }
+                
+                    else 
+                    {
+                        String queryInsert = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
+                                + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
+                                + "productService, qty, unitPrice, priceTotal, total, deposit, cashDeposit, cardDeposit, "
+                                + "due, status, issueDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                    String removeSpace = "UPDATE orderDetails SET fault = REPLACE (fault, '  ', ' ')";
+                        ps = con.prepareStatement(queryInsert);
+                        ps.setString(1, order.getOrderNo());
+                        ps.setString(2, order.getFirstName());
+                        ps.setString(3, order.getLastName()); 
+                        ps.setString(4, order.getContactNo());
+                        ps.setString(5, order.getEmail());
+                        ps.setString(6, order.getBrand());
+                        ps.setString(7, order.getModel());
+                        ps.setString(8, order.getSerialNumber());
+                        ps.setString(9, order.getImportantNotes());
+                        ps.setString(10, order.getStringFaults());
+                        ps.setString(11, order.getStringProducts());
+                        ps.setString(12, order.getStringQty());
+                        ps.setString(13, order.getUnitPrice());
+                        ps.setString(14, order.getPriceTotal());
+                        ps.setDouble(15, order.getTotal());
+                        ps.setDouble(16, order.getDeposit());
+                        ps.setDouble(17, order.getCashDeposit());
+                        ps.setDouble(18, order.getCardDeposit());
+                        ps.setDouble(19, order.getDue());
+                        ps.setString(20, order.getStatus());
+                        ps.setString(21, order.getIssueDate());
+                        ps.executeUpdate();
+
+                        JOptionPane.showMessageDialog(this, "order " +order.getOrderNo() + " created successfully!");
+                        }
+                    }
+                
+                    String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "
+                                        + "productService = REPLACE(productService, '  ', ' '), "
+                                        + "qty = REPLACE(qty, '  ', ' '), "
+                                        + "unitPrice = REPLACE(unitPrice, '  ', ' '), "
+                                        + "total = REPLACE(total, '  ', ' ')";
                        ps = con.prepareStatement(removeSpace);
                        ps.executeUpdate();
 
                    JOptionPane.showMessageDialog(this, "New order created successfully!");
                    this.dispose();
-                   new NewOrder ().setVisible(true);
+                  NewOrder newOrder =  new NewOrder ();
+                  //newOrder.setVisible(true);
+                  
+                  addDepositNote("Card");
 
-                   //Generate new OrderNo.
-
-                   PrintOrder printOrder = new PrintOrder(order, cashDeposit);
+                   PrintOrder printOrder = new PrintOrder(order);
                    printOrder.setVisible(true);
-                    // Send Order to print class as a constructor
-   //                 new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel,
-   //                    serialNumber, stringFaults, importantNotes, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total,
-   //                    deposit, due, issueDate).setVisible(true);
-
            } 
            catch (SQLException ex) 
            {
                Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
            }
+           
         }
     }//GEN-LAST:event_btn_pay_by_cardActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DepositPayment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DepositPayment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DepositPayment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DepositPayment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new DepositPayment().setVisible(true);
-            }
-        });
-    }
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_pay_by_card;
     private javax.swing.JButton btn_pay_by_cash;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel lbl_deposit;
+    private javax.swing.JLabel lbl_deposit€;
     private javax.swing.JLabel lbl_order_no;
     private javax.swing.JLabel lbl_order_payment;
     private javax.swing.JLabel lbl_order_total;
     private javax.swing.JLabel lbl_total;
-    private javax.swing.JLabel lbl_total_due;
     private javax.swing.JPanel panel_billing;
     private javax.swing.JPanel panel_deposit;
     // End of variables declaration//GEN-END:variables
