@@ -1321,13 +1321,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                     if (rs.next())
                         customer.setCustomerID(rs.getInt(1));
                 }
-                else
-                {
-                    txt_first_name.setText("");
-                    txt_last_name.setText("");
-                    txt_contact.setText("");
-                    txt_email.setText("");
-                }
             } 
             else
             {
@@ -1492,8 +1485,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
              else
              {
-                double oldDeposit = order.getDeposit();
-                 
                 order.setFirstName(txt_first_name.getText());
                 order.setLastName(txt_last_name.getText());
                 order.setContactNo(txt_contact.getText());
@@ -1508,19 +1499,21 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 order.setUnitPrice(stringUnitPrice);
                 order.setPriceTotal(stringPriceTotal);
                 order.setTotal(Double.parseDouble(txt_total.getText()));
-                order.setDeposit(Double.parseDouble(txt_deposit.getText()));
+//                order.setDeposit(Double.parseDouble(txt_deposit.getText()));
                 order.setDue(Double.parseDouble(txt_due.getText()));
                 order.setIssueDate(updateDate);
                 
-                 
                  int confirmUpdate = JOptionPane.showConfirmDialog(null, "Save changes on order " 
                         + order.getOrderNo() + " ?", "Update Order Details", JOptionPane.YES_NO_OPTION);
 
                     if (confirmUpdate == 0)
                     {
-                        if (order.getDeposit() > oldDeposit)
+                        double newDeposit = Double.parseDouble(txt_deposit.getText());
+                        
+                        if (newDeposit > order.getDeposit())
                         {
-                            DepositPayment depositPayment = new DepositPayment(order);
+                            newDeposit -= order.getDeposit();
+                            DepositPayment depositPayment = new DepositPayment(order, newDeposit);
                             depositPayment.setVisible(true);
                         }
                         else

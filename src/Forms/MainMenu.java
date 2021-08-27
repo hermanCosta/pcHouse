@@ -214,7 +214,7 @@ public class MainMenu extends javax.swing.JFrame {
         label_home.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         label_home.setForeground(new java.awt.Color(255, 255, 255));
         label_home.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_home.png"))); // NOI18N
-        label_home.setText(" Home");
+        label_home.setText("  Home");
         label_home.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 label_homeMousePressed(evt);
@@ -230,12 +230,12 @@ public class MainMenu extends javax.swing.JFrame {
             panel_homeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_homeLayout.createSequentialGroup()
                 .addComponent(label_home, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 4, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         panel_homeLayout.setVerticalGroup(
             panel_homeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_homeLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
                 .addComponent(label_home))
         );
 
@@ -685,6 +685,7 @@ public class MainMenu extends javax.swing.JFrame {
         );
 
         desktop_pane_main_menu.setBackground(new java.awt.Color(255, 255, 255));
+        desktop_pane_main_menu.setToolTipText("");
         desktop_pane_main_menu.setMaximumSize(new java.awt.Dimension(1049, 700));
         desktop_pane_main_menu.setSize(new java.awt.Dimension(1049, 700));
 

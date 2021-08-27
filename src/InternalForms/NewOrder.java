@@ -119,32 +119,40 @@ public class NewOrder extends javax.swing.JInternalFrame {
     
     public final void autoID()
     {
-        
         try {
             dbConnection();
+            
             String queryCheckOrders = "SELECT Max(orderNo) FROM orderDetails";
             ps = con.prepareStatement(queryCheckOrders);
             rs = ps.executeQuery();
             
-            rs.next();
-            Integer maxOrderNo = Integer.parseInt(rs.getString(1));
-             
-            //check saleNo from saleNo table
-            String queryCheckSale = "SELECT Max(saleNo) FROM sales";
-            PreparedStatement psSales = con.prepareStatement(queryCheckSale);
-            psSales = con.prepareStatement(queryCheckSale);
-           
-            ResultSet rsSales = psSales.executeQuery();
+            Integer maxOrderNo = 0;
+            Integer maxSaleNo = 0;
+            ResultSet rsSales = null;
+            PreparedStatement psSales = null;
+            boolean isEmpty = false;
+            if (rs.next() == false)
+                isEmpty = true;
+            else
+                maxOrderNo = Integer.parseInt(rs.getString(1));
+                
+                  //check saleNo from saleNo table
+                    String queryCheckSale = "SELECT Max(saleNo) FROM sales";
+                    psSales = con.prepareStatement(queryCheckSale);
+                    psSales = con.prepareStatement(queryCheckSale);
+                    rsSales = psSales.executeQuery();
             
-            rsSales.next();
-            Integer maxSaleNo = Integer.parseInt(rsSales.getString(1));
+            if (rsSales.next() == false)
+                isEmpty = true;
+            else
+                maxSaleNo = Integer.parseInt(rsSales.getString(1));
             
              
-             if (maxOrderNo == null || maxSaleNo == null) 
+             if (isEmpty) 
              {
                 lbl_auto_order_no.setText("0000001");
              }
-             else if (maxOrderNo > maxSaleNo)
+             if (maxOrderNo > maxSaleNo)
              {
                  long id = Long.parseLong(rs.getString("Max(orderNo)").substring(2,
                          rs.getString("Max(orderNo)").length()));
@@ -981,7 +989,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         
         else
         {
-             DepositPayment depositPayment = new DepositPayment(order);
+             DepositPayment depositPayment = new DepositPayment(order, 0);
             depositPayment.setVisible(true);
         }
     }//GEN-LAST:event_btn_save_orderActionPerformed
