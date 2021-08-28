@@ -62,39 +62,16 @@ public class DepositPayment extends javax.swing.JFrame {
         try {
             dbConnection();
             
-            String depositNote = "€" + order.getDeposit() + " Deposit, paid by " + payMethod;
-            String newDepositNote = "€" + newDeposit + " Deposit, paid by " + payMethod;
+            String depositnote = "€" + order.getDeposit() + " Deposit, paid by " + payMethod;
             String user = "System";
-            
-            String queryCheck = "SELECT * FROM orderNotes WHERE orderNo = ? ";
-            ps = con.prepareStatement(queryCheck);
-            ps.setString(1, order.getOrderNo());
-            rs = ps.executeQuery();
-            
-            while (rs.next())
-            {
-                if (!rs.getString("note").equals(depositNote))
-                {
-                    String query = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
-            
-                    ps = con.prepareStatement(query);
-                    ps.setString(1, order.getOrderNo());
-                    ps.setString(2, order.getIssueDate());
-                    ps.setString(3, depositNote); // create a depositNote
-                    ps.setString(4, user);
-                    ps.executeUpdate();
-                }
-                else 
-                {
+          
                     String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
                     ps = con.prepareStatement(queryUpdate);
                     ps.setString(1, order.getOrderNo());
                     ps.setString(2, order.getIssueDate());
-                    ps.setString(3, newDepositNote); // add new Deposit note
+                    ps.setString(3, depositnote); // add new Deposit note
                     ps.setString(4, user);
                     ps.executeUpdate();
-                }
-            }
             
             ps.close();
             con.close();
@@ -286,52 +263,11 @@ public class DepositPayment extends javax.swing.JFrame {
         if (confirmCardDeposit == 0)
         {
             order.setCashDeposit(order.getDeposit());
+            
             try 
             {
                 dbConnection();
                     
-                String queryCheck = "SELECT orderNo FROM orderDetails WHERE orderNo = ?";
-                ps = con.prepareStatement(queryCheck);
-                ps.setString(1, order.getOrderNo());
-                rs = ps.executeQuery();
-                  
-                while (rs.next())
-                {
-                    if (rs.getString("orderNo").equals(order.getOrderNo()))
-                    {
-                          String queryUpdate = "UPDATE orderDetails SET firstName =?, lastName =?, contactNo =?, "
-                        + "email =?, deviceBrand =?, deviceModel =?, serialNumber =?, importantNotes =?, fault =?, "
-                        + "productService =?, qty =?, unitPrice =?, priceTotal =?, total =?, deposit = deposit + ?, cashDeposit = cashDeposit + ?, "
-                        + "cardDeposit =?, due =?, status =?, issueDate =? WHERE orderNo = ?";
-                        ps = con.prepareStatement(queryUpdate);
-
-                        ps.setString(1, order.getFirstName());
-                        ps.setString(2, order.getLastName());
-                        ps.setString(3, order.getContactNo());
-                        ps.setString(4, order.getEmail());
-                        ps.setString(5, order.getBrand());
-                        ps.setString(6, order.getModel());
-                        ps.setString(7, order.getSerialNumber());
-                        ps.setString(8, order.getImportantNotes());
-                        ps.setString(9, order.getStringFaults());
-                        ps.setString(10, order.getStringProducts());
-                        ps.setString(11, order.getStringQty());
-                        ps.setString(12, order.getUnitPrice());
-                        ps.setString(13, order.getPriceTotal());
-                        ps.setDouble(14, order.getTotal());
-                        ps.setDouble(15, newDeposit); // sum deposit field to new received
-                        ps.setDouble(16, newDeposit); // sum cashDeposit field to the new received
-                        ps.setDouble(17, order.getCardDeposit());
-                        ps.setDouble(18, order.getDue());
-                        ps.setString(19, order.getStatus());
-                        ps.setString(20, order.getIssueDate());
-                        ps.setString(21, order.getOrderNo());
-                        ps.executeUpdate();
-
-                        JOptionPane.showMessageDialog(this, "Order " + order.getOrderNo() + " Updated successfully!");
-                    }
-                    else 
-                    {
                         String queryInsert = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
                                 + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
                                 + "productService, qty, unitPrice, priceTotal, total, deposit, cashDeposit, cardDeposit, "
@@ -362,8 +298,7 @@ public class DepositPayment extends javax.swing.JFrame {
                         ps.executeUpdate();
 
                         JOptionPane.showMessageDialog(this, "order " +order.getOrderNo() + " created successfully!");
-                    }
-                }
+                        
                     String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "
                                         + "productService = REPLACE(productService, '  ', ' '), "
                                         + "qty = REPLACE(qty, '  ', ' '), "
@@ -371,13 +306,10 @@ public class DepositPayment extends javax.swing.JFrame {
                                         + "total = REPLACE(total, '  ', ' ')";
                         ps = con.prepareStatement(removeSpace);
                         ps.executeUpdate();
-
-                    
-                    this.dispose();
-                    //new NewOrder ().setVisible(true);
                     
                     addDepositNote("Cash");
                     
+                    this.dispose();
                     PrintOrder printOrder = new PrintOrder(order);
                     printOrder.setVisible(true);
             } 
@@ -401,50 +333,7 @@ public class DepositPayment extends javax.swing.JFrame {
             
             try {
                 dbConnection();
-                    
-                String queryCheck = "SELECT orderNo FROM orderDetails WHERE orderNo = ?";
-                ps = con.prepareStatement(queryCheck);
-                ps.setString(1, order.getOrderNo());
-                rs = ps.executeQuery();
-                  
-                while (rs.next())
-                {
-                    if (rs.getString("orderNo").equals(order.getOrderNo()))
-                    {
-                          String queryUpdate = "UPDATE orderDetails SET firstName =?, lastName =?, contactNo =?, "
-                        + "email =?, deviceBrand =?, deviceModel =?, serialNumber =?, importantNotes =?, fault =?, "
-                        + "productService =?, qty =?, unitPrice =?, priceTotal =?, total =?, deposit = deposit + ?, cashDeposit =?, "
-                        + "cardDeposit = cardDeposit + ?, due =?, status =?, issueDate =? WHERE orderNo = ?";
-                        ps = con.prepareStatement(queryUpdate);
-
-                        ps.setString(1, order.getFirstName());
-                        ps.setString(2, order.getLastName());
-                        ps.setString(3, order.getContactNo());
-                        ps.setString(4, order.getEmail());
-                        ps.setString(5, order.getBrand());
-                        ps.setString(6, order.getModel());
-                        ps.setString(7, order.getSerialNumber());
-                        ps.setString(8, order.getImportantNotes());
-                        ps.setString(9, order.getStringFaults());
-                        ps.setString(10, order.getStringProducts());
-                        ps.setString(11, order.getStringQty());
-                        ps.setString(12, order.getUnitPrice());
-                        ps.setString(13, order.getPriceTotal());
-                        ps.setDouble(14, order.getTotal());
-                        ps.setDouble(15, newDeposit);
-                        ps.setDouble(16, order.getCashDeposit());
-                        ps.setDouble(17, newDeposit);
-                        ps.setDouble(18, order.getDue());
-                        ps.setString(19, order.getStatus());
-                        ps.setString(20, order.getIssueDate());
-                        ps.setString(21, order.getOrderNo());
-                        ps.executeUpdate();
-
-                        JOptionPane.showMessageDialog(this, "Order " + order.getOrderNo() + " Updated successfully!");
-                    }
-                
-                    else 
-                    {
+        
                         String queryInsert = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
                                 + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
                                 + "productService, qty, unitPrice, priceTotal, total, deposit, cashDeposit, cardDeposit, "
@@ -474,9 +363,7 @@ public class DepositPayment extends javax.swing.JFrame {
                         ps.setString(21, order.getIssueDate());
                         ps.executeUpdate();
 
-                        JOptionPane.showMessageDialog(this, "order " +order.getOrderNo() + " created successfully!");
-                        }
-                    }
+                        JOptionPane.showMessageDialog(this, "Order " +order.getOrderNo() + " created successfully!");
                 
                     String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "
                                         + "productService = REPLACE(productService, '  ', ' '), "
@@ -486,12 +373,12 @@ public class DepositPayment extends javax.swing.JFrame {
                        ps = con.prepareStatement(removeSpace);
                        ps.executeUpdate();
 
-                   this.dispose();
+                   
                   NewOrder newOrder =  new NewOrder ();
-                  //newOrder.setVisible(true);
                   
                   addDepositNote("Card");
-
+                  this.dispose();
+                  
                    PrintOrder printOrder = new PrintOrder(order);
                    printOrder.setVisible(true);
            } 

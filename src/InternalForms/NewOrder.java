@@ -349,12 +349,12 @@ public class NewOrder extends javax.swing.JInternalFrame {
             serialNumber = txt_serial_number.getText();
             importantNotes = editor_pane_notes.getText();
             
-            if (txt_deposit != null || !txt_deposit.getText().trim().isEmpty())
+            if (txt_deposit.getText() == null || txt_deposit.getText().trim().isEmpty())
             {
-                deposit = Double.parseDouble(txt_deposit.getText());
-                
-            } else {
                 deposit = 0;
+
+            } else {
+                deposit = Double.parseDouble(txt_deposit.getText());
             }
             
             due = Double.parseDouble(txt_due.getText());
@@ -957,9 +957,12 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     ps.setString(14, order.getPriceTotal());
                     ps.setDouble(15, order.getTotal());
                     ps.setDouble(16, order.getDeposit());
-                    ps.setDouble(17, order.getDue());
-                    ps.setString(18, order.getStatus());
-                    ps.setString(19, order.getIssueDate());
+                    ps.setDouble(17, order.getCashDeposit());
+                    ps.setDouble(18, order.getCardDeposit());
+                    ps.setDouble(19, order.getDue());
+                    ps.setString(20, order.getStatus());
+                    ps.setString(21, order.getIssueDate());
+                    
                     ps.executeUpdate();
 
                      String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "

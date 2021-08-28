@@ -66,10 +66,15 @@ public class PrintOrder extends javax.swing.JFrame {
         lbl_print_total_products.setText("Total: €" + String.valueOf(order.getTotal()));
         lbl_print_due.setText("Due: €" + String.valueOf(order.getDue()));
         
-        if (order.getCashDeposit()== 0)
-            lbl_print_deposit.setText("Deposit paid: €" + String.valueOf(order.getDeposit()) + " by Card");
+        if (order.getDeposit() == 0)
+            lbl_print_deposit.setText("Deposit paid: €" +order.getDeposit());
+        else if (order.getCashDeposit() == 0)
+            lbl_print_deposit.setText("Deposit paid: €" + String.valueOf(order.getCardDeposit()) + " by Card");
+        else if (order.getCardDeposit() == 0)
+            lbl_print_deposit.setText("Deposit paid: €" + String.valueOf(order.getCashDeposit()) + " by Cash ");
         else 
-            lbl_print_deposit.setText("Deposit paid: €" + String.valueOf(order.getDeposit()) + " by Cash ");
+            lbl_print_deposit.setText("Deposit paid: €" + String.valueOf(order.getCashDeposit()) + " by Cash " +
+            " | €" + String.valueOf(order.getCardDeposit() + " by Card"));
        
         String[] arrayProducts = order.getStringProducts().split(",");
         String[] arrayQty = order.getStringQty().split(",");
@@ -541,44 +546,6 @@ public class PrintOrder extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btn_printActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        
-    
-//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PrintOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PrintOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PrintOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PrintOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PrintOrder().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_print;

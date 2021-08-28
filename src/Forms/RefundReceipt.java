@@ -27,10 +27,6 @@ public class RefundReceipt extends javax.swing.JFrame {
      * Creates new form Print
      */
     
-    double total, cash, card;
-    String orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, serialNumber, 
-            stringProducts, stringQty, stringUnitPrice, stringPriceTotal, refundDate;
-    
     Order order;
     CompletedOrders completedOrders;
     
@@ -38,32 +34,6 @@ public class RefundReceipt extends javax.swing.JFrame {
         initComponents();
     }
     
-    public RefundReceipt(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, String _deviceBrand, 
-            String _deviceModel, String _serialNumber, String _stringProducts, String _stringQty, String _stringUnitPrice, 
-            String _stringPriceTotal, double _total,double _cash, double _card, String _refundDate) {
-        
-        initComponents();
-        
-        
-        this.orderNo = _orderNo;
-        this.firstName = _firstName;
-        this.lastName = _lastName;
-        this.contactNo = _contactNo;
-        this.email = _email;
-        this.deviceBrand = _deviceBrand;
-        this.deviceModel = _deviceModel;
-        this.serialNumber = _serialNumber;
-        this.stringProducts = _stringProducts;
-        this.stringQty = _stringQty;
-        this.stringUnitPrice = _stringUnitPrice;
-        this.stringPriceTotal = _stringPriceTotal;
-        this.total = _total;
-        this.cash = _cash;
-        this.card = _card;
-        this.refundDate = _refundDate;
-        
-        
-    }
 
     public RefundReceipt(Order _order, CompletedOrders _completedOrders) {
         initComponents();
@@ -76,7 +46,7 @@ public class RefundReceipt extends javax.swing.JFrame {
     
     public void loadOrderToPrint()
     {
-         if (completedOrders.getCash() == 0)
+        if (completedOrders.getCash() == 0)
             lbl_paid_by.setText("Refunded by Card: €" + completedOrders.getCard());
         else if (completedOrders.getCard() == 0)
             lbl_paid_by.setText("Refunded by Cash: €" + completedOrders.getCash());
@@ -94,10 +64,12 @@ public class RefundReceipt extends javax.swing.JFrame {
         lbl_print_total_products.setText("Total: €" + String.valueOf(order.getTotal()));
         
         
-        String[] arrayProducts = stringProducts.split(",");
-        String[] arrayQty = stringQty.split(",");
-        String[] arrayUnitPrice = stringUnitPrice.split(",");
-        String[] arrayPriceTotal = stringPriceTotal.split(",");
+         // Array for holding database String 
+        String[] arrayProducts = order.getStringProducts().split(",");
+        String[] arrayQty = order.getStringQty().split(",");
+        String[] arrayUnitPrice = order.getUnitPrice().split(",");
+        String[] arrayPriceTotal = order.getPriceTotal().split(",");
+        
         
         for (String s : arrayProducts)
             txt_pane_products.setText(txt_pane_products.getText() + " - " + s + "\n");
@@ -479,7 +451,7 @@ public class RefundReceipt extends javax.swing.JFrame {
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         PrinterJob printerJob = PrinterJob.getPrinterJob();
-        printerJob.setJobName("RefundReceipt" + this.orderNo);
+        printerJob.setJobName("RefundReceipt" + order.getOrderNo());
         
         PageFormat format = printerJob.getPageFormat(null);
         
@@ -507,7 +479,7 @@ public class RefundReceipt extends javax.swing.JFrame {
                 
                 printerJob.print();
                 
-                JOptionPane.showMessageDialog(this, "Refund Receipt " + orderNo + " Printed Successfully", "Print Refund", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Refund Receipt " + order.getOrderNo() + " Printed Successfully", "Print Refund", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
                 
             } catch (PrinterException ex) {
@@ -516,45 +488,6 @@ public class RefundReceipt extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_printActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        
-    
-//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(RefundReceipt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(RefundReceipt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(RefundReceipt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(RefundReceipt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new RefundReceipt().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_print;

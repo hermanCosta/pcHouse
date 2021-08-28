@@ -66,53 +66,10 @@ public class FixedOrder extends javax.swing.JInternalFrame {
     ResultSet rs;
     ResultSetMetaData rsmd;
     
-    String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
-           deviceModel,  serialNumber, importantNotes, stringFaults, 
-           stringProducts, stringQty, stringUnitPrice, stringPriceTotal, 
-            status, issueDate, finishedDate, pickedDate; 
-
-    double total, deposit, cashDeposit, cardDeposit, due;
     double cash, card, changeTotal;
-    
     
     public FixedOrder() {
         initComponents();
-        
-    }
-
-    public FixedOrder(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
-            String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
-            String _stringFaults, String _stringProducts, String _stringQty, String _stringUnitPrice, 
-            String _stringPriceTotal, double _total, double _deposit,double _cashDeposit,double _cardDeposit, 
-            double _due,String _status, String _issueDate, String _finishedDate, double _cash, double _card, String _pickedDate) {
-        
-        initComponents();
-        
-        this.orderNo = _orderNo;
-        this.firstName = _firstName;
-        this.lastName = _lastName;
-        this.contactNo = _contactNo;
-        this.email = _email;
-        this.deviceBrand = _deviceBrand;
-        this.deviceModel = _deviceModel;
-        this.serialNumber = _serialNumber;
-        this.importantNotes = _importantNotes;
-        this.issueDate = _issueDate;
-        this.stringFaults = _stringFaults;
-        this.stringProducts = _stringProducts;
-        this.stringQty = _stringQty;
-        this.stringUnitPrice = _stringUnitPrice;
-        this.stringPriceTotal = _stringPriceTotal;
-        this.total = _total;
-        this.deposit = _deposit;
-        this.cashDeposit = _cashDeposit;
-        this.cardDeposit = _cardDeposit;
-        this.due = _due;
-        this.status = _status;
-        this.finishedDate = _finishedDate;
-        this.cash = _cash;
-        this.card = _card;
-        this.pickedDate = _pickedDate;
         
     }
 
@@ -164,9 +121,9 @@ public class FixedOrder extends javax.swing.JInternalFrame {
             if (cash == 0)
             lbl_paid_by.setText("Paid by Card: €" + card);
             else if (card == 0)
-            lbl_paid_by.setText("Paid by Cash: €" + cash);
+            lbl_paid_by.setText("Paid by Cash: €" + cash + " | Change: €" + changeTotal);
             else
-            lbl_paid_by.setText("Paid by Cash: €" + cash + " | Card: €" + card);
+            lbl_paid_by.setText("Paid by Cash: €" + cash + " | Card: €" + card + " | Change: €" + changeTotal);
             
             lbl_paid_by.setVisible(true);
         }
@@ -898,7 +855,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 ps = con.prepareStatement(queryUpdate);
                 ps.setString(1, order.getStatus());
                 ps.setString(2, order.getRefundDate());
-                ps.setString(3, orderNo);
+                ps.setString(3, order.getOrderNo());
                 ps.executeUpdate();
                 
                 cash  = cash - changeTotal;
@@ -930,7 +887,8 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 order.getStringProducts(), refundTotal, refundDeposit, refundDue, refundDate, refundCash, refundCard, changeTotal);
                         
                 String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, productService, total,"
-                        + "deposit, due, payDate, cash, card) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        + "deposit, due, payDate, cash, card, changeTotal) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                
                 ps = con.prepareStatement(queryInsert);
                 ps.setString(1, completedOrders.getOrderNo());
                 ps.setString(2, completedOrders.getFirstName());
@@ -938,10 +896,11 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 ps.setString(4, completedOrders.getStringProducts());
                 ps.setDouble(5, completedOrders.getTotal());
                 ps.setDouble(6, completedOrders.getDeposit());
-                ps.setString(7, completedOrders.getPayDate());
-                ps.setDouble(8, completedOrders.getCash());
-                ps.setDouble(9, completedOrders.getCard());
-                ps.setDouble(10, completedOrders.getChangeTotal());
+                ps.setDouble(7, completedOrders.getDue());
+                ps.setString(8, completedOrders.getPayDate());
+                ps.setDouble(9, completedOrders.getCash());
+                ps.setDouble(10, completedOrders.getCard());
+                ps.setDouble(11, completedOrders.getChangeTotal());
                 ps.executeUpdate();
                 
                 

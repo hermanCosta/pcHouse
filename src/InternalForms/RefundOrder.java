@@ -7,6 +7,7 @@ package InternalForms;
 
 import Forms.OrderNotes;
 import Forms.RefundReceipt;
+import Model.CompletedOrders;
 import Model.Customer;
 import Model.Order;
 import Model.ProductService;
@@ -58,15 +59,9 @@ public class RefundOrder extends javax.swing.JInternalFrame {
     Customer customer;
     ProductService productService;
     Order order;
+    CompletedOrders completedOrders;
     ResultSet rs;
     ResultSetMetaData rsmd;
-    
-     String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
-           deviceModel,  serialNumber, importantNotes, stringFaults, 
-           stringProducts, stringQty, stringUnitPrice, stringPriceTotal, 
-            status, issueDate, finishedDate, pickedDate, refundDate; 
-
-    double total, deposit, cashDeposit, cardDeposit, due, cash, card;
     
     
     public RefundOrder() {
@@ -74,42 +69,11 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         
     }
 
-    public RefundOrder(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
-            String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
-            String _stringFaults, String _stringProducts, String _stringQty, String _stringUnitPrice, 
-            String _stringPriceTotal, double _total, double _deposit, double _cashDeposit, double _cardDeposit, double _due,String _status, 
-            String _issueDate, String _finishedDate, String _pickedDate, double _cash, double _card, String _refundDate) {
-        
-        initComponents();
-        
-        this.orderNo = _orderNo;
-        this.firstName = _firstName;
-        this.lastName = _lastName;
-        this.contactNo = _contactNo;
-        this.email = _email;
-        this.deviceBrand = _deviceBrand;
-        this.deviceModel = _deviceModel;
-        this.serialNumber = _serialNumber;
-        this.importantNotes = _importantNotes;
-        this.issueDate = _issueDate;
-        this.stringFaults = _stringFaults;
-        this.stringProducts = _stringProducts;
-        this.stringQty = _stringQty;
-        this.stringUnitPrice = _stringUnitPrice;
-        this.stringPriceTotal = _stringPriceTotal;
-        this.total = _total;
-        this.deposit = _deposit;
-        this.cashDeposit = _cashDeposit;
-        this.cardDeposit = _cardDeposit;
-        this.due = _due;
-        this.status = _status;
-        this.finishedDate = _finishedDate;
-        this.pickedDate = _pickedDate;
-        this.cash = Math.abs(_cash);
-        this.card = Math.abs(_card);
-        this.refundDate = _refundDate;
-        
-        //Remove borders
+    RefundOrder(Order _order, CompletedOrders _completedOrders) {
+     initComponents();
+     this.order = _order;
+     this.completedOrders = _completedOrders;
+     //Remove borders
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
@@ -117,10 +81,6 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         
         loadSelectedOrder();
         tableSettings();
-    }
-
-    RefundOrder(Order order) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 
@@ -151,43 +111,43 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         faultsModel.setRowCount(0);
         DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
         TableColumnModel tableModel = table_view_products.getColumnModel();
+        
+        
+        double positiveCash =  Math.abs(completedOrders.getCash());
+        double positiveCard = Math.abs(completedOrders.getCard());
+        completedOrders.setCash(positiveCash);
+        completedOrders.setCard(positiveCard);
 
-        if (cash == 0)
-        {
-            lbl_refunded_by.setText("Refunded by Card: €" + (card + deposit));
-        }
-        else if (card == 0)
-        {
-            lbl_refunded_by.setText("Refunded by Cash: €" + (cash + deposit));
-        }
+        if (completedOrders.getCash() == 0)
+            lbl_refunded_by.setText("Refunded by Card: €" + (completedOrders.getCard() + order.getDeposit()));
+        else if (completedOrders.getCard() == 0)
+            lbl_refunded_by.setText("Refunded by Cash: €" + (completedOrders.getCash() + order.getDeposit()));
         else
-        {
-            lbl_refunded_by.setText("Refunded by Cash: €" + (cash + deposit) + " | Card: €" + (card + deposit));
-        }
+            lbl_refunded_by.setText("Refunded by Cash: €" + (completedOrders.getCash() + order.getDeposit()) + " | Card: €" + (completedOrders.getCard() + order.getDeposit()));
         
         lbl_order_status.setText("Order Refunded");
-        lbl_date.setText("date: " + this.refundDate);
-        lbl_order_created_on.setText("Created on: " + this.issueDate);
-        lbl_order_paid_on.setText("Paid on: " + this.finishedDate);
-        lbl_auto_order_no.setText(this.orderNo);
-        txt_first_name.setText(this.firstName);
-        txt_last_name.setText(this.lastName);
-        txt_contact.setText(this.contactNo);
-        txt_email.setText(this.email);
-        txt_brand.setText(this.deviceBrand);
-        txt_model.setText(this.deviceModel);
-        txt_sn.setText(this.serialNumber);
-        editor_pane_notes.setText(this.importantNotes);
-        txt_total.setText(String.valueOf(this.total));
-        txt_deposit.setText(String.valueOf(this.deposit));
-        txt_due.setText(String.valueOf(this.due));
+        lbl_date.setText("date: " + order.getRefundDate());
+        lbl_order_created_on.setText("Created on: " + order.getIssueDate());
+        lbl_order_paid_on.setText("Paid on: " + order.getPickDate());
+        lbl_auto_order_no.setText(order.getOrderNo());
+        txt_first_name.setText(order.getFirstName());
+        txt_last_name.setText(order.getLastName());
+        txt_contact.setText(order.getContactNo());
+        txt_email.setText(order.getEmail());
+        txt_brand.setText(order.getBrand());
+        txt_model.setText(order.getModel());
+        txt_sn.setText(order.getSerialNumber());
+        editor_pane_important_notes.setText(order.getImportantNotes());
+        txt_total.setText(String.valueOf(order.getTotal()));
+        txt_deposit.setText(String.valueOf(order.getDeposit()));
+        txt_due.setText(String.valueOf(order.getDue()));
         
        // Array for holding database String 
-        String[] arrayFaults = stringFaults.split(",");
-        String[] arrayProducts = stringProducts.split(",");
-        String[] arrayQty = stringQty.split(",");
-        String[] arrayUnitPrice = stringUnitPrice.split(",");
-        String[] arrayPriceTotal = stringPriceTotal.split(",");
+        String[] arrayFaults = order.getStringFaults().split(",");
+        String[] arrayProducts = order.getStringProducts().split(",");
+        String[] arrayQty = order.getStringQty().split(",");
+        String[] arrayUnitPrice = order.getUnitPrice().split(",");
+        String[] arrayPriceTotal = order.getPriceTotal().split(",");
         
         //Iterate arrayProducts and pass elements to faults table
         for (Object objFaults : arrayFaults)
@@ -268,7 +228,7 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         lbl_date = new javax.swing.JLabel();
         lbl_refunded_by = new javax.swing.JLabel();
         jScrollPane_notes = new javax.swing.JScrollPane();
-        editor_pane_notes = new javax.swing.JEditorPane();
+        editor_pane_important_notes = new javax.swing.JEditorPane();
         lbl_order_paid_on = new javax.swing.JLabel();
 
         setMaximumSize(new java.awt.Dimension(1049, 827));
@@ -580,10 +540,10 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         jScrollPane_notes.setEnabled(false);
         jScrollPane_notes.setVerifyInputWhenFocusTarget(false);
 
-        editor_pane_notes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Important Notes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 16))); // NOI18N
-        editor_pane_notes.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
-        editor_pane_notes.setEnabled(false);
-        jScrollPane_notes.setViewportView(editor_pane_notes);
+        editor_pane_important_notes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Important Notes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 16))); // NOI18N
+        editor_pane_important_notes.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        editor_pane_important_notes.setEnabled(false);
+        jScrollPane_notes.setViewportView(editor_pane_important_notes);
 
         lbl_order_paid_on.setBackground(new java.awt.Color(204, 204, 204));
         lbl_order_paid_on.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
@@ -894,15 +854,13 @@ public class RefundOrder extends javax.swing.JInternalFrame {
 
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
-         RefundReceipt refundReceipt = new RefundReceipt(orderNo, firstName, lastName, contactNo, email, deviceBrand,
-                        deviceModel, serialNumber, stringProducts, stringQty, stringUnitPrice,stringPriceTotal, total, cash,
-                        card, refundDate);
-                refundReceipt.setVisible(true);
+         RefundReceipt refundReceipt = new RefundReceipt(order, completedOrders);
+         refundReceipt.setVisible(true);
     }//GEN-LAST:event_btn_printActionPerformed
 
     private void btn_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notesActionPerformed
         // TODO add your handling code here:
-        OrderNotes orderNotes = new OrderNotes(orderNo);
+        OrderNotes orderNotes = new OrderNotes(order.getOrderNo());
         orderNotes.setVisible(true);
     }//GEN-LAST:event_btn_notesActionPerformed
 
@@ -910,7 +868,7 @@ public class RefundOrder extends javax.swing.JInternalFrame {
     private javax.swing.JButton btn_notes;
     private javax.swing.JButton btn_print;
     private javax.swing.JDesktopPane desktop_pane_refund_order;
-    private javax.swing.JEditorPane editor_pane_notes;
+    private javax.swing.JEditorPane editor_pane_important_notes;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane_notes;

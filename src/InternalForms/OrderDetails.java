@@ -6,6 +6,7 @@
 package InternalForms;
 
 import Forms.DepositPayment;
+import Forms.DepositUpdatePayment;
 import Forms.PrintOrder;
 import Forms.OrderNotes;
 import Model.Customer;
@@ -1513,8 +1514,10 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                         if (newDeposit > order.getDeposit())
                         {
                             newDeposit -= order.getDeposit();
-                            DepositPayment depositPayment = new DepositPayment(order, newDeposit);
-                            depositPayment.setVisible(true);
+                            DepositUpdatePayment depositUpdatePayment = new DepositUpdatePayment(order, newDeposit);
+                            depositUpdatePayment.setVisible(true);
+                            System.out.println("Old deposit: " + order.getDeposit());
+                            System.out.println("New deposit: " + newDeposit);
                         }
                         else
                         {

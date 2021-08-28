@@ -41,7 +41,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
     /**
      * Creates new form NewOrder
      */
- ArrayList firstNames = new ArrayList();
+    ArrayList firstNames = new ArrayList();
     ArrayList faults = new ArrayList();
     ArrayList lastNames = new ArrayList();
     
@@ -59,52 +59,16 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
     ResultSet rs;
     ResultSetMetaData rsmd;
     
-     String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
-           deviceModel,  serialNumber, importantNotes, stringFaults, 
-           stringProducts, stringQty, stringUnitPrice, stringPriceTotal, 
-            status, issueDate, finishedDate, pickedDate; 
-
-    double total, deposit, cashDeposit, cardDeposit, due, cash, card;
-    
     
     public NotFixedOrder() {
         initComponents();
         
     }
 
-    public NotFixedOrder(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
-            String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
-            String _stringFaults, String _stringProducts, String _stringQty, String _stringUnitPrice, 
-            String _stringPriceTotal, double _total, double _deposit, double _cashDeposit, double _cardDeposit,
-            double _due, String _status, String _issueDate, String _finishedDate, double _cash, double _card, String _pickedDate) {
-        
+
+    NotFixedOrder(Order _order) {
         initComponents();
-        
-        this.orderNo = _orderNo;
-        this.firstName = _firstName;
-        this.lastName = _lastName;
-        this.contactNo = _contactNo;
-        this.email = _email;
-        this.deviceBrand = _deviceBrand;
-        this.deviceModel = _deviceModel;
-        this.serialNumber = _serialNumber;
-        this.importantNotes = _importantNotes;
-        this.issueDate = _issueDate;
-        this.stringFaults = _stringFaults;
-        this.stringProducts = _stringProducts;
-        this.stringQty = _stringQty;
-        this.stringUnitPrice = _stringUnitPrice;
-        this.stringPriceTotal = _stringPriceTotal;
-        this.total = _total;
-        this.deposit = _deposit;
-        this.cashDeposit = _cashDeposit;
-        this.cardDeposit = _cardDeposit;
-        this.due = _due;
-        this.status = _status;
-        this.finishedDate = _finishedDate;
-        this.cash = _cash;
-        this.card = _card;
-        this.pickedDate = _pickedDate;
+        this.order = _order;
         
         //Remove borders
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
@@ -114,10 +78,6 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         
         loadSelectedOrder();
         tableSettings();
-    }
-
-    NotFixedOrder(Order order) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     
@@ -143,16 +103,15 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
     
    public void loadSelectedOrder()
    {
-        
         DefaultTableModel faultsModel = (DefaultTableModel) table_view_faults.getModel();
         faultsModel.setRowCount(0);
         DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
         TableColumnModel tableModel = table_view_products.getColumnModel();
 
-        if (pickedDate != null && !pickedDate.trim().isEmpty())
+        if (order.getPickDate() != null && !order.getPickDate().trim().isEmpty())
         {
             lbl_order_picked_on.setVisible(true);
-            lbl_order_picked_on.setText("Picked on: " + pickedDate);
+            lbl_order_picked_on.setText("Picked on: " + order.getPickDate());
             btn_undo.setVisible(false);
             btn_pick_up.setVisible(false);
             btn_notes.setVisible(false);
@@ -170,27 +129,27 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         }
         
         lbl_order_status.setText("Order Not Fixed");
-        lbl_date.setText("date: " + this.finishedDate);
-        lbl_order_created_on.setText("Created on: " + this.issueDate);
-        lbl_auto_order_no.setText(this.orderNo);
-        txt_first_name.setText(this.firstName);
-        txt_last_name.setText(this.lastName);
-        txt_contact.setText(this.contactNo);
-        txt_email.setText(this.email);
-        txt_brand.setText(this.deviceBrand);
-        txt_model.setText(this.deviceModel);
-        txt_sn.setText(this.serialNumber);
-        editor_pane_notes.setText(this.importantNotes);
-        txt_total.setText(String.valueOf(this.total));
-        txt_deposit.setText(String.valueOf(this.deposit));
-        txt_due.setText(String.valueOf(this.due));
+        lbl_date.setText("date: " + order.getFinishDate());
+        lbl_order_created_on.setText("Created on: " + order.getIssueDate());
+        lbl_auto_order_no.setText(order.getOrderNo());
+        txt_first_name.setText(order.getFirstName());
+        txt_last_name.setText(order.getLastName());
+        txt_contact.setText(order.getContactNo());
+        txt_email.setText(order.getEmail());
+        txt_brand.setText(order.getBrand());
+        txt_model.setText(order.getModel());
+        txt_sn.setText(order.getSerialNumber());
+        editor_pane_notes.setText(order.getImportantNotes());
+        txt_total.setText(String.valueOf(order.getTotal()));
+        txt_deposit.setText(String.valueOf(order.getDeposit()));
+        txt_due.setText(String.valueOf(order.getDue()));
         
        // Array for holding database String 
-        String[] arrayFaults = stringFaults.split(",");
-        String[] arrayProducts = stringProducts.split(",");
-        String[] arrayQty = stringQty.split(",");
-        String[] arrayUnitPrice = stringUnitPrice.split(",");
-        String[] arrayPriceTotal = stringPriceTotal.split(",");
+        String[] arrayFaults = order.getStringFaults().split(",");
+        String[] arrayProducts = order.getStringProducts().split(",");
+        String[] arrayQty = order.getStringQty().split(",");
+        String[] arrayUnitPrice = order.getUnitPrice().split(",");
+        String[] arrayPriceTotal = order.getPriceTotal().split(",");
         
         //Iterate arrayProducts and pass elements to faults table
         for (Object objFaults : arrayFaults)
@@ -959,23 +918,23 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
     private void btn_pick_upActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pick_upActionPerformed
         // TODO add your handling code here:
         int confirmUndoing = JOptionPane.showConfirmDialog(null, "Confirm Picking Order: " 
-                            + orderNo + " ?", "Order Not Fixed", JOptionPane.YES_NO_OPTION);
+                            + order.getOrderNo() + " ?", "Order Not Fixed", JOptionPane.YES_NO_OPTION);
         if (confirmUndoing == 0)
         {
             try {
                 dbConnection();
                 java.util.Date date = new java.util.Date();
                 java.sql.Timestamp currentDateTime = new java.sql.Timestamp(date.getTime());
-                pickedDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
+                String pickDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
+                order.setPickDate(pickDate);
                 
-                
-                String query = "UPDATE orderDetails SET pickedDate = ? WHERE orderNo = ?";
+                String query = "UPDATE orderDetails SET pickDate = ? WHERE orderNo = ?";
                 ps = con.prepareStatement(query);
-                ps.setString(1, pickedDate);
-                ps.setString(2, orderNo);
+                ps.setString(1, order.getPickDate());
+                ps.setString(2, order.getOrderNo());
                 ps.executeUpdate();
                 
-                lbl_order_picked_on.setText("Picked on: " + pickedDate);
+                lbl_order_picked_on.setText("Picked on: " + order.getPickDate());
                 lbl_order_picked_on.setVisible(true);
                 btn_undo.setVisible(false);
                 btn_pick_up.setVisible(false);
@@ -993,20 +952,24 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         
         int confirmUndoing = JOptionPane.showConfirmDialog(null, "Do you really want to 'UNDO' Order: " 
-                            + orderNo + " ?", "Undo Order", JOptionPane.YES_NO_OPTION);
+                            + order.getOrderNo() + " ?", "Undo Order", JOptionPane.YES_NO_OPTION);
         if (confirmUndoing == 0)
         {
-            status = "In Progress";
+           String  status = "In Progress";
+            order.setStatus(status);
             try {
                 dbConnection();
-                String query = "UPDATE orderDetails SET status = '" + status + "' WHERE orderNo = '" + orderNo + "'";
+                String query = "UPDATE orderDetails SET status = ? WHERE orderNo = ? ";
                 ps = con.prepareStatement(query);
+                ps.setString(1, order.getStatus());
+                ps.setString(2, order.getOrderNo());
                 ps.executeUpdate();
                 
-                OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, 
-                        email, deviceBrand, deviceModel, serialNumber, importantNotes, stringFaults, stringProducts,
-                        stringQty, stringUnitPrice, stringPriceTotal, total, deposit, cashDeposit, cardDeposit, due, status, issueDate, cash, card, pickedDate);
-            
+//                OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, 
+//                        email, deviceBrand, deviceModel, serialNumber, importantNotes, stringFaults, stringProducts,
+//                        stringQty, stringUnitPrice, stringPriceTotal, total, deposit, cashDeposit, cardDeposit, due, status, issueDate, cash, card, pickDate);
+
+                OrderDetails orderDetails = new OrderDetails(order, 0, 0, 0);
                 desktop_pane_fixed_order.removeAll();
                 desktop_pane_fixed_order.add(orderDetails).setVisible(true);
             } catch (SQLException ex) {
@@ -1017,13 +980,13 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
 
     private void btn_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notesActionPerformed
         // TODO add your handling code here:
-        OrderNotes orderNotes = new OrderNotes(orderNo);
+        OrderNotes orderNotes = new OrderNotes(order.getOrderNo());
         orderNotes.setVisible(true);
     }//GEN-LAST:event_btn_notesActionPerformed
 
     private void btn_notes1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notes1ActionPerformed
         // TODO add your handling code here:
-        OrderNotes orderNotes = new OrderNotes(orderNo);
+        OrderNotes orderNotes = new OrderNotes(order.getOrderNo());
         orderNotes.setVisible(true);
     }//GEN-LAST:event_btn_notes1ActionPerformed
 

@@ -5,6 +5,7 @@
  */
 package InternalForms;
 
+import Model.CompletedOrders;
 import Model.Order;
 import java.awt.Color;
 import java.awt.Font;
@@ -35,6 +36,7 @@ public class OrderList extends javax.swing.JInternalFrame {
         PreparedStatement ps;
         String tableStatus;
         Order order;
+        CompletedOrders completedOrders;
        
     public OrderList() {
         initComponents();
@@ -326,6 +328,7 @@ public class OrderList extends javax.swing.JInternalFrame {
         {
             double cash = 0, card = 0, changeTotal = 0;
             
+            
             dbConnection();
             DefaultTableModel dtm = (DefaultTableModel)table_view_orders.getModel();
             int orderSelected = table_view_orders.getSelectedRow();
@@ -355,9 +358,14 @@ public class OrderList extends javax.swing.JInternalFrame {
                 
                 while (rs.next())
                 {
+                    
                     cash = rs.getDouble("cash");
                     card = rs.getDouble("card");
                     changeTotal = rs.getDouble("changeTotal");
+                    
+                    completedOrders = new CompletedOrders(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), 
+                            rs.getString("productService"), rs.getDouble("total"), rs.getDouble("deposit"),rs.getDouble("due"), rs.getString("payDate"),
+                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"));
                 }
                 
             
@@ -368,20 +376,13 @@ public class OrderList extends javax.swing.JInternalFrame {
                     desktop_pane_order_list.add(orderDetails).setVisible(true);
                     break;
                 case "Not Fixed":
-//                    OrderNotFixed orderNotFixed = new OrderNotFixed(orderNo, firstName, lastName, contactNo,
-//                    NotFixedOrder orderNotFixed = new NotFixedOrder(orderNo, firstName, lastName, contactNo,
-//                            email, deviceBrand, deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty,
-//                             stringUnitPrice, stringPriceTotal, total, deposit, cashDeposit, cardDeposit, due, status, issueDate, finishedDate, cash, card, pickedDate);
-                     NotFixedOrder orderNotFixed = new NotFixedOrder(order);
+                    NotFixedOrder orderNotFixed = new NotFixedOrder(order);
                     desktop_pane_order_list.removeAll();
                     desktop_pane_order_list.add(orderNotFixed).setVisible(true);
                     break;
                     
                 case "Refunded":
-//                   RefundOrder refundOrder = new RefundOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
-//                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
-//                        stringPriceTotal, total, deposit, cashDeposit, cardDeposit, due, status, issueDate, finishedDate, pickedDate, cash, card, refundDate);
-                   RefundOrder refundOrder = new RefundOrder(order);
+                   RefundOrder refundOrder = new RefundOrder(order, completedOrders);
                    desktop_pane_order_list.removeAll();
                    desktop_pane_order_list.add(refundOrder).setVisible(true);
                    break;
