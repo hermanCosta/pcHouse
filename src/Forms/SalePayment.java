@@ -6,6 +6,7 @@
 package Forms;
 
 import InternalForms.NewOrder;
+import Model.Sale;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -30,9 +31,10 @@ public class SalePayment extends javax.swing.JFrame {
     PreparedStatement ps;
     ResultSet rs;
     
+    Sale sale;
     JTable tableViewProducts;
     
-    double deposit, total, cash, card, totalPaid;
+    double deposit, total, cash, card, totalPaid, changeTotal;
     String saleNo, firstName, lastName, contactNo, email, stringProducts, stringQty, stringUnitprice, 
             stringPriceTotal, saleDate;
     
@@ -40,28 +42,13 @@ public class SalePayment extends javax.swing.JFrame {
         initComponents();
     }
 
-   public SalePayment(String _saleNo, String _firstName, String _lastName, String _contactNo, String _email, 
-            String _stringProducts, String _stringQty, String _stringUnitPrice, String _stringPriceTotal,
-            double _total, String _saleDate, double _cash, double _card, JTable _tableViewProducts) {
+    public SalePayment(Sale _sale, JTable _tableViewProducts) {
         initComponents();
-       
-        this.saleNo = _saleNo;
-        this.firstName = _firstName;
-        this.lastName = _lastName;
-        this.contactNo = _contactNo;
-        this.email = _email;
-        this.stringProducts = _stringProducts;
-        this.stringQty =_stringQty;
-        this.stringUnitprice = _stringUnitPrice;
-        this.stringPriceTotal = _stringPriceTotal;
-        this.total = _total;
-        this.saleDate = _saleDate;
-        this.cash = _cash;
+        this.sale = _sale;
         this.tableViewProducts = _tableViewProducts;
-
-        lbl_sale_no.setText(this.saleNo);
-        lbl_total.setText(String.valueOf(this.total));
         
+        lbl_sale_no.setText(sale.getSaleNo());
+        lbl_total.setText(String.valueOf(sale.getTotal()));
     }
     
     public void dbConnection() 
@@ -357,6 +344,9 @@ public class SalePayment extends javax.swing.JFrame {
         Date date = new Date();
         Timestamp currentDateTime = new Timestamp(date.getTime());
         saleDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDateTime);
+        sale.setSaleDate(saleDate);
+        sale.setStatus("Paid");
+        boolean isPaid = false;
         
         
         if (txt_cash.getText().isEmpty() && txt_card.getText().isEmpty())
@@ -367,30 +357,60 @@ public class SalePayment extends javax.swing.JFrame {
         
         else if(txt_cash.getText().isEmpty() && !txt_card.getText().isEmpty())
         {
-            card = Double.parseDouble(txt_card.getText());
-            cash = 0;
-        }
-        else if (txt_card.getText().isEmpty() && !txt_cash.getText().isEmpty())
-        {
-            cash = Double.parseDouble(txt_cash.getText());
-            card = 0;
+            sale.setCard(Double.parseDouble(txt_card.getText()));
+            //sale.setCash(0);
+            
+            if (sale.getCard() > sale.getTotal())
+            {
+                JOptionPane.showMessageDialog(null, "Payment by Card can't be greater than Total Due !", "Payment",  JOptionPane.ERROR_MESSAGE); 
+                return;
+            }
+            else if ((sale.getTotal() - sale.getCard()) == 0) 
+            {
+                isPaid = true; 
+                sale.setCash(0);
+            }
+            else if ((sale.getTotal() - sale.getCard()) > 0)
+            {
+                sale.setCard(Double.parseDouble(txt_card.getText()));
+            }
         }
         
-        else
+        else if (!txt_cash.getText().isEmpty() && txt_card.getText().isEmpty())
         {
-            cash = Double.parseDouble(txt_cash.getText());
-            card = Double.parseDouble(txt_card.getText());
+            sale.setCash(Double.parseDouble(txt_cash.getText()));
+            if ((sale.getTotal() - sale.getCash()) <= 0)
+            {
+                isPaid = true;
+                sale.setCard(0);
+                sale.setChangeTotal(sale.getCash() - sale.getTotal());
+            }
         }
-
-        totalPaid = cash + card;
-        double changeTotal = totalPaid - total;
+        else if (!txt_cash.getText().isEmpty() && !txt_card.getText().isEmpty())
+        {
+            sale.setCash(Double.parseDouble(txt_cash.getText()));
+            sale.setCard(Double.parseDouble(txt_card.getText()));
+            
+            totalPaid = sale.getCash() + sale.getCard();
+            if (sale.getCard() > sale.getTotal())
+            {
+                JOptionPane.showMessageDialog(null, "Payment by Card can't be greater than Total Due !", "Payment",  JOptionPane.ERROR_MESSAGE); 
+                return;
+            } 
+            else if ((sale.getTotal() - totalPaid) <= 0)
+            {
+               changeTotal = (sale.getCash() + sale.getCard()) - sale.getTotal();
+               isPaid = true;
+               sale.setChangeTotal(changeTotal);
+            }
+        }
         
-        if ((total - totalPaid) <= 0)
+        if (isPaid)
         {
             lbl_change.setText(String.valueOf(changeTotal));
             
-         int confirmPayment = JOptionPane.showConfirmDialog(this, "Do you want to Pay Order: " 
-                 + saleNo + "?", "Payment", JOptionPane.YES_NO_OPTION);
+         int confirmPayment = JOptionPane.showConfirmDialog(this, "Confirm payment on Sale " 
+                 + sale.getSaleNo() + " ?", "Payment", JOptionPane.YES_NO_OPTION);
          
           if (confirmPayment == 0)  
           {
@@ -398,37 +418,34 @@ public class SalePayment extends javax.swing.JFrame {
               dbConnection();
 
                    String query = "INSERT INTO sales(saleNo, firstName, lastName, contactNo, "
-                           + "email, productService, qty, unitPrice, priceTotal, total, saleDate, cash, card, changeTotal) "
-                           + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                           + "email, productService, qty, unitPrice, priceTotal, total, saleDate, cash, card, changeTotal, status) "
+                           + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                   ps = con.prepareStatement(query);
-                  ps.setString(1, saleNo);
-                  ps.setString(2, firstName);
-                  ps.setString(3, lastName); 
-                  ps.setString(4, contactNo);
-                  ps.setString(5, email);
-                  ps.setString(6, stringProducts);
-                  ps.setString(7, stringQty);
-                  ps.setString(8, stringUnitprice);
-                  ps.setString(9, stringPriceTotal);
-                  ps.setDouble(10, total);
-                  ps.setString(11, saleDate);
-                  ps.setDouble(12, cash);
-                  ps.setDouble(13, card);
-                  ps.setDouble(14, changeTotal);
+                  ps.setString(1, sale.getSaleNo());
+                  ps.setString(2, sale.getFirstName());
+                  ps.setString(3, sale.getLastName()); 
+                  ps.setString(4, sale.getContactNo());
+                  ps.setString(5, sale.getEmail());
+                  ps.setString(6, sale.getStringProducts());
+                  ps.setString(7, sale.getStringQty());
+                  ps.setString(8, sale.getStringUnitPrice());
+                  ps.setString(9, sale.getStringPriceTotal());
+                  ps.setDouble(10, sale.getTotal());
+                  ps.setString(11, sale.getSaleDate());
+                  ps.setDouble(12, sale.getCash());
+                  ps.setDouble(13, sale.getCard());
+                  ps.setDouble(14, sale.getChangeTotal());
+                  ps.setString(15, sale.getStatus());
                   ps.executeUpdate();
-                  
-                  
                  
-                  JOptionPane.showMessageDialog(null,saleNo + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this,sale.getSaleNo() + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
               
                 updateProductQty();
             
-            SaleReceipt saleReceipt =  new SaleReceipt(saleNo, firstName, lastName, contactNo, email,
-                                    stringProducts, stringQty, stringUnitprice, stringPriceTotal, total, saleDate, 
-                    cash, card, changeTotal);
-            saleReceipt.setVisible(true);
-            
-            this.dispose();
+                SaleReceipt saleReceipt =  new SaleReceipt(sale);
+                saleReceipt.setVisible(true);
+
+                this.dispose();
 
               } catch (SQLException ex) {
                 Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);

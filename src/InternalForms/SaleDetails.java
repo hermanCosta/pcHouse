@@ -19,17 +19,22 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import static org.bouncycastle.pqc.math.linearalgebra.IntegerFunctions.order;
 
 /**
  *
@@ -62,25 +67,9 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         initComponents();
     }
 
-    SaleDetails(String _saleNo, String _firstName, String _lastName, String _contactNo, String _email, 
-            String _stringProducts, String _stringQty, String _stringUnitPrice, String _stringPriceTotal, 
-            String _saleDate, double _total, double _cash, double _card,  double _change) {
+    public SaleDetails(Sale _sale) {
         initComponents();
-        
-        this.saleNo = _saleNo;
-        this.firstName = _firstName;
-        this.lastName = _lastName;
-        this.contactNo = _contactNo;
-        this.email = _email;
-        this.stringProducts = _stringProducts;
-        this.stringQty = _stringQty;
-        this.stringUnitPrice = _stringUnitPrice;
-        this.stringPriceTotal = _stringPriceTotal;
-        this.saleDate = _saleDate;
-        this.total = _total;
-        this.cash = _cash;
-        this.card = _card;
-        this.change = _change;
+        this.sale = _sale;
         
         //Remove borders
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
@@ -115,32 +104,33 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         TableColumnModel model = table_view_products.getColumnModel();
         dtm.setRowCount(0);
         
-        lbl_auto_order_no.setText(this.saleNo);
-        txt_first_name.setText(this.firstName);
-        txt_last_name.setText(this.lastName);
-        txt_contact.setText(this.contactNo);
-        txt_email.setText(this.email);
-        txt_total.setText(String.valueOf(this.total));
-        lbl_sale_date.setText("Sale Date: " + saleDate);
-        lbl_change.setText("Change: €" + change);
         
-        if (cash == 0)
+        lbl_auto_order_no.setText(sale.getSaleNo());
+        txt_first_name.setText(sale.getFirstName());
+        txt_last_name.setText(sale.getLastName());
+        txt_contact.setText(sale.getContactNo());
+        txt_email.setText(sale.getEmail());
+        txt_total.setText(String.valueOf(sale.getTotal()));
+        lbl_sale_paid_on.setText("Sale Date: " + sale.getSaleDate());
+        
+        
+        if (sale.getCash() == 0)
         {
-            lbl_paid_by.setText("Paid by Card: €" + card);
+            lbl_paid_by.setText("Paid by Card: €" + sale.getCard());
         }
-        else if (card == 0)
+        else if (sale.getCard() == 0)
         {
-            lbl_paid_by.setText("Paid by Cash: €" + cash);
+            lbl_paid_by.setText("Paid by Cash: €" + sale.getCash() + " | Change: €" + sale.getChangeTotal());
         }
-        else
+        else 
         {
-            lbl_paid_by.setText("Paid by Cash: €" + cash + " | Card: €" +card);
+            lbl_paid_by.setText("Paid by Cash: €" + sale.getCash() + " | Card: €" + sale.getCard() + " | Change: €" + sale.getChangeTotal());
         }
         
-        String[] arrayProducts = stringProducts.split(",");
-        String[] arrayQty = stringQty.split(",");
-        String[] arrayUnitPrice = stringUnitPrice.split(",");
-        String[] arrayPriceTotal = stringPriceTotal.split(",");
+        String[] arrayProducts = sale.getStringProducts().split(",");
+        String[] arrayQty = sale.getStringQty().split(",");
+        String[] arrayUnitPrice = sale.getStringUnitPrice().split(",");
+        String[] arrayPriceTotal = sale.getStringPriceTotal().split(",");
         
         for (Object objProducts : arrayProducts)
         {
@@ -163,7 +153,9 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         dtm.addColumn("Unit €", vecUnitPrice);
         dtm.addColumn("Total €", vecPriceTotal);
             
-        model.getColumn(1).setMaxWidth(80);
+        model.getColumn(1).setMaxWidth(40);
+        model.getColumn(2).setMaxWidth(80);
+        model.getColumn(3).setMaxWidth(80);
     }
     
     @SuppressWarnings("unchecked")
@@ -186,10 +178,11 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         table_view_products = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
-        lbl_paid_by = new javax.swing.JLabel();
-        lbl_sale_date = new javax.swing.JLabel();
         btn_notes = new javax.swing.JButton();
-        lbl_change = new javax.swing.JLabel();
+        btn_refund = new javax.swing.JButton();
+        panel_sale_status = new javax.swing.JPanel();
+        lbl_sale_paid_on = new javax.swing.JLabel();
+        lbl_paid_by = new javax.swing.JLabel();
 
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -331,14 +324,6 @@ public class SaleDetails extends javax.swing.JInternalFrame {
             }
         });
 
-        lbl_paid_by.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
-        lbl_paid_by.setText("paidBy");
-        lbl_paid_by.setEnabled(false);
-
-        lbl_sale_date.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
-        lbl_sale_date.setText("saleDate");
-        lbl_sale_date.setEnabled(false);
-
         btn_notes.setBackground(new java.awt.Color(21, 76, 121));
         btn_notes.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
         btn_notes.setForeground(new java.awt.Color(255, 255, 255));
@@ -351,9 +336,47 @@ public class SaleDetails extends javax.swing.JInternalFrame {
             }
         });
 
-        lbl_change.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
-        lbl_change.setText("change");
-        lbl_change.setEnabled(false);
+        btn_refund.setBackground(new java.awt.Color(0, 0, 0));
+        btn_refund.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
+        btn_refund.setForeground(new java.awt.Color(255, 255, 255));
+        btn_refund.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_refund.png"))); // NOI18N
+        btn_refund.setText("Refund");
+        btn_refund.setFocusable(false);
+        btn_refund.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_refundActionPerformed(evt);
+            }
+        });
+
+        panel_sale_status.setBackground(new java.awt.Color(0, 153, 102));
+
+        lbl_sale_paid_on.setBackground(new java.awt.Color(0, 102, 102));
+        lbl_sale_paid_on.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        lbl_sale_paid_on.setForeground(java.awt.Color.white);
+        lbl_sale_paid_on.setText("salePaidOn");
+
+        lbl_paid_by.setFont(new java.awt.Font("sansserif", 0, 13)); // NOI18N
+        lbl_paid_by.setForeground(java.awt.Color.white);
+        lbl_paid_by.setText("paidBy");
+
+        javax.swing.GroupLayout panel_sale_statusLayout = new javax.swing.GroupLayout(panel_sale_status);
+        panel_sale_status.setLayout(panel_sale_statusLayout);
+        panel_sale_statusLayout.setHorizontalGroup(
+            panel_sale_statusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_sale_statusLayout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(panel_sale_statusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_sale_paid_on, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_paid_by))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panel_sale_statusLayout.setVerticalGroup(
+            panel_sale_statusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_sale_statusLayout.createSequentialGroup()
+                .addComponent(lbl_sale_paid_on)
+                .addGap(5, 5, 5)
+                .addComponent(lbl_paid_by))
+        );
 
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);
@@ -361,94 +384,90 @@ public class SaleDetails extends javax.swing.JInternalFrame {
             panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                 .addGap(21, 21, 21)
-                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_sale_date)
-                    .addComponent(lbl_change)
+                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                    .addComponent(lbl_order_no)
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                .addComponent(lbl_order_no)
+                                .addGap(18, 18, 18)
+                                .addComponent(lbl_auto_order_no))
+                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                .addComponent(lbl_email)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
+                                    .addComponent(lbl_first_name)
                                     .addGap(18, 18, 18)
-                                    .addComponent(lbl_auto_order_no))
-                                .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                    .addComponent(lbl_email)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
-                                        .addComponent(lbl_first_name)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(txt_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
-                                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
-                                                .addComponent(lbl_last_name)
-                                                .addGap(20, 20, 20))
-                                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                                .addComponent(lbl_contact)
-                                                .addGap(11, 11, 11)))
-                                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(txt_contact, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                                            .addComponent(txt_last_name))))
-                                .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                    .addComponent(lbl_total)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(txt_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addComponent(lbl_paid_by))
+                                    .addComponent(txt_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
+                                    .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
+                                            .addComponent(lbl_last_name)
+                                            .addGap(20, 20, 20))
+                                        .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                            .addComponent(lbl_contact)
+                                            .addGap(11, 11, 11)))
+                                    .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(txt_contact, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                                        .addComponent(txt_last_name))))
+                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                .addComponent(lbl_total)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txt_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGap(30, 30, 30)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 571, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(36, 36, 36)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(btn_refund, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(15, 15, 15)
+                                .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(15, 15, 15)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(panel_sale_status, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 22, Short.MAX_VALUE))
         );
         panel_order_detailsLayout.setVerticalGroup(
             panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(panel_sale_status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbl_auto_order_no, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_order_no)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_refund, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(15, 15, 15))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbl_auto_order_no, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbl_order_no))
+                        .addGap(18, 18, 18)))
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txt_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_first_name))
-                        .addGap(15, 15, 15)
+                        .addGap(18, 18, Short.MAX_VALUE)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_last_name)
                             .addComponent(txt_last_name, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(15, 15, 15)
+                        .addGap(18, 18, Short.MAX_VALUE)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_contact)
                             .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(15, 15, 15)
+                        .addGap(18, 18, Short.MAX_VALUE)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_email)
                             .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(15, 15, 15)
+                        .addGap(18, 18, Short.MAX_VALUE)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_total)
                             .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lbl_paid_by)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lbl_change)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lbl_sale_date)
-                .addContainerGap())
+                .addGap(385, 385, 385))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -461,7 +480,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
+            .addComponent(panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, 740, Short.MAX_VALUE)
         );
 
         pack();
@@ -523,9 +542,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        SaleReceipt saleReceipt =  new SaleReceipt(saleNo, firstName, lastName, contactNo, email,
-                              stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total, saleDate, 
-                cash, card, change);
+        SaleReceipt saleReceipt =  new SaleReceipt(sale);
             saleReceipt.setVisible(true);
             
         
@@ -533,25 +550,111 @@ public class SaleDetails extends javax.swing.JInternalFrame {
 
     private void btn_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notesActionPerformed
         // TODO add your handling code here:
-        OrderNotes orderNotes = new OrderNotes(saleNo);
+        OrderNotes orderNotes = new OrderNotes(sale.getSaleNo());
         orderNotes.setVisible(true);
     }//GEN-LAST:event_btn_notesActionPerformed
 
+    private void btn_refundActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_refundActionPerformed
+        // TODO add your handling code here:
+//        int confirmRefund = JOptionPane.showConfirmDialog(this, "Do you really want to Refund Order: " + order.getOrderNo() + " ?",
+//            "Confirm Refund", JOptionPane.YES_NO_OPTION);
+//
+//        if (confirmRefund == 0)
+//        {
+//            try {
+//                Date date = new Date();
+//                Timestamp currentDate = new Timestamp(date.getTime());
+//                String refundDate = new SimpleDateFormat("dd/MM/yyy").format(currentDate);
+//
+//                order.setStatus("Refunded");
+//                order.setRefundDate(refundDate);
+//
+//                dbConnection();
+//                String queryUpdate = "UPDATE orderDetails SET status = ?, refundDate = ? WHERE orderNo = ?";
+//                ps = con.prepareStatement(queryUpdate);
+//                ps.setString(1, order.getStatus());
+//                ps.setString(2, order.getRefundDate());
+//                ps.setString(3, order.getOrderNo());
+//                ps.executeUpdate();
+//
+//                completedOrders.setCash(completedOrders.getCash() - completedOrders.getChangeTotal());
+//
+//                completedOrders.setChangeTotal(0);
+//                order.setCashDeposit(0);
+//                order.setCardDeposit(0);
+//
+//                completedOrders.setCash(completedOrders.getCash() + order.getCashDeposit());
+//                completedOrders.setCard(completedOrders.getCard() + order.getCardDeposit());
+//
+//                double refundTotal = order.getTotal();
+//                double refundDeposit = order.getDeposit();
+//                double refundDue = order.getDue();
+//
+//                double cash = completedOrders.getCash();
+//                double card = completedOrders.getCard();
+//
+//                double refundCash = cash *= -1;
+//                double refundCard = card *= -1;
+//
+//                order.setTotal(refundTotal *= -1);
+//                order.setDeposit(refundDeposit *= -1);
+//                order.setDue(refundDue *= -1);
+//
+//                /*
+//                public CompletedOrders(String _orderNo, String _firstName, String _lastName, String _stringProducts,
+//                    String _payDate, double _total, double _deposit, double _due, double _cash, double _card, double _changeTotal) {
+//                    */
+//                    completedOrders = new CompletedOrder(order.getOrderNo(), order.getFirstName(), order.getLastName(),
+//                        order.getStringProducts(), refundTotal, refundDeposit, refundDue, refundDate, refundCash, refundCard, completedOrders.getChangeTotal());
+//
+//                    String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, productService, total,"
+//                    + "deposit, due, payDate, cash, card, changeTotal) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+//
+//                    ps = con.prepareStatement(queryInsert);
+//                    ps.setString(1, completedOrders.getOrderNo());
+//                    ps.setString(2, completedOrders.getFirstName());
+//                    ps.setString(3, completedOrders.getLastName());
+//                    ps.setString(4, completedOrders.getStringProducts());
+//                    ps.setDouble(5, completedOrders.getTotal());
+//                    ps.setDouble(6, completedOrders.getDeposit());
+//                    ps.setDouble(7, completedOrders.getDue());
+//                    ps.setString(8, completedOrders.getPayDate());
+//                    ps.setDouble(9, completedOrders.getCash());
+//                    ps.setDouble(10, completedOrders.getCard());
+//                    ps.setDouble(11, completedOrders.getChangeTotal());
+//                    ps.executeUpdate();
+//
+//                    JOptionPane.showMessageDialog(this, "Order " + order.getOrderNo() + " Refunded Successfully!",
+//                        "Refund Order", JOptionPane.INFORMATION_MESSAGE);
+//                    //
+//                    //                RefundReceipt refundReceipt = new RefundReceipt(orderNo, firstName, lastName, contactNo, email, deviceBrand,
+//                        //                        deviceModel, serialNumber, stringProducts, stringQty, stringUnitPrice,stringPriceTotal, total, cash,
+//                        //                        card, refundDate);
+//                    RefundReceipt refundReceipt = new RefundReceipt(order, completedOrders);
+//                    refundReceipt.setVisible(true);
+//
+//                } catch (SQLException ex) {
+//                    Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+    }//GEN-LAST:event_btn_refundActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_notes;
+    private javax.swing.JButton btn_refund;
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lbl_auto_order_no;
-    private javax.swing.JLabel lbl_change;
     private javax.swing.JLabel lbl_contact;
     private javax.swing.JLabel lbl_email;
     private javax.swing.JLabel lbl_first_name;
     private javax.swing.JLabel lbl_last_name;
     private javax.swing.JLabel lbl_order_no;
     private javax.swing.JLabel lbl_paid_by;
-    private javax.swing.JLabel lbl_sale_date;
+    private javax.swing.JLabel lbl_sale_paid_on;
     private javax.swing.JLabel lbl_total;
     private javax.swing.JPanel panel_order_details;
+    private javax.swing.JPanel panel_sale_status;
     private javax.swing.JTable table_view_products;
     private javax.swing.JFormattedTextField txt_contact;
     private javax.swing.JTextField txt_email;

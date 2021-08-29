@@ -5,7 +5,7 @@
  */
 package InternalForms;
 
-import Model.CompletedOrders;
+import Model.CompletedOrder;
 import Model.Order;
 import java.awt.Color;
 import java.awt.Font;
@@ -36,7 +36,7 @@ public class OrderList extends javax.swing.JInternalFrame {
         PreparedStatement ps;
         String tableStatus;
         Order order;
-        CompletedOrders completedOrders;
+        CompletedOrder completedOrder;
        
     public OrderList() {
         initComponents();
@@ -253,9 +253,6 @@ public class OrderList extends javax.swing.JInternalFrame {
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
@@ -313,7 +310,8 @@ public class OrderList extends javax.swing.JInternalFrame {
                 .addGap(13, 13, 13)
                 .addComponent(label_latest_orders_created)
                 .addGap(25, 25, 25)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         getContentPane().add(desktop_pane_order_list);
@@ -326,16 +324,14 @@ public class OrderList extends javax.swing.JInternalFrame {
 
         if(evt.getClickCount() == 2)
         {
-            double cash = 0, card = 0, changeTotal = 0;
-            
-            
             dbConnection();
             DefaultTableModel dtm = (DefaultTableModel)table_view_orders.getModel();
             int orderSelected = table_view_orders.getSelectedRow();
             String selectedOrderNo = dtm.getValueAt(orderSelected, 0).toString();
         
+            ////select exists(select * from table where condition=value limit 1)
             try {
-                String query = "SELECT * FROM orderDetails WHERE orderNo = ?";
+                String query = "SELECT * FROM orderDetails WHERE orderNo = ? ";
                 ps = con.prepareStatement(query);
                 ps.setString(1, selectedOrderNo);
                 rs = ps.executeQuery();
@@ -348,50 +344,56 @@ public class OrderList extends javax.swing.JInternalFrame {
                    rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"),
                    rs.getString("status"), rs.getString("issueDate"), rs.getString("finishDate"), rs.getString("pickDate"),
                    rs.getString("refundDate"));
-                   
                 }
                 
-                String queryPayDate = "SELECT * FROM completedOrders WHERE orderNo = ? ";
+                String queryPayDate = "SELECT * FROM completedOrders WHERE orderNo = ?"; 
+                //"SELECT EXISTS (SELECT * FROM completedOrders WHERE orderNo = ? LIMIT 1)";
                 ps = con.prepareStatement(queryPayDate);
                 ps.setString(1, selectedOrderNo);
                 rs = ps.executeQuery();
                 
-                while (rs.next())
+                
+                if(!rs.next())
                 {
-                    
-                    cash = rs.getDouble("cash");
-                    card = rs.getDouble("card");
-                    changeTotal = rs.getDouble("changeTotal");
-                    
-                    completedOrders = new CompletedOrders(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), 
-                            rs.getString("productService"), rs.getDouble("total"), rs.getDouble("deposit"),rs.getDouble("due"), rs.getString("payDate"),
-                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"));
+                    completedOrder = new CompletedOrder("", "", "", "", 0, 0, 0, "", 0, 0, 0);
                 }
                 
-            
-            switch (order.getStatus()) {
-                case "In Progress":
-                    OrderDetails orderDetails = new OrderDetails(order, cash, card, changeTotal);
-                    desktop_pane_order_list.removeAll();
-                    desktop_pane_order_list.add(orderDetails).setVisible(true);
-                    break;
-                case "Not Fixed":
-                    NotFixedOrder orderNotFixed = new NotFixedOrder(order);
-                    desktop_pane_order_list.removeAll();
-                    desktop_pane_order_list.add(orderNotFixed).setVisible(true);
-                    break;
-                    
-                case "Refunded":
-                   RefundOrder refundOrder = new RefundOrder(order, completedOrders);
-                   desktop_pane_order_list.removeAll();
-                   desktop_pane_order_list.add(refundOrder).setVisible(true);
-                   break;
-                default:
-                    FixedOrder fixedOrder = new FixedOrder(order, cash, card, changeTotal);
-                    desktop_pane_order_list.removeAll();
-                    desktop_pane_order_list.add(fixedOrder).setVisible(true);
-                    break;
-            }
+                else
+                {
+                    do {
+                        completedOrder = new CompletedOrder(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), 
+                            rs.getString("productService"), rs.getDouble("total"), rs.getDouble("deposit"),rs.getDouble("due"), rs.getString("payDate"),
+                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"));
+                    } while (rs.next());
+                }  
+                
+                switch (order.getStatus()) 
+                {
+                    case "In Progress":
+                        OrderDetails orderDetails = new OrderDetails(order, completedOrder);
+                        desktop_pane_order_list.removeAll();
+                        desktop_pane_order_list.add(orderDetails).setVisible(true);
+                        break;
+
+                    case "Not Fixed":
+                        NotFixedOrder orderNotFixed = new NotFixedOrder(order, completedOrder);
+                        desktop_pane_order_list.removeAll();
+                        desktop_pane_order_list.add(orderNotFixed).setVisible(true);
+                        break;
+
+                    case "Refunded":
+                       RefundOrder refundOrder = new RefundOrder(order, completedOrder);
+                       desktop_pane_order_list.removeAll();
+                       desktop_pane_order_list.add(refundOrder).setVisible(true);
+                       break;
+
+                    default:
+                        FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
+                        desktop_pane_order_list.removeAll();
+                        desktop_pane_order_list.add(fixedOrder).setVisible(true);
+                        break;
+                }
+                
             } catch (SQLException ex) {
                 Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
             }

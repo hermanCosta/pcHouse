@@ -5,7 +5,7 @@
  */
 package Forms;
 
-import Model.CompletedOrders;
+import Model.CompletedOrder;
 import Model.Order;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -28,14 +28,14 @@ public class RefundReceipt extends javax.swing.JFrame {
      */
     
     Order order;
-    CompletedOrders completedOrders;
+    CompletedOrder completedOrders;
     
     public RefundReceipt() {
         initComponents();
     }
     
 
-    public RefundReceipt(Order _order, CompletedOrders _completedOrders) {
+    public RefundReceipt(Order _order, CompletedOrder _completedOrders) {
         initComponents();
         this.order = _order;
         this.completedOrders = _completedOrders;
@@ -46,6 +46,7 @@ public class RefundReceipt extends javax.swing.JFrame {
     
     public void loadOrderToPrint()
     {
+        
         if (completedOrders.getCash() == 0)
             lbl_paid_by.setText("Refunded by Card: €" + completedOrders.getCard());
         else if (completedOrders.getCard() == 0)

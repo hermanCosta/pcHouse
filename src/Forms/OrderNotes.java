@@ -6,6 +6,7 @@
 package Forms;
 
 import Common.DBConnection;
+import Model.OrderNote;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -14,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -36,6 +38,7 @@ public class OrderNotes extends javax.swing.JFrame {
     Statement st;
     ResultSet rs;
     String orderNo, noteDate, note, user;
+    OrderNote orderNote;
     
     public OrderNotes() {
         initComponents();
@@ -43,7 +46,6 @@ public class OrderNotes extends javax.swing.JFrame {
 
     public OrderNotes(String _orderNo) {
         initComponents();
-        
         this.orderNo = _orderNo;
         
         loadTableNotes();
@@ -62,10 +64,9 @@ public class OrderNotes extends javax.swing.JFrame {
     
     public void loadTableNotes()
     {
+        ArrayList<OrderNote> noteList = new ArrayList();
         DefaultTableModel dtm = (DefaultTableModel) table_view_notes.getModel();
-        dtm.setColumnCount(0);
         dtm.setRowCount(0);
-        TableColumnModel tableModel = (TableColumnModel) table_view_notes.getColumnModel();
         
         try {
             dbConnection();
@@ -77,27 +78,41 @@ public class OrderNotes extends javax.swing.JFrame {
             ps.setString(1, orderNo);
             rs = ps.executeQuery();
             
-            Vector dates = new Vector();
-            Vector notes = new Vector();
-            Vector users = new Vector();
+//            Vector dates = new Vector();
+//            Vector notes = new Vector();
+//            Vector users = new Vector();
             
             while (rs.next())
             {
-                    dates.add(rs.getString("date"));
-                    notes.add(rs.getString("note"));
-                    users.add(rs.getString("user"));
+                
+//                    dates.add(rs.getString("date"));
+//                    notes.add(rs.getString("note"));
+//                    users.add(rs.getString("user"));
+                    
+                    orderNote = new OrderNote(rs.getString("date"), rs.getString("note"), rs.getString("user"));
+                    noteList.add(orderNote);
+                    
             }
             
-            
-            dtm.addColumn("Date",dates);
-            dtm.addColumn("Notes",notes);
-            dtm.addColumn("User",users);
-            
-            tableModel.getColumn(0).setMaxWidth(160);
-            tableModel.getColumn(2).setMaxWidth(90);
+            Object[] noteRow = new Object[3];
+            for (int i = 0; i < noteList.size() ; i++)
+            {
+                noteRow[0] = noteList.get(i).getDate();
+                noteRow[1] = noteList.get(i).getNote();
+                noteRow[2] = noteList.get(i).getUser();
+                
+                dtm.addRow(noteRow);
+            }
+//            
+//            dtm.addColumn("Date",dates);
+//            dtm.addColumn("Notes",notes);
+//            dtm.addColumn("User",users);
+//            
+//            tableModel.getColumn(0).setMaxWidth(160);
+//            tableModel.getColumn(2).setMaxWidth(90);
 
-            rs.close();
-            ps.close();
+//            rs.close();
+//            ps.close();
             
         } catch (SQLException ex) {
             Logger.getLogger(OrderNotes.class.getName()).log(Level.SEVERE, null, ex);
@@ -128,16 +143,29 @@ public class OrderNotes extends javax.swing.JFrame {
 
             },
             new String [] {
-
+                "Date", "Note", "User"
             }
-        ));
-        table_view_notes.setEnabled(false);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         table_view_notes.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 table_view_notesMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(table_view_notes);
+        if (table_view_notes.getColumnModel().getColumnCount() > 0) {
+            table_view_notes.getColumnModel().getColumn(0).setPreferredWidth(100);
+            table_view_notes.getColumnModel().getColumn(0).setMaxWidth(120);
+            table_view_notes.getColumnModel().getColumn(2).setPreferredWidth(100);
+            table_view_notes.getColumnModel().getColumn(2).setMaxWidth(120);
+        }
 
         txt_note.setFont(new java.awt.Font("sansserif", 0, 13)); // NOI18N
         txt_note.addActionListener(new java.awt.event.ActionListener() {
@@ -183,7 +211,7 @@ public class OrderNotes extends javax.swing.JFrame {
         noteDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
         note = txt_note.getText();    
         
-        int confirmInsertion = JOptionPane.showConfirmDialog(null, "Do you want to add note: " + note + "to the Database ?","Order Notes", JOptionPane.YES_OPTION);
+        int confirmInsertion = JOptionPane.showConfirmDialog(null, "Do you want to add note: " + note + " to the Database ?","Order Notes", JOptionPane.YES_OPTION);
         if (confirmInsertion == 0)
         {
             
@@ -195,7 +223,7 @@ public class OrderNotes extends javax.swing.JFrame {
                 ps.setString(1, orderNo);
                 ps.setString(2, noteDate);
                 ps.setString(3, note);
-                ps.setString(4, "");
+                ps.setString(4, "User");
                 ps.executeUpdate();
 
             } catch (SQLException ex) {
@@ -205,11 +233,11 @@ public class OrderNotes extends javax.swing.JFrame {
             txt_note.setText("");
             loadTableNotes();
         }
-        else
-        {
-            txt_note.setText("");
-            loadTableNotes();
-        }
+//        else
+//        {
+//            txt_note.setText("");
+//            //loadTableNotes();
+//        }
     }//GEN-LAST:event_txt_noteActionPerformed
 
     private void table_view_notesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_notesMouseClicked
@@ -217,27 +245,39 @@ public class OrderNotes extends javax.swing.JFrame {
         
         if (evt.getClickCount() == 2)
         {
+            DefaultTableModel dtm = (DefaultTableModel) table_view_notes.getModel();
             
-//            int selectedRow = table_view_notes.getSelectedRow();
-//            note = table_view_notes.getValueAt(selectedRow, 1).toString();
-        
-            int confirmDeletion = JOptionPane.showConfirmDialog(null, "Do you want to Delete note " + note + "?", "Order Notes", JOptionPane.YES_NO_OPTION);
-            if (confirmDeletion == 0)
+            int selectedRow = table_view_notes.getSelectedRow();
+            String selectedNote = dtm.getValueAt(selectedRow, 1).toString();
+            String selectedUser = dtm.getValueAt(selectedRow, 2).toString();
+            
+            if (selectedUser.equals("System"))
+                JOptionPane.showMessageDialog(this, "Notes from System are not allowed to delete !", "Order Notes", JOptionPane.ERROR_MESSAGE);
+            
+            else
             {
-                try {
-                    dbConnection();
-                    String query = "Delete " + note + " FROM orderNotes WHERE orderNo = '" + orderNo + "'";
-                    ps = con.prepareCall(query);
-                    ps.executeUpdate();
-                    
-                } catch (SQLException ex) {
-                    Logger.getLogger(OrderNotes.class.getName()).log(Level.SEVERE, null, ex);
+                int confirmDeletion = JOptionPane.showConfirmDialog(null, "Do you want to Delete note " + selectedNote + " ?", "Order Notes", JOptionPane.YES_NO_OPTION);
+                if (confirmDeletion == 0)
+                {
+                    try {
+                        dbConnection();
+                        String queryDelete = "DELETE FROM orderNotes WHERE orderNo = ? AND note = ?";
+                        ps = con.prepareStatement(queryDelete);
+                        ps.setString(1, orderNo);
+                        ps.setString(2, selectedNote);
+                        ps.executeUpdate();
+                        
+                        loadTableNotes();
+
+                    } catch (SQLException ex) {
+                        Logger.getLogger(OrderNotes.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+
                 }
-               
-            
+            }
         }
     }//GEN-LAST:event_table_view_notesMouseClicked
- }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;

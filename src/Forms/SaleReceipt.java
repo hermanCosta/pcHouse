@@ -5,6 +5,7 @@
  */
 package Forms;
 
+import Model.Sale;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
@@ -25,58 +26,41 @@ public class SaleReceipt extends javax.swing.JFrame {
      * Creates new form Print
      */
     
-    double deposit, due, total, cash, card, change;
-    String orderNo, firstName, lastName, contactNo, email, stringProducts, stringQty,
-            stringUnitPrice, stringPriceTotal, saleDate;
-    
+    Sale sale;
     public SaleReceipt() {
         initComponents();
     }
-    
-   public SaleReceipt(String _saleNo, String _firstName, String _lastName, String _contactNo, String _email, 
-            String _stringProducts, String _stringQty,String _stringUnitPrice, String _stringPriceTotal, double _total, String _saleDate, double _cash, double _card, double _change) {
+   
+
+    public SaleReceipt(Sale _sale) {
         initComponents();
-       
-        this.orderNo = _saleNo;
-        this.firstName = _firstName;
-        this.lastName = _lastName;
-        this.contactNo = _contactNo;
-        this.email = _email;
-        this.stringProducts = _stringProducts;
-        this.stringQty = _stringQty;
-        this.stringUnitPrice = _stringUnitPrice;
-        this.stringPriceTotal = _stringPriceTotal;
-        this.total = _total;
-        this.saleDate = _saleDate;
-        this.cash = _cash;
-        this.card = _card;
-        this.change = _change;
+        this.sale = _sale;
         
         loadOrderToPrint();
     }
     
     public void loadOrderToPrint()
     {
-        lbl_print_order_no.setText("Order: " + orderNo);
-        lbl_print_first_name.setText("Customer name: " + firstName + " " + lastName);
-        lbl_print_contact.setText("Contact no.: " + contactNo);
-        lbl_print_email.setText("Email: " + email);
-        lbl_print_total_products.setText("Total: €" + String.valueOf(total));
-        lbl_date.setText("Date: " + saleDate);
-        lbl_change.setText("Change: €" + change);
+        lbl_print_order_no.setText("Order: " + sale.getSaleNo());
+        lbl_print_first_name.setText("Customer name: " + sale.getFirstName() + " " + sale.getLastName());
+        lbl_print_contact.setText("Contact no.: " + sale.getContactNo());
+        lbl_print_email.setText("Email: " + sale.getEmail());
+        lbl_print_total_products.setText("Total: €" + String.valueOf(sale.getTotal()));
+        lbl_date.setText("Date: " + sale.getSaleDate());
+        lbl_change.setText("Change: €" + sale.getChangeTotal());
         
-        if (cash == 0)
-            lbl_paid_by.setText("Paid by Card: €" + card);
-        else if (card == 0)
-            lbl_paid_by.setText("Paid by Cash: €" + cash);
+        if (sale.getCash() == 0)
+            lbl_paid_by.setText("Paid by Card: €" + sale.getCard());
+        else if (sale.getCard() == 0)
+            lbl_paid_by.setText("Paid by Cash: €" + sale.getCash());
         else
-            lbl_paid_by.setText("Paid by Cash: €" + cash + " | Card: €" +card);
+            lbl_paid_by.setText("Paid by Cash: €" + sale.getCash() + " | Card: €" + sale.getCard());
         
         
-        String[] arrayProducts = stringProducts.split(",");
-        String[] arrayQty = stringQty.split(",");
-        String[] arrayUnitPrice = stringUnitPrice.split(",");
-        String[] arrayPriceTotal = stringPriceTotal.split(",");
+        String[] arrayProducts = sale.getStringProducts().split(",");
+        String[] arrayQty = sale.getStringQty().split(",");
+        String[] arrayUnitPrice = sale.getStringUnitPrice().split(",");
+        String[] arrayPriceTotal = sale.getStringPriceTotal().split(",");
         
         for (String s : arrayProducts)
             txt_pane_products.setText(txt_pane_products.getText() + " - " + s + " \n");
@@ -421,7 +405,7 @@ public class SaleReceipt extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         PrinterJob printerJob = PrinterJob.getPrinterJob();
-        printerJob.setJobName("Sale" + this.orderNo);
+        printerJob.setJobName("Sale" + sale.getSaleNo());
         
         PageFormat format = printerJob.getPageFormat(null);
         
@@ -448,7 +432,7 @@ public class SaleReceipt extends javax.swing.JFrame {
             try {
                 printerJob.print();
                 
-                JOptionPane.showMessageDialog(this, "Receipt: " + orderNo + " Printed Successfully", "Payment Receipt", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Receipt: " + sale.getSaleNo() + " Printed Successfully", "Payment Receipt", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
 
             } catch (PrinterException ex) {

@@ -9,6 +9,7 @@ import Forms.DepositPayment;
 import Forms.DepositUpdatePayment;
 import Forms.PrintOrder;
 import Forms.OrderNotes;
+import Model.CompletedOrder;
 import Model.Customer;
 import Model.Order;
 import Model.ProductService;
@@ -73,6 +74,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     Customer customer;
     ProductService productService;
     Order order;
+    CompletedOrder completedOrders;
     ResultSet rs;
     ResultSetMetaData rsmd;
     
@@ -89,47 +91,10 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         
     }
 
-    public OrderDetails(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
-            String _deviceBrand, String _deviceModel, String _serialNumber, String _importantNotes, 
-            String _stringFaults, String _stringProducts, String _stringQty, String _stringUnitPrice,
-            String _stringPriceTotal, double _total, double _deposit, double _cashDeposit, double _cardDeposit, double _due, String _status, 
-            String _issueDate, double _cash, double _card, String _pickedDate) {
-        
-        initComponents();
-        
-        this.orderNo = _orderNo;
-        this.firstName = _firstName;
-        this.lastName = _lastName;
-        this.contactNo = _contactNo;
-        this.email = _email;
-        this.deviceBrand = _deviceBrand;
-        this.deviceModel = _deviceModel;
-        this.serialNumber = _serialNumber;
-        this.importantNotes = _importantNotes;
-        this.stringFaults = _stringFaults;
-        this.stringProducts = _stringProducts;
-        this.stringQty = _stringQty;
-        this.stringUnitPrice = _stringUnitPrice;
-        this.stringPriceTotal = _stringPriceTotal;
-        this.total = _total;
-        this.deposit = _deposit;
-        this.cashDeposit = _cashDeposit;
-        this.cardDeposit = _cardDeposit;
-        this.due = _due;
-        this.status = _status;
-        this.issueDate = _issueDate;
-        this.cash = _cash;
-        this.card = -card;
-        this.pickedDate = _pickedDate;
-        
-    }
-
-    OrderDetails(Order _order, double _cash, double _card, double _changeTotal) {
+    OrderDetails(Order _order, CompletedOrder _completedOrders) {
         initComponents();
         this.order = _order;
-        this.cash = _cash;
-        this.card = _card;
-        this.changeTotal = _changeTotal;
+        this.completedOrders = _completedOrders;
         
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
@@ -172,7 +137,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         txt_brand.setText(order.getBrand());
         txt_model.setText(order.getModel());
         txt_serial_number.setText(order.getSerialNumber());
-        editor_pane_notes.setText(order.getImportantNotes());
+        editor_pane_important_notes.setText(order.getImportantNotes());
         txt_total.setText(String.valueOf(order.getTotal()));
         txt_deposit.setText(String.valueOf(order.getDeposit()));
         txt_due.setText(String.valueOf(order.getDue()));
@@ -386,7 +351,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         btn_print = new javax.swing.JButton();
         btn_notes = new javax.swing.JButton();
         jScrollPane_notes = new javax.swing.JScrollPane();
-        editor_pane_notes = new javax.swing.JEditorPane();
+        editor_pane_important_notes = new javax.swing.JEditorPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         table_view_products = new javax.swing.JTable();
 
@@ -740,9 +705,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         jScrollPane_notes.setEnabled(false);
         jScrollPane_notes.setVerifyInputWhenFocusTarget(false);
 
-        editor_pane_notes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Important Notes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 16))); // NOI18N
-        editor_pane_notes.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
-        jScrollPane_notes.setViewportView(editor_pane_notes);
+        editor_pane_important_notes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Important Notes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 16))); // NOI18N
+        editor_pane_important_notes.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        jScrollPane_notes.setViewportView(editor_pane_important_notes);
 
         table_view_products.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         table_view_products.setModel(new javax.swing.table.DefaultTableModel(
@@ -1096,7 +1061,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     private void txt_faultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_faultActionPerformed
         // TODO add your handling code here:
         String faultText = txt_fault.getText();
-        Vector faultsList = new Vector();
+        Vector faultsVector = new Vector();
         DefaultTableModel dtm = (DefaultTableModel)table_view_faults.getModel();
         
         if (faultText.isEmpty())
@@ -1108,8 +1073,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             try 
             {
                 dbConnection();
-                String queryCheck = "SELECT * FROM faults WHERE faultName = '" +faultText+ "'";
+                String queryCheck = "SELECT * FROM faults WHERE faultName = ? ";
                 ps = con.prepareStatement(queryCheck);
+                ps.setString(1, faultText);
                 rs = ps.executeQuery();
 
                 if (!rs.isBeforeFirst())
@@ -1122,8 +1088,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                         ps.setString(1, faultText);
                         ps.executeUpdate();
 
-                        faultsList.add(faultText);
-                        dtm.addRow(faultsList);
+                        faultsVector.add(faultText);
+                        dtm.addRow(faultsVector);
                         txt_fault.setText("");
                     }
                     else
@@ -1133,8 +1099,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 }
                 else
                 {
-                    faultsList.add(faultText);
-                    dtm.addRow(faultsList);
+                    faultsVector.add(faultText);
+                    dtm.addRow(faultsVector);
                     txt_fault.setText("");
                 }
 
@@ -1180,8 +1146,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             {
                 dbConnection();
                 
-                String query = "SELECT * FROM products WHERE productService = '" + selectedItem + "'";
+                String query = "SELECT * FROM products WHERE productService = ? ";
                 ps = con.prepareStatement(query);
+                ps.setString(1, selectedItem);
                 rs = ps.executeQuery();
                 
                 if (!rs.isBeforeFirst())
@@ -1250,7 +1217,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         
         if(evt.getClickCount() == 2)
         {
-          int confirmDeletion = JOptionPane.showConfirmDialog(null, "Delete This Item ?", "Delete Faults", JOptionPane.YES_NO_OPTION);
+          String selectedFault = table_view_faults.getValueAt(table_view_faults.getSelectedRow(), 0).toString();
+          int confirmDeletion = JOptionPane.showConfirmDialog(null, "Remove " + selectedFault + " ?", "Remove Fault", JOptionPane.YES_NO_OPTION);
           if(confirmDeletion == 0)
               dtm.removeRow(table_view_faults.getSelectedRow());
         }
@@ -1293,8 +1261,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         
         try {
             dbConnection();
-            String query = "SELECT * FROM customers WHERE contactNo = '" +contactNo+ "'";
+            String query = "SELECT * FROM customers WHERE contactNo = ? ";
             ps = con.prepareStatement(query);
+            ps.setString(1, contactNo);
             rs = ps.executeQuery();
             
             //show a message if a costumer is not found in the db
@@ -1310,22 +1279,18 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                     customer = new Customer(firstName, lastName, contactNo, email);
                     String insertQuery = "INSERT INTO customers (firstName, lastName, contactNo, email) VALUES(?, ?, ?, ?)";
                     
-                    ps = con.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+                    ps = con.prepareStatement(insertQuery);
                     ps.setString(1, customer.getFirstName());
                     ps.setString(2, customer.getLastName());
                     ps.setString(3, customer.getContactNo());
                     ps.setString(4, customer.getEmail());
                     ps.executeUpdate();
                     txt_brand.requestFocus();
-                    
-                    rs = ps.getGeneratedKeys();
-                    if (rs.next())
-                        customer.setCustomerID(rs.getInt(1));
                 }
             } 
             else
             {
-                String fillQuery = "Select * from customers WHERE contactNo = '" +contactNo+ "'";
+                String fillQuery = "Select * from customers WHERE contactNo = ? ";
                 ps = con.prepareStatement(fillQuery);
                 rs = ps.executeQuery();
                 
@@ -1336,7 +1301,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                     txt_contact.setText(rs.getString("contactNo"));
                     txt_email.setText(rs.getString("email"));
                     int id = rs.getInt("customerID");
-                    System.out.println("Customer ID: " + id);
                 }
             }
             
@@ -1369,11 +1333,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 
                 ps.executeUpdate();
                 
-//                FixedOrder fixedOrder = new FixedOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
-//                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
-//                         stringPriceTotal, total, deposit, cashDeposit, cardDeposit, due, status, issueDate, finishedDate, 
-//                        cash, card, pickedDate);
-                FixedOrder fixedOrder = new FixedOrder(order, cash, card, changeTotal);
+                FixedOrder fixedOrder = new FixedOrder(order, completedOrders);
                 desktop_pane_order_details.removeAll();
                 desktop_pane_order_details.add(fixedOrder).setVisible(true);
                 
@@ -1385,10 +1345,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
-        
-//        PrintOrder printOrder = new PrintOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand, 
-//                deviceModel, serialNumber, stringFaults, importantNotes, stringProducts, stringQty, stringUnitPrice,
-//                stringPriceTotal, total, deposit, due, issueDate);
         PrintOrder printOrder = new PrintOrder(order);
         printOrder.setVisible(true);
     }//GEN-LAST:event_btn_printActionPerformed
@@ -1403,8 +1359,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
            order.setStatus("Not Fixed");
             try {
                 dbConnection();
-//                String query = "UPDATE orderDetails SET status = '" + status + "', finishDate = '" + finishedDate +"'"
-//                        + "WHERE orderNo = '"+ orderNo + "'";
                 String query = "UPDATE orderDetails SET status = ?, finishDate = ? WHERE orderNo = ?";
                 ps = con.prepareStatement(query);
                 ps.setString(1, order.getStatus());
@@ -1412,11 +1366,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 ps.setString(3, order.getOrderNo());
                 ps.executeUpdate();
                 
-//                NotFixedOrder orderNotFixed = new NotFixedOrder(orderNo, firstName, lastName, contactNo, email, deviceBrand,
-//                        deviceModel, serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice,
-//                         stringPriceTotal, total, deposit, cashDeposit, cardDeposit, due, status, issueDate, finishedDate, cash, card, pickedDate);
-                
-                NotFixedOrder orderNotFixed = new NotFixedOrder(order);
+                NotFixedOrder orderNotFixed = new NotFixedOrder(order, completedOrders);
                 desktop_pane_order_details.removeAll();
                 desktop_pane_order_details.add(orderNotFixed).setVisible(true);
                 
@@ -1471,19 +1421,22 @@ public class OrderDetails extends javax.swing.JInternalFrame {
              stringUnitPrice = vecUpdateUnitPrice.toString().replace("[", "").replace("]", "");
              stringPriceTotal = vecUpdatePriceTotal.toString().replace("[", "").replace("]", "");
 
-             
-             if (order.getFirstName().equals(txt_first_name.getText()) && order.getLastName().equals(txt_last_name.getText()) 
+              if (order.getFirstName().equals(txt_first_name.getText()) && order.getLastName().equals(txt_last_name.getText()) 
                  && order.getContactNo().equals(txt_contact.getText()) && order.getEmail().equals(txt_email.getText()) 
                  && order.getBrand().equals(txt_brand.getText()) && order.getModel().equals(txt_model.getText()) 
                  && order.getSerialNumber().equals(txt_serial_number.getText()) && order.getStringFaults().equals(stringFaults)
-                 && order.getImportantNotes().equals(editor_pane_notes.getText()) && order.getStringProducts().equals(stringProducts)
+                 && order.getImportantNotes().equals(editor_pane_important_notes.getText()) && order.getStringProducts().equals(stringProducts)
                  && order.getStringQty().equals(stringQty) && order.getUnitPrice().equals(stringUnitPrice) 
                  && order.getPriceTotal().equals(stringPriceTotal) && order.getTotal() == Double.parseDouble(txt_total.getText()) 
-                 && order.getDeposit() == Double.parseDouble(txt_deposit.getText()) && order.getDue() == Double.parseDouble(txt_due.getText()))
+                 //&& order.getDeposit() == Double.parseDouble(txt_deposit.getText()) 
+                      && order.getDue() == Double.parseDouble(txt_due.getText()))
              {
                 JOptionPane.showMessageDialog(null, "No changes to be Updated", "Update Order Details", JOptionPane.ERROR_MESSAGE);
              }
 
+             else if (Double.parseDouble(txt_deposit.getText()) < order.getDeposit())
+                 JOptionPane.showMessageDialog(this, "Deposit can not be equal or less than " + order.getDeposit() + " !", "Update Order Details", JOptionPane.ERROR_MESSAGE);
+              
              else
              {
                 order.setFirstName(txt_first_name.getText());
@@ -1494,7 +1447,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 order.setModel(txt_model.getText());
                 order.setSerialNumber(txt_serial_number.getText());
                 order.setStringFaults(stringFaults);
-                order.setImportantNotes(editor_pane_notes.getText());
+                order.setImportantNotes(editor_pane_important_notes.getText());
                 order.setStringProducts(stringProducts);
                 order.setStringQty(stringQty);
                 order.setUnitPrice(stringUnitPrice);
@@ -1580,10 +1533,10 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         //Delete products|Service item of the selected row (Function is called with 2 clicks)
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
-
+        String selectedProduct = table_view_products.getValueAt(table_view_products.getSelectedRow(), 0).toString();
         if(evt.getClickCount() == 2)
         {
-            int confirmDeletion = JOptionPane.showConfirmDialog(null, "Delete This Item ?", "Delete Product|Service", JOptionPane.YES_NO_OPTION);
+            int confirmDeletion = JOptionPane.showConfirmDialog(null, "Remove " + selectedProduct + " ?", "Delete Product|Service", JOptionPane.YES_NO_OPTION);
             if(confirmDeletion == 0)
             {
                 dtm.removeRow(table_view_products.getSelectedRow());
@@ -1603,7 +1556,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> combo_box_product_service;
     private javax.swing.JDesktopPane desktop_pane_order_details;
-    private javax.swing.JEditorPane editor_pane_notes;
+    private javax.swing.JEditorPane editor_pane_important_notes;
     private javax.swing.JLabel icon_add_table_view;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JDialog jDialog1;

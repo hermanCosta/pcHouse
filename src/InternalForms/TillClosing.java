@@ -7,8 +7,8 @@ package InternalForms;
 
 import Common.DBConnection;
 import Forms.PrintFullReport;
-import Model.OrdersReport;
-import Model.SalesReport;
+import Model.OrderReport;
+import Model.SaleReport;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -47,8 +47,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
     Statement st;
     Connection con;
     ResultSet rs;
-    OrdersReport ordersReport;
-    SalesReport salesReport;
+    OrderReport ordersReport;
+    SaleReport salesReport;
     //Date pickedDate; //= date_picker.getDate();
     //String tillClosingDate; // = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
     
@@ -82,9 +82,9 @@ public class TillClosing extends javax.swing.JInternalFrame {
         }
     }
      
-     public ArrayList<SalesReport> loadSalesList()
+     public ArrayList<SaleReport> loadSalesList()
      {
-        ArrayList<SalesReport> salesList = new ArrayList<>();
+        ArrayList<SaleReport> salesList = new ArrayList<>();
          
          try {
             // TODO add your handling code here:
@@ -101,7 +101,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
             {
                 // Before adding to the list take the changeTotal deducted from cash
 //                double cash = rs.getDouble("cash") - rs.getDouble("changeTotal");
-                salesReport = new SalesReport(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
+                salesReport = new SaleReport(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
                         rs.getString("productService"), rs.getDouble("total"), rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"));
                 
                 salesList.add(salesReport);
@@ -113,9 +113,9 @@ public class TillClosing extends javax.swing.JInternalFrame {
          return salesList;
      }
     
-     public ArrayList<OrdersReport> loadOrdersList()
+     public ArrayList<OrderReport> loadOrdersList()
      {
-        ArrayList<OrdersReport> ordersList = new ArrayList<>();
+        ArrayList<OrderReport> ordersList = new ArrayList<>();
          
         try {
             dbConnection();
@@ -130,7 +130,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 while (rs.next())
                 {
                    //double cash = rs.getDouble("cash") - rs.getDouble("changeTotal");
-                   ordersReport = new OrdersReport(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"),
+                   ordersReport = new OrderReport(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"),
                             rs.getString("productService"), rs.getDouble("deposit"), rs.getDouble("due"), rs.getDouble("cash"), 
                            rs.getDouble("card"), rs.getDouble("changeTotal"));
 
@@ -155,7 +155,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
         
         //Lists for holding list from the constructor
-        ArrayList<OrdersReport> listOrders = loadOrdersList();
+        ArrayList<OrderReport> listOrders = loadOrdersList();
         // This Lists hold all values paid by cash and card
         ArrayList<Double> cashList = new ArrayList<>();
         ArrayList<Double> cardList = new ArrayList<>();
@@ -172,10 +172,10 @@ public class TillClosing extends javax.swing.JInternalFrame {
             // this object holds each range of elements for setting into the table
             Object[] rowOrders = new Object[5];
             for (int i = 0; i < listOrders.size() ; i++)
-        {
-            rowOrders[0] = listOrders.get(i).getOrderNo();
-            rowOrders[1] = listOrders.get(i).getFirstName() + " " + listOrders.get(i).getLastName();;
-            rowOrders[2] = listOrders.get(i).getProductsService();
+            {
+                rowOrders[0] = listOrders.get(i).getOrderNo();
+                rowOrders[1] = listOrders.get(i).getFirstName() + " " + listOrders.get(i).getLastName();;
+                rowOrders[2] = listOrders.get(i).getProductsService();
             
 
             // check if there's negative values, pass due + deposit if true, else, pass as normal to the list
@@ -644,8 +644,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
         Date pickedDate = pickedDate = date_picker.getDate();
         String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
         
-        ArrayList<SalesReport> listSales = loadSalesList();
-        ArrayList<OrdersReport> listOrders = loadOrdersList();
+        ArrayList<SaleReport> listSales = loadSalesList();
+        ArrayList<OrderReport> listOrders = loadOrdersList();
         
         
         Date dateFullReport = new Date();
@@ -674,7 +674,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         panel_orders.setVisible(false);
         
         //Lists for holding list from the constructor
-        ArrayList<SalesReport> listSales = loadSalesList();
+        ArrayList<SaleReport> listSales = loadSalesList();
         
         if (listSales.isEmpty() || pickedDate.after(currentDate))
             

@@ -926,13 +926,14 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void btn_save_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save_orderActionPerformed
         // TODO add your handling code here:
-        loadOrderList();
         
-        if (order.getDeposit() <= 0)
+        if (deposit <= 0)
         {
-            int confirmNewOrder = JOptionPane.showConfirmDialog(this, "Do you Want to Save this new order " + order.getOrderNo() +" ?");
+            int confirmNewOrder = JOptionPane.showConfirmDialog(this, "Do you want to save this new Order " + orderNo +" ?");
             if (confirmNewOrder == 0)
             {
+                loadOrderList();
+                
                 try {
                     dbConnection();
                     String query = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
@@ -992,7 +993,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
         
         else
         {
-             DepositPayment depositPayment = new DepositPayment(order, 0);
+            loadOrderList();
+            DepositPayment depositPayment = new DepositPayment(order, 0);
             depositPayment.setVisible(true);
         }
     }//GEN-LAST:event_btn_save_orderActionPerformed

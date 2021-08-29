@@ -5,7 +5,7 @@
  */
 package Forms;
 
-import Model.CompletedOrders;
+import Model.CompletedOrder;
 import Model.Order;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -31,44 +31,13 @@ public class OrderReceipt extends javax.swing.JFrame {
     double deposit, due, total;
 
     Order order;
-    CompletedOrders completedOrders;
-    double cash, card, changeTotal;
-    
-    String orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
-            stringProducts, stringQty, stringUnitPrice, stringPriceTotal, serialNumber, payDate;
+    CompletedOrder completedOrders;
     
     public OrderReceipt() {
         initComponents();
     }
     
-    public OrderReceipt(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
-            String _deviceBrand, String _deviceModel, String _serialNumber, String _stringProducts, String _stringQty,
-            String _stringUnitPrice, String _stringPriceTotal, double _total, double _deposit, double _due, String _payDate, 
-            double _cash, double _card, double _changeTotal) {
-        
-        initComponents();
-        
-        this.orderNo = _orderNo;
-        this.firstName = _firstName;
-        this.lastName = _lastName;
-        this.contactNo = _contactNo;
-        this.email = _email;
-        this.deviceBrand = _deviceBrand;
-        this.deviceModel = _deviceModel;
-        this.serialNumber = _serialNumber;
-        this.stringProducts = _stringProducts;
-        this.stringQty = _stringQty;
-        this.stringUnitPrice = _stringUnitPrice;
-        this.stringPriceTotal = _stringPriceTotal;
-        this.total = _total;
-        this.payDate = _payDate;
-        this.cash = _cash;
-        this.card = _card;
-        this.changeTotal = _changeTotal;
-        
-    }
-
-    public OrderReceipt(Order _order, CompletedOrders _completedOrders) {
+    public OrderReceipt(Order _order, CompletedOrder _completedOrders) {
         initComponents();
         this.order = _order;
         this.completedOrders = _completedOrders;

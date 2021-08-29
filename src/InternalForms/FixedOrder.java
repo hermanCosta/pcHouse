@@ -5,12 +5,11 @@
  */
 package InternalForms;
 
-import Forms.PrintOrder;
 import Forms.OrderPayment;
 import Forms.OrderNotes;
 import Forms.OrderReceipt;
 import Forms.RefundReceipt;
-import Model.CompletedOrders;
+import Model.CompletedOrder;
 import Model.Customer;
 import Model.Order;
 import Model.ProductService;
@@ -31,7 +30,6 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -63,22 +61,19 @@ public class FixedOrder extends javax.swing.JInternalFrame {
     Customer customer;
     ProductService productService;
     Order order;
+    CompletedOrder completedOrders;
     ResultSet rs;
     ResultSetMetaData rsmd;
-    
-    double cash, card, changeTotal;
     
     public FixedOrder() {
         initComponents();
         
     }
 
-    FixedOrder(Order _order, double _cash, double _card, double _changeTotal) {
+    FixedOrder(Order _order, CompletedOrder _completedOrders) {
         initComponents();
         this.order = _order;
-        this.cash = _cash;
-        this.card = _card;
-        this.changeTotal = _changeTotal;
+        this.completedOrders = _completedOrders;
         
          //Remove borders
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
@@ -106,10 +101,9 @@ public class FixedOrder extends javax.swing.JInternalFrame {
 
    public void loadSelectedOrder()
    {
-       
        if (order.getPickDate() != null && !order.getPickDate().trim().isEmpty())
         {
-            lbl_order_picked_on.setText("Picked on: " + order.getPickDate());
+            lbl_order_picked_on.setText("Paid on: " + order.getPickDate());
             lbl_order_picked_on.setVisible(true);
             
             btn_pay.setVisible(false);
@@ -118,12 +112,12 @@ public class FixedOrder extends javax.swing.JInternalFrame {
             btn_undo.setVisible(false);
             btn_refund.setVisible(true);
             
-            if (cash == 0)
-            lbl_paid_by.setText("Paid by Card: €" + card);
-            else if (card == 0)
-            lbl_paid_by.setText("Paid by Cash: €" + cash + " | Change: €" + changeTotal);
+            if (completedOrders.getCash() == 0)
+            lbl_paid_by.setText("Paid by Card: €" + completedOrders.getCard());
+            else if (completedOrders.getCard() == 0)
+            lbl_paid_by.setText("Paid by Cash: €" + completedOrders.getCash() + " | Change: €" + completedOrders.getChangeTotal());
             else
-            lbl_paid_by.setText("Paid by Cash: €" + cash + " | Card: €" + card + " | Change: €" + changeTotal);
+            lbl_paid_by.setText("Paid by Cash: €" + completedOrders.getCash() + " | Card: €" + completedOrders.getCard() + " | Change: €" + completedOrders.getChangeTotal());
             
             lbl_paid_by.setVisible(true);
         }
@@ -768,11 +762,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
 
     private void btn_payActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_payActionPerformed
         // TODO add your handling code here:
-        
-         OrderPayment orderPayment = new OrderPayment(order);
-//        OrderPayment billing = new OrderPayment(orderNo, firstName, lastName, contactNo, email, deviceBrand, deviceModel, 
-//                serialNumber, importantNotes, stringFaults, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, 
-//                total, deposit, due, issueDate, finishedDate, table_view_products);
+        OrderPayment orderPayment = new OrderPayment(order, completedOrders);
         orderPayment.setVisible(true);
     }//GEN-LAST:event_btn_payActionPerformed
 
@@ -784,6 +774,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         if (confirmUndoing == 0)
         {
             order.setStatus("In Progress");
+            
             try {
                 dbConnection();
                 String query = "UPDATE orderDetails SET status = ? WHERE orderNo = ?";
@@ -792,9 +783,10 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 ps.setString(2, order.getOrderNo());
                 ps.executeUpdate();
                 
-                OrderDetails orderDetails = new OrderDetails(order, cash, card, changeTotal);
+                OrderDetails orderDetails = new OrderDetails(order, completedOrders);
                 desktop_pane_fixed_order.removeAll();
                 desktop_pane_fixed_order.add(orderDetails).setVisible(true);
+                
             } catch (SQLException ex) {
                 Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -817,15 +809,20 @@ public class FixedOrder extends javax.swing.JInternalFrame {
             ps.setString(1, order.getOrderNo());
             rs = ps.executeQuery();
             
-            while (rs.next())
-            {
-                cash = rs.getDouble("cash");
-                card = rs.getDouble("card");
-                changeTotal = rs.getDouble("changeTotal");
-            }
+//            while (rs.next())
+//            {
+//                cash = rs.getDouble("cash");
+//                card = rs.getDouble("card");
+//                changeTotal = rs.getDouble("changeTotal");
+//                
+//                completedOrders.setCash(rs.getDouble("cash"));
+//                completedOrders.setCard(rs.getDouble("card"));
+//                completedOrders.setChangeTotal(rs.getDouble("changeTotal"));
+//            }
             
-            CompletedOrders completedOrders = new CompletedOrders(order.getOrderNo(), order.getFirstName(), order.getLastName(),
-            order.getStringProducts(), order.getTotal(), order.getDeposit(), order.getDue(),order.getPickDate() , cash, card, changeTotal);
+//            completedOrders = new CompletedOrders(order.getOrderNo(), order.getFirstName(), order.getLastName(),
+//            order.getStringProducts(), order.getTotal(), order.getDeposit(), order.getDue(),order.getPickDate() , completedOrders.getCash(),
+//                    completedOrders.getCard(), completedOrders.getChangeTotal());
             
             OrderReceipt orderReceipt =  new OrderReceipt(order, completedOrders);
             orderReceipt.setVisible(true);
@@ -858,18 +855,38 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 ps.setString(3, order.getOrderNo());
                 ps.executeUpdate();
                 
-                cash  = cash - changeTotal;
+//                cash  = cash - changeTotal;
+//                
+//                changeTotal = 0;
+//                order.setCashDeposit(0);
+//                order.setCardDeposit(0);
+//                
+//                cash = cash + order.getCashDeposit();
+//                card = card + order.getCardDeposit();
+//                
+//                double refundTotal = order.getTotal();
+//                double refundDeposit = order.getDeposit();
+//                double refundDue = order.getDue();
+//                
+//                double refundCash = cash *= -1;
+//                double refundCard = card *= -1;
+
+
+                 completedOrders.setCash(completedOrders.getCash() - completedOrders.getChangeTotal());
                 
-                changeTotal = 0;
+                completedOrders.setChangeTotal(0);
                 order.setCashDeposit(0);
                 order.setCardDeposit(0);
                 
-                cash = cash + order.getCashDeposit();
-                card = card + order.getCardDeposit();
+                completedOrders.setCash(completedOrders.getCash() + order.getCashDeposit());
+                completedOrders.setCard(completedOrders.getCard() + order.getCardDeposit());
                 
                 double refundTotal = order.getTotal();
                 double refundDeposit = order.getDeposit();
                 double refundDue = order.getDue();
+                
+                double cash = completedOrders.getCash();
+                double card = completedOrders.getCard();
                 
                 double refundCash = cash *= -1;
                 double refundCard = card *= -1;
@@ -883,8 +900,8 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                     public CompletedOrders(String _orderNo, String _firstName, String _lastName, String _stringProducts, 
             String _payDate, double _total, double _deposit, double _due, double _cash, double _card, double _changeTotal) {
                 */
-                CompletedOrders completedOrders = new CompletedOrders(order.getOrderNo(), order.getFirstName(), order.getLastName(),
-                order.getStringProducts(), refundTotal, refundDeposit, refundDue, refundDate, refundCash, refundCard, changeTotal);
+                completedOrders = new CompletedOrder(order.getOrderNo(), order.getFirstName(), order.getLastName(),
+                order.getStringProducts(), refundTotal, refundDeposit, refundDue, refundDate, refundCash, refundCard, completedOrders.getChangeTotal());
                         
                 String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, productService, total,"
                         + "deposit, due, payDate, cash, card, changeTotal) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

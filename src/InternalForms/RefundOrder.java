@@ -7,7 +7,7 @@ package InternalForms;
 
 import Forms.OrderNotes;
 import Forms.RefundReceipt;
-import Model.CompletedOrders;
+import Model.CompletedOrder;
 import Model.Customer;
 import Model.Order;
 import Model.ProductService;
@@ -59,7 +59,7 @@ public class RefundOrder extends javax.swing.JInternalFrame {
     Customer customer;
     ProductService productService;
     Order order;
-    CompletedOrders completedOrders;
+    CompletedOrder completedOrders;
     ResultSet rs;
     ResultSetMetaData rsmd;
     
@@ -69,10 +69,11 @@ public class RefundOrder extends javax.swing.JInternalFrame {
         
     }
 
-    RefundOrder(Order _order, CompletedOrders _completedOrders) {
+    RefundOrder(Order _order, CompletedOrder _completedOrders) {
      initComponents();
      this.order = _order;
      this.completedOrders = _completedOrders;
+     
      //Remove borders
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();

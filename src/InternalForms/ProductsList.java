@@ -47,7 +47,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
      Vector vector;
      Statement statement;
      String productId;
-     String ID;
+     int ID;
      String addCategory = "";
 
     @SuppressWarnings("unchecked")
@@ -206,8 +206,9 @@ public class ProductsList extends javax.swing.JInternalFrame {
         {
             try {
                 
-                String query = "DELETE FROM products WHERE productId = '" + productId + "'";
+                String query = "DELETE FROM products WHERE productId = ? ";
                 ps = con.prepareStatement(query);
+                ps.setInt(1, ID);
                 ps.executeUpdate();
                 dtm.removeRow(table_view_products_list.getSelectedRow());
                 displayProductList();
@@ -546,7 +547,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
             int selectedRow = table_view_products_list.getSelectedRow();
             dtm = (DefaultTableModel)table_view_products_list.getModel();
             table_view_products_list.getModel().addTableModelListener(table_view_products_list);
-            ID = dtm.getValueAt(selectedRow, 0).toString();
+            ID = (Integer) dtm.getValueAt(selectedRow, 0);
 
             txt_product_service_list.setText(dtm.getValueAt(selectedRow, 1).toString());
             txt_add_price.setText(dtm.getValueAt(selectedRow, 2).toString());

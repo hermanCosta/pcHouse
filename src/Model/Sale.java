@@ -11,21 +11,25 @@ package Model;
  */
 public class Sale extends Customer {
     
-    String saleNo, productService, qty, unitPrice, priceTotal, saleDate;
-    double total;
+    String saleNo, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, saleDate, status;
+    double total, cash, card, changeTotal;
     
     public Sale(String _saleNo, String _firstName, String _lastName, String _contactNo, String _email,
-            String _productService, String _qty, String _unitPrice, String _priceTotal, 
-            double _total, String _saleDate) {
+            String _stringProducts, String _stringQty, String _stringUnitPrice, String _stringPriceTotal, 
+            double _total, String _saleDate, double _cash, double _card, double _changeTotal, String _status) {
         super(_firstName, _lastName, _contactNo, _email);
         
         this.saleNo = _saleNo;
-        this.productService = _productService;
-        this.qty = _qty;
-        this.unitPrice = _unitPrice;
+        this.stringProducts = _stringProducts;
+        this.stringQty = _stringQty;
+        this.stringUnitPrice = _stringUnitPrice;
+        this.stringPriceTotal = _stringPriceTotal;
         this.total = _total;
         this.saleDate = _saleDate;
-        
+        this.cash = _cash;
+        this.card = _card;
+        this.changeTotal = _changeTotal;
+        this.status = _status;
     }
 
     public String getSaleNo() {
@@ -36,36 +40,36 @@ public class Sale extends Customer {
         this.saleNo = sellingNo;
     }
 
-    public String getProductService() {
-        return productService;
+    public String getStringProducts() {
+        return stringProducts;
     }
 
-    public void setProductService(String productService) {
-        this.productService = productService;
+    public void setStringProducts(String stringProducts) {
+        this.stringProducts = stringProducts;
     }
 
-    public String getQty() {
-        return qty;
+    public String getStringQty() {
+        return stringQty;
     }
 
-    public void setQty(String qty) {
-        this.qty = qty;
+    public void setStringQty(String stringQty) {
+        this.stringQty = stringQty;
     }
 
-    public String getUnitPrice() {
-        return unitPrice;
+    public String getStringUnitPrice() {
+        return stringUnitPrice;
     }
 
-    public void setUnitPrice(String unitPrice) {
-        this.unitPrice = unitPrice;
+    public void setStringUnitPrice(String stringUnitPrice) {
+        this.stringUnitPrice = stringUnitPrice;
     }
     
-    public String getPriceTotal() {
-        return priceTotal;
+    public String getStringPriceTotal() {
+        return stringPriceTotal;
     }
 
-    public void setPriceTotal(String price) {
-        this.priceTotal = price;
+    public void setStringPriceTotal(String stringPriceTotal) {
+        this.stringPriceTotal = stringPriceTotal;
     }
 
     public double getTotal() {
@@ -83,4 +87,38 @@ public class Sale extends Customer {
     public void setSaleDate(String sellingDate) {
         this.saleDate = sellingDate;
     }
+
+    public double getCash() {
+        return cash;
+    }
+
+    public void setCash(double cash) {
+        this.cash = cash;
+    }
+
+    public double getCard() {
+        return card;
+    }
+
+    public void setCard(double card) {
+        this.card = card;
+    }
+
+    public double getChangeTotal() {
+        return changeTotal;
+    }
+
+    public void setChangeTotal(double changeTotal) {
+        this.changeTotal = changeTotal;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+    
 }

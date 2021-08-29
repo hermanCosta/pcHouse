@@ -63,6 +63,7 @@ public class Sales extends javax.swing.JInternalFrame {
     Customer customer;
     ProductService productService;
     Sale sale;
+    SaleDetails saleDetails ;
     ResultSet rs;
     ResultSetMetaData rsmd;
     
@@ -175,8 +176,9 @@ public class Sales extends javax.swing.JInternalFrame {
             while (rs.next())
             {
                 sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
-                rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), rs.getString("qty"),  
-                        rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getString("saleDate"));
+                        rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), rs.getString("qty"),  
+                        rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getString("saleDate"), 
+                        rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getString("status"));
                 
                 salesList.add(sale);
             }
@@ -200,10 +202,10 @@ public class Sales extends javax.swing.JInternalFrame {
             row[0] = list.get(i).getSaleNo();
             row[1] = list.get(i).getFirstName() + " " + list.get(i).getLastName();
             row[2] = list.get(i).getContactNo();
-            row[3] = list.get(i).getProductService();
-            row[4] = list.get(i).getQty();
-            row[5] = list.get(i).getUnitPrice();
-            row[6] = list.get(i).getTotal();
+            row[3] = list.get(i).getStringProducts();
+            row[4] = list.get(i).getStringQty();
+            row[5] = list.get(i).getTotal();
+            row[6] = list.get(i).getStatus();
             dtm.addRow(row);
         }
     }
@@ -575,7 +577,7 @@ public class Sales extends javax.swing.JInternalFrame {
                 {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Sale No", "Full Name", "Contact No.", "Products | Service", "Qty", "Unit €", "Total €"
+                "Sale No", "Full Name", "Contact No.", "Products | Service", "Qty", "Total €", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -594,10 +596,16 @@ public class Sales extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(table_view_sales);
         if (table_view_sales.getColumnModel().getColumnCount() > 0) {
             table_view_sales.getColumnModel().getColumn(0).setMaxWidth(100);
-            table_view_sales.getColumnModel().getColumn(2).setPreferredWidth(50);
+            table_view_sales.getColumnModel().getColumn(1).setPreferredWidth(210);
+            table_view_sales.getColumnModel().getColumn(1).setMaxWidth(250);
+            table_view_sales.getColumnModel().getColumn(2).setPreferredWidth(130);
+            table_view_sales.getColumnModel().getColumn(2).setMaxWidth(150);
             table_view_sales.getColumnModel().getColumn(3).setPreferredWidth(200);
-            table_view_sales.getColumnModel().getColumn(4).setMaxWidth(40);
-            table_view_sales.getColumnModel().getColumn(6).setMaxWidth(80);
+            table_view_sales.getColumnModel().getColumn(4).setPreferredWidth(80);
+            table_view_sales.getColumnModel().getColumn(4).setMaxWidth(100);
+            table_view_sales.getColumnModel().getColumn(5).setMaxWidth(90);
+            table_view_sales.getColumnModel().getColumn(6).setPreferredWidth(90);
+            table_view_sales.getColumnModel().getColumn(6).setMaxWidth(100);
         }
 
         txt_search_sale.setFont(new java.awt.Font("sansserif", 1, 16)); // NOI18N
@@ -810,11 +818,9 @@ public class Sales extends javax.swing.JInternalFrame {
             stringPriceTotal = vecPriceTotal.toString().replace("[", " ").replace("]", "");
 
             sale = new Sale(saleNo, firstName, lastName, contactNo, email, stringProducts, stringQty, 
-                    stringUnitPrice, stringPriceTotal, total,saleDate);
+                    stringUnitPrice, stringPriceTotal, total, saleDate, cash, card, changeTotal, "");
 
-            SalePayment salePayment =  new SalePayment(saleNo, firstName, lastName, contactNo, email, 
-                       stringProducts, stringQty, stringUnitPrice, stringPriceTotal, total, saleDate, cash, card,
-            table_view_products);
+            SalePayment salePayment =  new SalePayment(sale, table_view_products);
                salePayment.setVisible(true);
        }
     }//GEN-LAST:event_btn_save_orderActionPerformed
@@ -912,7 +918,7 @@ public class Sales extends javax.swing.JInternalFrame {
         
         if(selectedItem.isEmpty() || selectedItem.matches("Select or Type"))
         {
-            JOptionPane.showMessageDialog(null, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
         }
         else
         {
@@ -920,8 +926,9 @@ public class Sales extends javax.swing.JInternalFrame {
             {
                 dbConnection();
                 
-                String query = "SELECT * FROM products WHERE productService = '" + selectedItem + "'";
+                String query = "SELECT * FROM products WHERE productService = ?";
                 ps = con.prepareStatement(query);
+                ps.setString(1, selectedItem);
                 rs = ps.executeQuery();
                 
                 if (!rs.isBeforeFirst())
@@ -973,7 +980,7 @@ public class Sales extends javax.swing.JInternalFrame {
                         dtm.addRow(vector);
                     }
                     
-                    combo_box_product_service.setSelectedIndex(-1);
+                    combo_box_product_service.setSelectedIndex(1);
                     
                     // Sum price column and set into total textField
                     getPriceSum();
@@ -1014,13 +1021,14 @@ public class Sales extends javax.swing.JInternalFrame {
         try {
             dbConnection();
             
-            String query = "SELECT * FROM customers WHERE contactNo = '" + contactNo + "'";
+            String query = "SELECT * FROM customers WHERE contactNo = ?";
             ps = con.prepareStatement(query);
+            ps.setString(1, contactNo);
             rs = ps.executeQuery();
             
             //show a message if a costumer is not found in the db
             if (!rs.isBeforeFirst() && firstName.trim().isEmpty() && lastName.trim().isEmpty())
-                JOptionPane.showMessageDialog(null, "Customer not found in the Database", "New Order", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Customer not found in the Database", "New Order", JOptionPane.ERROR_MESSAGE);
             
             //add a new customer if not exists AND fields are not empty
             else if (!rs.isBeforeFirst() && !firstName.trim().isEmpty() && !lastName.trim().isEmpty())
@@ -1091,8 +1099,9 @@ public class Sales extends javax.swing.JInternalFrame {
             while (rs.next())
             {
                 sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
-                rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), rs.getString("qty"), 
-                rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getString("saleDate"));
+                        rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), rs.getString("qty"), 
+                        rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getString("saleDate"), 
+                        rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getString("status"));
                 
                 salesList.add(sale);
             }
@@ -1109,9 +1118,9 @@ public class Sales extends javax.swing.JInternalFrame {
                 row[0] = salesList.get(i).getSaleNo();
                 row[1] = salesList.get(i).getFirstName() + " " + salesList.get(i).getLastName();
                 row[2] = salesList.get(i).getContactNo();
-                row[3] = salesList.get(i).getProductService();
-                row[4] = salesList.get(i).getQty();
-                row[5] = salesList.get(i).getUnitPrice();
+                row[3] = salesList.get(i).getStringProducts();
+                row[4] = salesList.get(i).getStringQty();
+                row[5] = salesList.get(i).getStringUnitPrice();
                 row[6] = salesList.get(i).getTotal();
             dtm.addRow(row);
         }
@@ -1135,25 +1144,26 @@ public class Sales extends javax.swing.JInternalFrame {
                 
                 while (rs.next())
                 {
-                    saleNo = rs.getString("saleNo");
-                    firstName = rs.getString("firstName");
-                    lastName = rs.getString("lastName");
-                    contactNo = rs.getString("contactNo");
-                    email = rs.getString("email");
-                    stringProducts = rs.getString("productService");
-                    stringQty = rs.getString("qty");
-                    stringUnitPrice = rs.getString("unitPrice");
-                    stringPriceTotal = rs.getString("priceTotal");
-                    saleDate = rs.getString("saleDate");
-                    total = rs.getDouble("total");
-                    cash = rs.getDouble("cash");
-                    card = rs.getDouble("card");
-                    changeTotal = rs.getDouble("changeTotal");
+//               { {
+//                    sale = new Sale("", "", "", "", "", "", "","", "", 0, "", 0, 0, 0);
+//                    saleDetails = new SaleDetails(sale);
+//                }
+//                else 
+//                {
+//                    do
+//                    {
                     
-                }
+                        sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"),
+                        rs.getString("email"), rs.getString("productService"), rs.getString("qty"), rs.getString("unitPrice"), rs.getString("priceTotal"),
+                        rs.getDouble("total"), rs.getString("saleDate"), rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getString("status"));
+                    //} while (rs.next());
+                    
+                    saleDetails = new SaleDetails(sale);
+                    
+                    
+               }
                 
-                SaleDetails saleDetails = new SaleDetails(saleNo, firstName, lastName, contactNo, email,
-                        stringProducts, stringQty, stringUnitPrice, stringPriceTotal, saleDate,total, cash, card, changeTotal);
+                
                 
                 
                 //desktop_pane_sales.removeAll();

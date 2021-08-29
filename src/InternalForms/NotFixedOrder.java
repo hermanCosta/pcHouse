@@ -6,6 +6,7 @@
 package InternalForms;
 
 import Forms.OrderNotes;
+import Model.CompletedOrder;
 import Model.Customer;
 import Model.Order;
 import Model.ProductService;
@@ -56,6 +57,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
     Customer customer;
     ProductService productService;
     Order order;
+    CompletedOrder completedOrders;
     ResultSet rs;
     ResultSetMetaData rsmd;
     
@@ -66,9 +68,10 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
     }
 
 
-    NotFixedOrder(Order _order) {
+    NotFixedOrder(Order _order, CompletedOrder _completedOrders) {
         initComponents();
         this.order = _order;
+        this.completedOrders = _completedOrders;
         
         //Remove borders
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
@@ -124,8 +127,6 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
             btn_pick_up.setVisible(true);
             btn_notes.setVisible(true);
             btn_notes1.setVisible(false);
-            
-            
         }
         
         lbl_order_status.setText("Order Not Fixed");
@@ -194,7 +195,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        desktop_pane_fixed_order = new javax.swing.JDesktopPane();
+        desktop_pane_not_fixed_order = new javax.swing.JDesktopPane();
         panel_order_details = new javax.swing.JPanel();
         btn_pick_up = new javax.swing.JButton();
         btn_notes1 = new javax.swing.JButton();
@@ -238,7 +239,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         setPreferredSize(new java.awt.Dimension(1049, 700));
         setSize(new java.awt.Dimension(1049, 700));
 
-        desktop_pane_fixed_order.setPreferredSize(new java.awt.Dimension(1049, 700));
+        desktop_pane_not_fixed_order.setPreferredSize(new java.awt.Dimension(1049, 700));
 
         panel_order_details.setPreferredSize(new java.awt.Dimension(1049, 700));
 
@@ -737,16 +738,16 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                                     .addComponent(lbl_price)))))))
         );
 
-        desktop_pane_fixed_order.setLayer(panel_order_details, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktop_pane_not_fixed_order.setLayer(panel_order_details, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        javax.swing.GroupLayout desktop_pane_fixed_orderLayout = new javax.swing.GroupLayout(desktop_pane_fixed_order);
-        desktop_pane_fixed_order.setLayout(desktop_pane_fixed_orderLayout);
-        desktop_pane_fixed_orderLayout.setHorizontalGroup(
-            desktop_pane_fixed_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout desktop_pane_not_fixed_orderLayout = new javax.swing.GroupLayout(desktop_pane_not_fixed_order);
+        desktop_pane_not_fixed_order.setLayout(desktop_pane_not_fixed_orderLayout);
+        desktop_pane_not_fixed_orderLayout.setHorizontalGroup(
+            desktop_pane_not_fixed_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panel_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, 1037, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
-        desktop_pane_fixed_orderLayout.setVerticalGroup(
-            desktop_pane_fixed_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        desktop_pane_not_fixed_orderLayout.setVerticalGroup(
+            desktop_pane_not_fixed_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panel_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
@@ -754,11 +755,11 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktop_pane_fixed_order, javax.swing.GroupLayout.DEFAULT_SIZE, 1037, Short.MAX_VALUE)
+            .addComponent(desktop_pane_not_fixed_order, javax.swing.GroupLayout.DEFAULT_SIZE, 1037, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktop_pane_fixed_order, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
+            .addComponent(desktop_pane_not_fixed_order, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
         );
 
         pack();
@@ -925,7 +926,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 dbConnection();
                 java.util.Date date = new java.util.Date();
                 java.sql.Timestamp currentDateTime = new java.sql.Timestamp(date.getTime());
-                String pickDate = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(currentDateTime);
+                String pickDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDateTime);
                 order.setPickDate(pickDate);
                 
                 String query = "UPDATE orderDetails SET pickDate = ? WHERE orderNo = ?";
@@ -950,12 +951,12 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
 
     private void btn_undoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_undoActionPerformed
         // TODO add your handling code here:
-        
         int confirmUndoing = JOptionPane.showConfirmDialog(null, "Do you really want to 'UNDO' Order: " 
                             + order.getOrderNo() + " ?", "Undo Order", JOptionPane.YES_NO_OPTION);
         if (confirmUndoing == 0)
         {
            String  status = "In Progress";
+           
             order.setStatus(status);
             try {
                 dbConnection();
@@ -964,17 +965,13 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 ps.setString(1, order.getStatus());
                 ps.setString(2, order.getOrderNo());
                 ps.executeUpdate();
-                
-//                OrderDetails orderDetails = new OrderDetails(orderNo, firstName, lastName, contactNo, 
-//                        email, deviceBrand, deviceModel, serialNumber, importantNotes, stringFaults, stringProducts,
-//                        stringQty, stringUnitPrice, stringPriceTotal, total, deposit, cashDeposit, cardDeposit, due, status, issueDate, cash, card, pickDate);
-
-                OrderDetails orderDetails = new OrderDetails(order, 0, 0, 0);
-                desktop_pane_fixed_order.removeAll();
-                desktop_pane_fixed_order.add(orderDetails).setVisible(true);
+               
+                OrderDetails orderDetails = new OrderDetails(order, completedOrders);
+                desktop_pane_not_fixed_order.removeAll();
+                desktop_pane_not_fixed_order.add(orderDetails).setVisible(true);
             } catch (SQLException ex) {
                 Logger.getLogger(NotFixedOrder.class.getName()).log(Level.SEVERE, null, ex);
-            }
+          } 
         }
     }//GEN-LAST:event_btn_undoActionPerformed
 
@@ -995,7 +992,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
     private javax.swing.JButton btn_notes1;
     private javax.swing.JButton btn_pick_up;
     private javax.swing.JButton btn_undo;
-    private javax.swing.JDesktopPane desktop_pane_fixed_order;
+    private javax.swing.JDesktopPane desktop_pane_not_fixed_order;
     private javax.swing.JEditorPane editor_pane_notes;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;

@@ -5,8 +5,8 @@
  */
 package Forms;
 
-import Model.OrdersReport;
-import Model.SalesReport;
+import Model.OrderReport;
+import Model.SaleReport;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
@@ -31,14 +31,14 @@ public class PrintFullReport extends javax.swing.JFrame {
      */
     
     String tillClosingDate;
-    ArrayList<SalesReport> salesList;
-    ArrayList<OrdersReport> ordersList;
+    ArrayList<SaleReport> salesList;
+    ArrayList<OrderReport> ordersList;
     
     public PrintFullReport() {
         initComponents();
     }
     
-    public PrintFullReport(String _TillClosingDate, ArrayList<SalesReport> _saleList, ArrayList<OrdersReport> _ordersList )
+    public PrintFullReport(String _TillClosingDate, ArrayList<SaleReport> _saleList, ArrayList<OrderReport> _ordersList )
     {
         initComponents();
         this.tillClosingDate = _TillClosingDate;
@@ -59,8 +59,8 @@ public class PrintFullReport extends javax.swing.JFrame {
     public void loadOrderToPrint()
     {
         //Lists for holding list from the constructor
-        ArrayList<OrdersReport> listOrders = ordersList;
-        ArrayList<SalesReport> listSales = salesList;
+        ArrayList<OrderReport> listOrders = ordersList;
+        ArrayList<SaleReport> listSales = salesList;
         
         // This Lists hold all values paid by cash and card
         ArrayList<Double> cashList = new ArrayList<>();
