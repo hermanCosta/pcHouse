@@ -415,6 +415,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         btn_edit_product_service.setBackground(new java.awt.Color(21, 76, 121));
         btn_edit_product_service.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
         btn_edit_product_service.setForeground(new java.awt.Color(255, 255, 255));
+        btn_edit_product_service.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_save_changes.png"))); // NOI18N
         btn_edit_product_service.setText("Update");
         btn_edit_product_service.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -425,6 +426,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         btn_add_product_service.setBackground(new java.awt.Color(21, 76, 121));
         btn_add_product_service.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
         btn_add_product_service.setForeground(new java.awt.Color(255, 255, 255));
+        btn_add_product_service.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_add_new.png"))); // NOI18N
         btn_add_product_service.setText("Add");
         btn_add_product_service.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -435,6 +437,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         txt_delete_product_service.setBackground(new java.awt.Color(21, 76, 121));
         txt_delete_product_service.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
         txt_delete_product_service.setForeground(new java.awt.Color(255, 255, 255));
+        txt_delete_product_service.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_cancel.png"))); // NOI18N
         txt_delete_product_service.setText("Delete");
         txt_delete_product_service.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -445,6 +448,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         btn_clear_fields.setBackground(new java.awt.Color(21, 76, 121));
         btn_clear_fields.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
         btn_clear_fields.setForeground(new java.awt.Color(255, 255, 255));
+        btn_clear_fields.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_clear.png"))); // NOI18N
         btn_clear_fields.setText("Clear Fields");
         btn_clear_fields.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

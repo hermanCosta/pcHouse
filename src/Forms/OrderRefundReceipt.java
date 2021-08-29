@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
  *
  * @author user
  */
-public class RefundReceipt extends javax.swing.JFrame {
+public class OrderRefundReceipt extends javax.swing.JFrame {
 
     /**
      * Creates new form Print
@@ -30,12 +30,12 @@ public class RefundReceipt extends javax.swing.JFrame {
     Order order;
     CompletedOrder completedOrders;
     
-    public RefundReceipt() {
+    public OrderRefundReceipt() {
         initComponents();
     }
     
 
-    public RefundReceipt(Order _order, CompletedOrder _completedOrders) {
+    public OrderRefundReceipt(Order _order, CompletedOrder _completedOrders) {
         initComponents();
         this.order = _order;
         this.completedOrders = _completedOrders;
@@ -484,7 +484,7 @@ public class RefundReceipt extends javax.swing.JFrame {
                 this.dispose();
                 
             } catch (PrinterException ex) {
-                Logger.getLogger(RefundReceipt.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(OrderRefundReceipt.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btn_printActionPerformed

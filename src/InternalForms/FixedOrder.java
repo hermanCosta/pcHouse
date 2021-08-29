@@ -8,7 +8,7 @@ package InternalForms;
 import Forms.OrderPayment;
 import Forms.OrderNotes;
 import Forms.OrderReceipt;
-import Forms.RefundReceipt;
+import Forms.OrderRefundReceipt;
 import Model.CompletedOrder;
 import Model.Customer;
 import Model.Order;
@@ -927,7 +927,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
 //                RefundReceipt refundReceipt = new RefundReceipt(orderNo, firstName, lastName, contactNo, email, deviceBrand,
 //                        deviceModel, serialNumber, stringProducts, stringQty, stringUnitPrice,stringPriceTotal, total, cash,
 //                        card, refundDate);
-                RefundReceipt refundReceipt = new RefundReceipt(order, completedOrders);
+                OrderRefundReceipt refundReceipt = new OrderRefundReceipt(order, completedOrders);
                 refundReceipt.setVisible(true);
                 
             } catch (SQLException ex) {

@@ -64,6 +64,7 @@ public class Sales extends javax.swing.JInternalFrame {
     ProductService productService;
     Sale sale;
     SaleDetails saleDetails ;
+    RefundSale refundSale;
     ResultSet rs;
     ResultSetMetaData rsmd;
     
@@ -1133,6 +1134,7 @@ public class Sales extends javax.swing.JInternalFrame {
             DefaultTableModel dtm = (DefaultTableModel)table_view_sales.getModel();
             int selectedSale = table_view_sales.getSelectedRow();
             String selectedSaleNo = dtm.getValueAt(selectedSale, 0).toString();
+            String selectedStatus = dtm.getValueAt(selectedSale, 6).toString();
                 
             try {
                 dbConnection();
@@ -1144,30 +1146,24 @@ public class Sales extends javax.swing.JInternalFrame {
                 
                 while (rs.next())
                 {
-//               { {
-//                    sale = new Sale("", "", "", "", "", "", "","", "", 0, "", 0, 0, 0);
-//                    saleDetails = new SaleDetails(sale);
-//                }
-//                else 
-//                {
-//                    do
-//                    {
-                    
                         sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"),
                         rs.getString("email"), rs.getString("productService"), rs.getString("qty"), rs.getString("unitPrice"), rs.getString("priceTotal"),
                         rs.getDouble("total"), rs.getString("saleDate"), rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getString("status"));
-                    //} while (rs.next());
                     
                     saleDetails = new SaleDetails(sale);
-                    
+                    refundSale = new RefundSale(sale);
                     
                }
                 
                 
+                if (selectedStatus.equals("Paid"))
+                    desktop_pane_sales.add(saleDetails).setVisible(true);
+                else
+                    desktop_pane_sales.add(refundSale).setVisible(true);
                 
                 
                 //desktop_pane_sales.removeAll();
-                desktop_pane_sales.add(saleDetails).setVisible(true);
+                
             } catch (SQLException ex) {
                 Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -153,8 +153,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
         panel_orders.setVisible(true);
         panel_sales.setVisible(false);
         
-        
-        
         // Get Current date for checking cash entries
         Date pickedDate = pickedDate = date_picker.getDate();
         String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
@@ -173,7 +171,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
         ordersModel.setRowCount(0);
             
         
-        
             // this object holds each range of elements for setting into the table
             Object[] rowOrders = new Object[5];
             for (int i = 0; i < listOrders.size() ; i++)
@@ -183,31 +180,27 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 rowOrders[2] = listOrders.get(i).getProductsService();
             
 
+             if (listOrders.get(i).getTotal() == 0)
+                 orderDueColumn.add(listOrders.get(i).getDeposit());
             // check if there's negative values, pass due + deposit if true, else, pass as normal to the list
             // set deposit row = 0, and dont get changeTotal for calculation
             if (listOrders.get(i).getTotal() < 0)
             {
-                //rowOrders[4] = listOrders.get(i).getDue() + listOrders.get(i).getDeposit();
+                rowOrders[3] = 0.0;
                 rowOrders[4] = listOrders.get(i).getTotal();
                 orderDueColumn.add(listOrders.get(i).getTotal());
-                cashList.add(listOrders.get(i).getCash() + listOrders.get(i).getCashDeposit());
+                cashList.add(listOrders.get(i).getCash() + listOrders.get(i).getCashDeposit() -listOrders.get(i).getChangeTotal());
                 cardList.add(listOrders.get(i).getCard() + listOrders.get(i).getCardDeposit());
-                rowOrders[3] = 0.0;
-                //orderDueColumn.add(listOrders.get(i).getDue() + listOrders.get(i).getDeposit());
-                
-//                cashList.add(listOrders.get(i).getDeposit());
-//                cashList.add(listOrders.get(i).getCash());
-//                cardList.add(listOrders.get(i).getCard());
             }
             else
             {
                 rowOrders[3] = listOrders.get(i).getDeposit();
                 rowOrders[4] = listOrders.get(i).getDue();
-                orderDueColumn.add(listOrders.get(i).getDue() + listOrders.get(i).getDeposit());
                 
-                cashList.add(listOrders.get(i).getCash());
+                orderDueColumn.add(listOrders.get(i).getDue()); 
+                
                 cardList.add(listOrders.get(i).getCard());
-                //cashList.add(listOrders.get(i).getCash() - listOrders.get(i).getChangeTotal());
+                cashList.add(listOrders.get(i).getCash() - listOrders.get(i).getChangeTotal());
             }
             
                 ordersModel.addRow(rowOrders);
@@ -218,8 +211,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
             for (double d : cashList)
                 cashTotal += d;
             
-            System.out.println("CashTotal " +cashList);
-
             double cardTotal = 0;
             for (double d : cardList)
                 cardTotal += d;
@@ -724,8 +715,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
 //                if (listSales.get(i).getTotal() < 0)
 //                    cashList.add(listSales.get(i).getCash());
 //                else
-                    cashList.add(listSales.get(i).getCash() - listSales.get(i).getChangeTotal());
-               
+               cashList.add(listSales.get(i).getCash() - listSales.get(i).getChangeTotal());
                cardList.add(listSales.get(i).getCard());
                salesTotalColumn.add(listSales.get(i).getTotal());
             }

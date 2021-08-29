@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -90,22 +89,21 @@ public class PrintFullReport extends javax.swing.JFrame {
             // check if there's negative values, pass due + deposit if true, else, pass as normal to the list
             if (listOrders.get(i).getTotal() < 0)
             {
+                rowOrders[3] = 0.0;
                 rowOrders[4] = listOrders.get(i).getTotal();
                 orderDueColumn.add(listOrders.get(i).getTotal());
                 
-                cashList.add(listOrders.get(i).getCash() + listOrders.get(i).getCashDeposit());
+                cashList.add(listOrders.get(i).getCash() + listOrders.get(i).getCashDeposit() - listOrders.get(i).getChangeTotal());
                 cardList.add(listOrders.get(i).getCard() + listOrders.get(i).getCardDeposit());
-                rowOrders[3] = 0.0;
             }
             else
             {
                 rowOrders[3] = listOrders.get(i).getDeposit();
                 rowOrders[4] = listOrders.get(i).getDue();
                 
-                orderDueColumn.add(listOrders.get(i).getDue()); //+ listOrders.get(i).getDeposit());
-                cashList.add(listOrders.get(i).getCash());
+                orderDueColumn.add(listOrders.get(i).getDue()); 
+                cashList.add(listOrders.get(i).getCash() - listOrders.get(i).getChangeTotal());
                 cardList.add(listOrders.get(i).getCard());
-                //cashList.add(listOrders.get(i).getCash() - listOrders.get(i).getChangeTotal());
             }
             
             ordersModel.addRow(rowOrders);
@@ -124,6 +122,7 @@ public class PrintFullReport extends javax.swing.JFrame {
            cashList.add(listSales.get(i).getCash() - listSales.get(i).getChangeTotal());
            cardList.add(listSales.get(i).getCard());
            salesTotalColumn.add(listSales.get(i).getTotal());
+           
         }
         
         //Loop the List and sum Cash payments
@@ -145,6 +144,7 @@ public class PrintFullReport extends javax.swing.JFrame {
         
         //Gross total (cash&card    
         double grossTotal = ordersTotal + salesTotal;
+        
         
         lbl_full_report.setText("Full Report - " + tillClosingDate);
         lbl_orders_total.setText("Orders Total ............................... €" + ordersTotal);

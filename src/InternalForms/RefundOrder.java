@@ -6,7 +6,7 @@
 package InternalForms;
 
 import Forms.OrderNotes;
-import Forms.RefundReceipt;
+import Forms.OrderRefundReceipt;
 import Model.CompletedOrder;
 import Model.Customer;
 import Model.Order;
@@ -855,7 +855,7 @@ public class RefundOrder extends javax.swing.JInternalFrame {
 
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
-         RefundReceipt refundReceipt = new RefundReceipt(order, completedOrders);
+         OrderRefundReceipt refundReceipt = new OrderRefundReceipt(order, completedOrders);
          refundReceipt.setVisible(true);
     }//GEN-LAST:event_btn_printActionPerformed
 
