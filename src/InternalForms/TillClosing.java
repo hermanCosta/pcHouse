@@ -129,10 +129,15 @@ public class TillClosing extends javax.swing.JInternalFrame {
             
                 while (rs.next())
                 {
+                    /*
+                        public OrderReport(String _orderNo, String _firstName, String _lastName, String _productsService,
+                double _deposit, double _total, double _due, double _cash, double _card, double _changeTotal,
+                double _cashDeposit, double _cardDeposit) {
+                    */
                    //double cash = rs.getDouble("cash") - rs.getDouble("changeTotal");
                    ordersReport = new OrderReport(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"),
-                            rs.getString("productService"), rs.getDouble("deposit"), rs.getDouble("due"), rs.getDouble("cash"), 
-                           rs.getDouble("card"), rs.getDouble("changeTotal"));
+                            rs.getString("productService"), rs.getDouble("deposit"), rs.getDouble("total"), rs.getDouble("due"), rs.getDouble("cash"), 
+                           rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"));
 
                    ordersList.add(ordersReport);
                 }
@@ -151,7 +156,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         
         
         // Get Current date for checking cash entries
-         Date pickedDate = pickedDate = date_picker.getDate();
+        Date pickedDate = pickedDate = date_picker.getDate();
         String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
         
         //Lists for holding list from the constructor
@@ -180,34 +185,40 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
             // check if there's negative values, pass due + deposit if true, else, pass as normal to the list
             // set deposit row = 0, and dont get changeTotal for calculation
-            if (listOrders.get(i).getDeposit() < 0 && listOrders.get(i).getDue() < 0)
+            if (listOrders.get(i).getTotal() < 0)
             {
-                rowOrders[4] = listOrders.get(i).getDue() + listOrders.get(i).getDeposit();
-                orderDueColumn.add(listOrders.get(i).getDue() + listOrders.get(i).getDeposit());
-                
-                cashList.add(listOrders.get(i).getDeposit());
-                cashList.add(listOrders.get(i).getCash());
-                cardList.add(listOrders.get(i).getCard());
+                //rowOrders[4] = listOrders.get(i).getDue() + listOrders.get(i).getDeposit();
+                rowOrders[4] = listOrders.get(i).getTotal();
+                orderDueColumn.add(listOrders.get(i).getTotal());
+                cashList.add(listOrders.get(i).getCash() + listOrders.get(i).getCashDeposit());
+                cardList.add(listOrders.get(i).getCard() + listOrders.get(i).getCardDeposit());
                 rowOrders[3] = 0.0;
+                //orderDueColumn.add(listOrders.get(i).getDue() + listOrders.get(i).getDeposit());
+                
+//                cashList.add(listOrders.get(i).getDeposit());
+//                cashList.add(listOrders.get(i).getCash());
+//                cardList.add(listOrders.get(i).getCard());
             }
             else
             {
                 rowOrders[3] = listOrders.get(i).getDeposit();
                 rowOrders[4] = listOrders.get(i).getDue();
-                orderDueColumn.add(listOrders.get(i).getDue());
+                orderDueColumn.add(listOrders.get(i).getDue() + listOrders.get(i).getDeposit());
+                
                 cashList.add(listOrders.get(i).getCash());
                 cardList.add(listOrders.get(i).getCard());
                 //cashList.add(listOrders.get(i).getCash() - listOrders.get(i).getChangeTotal());
-                
             }
             
-            ordersModel.addRow(rowOrders);
+                ordersModel.addRow(rowOrders);
         }
 
             //Loop the List and sum Cash payments
             double cashTotal = 0;
             for (double d : cashList)
                 cashTotal += d;
+            
+            System.out.println("CashTotal " +cashList);
 
             double cardTotal = 0;
             for (double d : cardList)
@@ -710,9 +721,9 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 rowSales[3] = listSales.get(i).getTotal();
                 salesModel.addRow(rowSales);
                 
-                if (listSales.get(i).getTotal() < 0)
-                    cashList.add(listSales.get(i).getCash());
-                else
+//                if (listSales.get(i).getTotal() < 0)
+//                    cashList.add(listSales.get(i).getCash());
+//                else
                     cashList.add(listSales.get(i).getCash() - listSales.get(i).getChangeTotal());
                
                cardList.add(listSales.get(i).getCard());

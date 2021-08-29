@@ -481,7 +481,7 @@ public class OrderPayment extends javax.swing.JFrame {
                 completedOrders.setPayDate(payDate);
                 
                 String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, productService,"
-                        + "total, deposit, due, payDate, cash, card, changeTotal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        + "total, deposit, due, payDate, cash, card, changeTotal, cashDeposit, cardDeposit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 ps = con.prepareStatement(queryInsert);
                 ps.setString(1, completedOrders.getOrderNo());
                 ps.setString(2, completedOrders.getFirstName());
@@ -494,6 +494,8 @@ public class OrderPayment extends javax.swing.JFrame {
                 ps.setDouble(9, completedOrders.getCash());
                 ps.setDouble(10, completedOrders.getCard());
                 ps.setDouble(11, completedOrders.getChangeTotal());
+                ps.setDouble(12, order.getCashDeposit());
+                ps.setDouble(13, order.getCardDeposit());
 
                 ps.executeUpdate();
 

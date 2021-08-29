@@ -416,7 +416,7 @@ public class RefundReceipt extends javax.swing.JFrame {
         });
 
         lbl_order_print_view.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
-        lbl_order_print_view.setText("Repair Order Print View");
+        lbl_order_print_view.setText("Order Refund Print View");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

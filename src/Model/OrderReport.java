@@ -12,21 +12,24 @@ package Model;
 public class OrderReport {
     
     String orderNo, firstName, lastName, productsService;
-    double deposit, due, cash, card, changeTotal;
+    double deposit, total, due, cash, card, changeTotal, cashDeposit, cardDeposit;
     
     public OrderReport(String _orderNo, String _firstName, String _lastName, String _productsService,
-                double _deposit, double _due, double _cash, double _card, double _changeTotal) {
+                double _deposit, double _total, double _due, double _cash, double _card, double _changeTotal,
+                double _cashDeposit, double _cardDeposit) {
         
         this.orderNo = _orderNo;
         this.firstName = _firstName;
         this.lastName = _lastName;
         this.productsService = _productsService;
         this.deposit = _deposit;
+        this.total = _total;
         this.due = _due;
         this.cash = _cash;
         this.card = _card;
         this.changeTotal = _changeTotal;
-        
+        this.cashDeposit = _cashDeposit;
+        this.cardDeposit = _cardDeposit;
     }
 
     public String getOrderNo() {
@@ -77,7 +80,6 @@ public class OrderReport {
         this.card = card;
     }
 
-    
     public double getDeposit() {
         return deposit;
     }
@@ -86,6 +88,14 @@ public class OrderReport {
         this.deposit = deposit;
     }
 
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+    
     public double getDue() {
         return due;
     }
@@ -100,6 +110,22 @@ public class OrderReport {
 
     public void setChangeTotal(double changeTotal) {
         this.changeTotal = changeTotal;
+    }
+
+    public double getCashDeposit() {
+        return cashDeposit;
+    }
+
+    public void setCashDeposit(double cashDeposit) {
+        this.cashDeposit = cashDeposit;
+    }
+
+    public double getCardDeposit() {
+        return cardDeposit;
+    }
+
+    public void setCardDeposit(double cardDeposit) {
+        this.cardDeposit = cardDeposit;
     }
     
     

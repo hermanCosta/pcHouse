@@ -62,14 +62,14 @@ public class DepositPayment extends javax.swing.JFrame {
         try {
             dbConnection();
             
-            String depositnote = "€" + order.getDeposit() + " Deposit, paid by " + payMethod;
+            String depositNote = "€" + order.getDeposit() + " Deposit, paid by " + payMethod;
             String user = "System";
           
                     String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
                     ps = con.prepareStatement(queryUpdate);
                     ps.setString(1, order.getOrderNo());
                     ps.setString(2, order.getIssueDate());
-                    ps.setString(3, depositnote); // add new Deposit note
+                    ps.setString(3, depositNote); // add new Deposit note
                     ps.setString(4, user);
                     ps.executeUpdate();
             
@@ -306,9 +306,28 @@ public class DepositPayment extends javax.swing.JFrame {
                                         + "total = REPLACE(total, '  ', ' ')";
                         ps = con.prepareStatement(removeSpace);
                         ps.executeUpdate();
+                        
+                        
+                        String queryDepositInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, "
+                                + "productService, total, deposit, due, payDate, cash, card, changeTotal, cashDeposit, "
+                                + "cardDeposit) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        ps = con.prepareStatement(queryDepositInsert);
+                        ps.setString(1, order.getOrderNo());
+                        ps.setString(2, order.getFirstName());
+                        ps.setString(3, order.getLastName()); 
+                        ps.setString(4, order.getStringProducts());
+                        ps.setDouble(5, 0);
+                        ps.setDouble(6, order.getDeposit());
+                        ps.setDouble(7, 0);
+                        ps.setString(8, order.getIssueDate());
+                        ps.setDouble(9, order.getDeposit()); // cash payment same value of deposi
+                        ps.setDouble(10, 0);
+                        ps.setDouble(11, 0);
+                        ps.setDouble(12, 0);
+                        ps.setDouble(13, 0);
+                        ps.executeUpdate();
                     
                     addDepositNote("Cash");
-                    
                     this.dispose();
                     PrintOrder printOrder = new PrintOrder(order);
                     printOrder.setVisible(true);

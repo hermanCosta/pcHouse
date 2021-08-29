@@ -620,13 +620,13 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         lbl_paid_by.setForeground(new java.awt.Color(255, 255, 255));
         lbl_paid_by.setText("paidBy");
         lbl_paid_by.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        panel_order_status.add(lbl_paid_by, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 24, 329, 20));
+        panel_order_status.add(lbl_paid_by, new org.netbeans.lib.awtextra.AbsoluteConstraints(639, 24, 370, 20));
 
         lbl_order_picked_on.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         lbl_order_picked_on.setForeground(new java.awt.Color(255, 255, 255));
         lbl_order_picked_on.setText("orderPickedOn");
         lbl_order_picked_on.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        panel_order_status.add(lbl_order_picked_on, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 0, 329, -1));
+        panel_order_status.add(lbl_order_picked_on, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 0, 329, -1));
 
         panel_order_details.add(panel_order_status, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 6, 1010, -1));
 
