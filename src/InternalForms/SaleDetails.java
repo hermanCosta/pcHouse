@@ -145,7 +145,6 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         Vector vecUnitPrice = new Vector();
         Vector vecPriceTotal = new Vector();
         
-        
         vecProducts.addAll(Arrays.asList(arrayProducts)); 
         vecQty.addAll(Arrays.asList(arrayQty));
         vecUnitPrice.addAll(Arrays.asList(arrayUnitPrice)); 
@@ -159,8 +158,6 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         model.getColumn(1).setMaxWidth(40);
         model.getColumn(2).setMaxWidth(80);
         model.getColumn(3).setMaxWidth(80);
-        
-        System.out.println("Size " +table_view_products.getRowCount());
     }
     
     public void updateProductQty()

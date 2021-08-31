@@ -7,7 +7,10 @@ package InternalForms;
 
 import Common.DBConnection;
 import Forms.PrintFullReport;
+import Model.CompletedOrder;
+import Model.Order;
 import Model.OrderReport;
+import Model.Sale;
 import Model.SaleReport;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -49,6 +52,9 @@ public class TillClosing extends javax.swing.JInternalFrame {
     ResultSet rs;
     OrderReport ordersReport;
     SaleReport salesReport;
+    Order order;
+    CompletedOrder completedOrder;
+    Sale sale;
     
     ArrayList<Double> refundList = new ArrayList<>();
     double refundTotal;
@@ -250,6 +256,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        desktop_pane_till_closing = new javax.swing.JDesktopPane();
+        panel_till_closing = new javax.swing.JPanel();
         panel_calendar = new javax.swing.JPanel();
         date_picker = new com.toedter.calendar.JCalendar();
         btn_orders = new javax.swing.JButton();
@@ -278,7 +286,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
         table_view_sales = new javax.swing.JTable();
         lbl_till_closing_date = new javax.swing.JLabel();
         lbl_print_refunds = new javax.swing.JLabel();
-        lbl_full_report = new javax.swing.JLabel();
 
         setBorder(null);
         setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
@@ -492,6 +499,11 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
         scroll_pane_table_sales.setEnabled(false);
         scroll_pane_table_sales.setPreferredSize(new java.awt.Dimension(540, 500));
+        scroll_pane_table_sales.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                scroll_pane_table_salesMouseClicked(evt);
+            }
+        });
 
         table_view_sales.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
         table_view_sales.setModel(new javax.swing.table.DefaultTableModel(
@@ -543,9 +555,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
         lbl_print_refunds.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_refund_black.png"))); // NOI18N
         lbl_print_refunds.setText("totalRefunds");
 
-        lbl_full_report.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
-        lbl_full_report.setText("Full Report - 23/08/2021");
-
         javax.swing.GroupLayout panel_print_orderLayout = new javax.swing.GroupLayout(panel_print_order);
         panel_print_order.setLayout(panel_print_orderLayout);
         panel_print_orderLayout.setHorizontalGroup(
@@ -570,11 +579,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_till_closing_date)
                 .addGap(190, 190, 190))
-            .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panel_print_orderLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(lbl_full_report)
-                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         panel_print_orderLayout.setVerticalGroup(
             panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -594,53 +598,84 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 .addGap(0, 0, 0)
                 .addComponent(lbl_print_refunds)
                 .addContainerGap())
-            .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panel_print_orderLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(lbl_full_report)
-                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         scroll_pane_orders_sales.setViewportView(panel_print_order);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+        javax.swing.GroupLayout panel_till_closingLayout = new javax.swing.GroupLayout(panel_till_closing);
+        panel_till_closing.setLayout(panel_till_closingLayout);
+        panel_till_closingLayout.setHorizontalGroup(
+            panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_till_closingLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(panel_calendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
+                    .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panel_till_closingLayout.createSequentialGroup()
                             .addComponent(btn_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(btn_full_report, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panel_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        panel_till_closingLayout.setVerticalGroup(
+            panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_till_closingLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_till_closingLayout.createSequentialGroup()
+                        .addComponent(panel_calendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btn_full_report, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(panel_till_closingLayout.createSequentialGroup()
+                        .addComponent(panel_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+
+        desktop_pane_till_closing.setLayer(panel_till_closing, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout desktop_pane_till_closingLayout = new javax.swing.GroupLayout(desktop_pane_till_closing);
+        desktop_pane_till_closing.setLayout(desktop_pane_till_closingLayout);
+        desktop_pane_till_closingLayout.setHorizontalGroup(
+            desktop_pane_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(desktop_pane_till_closingLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(panel_till_closing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
+        );
+        desktop_pane_till_closingLayout.setVerticalGroup(
+            desktop_pane_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(desktop_pane_till_closingLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(panel_till_closing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(desktop_pane_till_closing)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(panel_calendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_full_report, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(panel_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
+                .addComponent(desktop_pane_till_closing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -830,11 +865,107 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
     private void table_view_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_ordersMouseClicked
         // TODO add your handling code here:
+         if(evt.getClickCount() == 2)
+        {
+            DefaultTableModel dtm = (DefaultTableModel)table_view_orders.getModel();
+            int orderSelected = table_view_orders.getSelectedRow();
+            String selectedOrderNo = dtm.getValueAt(orderSelected, 0).toString();
+        
+            ////select exists(select * from table where condition=value limit 1)
+            try {
+                dbConnection();
+                String queryOrder = "SELECT * FROM orderDetails WHERE orderNo = ? ";
+                ps = con.prepareStatement(queryOrder);
+                ps.setString(1, selectedOrderNo);
+                rs = ps.executeQuery();
+                
+                while(rs.next())
+                {
+                   order  = new Order(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"),
+                   rs.getString("email"), rs.getString("deviceBrand"), rs.getString("deviceModel"), rs.getString("serialNumber"), rs.getString("importantNotes"),
+                   rs.getString("fault"), rs.getString("productService"), rs.getString("qty"),rs.getString("unitPrice"), rs.getString("priceTotal"),
+                   rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"),
+                   rs.getString("status"), rs.getString("issueDate"), rs.getString("finishDate"), rs.getString("pickDate"),
+                   rs.getString("refundDate"));
+                }
+                
+                String queryCompletedOrder = "SELECT * FROM completedOrders WHERE orderNo = ?"; 
+                ps = con.prepareStatement(queryCompletedOrder);
+                ps.setString(1, selectedOrderNo);
+                rs = ps.executeQuery();
+                
+                
+                while (rs.next())
+                        completedOrder = new CompletedOrder(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), 
+                            rs.getString("productService"), rs.getDouble("total"), rs.getDouble("deposit"),rs.getDouble("due"), 
+                            rs.getString("payDate"), rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), 
+                            rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"));
+                
+                switch (order.getStatus()) 
+                {
+                    
+                    case "Refunded":
+                       OrderRefund refundOrder = new OrderRefund(order, completedOrder);
+                       //desktop_pane_till_closing.removeAll();
+                       desktop_pane_till_closing.add(refundOrder).setVisible(true);
+                       break;
+
+                    default:
+                        FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
+                        //desktop_pane_till_closing.removeAll();
+                        desktop_pane_till_closing.add(fixedOrder).setVisible(true);
+                        break;
+                }
+            
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_table_view_ordersMouseClicked
 
     private void table_view_salesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_salesMouseClicked
         // TODO add your handling code here:
+        if (evt.getClickCount() == 2)
+        {
+            DefaultTableModel dtm = (DefaultTableModel)table_view_sales.getModel();
+            int orderSelected = table_view_sales.getSelectedRow();
+            String selectedSaleNo = dtm.getValueAt(orderSelected, 0).toString();
+            
+            try {
+                dbConnection();
+                
+                
+                String queryOrder = "SELECT * FROM sales WHERE saleNo = ? ";
+                ps = con.prepareStatement(queryOrder);
+                ps.setString(1, selectedSaleNo);
+                rs = ps.executeQuery();
+                
+                while (rs.next())
+                {
+                    sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
+                            rs.getString("contactNo"), rs.getString("email"), 
+                            rs.getString("productService"), rs.getString("qty"), rs.getString("unitPrice"),
+                            rs.getString("priceTotal"),rs.getDouble("total"), rs.getString("saleDate"),  
+                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getString("status"));
+                
+                
+                SaleDetails saleDetails = new SaleDetails(sale);
+                //desktop_pane_till_closing.removeAll();
+                desktop_pane_till_closing.add(saleDetails).setVisible(true);
+               
+                }
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(TillClosing.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_table_view_salesMouseClicked
+
+    private void scroll_pane_table_salesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scroll_pane_table_salesMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_scroll_pane_table_salesMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -843,8 +974,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
     private javax.swing.JButton btn_print;
     private javax.swing.JButton btn_sales;
     private com.toedter.calendar.JCalendar date_picker;
+    private javax.swing.JDesktopPane desktop_pane_till_closing;
     private javax.swing.JLabel lbl_address1;
-    private javax.swing.JLabel lbl_full_report;
     private javax.swing.JLabel lbl_land_line_number;
     private javax.swing.JLabel lbl_logo_icon;
     private javax.swing.JLabel lbl_mobile_number;
@@ -862,6 +993,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
     private javax.swing.JPanel panel_print_order;
     private javax.swing.JPanel panel_print_view;
     private javax.swing.JPanel panel_sales;
+    private javax.swing.JPanel panel_till_closing;
     private javax.swing.JScrollPane scroll_pane_orders_sales;
     private javax.swing.JScrollPane scroll_pane_table_orders;
     private javax.swing.JScrollPane scroll_pane_table_sales;

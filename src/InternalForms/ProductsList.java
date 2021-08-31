@@ -46,8 +46,8 @@ public class ProductsList extends javax.swing.JInternalFrame {
      ResultSetMetaData rsmd;
      Vector vector;
      Statement statement;
-     String productId;
-     int ID;
+     int productId;
+     int id;
      String addCategory = "";
 
     @SuppressWarnings("unchecked")
@@ -64,8 +64,8 @@ public class ProductsList extends javax.swing.JInternalFrame {
         mouseEnteredColor = new Color(118,181,197);
         
         displayProductList();
-        avoidEmptyField(txt_product_service_list,"product|service");
-        avoidEmptyField(txt_add_price, "price");
+        //avoidEmptyField(txt_product_service_list,"product|service");
+        //avoidEmptyField(txt_add_price, "price");
     }
 
     public final void displayProductList()
@@ -104,58 +104,9 @@ public class ProductsList extends javax.swing.JInternalFrame {
         }
     }
     
-    public void addNewProductService()
-    {
-        String addProductService = txt_product_service_list.getText();
-        double addPrice = Double.parseDouble(txt_add_price.getText());
-        int addQty =  Integer.parseInt(txt_add_qty.getText());
-        String addNotes = txt_add_notes.getText();
-        addCategory = combo_box_category.getSelectedItem().toString();
-        
-        if (addCategory.equals("Select"))
-        {
-            JOptionPane.showMessageDialog(null, "Please, Select a Category", "Product List",JOptionPane.ERROR_MESSAGE);
-        }
-        else
-        {
-            productService = new ProductService(addProductService, addQty, addPrice, addNotes, addCategory);
-
-            try {
-                dbConnection();
-                 String queryCheck = "SELECT productService FROM products WHERE productService = '" + addProductService + "'";
-                    ps = con.prepareStatement(queryCheck);
-                    rs = ps.executeQuery();
-
-                    if (rs.isBeforeFirst())
-                    {
-                       JOptionPane.showMessageDialog(null, addProductService + " already exist in the Database !", "Products List", JOptionPane.ERROR_MESSAGE);
-                    }
-                    else
-                    {
-                        String queryInsert = "INSERT INTO products(productService, price, qty, notes, category) VALUES(?, ?, ?, ?, ?)";
-                        ps = con.prepareStatement(queryInsert);
-
-                        ps.setString(1, productService.getProductService());
-                        ps.setDouble(2, productService.getPrice());
-                        ps.setInt(3,  productService.getQty());
-                        ps.setString(4, productService.getNotes());
-                        ps.setString(5, productService.getCategory());
-                        ps.executeUpdate();
-
-                        JOptionPane.showMessageDialog(this, "Item added successfully!");
-                        
-
-                        displayProductList();
-                        clearFields();
-                    }
-
-            } catch (SQLException ex) {
-                Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
         
     public void searchProductService() {
+        
         
         String searchProduct = txt_product_service_list.getText();
          
@@ -189,35 +140,6 @@ public class ProductsList extends javax.swing.JInternalFrame {
         }
     }
     
-    public void deleteProductService()
-    {
-        dbConnection();
-        
-        int selectedRow = table_view_products_list.getSelectedRow();
-        dtm = (DefaultTableModel)table_view_products_list.getModel();
-        productId = dtm.getValueAt(selectedRow, 0).toString();
-        
-        String productName = dtm.getValueAt(selectedRow, 1).toString();
-        
-        
-        int confirmDeletion = JOptionPane.showConfirmDialog(null, "Do you really want to delete " 
-                + productName +" from Database ?", "Delete Product|Service", JOptionPane.YES_NO_OPTION);
-        if(confirmDeletion == 0)
-        {
-            try {
-                
-                String query = "DELETE FROM products WHERE productId = ? ";
-                ps = con.prepareStatement(query);
-                ps.setInt(1, ID);
-                ps.executeUpdate();
-                dtm.removeRow(table_view_products_list.getSelectedRow());
-                displayProductList();
-
-            } catch (SQLException ex) {
-                Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
     
     public void clearFields()
     {
@@ -225,7 +147,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         txt_add_price.setText("");
         txt_add_qty.setText("");
         txt_add_notes.setText("");
-        combo_box_category.setSelectedIndex(-1);
+        combo_box_category.setSelectedIndex(0);
         displayProductList();
     }
         
@@ -238,6 +160,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
             Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
      
      
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -525,12 +448,97 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
     private void btn_add_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add_product_serviceActionPerformed
              // TODO add your handling code here:
-        addNewProductService();
+        
+            if (txt_product_service_list.getText().trim().isEmpty() || txt_add_price.getText().trim().isEmpty()
+               || txt_add_qty.getText().trim().isEmpty() || combo_box_category.getSelectedItem().equals("Select"))
+            {
+                JOptionPane.showMessageDialog(this, "Please check empty fields !", "Product List", JOptionPane.ERROR_MESSAGE);
+            }
+            else
+            {
+                
+                String addProductService = txt_product_service_list.getText();
+                double addPrice = Double.parseDouble(txt_add_price.getText());
+                int addQty =  Integer.parseInt(txt_add_qty.getText());
+                String addNotes = txt_add_notes.getText();
+                addCategory = combo_box_category.getSelectedItem().toString();
+
+                    productService = new ProductService(addProductService, addQty, addPrice, addNotes, addCategory);
+
+                    try {
+                        dbConnection();
+                         String queryCheck = "SELECT productService FROM products WHERE productService = ? ";
+                            ps = con.prepareStatement(queryCheck);
+                            ps.setString(1, addProductService);
+                            rs = ps.executeQuery();
+
+                            if (rs.isBeforeFirst())
+                            {
+                               JOptionPane.showMessageDialog(null, addProductService + " already exist in the Database !", "Products List", JOptionPane.ERROR_MESSAGE);
+                            }
+                            else
+                            {
+                                String queryInsert = "INSERT INTO products(productService, price, qty, notes, category) VALUES(?, ?, ?, ?, ?)";
+                                ps = con.prepareStatement(queryInsert);
+
+                                ps.setString(1, productService.getProductService());
+                                ps.setDouble(2, productService.getPrice());
+                                ps.setInt(3,  productService.getQty());
+                                ps.setString(4, productService.getNotes());
+                                ps.setString(5, productService.getCategory());
+                                ps.executeUpdate();
+
+                                JOptionPane.showMessageDialog(this, productService.getProductService() + " added successfully!");
+
+
+                                displayProductList();
+                                clearFields();
+                            }
+
+                    } catch (SQLException ex) {
+                       Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+            }
+        
     }//GEN-LAST:event_btn_add_product_serviceActionPerformed
 
     private void txt_delete_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_delete_product_serviceActionPerformed
         // TODO add your handling code here:
-        deleteProductService();
+        int selectedRow = table_view_products_list.getSelectedRow();
+        
+        if (selectedRow == -1 )
+            JOptionPane.showMessageDialog(this, "Select a item to Delete !", "Delete Product | Service", JOptionPane.ERROR_MESSAGE);
+
+        else
+        {
+            selectedRow = table_view_products_list.getSelectedRow();
+            
+            dtm = (DefaultTableModel)table_view_products_list.getModel();
+            productId = Integer.parseInt(dtm.getValueAt(selectedRow, 0).toString());
+
+            String productName = dtm.getValueAt(selectedRow, 1).toString();
+
+
+            int confirmDeletion = JOptionPane.showConfirmDialog(this, "Do you really want to delete '" 
+                    + productName +"' from Database ?", "Delete Product|Service", JOptionPane.YES_NO_OPTION);
+
+            if(confirmDeletion == 0)
+            {
+                try {
+                    dbConnection();
+
+                    String query = "DELETE FROM products WHERE productId = ? ";
+                    ps = con.prepareStatement(query);
+                    ps.setInt(1, productId);
+                    ps.executeUpdate();
+                    dtm.removeRow(table_view_products_list.getSelectedRow());
+                    displayProductList();
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }//GEN-LAST:event_txt_delete_product_serviceActionPerformed
 
     private void txt_product_service_listKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_product_service_listKeyReleased
@@ -545,24 +553,18 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
     private void table_view_products_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_products_listMouseClicked
         // TODO add your handling code here:
-        int count  = evt.getClickCount();
-        if(count == 2)
+        if(evt.getClickCount() == 2)
         {
             int selectedRow = table_view_products_list.getSelectedRow();
             dtm = (DefaultTableModel)table_view_products_list.getModel();
             table_view_products_list.getModel().addTableModelListener(table_view_products_list);
-            ID = (Integer) dtm.getValueAt(selectedRow, 0);
+            id = (Integer) dtm.getValueAt(selectedRow, 0);
 
             txt_product_service_list.setText(dtm.getValueAt(selectedRow, 1).toString());
             txt_add_price.setText(dtm.getValueAt(selectedRow, 2).toString());
             txt_add_qty.setText(dtm.getValueAt(selectedRow, 3).toString());
             txt_add_notes.setText(dtm.getValueAt(selectedRow, 4).toString());
             combo_box_category.setSelectedItem(dtm.getValueAt(selectedRow, 5).toString());;
-        }
-       
-        else
-        {
-            clearFields();
         }
     }//GEN-LAST:event_table_view_products_listMouseClicked
 
@@ -615,6 +617,16 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
     public void editProductService()
     {
+            
+        if (txt_product_service_list.getText().trim().isEmpty() || txt_add_price.getText().trim().isEmpty()
+               || txt_add_qty.getText().trim().isEmpty() || combo_box_category.getSelectedItem().equals("Select"))
+            {
+                JOptionPane.showMessageDialog(this, "Please check empty fields !", "Product List", JOptionPane.ERROR_MESSAGE);
+            }
+        else
+        {
+
+        
         String productName = txt_product_service_list.getText();
         double price = Double.parseDouble(txt_add_price.getText());
         int qty = Integer.parseInt(txt_add_qty.getText());
@@ -630,8 +642,9 @@ public class ProductsList extends javax.swing.JInternalFrame {
             try {
                 dbConnection(); 
 
-                    String queryCheck = "SELECT * FROM products WHERE productService = '" + productName + "'";
+                    String queryCheck = "SELECT * FROM products WHERE productService = ?";
                     ps = con.prepareStatement(queryCheck);
+                    ps.setString(1, productName);
                     rs = ps.executeQuery();
 
                     while (rs.next())
@@ -647,9 +660,13 @@ public class ProductsList extends javax.swing.JInternalFrame {
                                     "Edit Product|Service", JOptionPane.YES_NO_OPTION);
                             if(confirmEditing == 0)
                             {
-                                String query = "UPDATE products SET productService = '" + productName +  "', price = " + price + ", "
-                                        + "qty = " + qty + ", notes = '" + notes + "' WHERE productId = '" + ID +"'";
+                                String query = "UPDATE products SET productService = ?, price = ?, qty = ?, notes = ? WHERE productId = ?";
                                 ps = con.prepareStatement(query);
+                                ps.setString(1, productName);
+                                ps.setDouble(2, price);
+                                ps.setInt(3, qty);
+                                ps.setString(4, notes);
+                                ps.setInt(5, id);
                                 ps.executeUpdate();
 
                                 displayProductList();
@@ -667,41 +684,42 @@ public class ProductsList extends javax.swing.JInternalFrame {
                     Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        }
     }
     
-    public final void avoidEmptyField(JTextField textField, String title)
-    {
-        textField.setInputVerifier(new InputVerifier() {
-           
-           Border originalBorder;
-           
-           @Override
-           public boolean verify(JComponent input) {
-               JTextField comp = (JTextField) input;
-               return !comp.getText().trim().isEmpty();
-           }
-           
-           @Override
-           public boolean shouldYieldFocus(JComponent input)
-           {
-               boolean isValid = verify(input);
-               
-               if (!isValid)
-               {
-                   originalBorder = originalBorder == null ? input.getBorder() : originalBorder;
-                   input.setBorder(javax.swing.BorderFactory.createTitledBorder(originalBorder, title, TitledBorder.ABOVE_BOTTOM, TitledBorder.BOTTOM,Font.getFont("Lucida Grande"), Color.red));
-               } 
-               else 
-               {
-                    if(originalBorder != null) {
-                        input.setBorder(originalBorder);
-                        originalBorder = null;
-                    }
-                }
-                return isValid;
-            }
-        });
-    }
+//    public final void avoidEmptyField(JTextField textField, String title)
+//    {
+//        textField.setInputVerifier(new InputVerifier() {
+//           
+//           Border originalBorder;
+//           
+//           @Override
+//           public boolean verify(JComponent input) {
+//               JTextField comp = (JTextField) input;
+//               return !comp.getText().trim().isEmpty();
+//           }
+//           
+//           @Override
+//           public boolean shouldYieldFocus(JComponent input)
+//           {
+//               boolean isValid = verify(input);
+//               
+//               if (!isValid)
+//               {
+//                   originalBorder = originalBorder == null ? input.getBorder() : originalBorder;
+//                   input.setBorder(javax.swing.BorderFactory.createTitledBorder(originalBorder, title, TitledBorder.ABOVE_BOTTOM, TitledBorder.BOTTOM,Font.getFont("Lucida Grande"), Color.red));
+//               } 
+//               else 
+//               {
+//                    if(originalBorder != null) {
+//                        input.setBorder(originalBorder);
+//                        originalBorder = null;
+//                    }
+//                }
+//                return isValid;
+//            }
+//        });
+//    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_add_product_service;
     private javax.swing.JButton btn_clear_fields;
