@@ -64,7 +64,7 @@ public class Sales extends javax.swing.JInternalFrame {
     ProductService productService;
     Sale sale;
     SaleDetails saleDetails ;
-    RefundSale refundSale;
+    SaleRefund refundSale;
     ResultSet rs;
     ResultSetMetaData rsmd;
     
@@ -114,50 +114,26 @@ public class Sales extends javax.swing.JInternalFrame {
         try {
             dbConnection();
             
-            String queryCheckOrders = "SELECT Max(orderNo) FROM orderDetails";
-            ps = con.prepareStatement(queryCheckOrders);
+            //check saleNo from saleNo table
+            String queryCheck = "SELECT saleNo FROM sales";
+            ps = con.prepareStatement(queryCheck);
             rs = ps.executeQuery();
-            
-            Integer maxOrderNo = 0;
-            Integer maxSaleNo = 0;
-            ResultSet rsSales = null;
-            PreparedStatement psSales = null;
-            boolean isEmpty = false;
-            if (rs.next() == false)
-                isEmpty = true;
-            else
-                maxOrderNo = Integer.parseInt(rs.getString(1));
-                
-                  //check saleNo from saleNo table
-                    String queryCheckSale = "SELECT Max(saleNo) FROM sales";
-                    psSales = con.prepareStatement(queryCheckSale);
-                    psSales = con.prepareStatement(queryCheckSale);
-                    rsSales = psSales.executeQuery();
-            
-            if (rsSales.next() == false)
-                isEmpty = true;
-            else
-                maxSaleNo = Integer.parseInt(rsSales.getString(1));
-            
              
-             if (isEmpty) 
-             {
-                lbl_auto_order_no.setText("0000001");
-             }
-             if (maxOrderNo > maxSaleNo)
-             {
-                 long id = Long.parseLong(rs.getString("Max(orderNo)").substring(2,
-                         rs.getString("Max(orderNo)").length()));
-                 id++;
-                 lbl_auto_order_no.setText(String.format("%07d", id));            
-             }
-             else
-             {
-                 long id = Long.parseLong(rsSales.getString("Max(saleNo)").substring(2,
-                         rsSales.getString("Max(saleNo)").length()));
-                 id++;
-                 lbl_auto_order_no.setText(String.format("%07d", id)); 
-             }
+            if (rs.next())
+            {
+                String queryMax = "SELECT Max(saleNo) FROM sales";
+                ps = con.prepareStatement(queryMax);
+                rs = ps.executeQuery();
+                            
+                while(rs.next())
+                {
+                    long id = Long.parseLong(rs.getString("Max(saleNo)").substring(3, rs.getString("Max(saleNo)").length()));
+                    id++;
+                    lbl_auto_sale_no.setText(String.format("SNO" + id)); 
+                }
+            }
+            else
+                lbl_auto_sale_no.setText("SNO1"); 
             
         } catch (SQLException ex) {
             Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
@@ -288,7 +264,7 @@ public class Sales extends javax.swing.JInternalFrame {
     public void cleanAllFields(JTable table)
     {
         //Clean all Fields 
-            lbl_auto_order_no.setText("");
+            lbl_auto_sale_no.setText("");
             txt_first_name.setText("");
             txt_last_name.setText("");
             txt_contact.setText("");
@@ -366,7 +342,7 @@ public class Sales extends javax.swing.JInternalFrame {
         lbl_last_name = new javax.swing.JLabel();
         lbl_contact = new javax.swing.JLabel();
         lbl_email = new javax.swing.JLabel();
-        lbl_auto_order_no = new javax.swing.JLabel();
+        lbl_auto_sale_no = new javax.swing.JLabel();
         lbl_service_product = new javax.swing.JLabel();
         lbl_total = new javax.swing.JLabel();
         txt_first_name = new javax.swing.JTextField();
@@ -406,8 +382,8 @@ public class Sales extends javax.swing.JInternalFrame {
         lbl_email.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         lbl_email.setText("Email");
 
-        lbl_auto_order_no.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
-        lbl_auto_order_no.setText("autoGen");
+        lbl_auto_sale_no.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
+        lbl_auto_sale_no.setText("autoGen");
 
         lbl_service_product.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         lbl_service_product.setText("Service | Product");
@@ -596,7 +572,8 @@ public class Sales extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(table_view_sales);
         if (table_view_sales.getColumnModel().getColumnCount() > 0) {
-            table_view_sales.getColumnModel().getColumn(0).setMaxWidth(100);
+            table_view_sales.getColumnModel().getColumn(0).setPreferredWidth(100);
+            table_view_sales.getColumnModel().getColumn(0).setMaxWidth(200);
             table_view_sales.getColumnModel().getColumn(1).setPreferredWidth(210);
             table_view_sales.getColumnModel().getColumn(1).setMaxWidth(250);
             table_view_sales.getColumnModel().getColumn(2).setPreferredWidth(130);
@@ -647,7 +624,7 @@ public class Sales extends javax.swing.JInternalFrame {
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_sale_no)
                                 .addGap(18, 18, 18)
-                                .addComponent(lbl_auto_order_no))
+                                .addComponent(lbl_auto_sale_no))
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_email)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -704,7 +681,7 @@ public class Sales extends javax.swing.JInternalFrame {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbl_auto_order_no, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbl_auto_sale_no, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_sale_no))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -788,11 +765,11 @@ public class Sales extends javax.swing.JInternalFrame {
        if (txt_first_name.getText().trim().isEmpty() || txt_last_name.getText().trim().isEmpty() || 
                 txt_contact.getText().trim().isEmpty() || table_view_products.getRowCount() == 0)
         {
-            JOptionPane.showMessageDialog(null, "Please, check Empty fields", "New Order", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Please, check Empty fields", "New Sale", JOptionPane.ERROR_MESSAGE);
         }
         else
         {
-            saleNo = lbl_auto_order_no.getText();
+            saleNo = lbl_auto_sale_no.getText();
             firstName = txt_first_name.getText();
             lastName = txt_last_name.getText();
             contactNo = txt_contact.getText();
@@ -803,6 +780,12 @@ public class Sales extends javax.swing.JInternalFrame {
             Timestamp currentDate = new Timestamp(date.getTime());
             saleDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
 
+            //Empty vector before looping to avoid duplicate values on tableView
+            vecProducts.removeAllElements();
+            vecQty.removeAllElements();
+            vecUnitPrice.removeAllElements();
+            vecPriceTotal.removeAllElements();
+            
             for(int j = 0; j < table_view_products.getRowCount(); j++)
             {
                vecProducts.add(table_view_products.getValueAt(j, 0));
@@ -840,7 +823,7 @@ public class Sales extends javax.swing.JInternalFrame {
 
     private void btn_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelActionPerformed
             
-        int confirmCancelling = JOptionPane.showConfirmDialog(null, "Do you want to cancel this ?", "New Sale", 
+        int confirmCancelling = JOptionPane.showConfirmDialog(this, "Do you want to cancel this ?", "New Sale", 
                 JOptionPane.YES_NO_OPTION);
         if (confirmCancelling == 0)
         {
@@ -957,7 +940,7 @@ public class Sales extends javax.swing.JInternalFrame {
                             }
                             catch (NumberFormatException e)
                             {
-                                JOptionPane.showMessageDialog(this, "Qty must be an Integer!", "New Order", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(this, "Qty must be an Integer!", "New Sale", JOptionPane.ERROR_MESSAGE);
                             }
                         }
                         
@@ -1013,7 +996,7 @@ public class Sales extends javax.swing.JInternalFrame {
 
     private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
         
-        saleNo = lbl_auto_order_no.getText();
+        saleNo = lbl_auto_sale_no.getText();
         firstName = txt_first_name.getText();
         lastName = txt_last_name.getText();
         contactNo = txt_contact.getText();
@@ -1029,7 +1012,7 @@ public class Sales extends javax.swing.JInternalFrame {
             
             //show a message if a costumer is not found in the db
             if (!rs.isBeforeFirst() && firstName.trim().isEmpty() && lastName.trim().isEmpty())
-                JOptionPane.showMessageDialog(this, "Customer not found in the Database", "New Order", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Customer not found in the Database", "New Sale", JOptionPane.ERROR_MESSAGE);
             
             //add a new customer if not exists AND fields are not empty
             else if (!rs.isBeforeFirst() && !firstName.trim().isEmpty() && !lastName.trim().isEmpty())
@@ -1132,16 +1115,17 @@ public class Sales extends javax.swing.JInternalFrame {
         if (evt.getClickCount() == 2)
         {
             DefaultTableModel dtm = (DefaultTableModel)table_view_sales.getModel();
-            int selectedSale = table_view_sales.getSelectedRow();
-            String selectedSaleNo = dtm.getValueAt(selectedSale, 0).toString();
-            String selectedStatus = dtm.getValueAt(selectedSale, 6).toString();
+            int selectedRow = table_view_sales.getSelectedRow();
+            String selectedSaleNo = dtm.getValueAt(selectedRow, 0).toString();
+            String selectedStatus = dtm.getValueAt(selectedRow, 6).toString();
                 
             try {
                 dbConnection();
                 
-                String query = "SELECT * FROM sales WHERE saleNo = ?";
+                String query = "SELECT * FROM sales WHERE saleNo = ? AND status = ?";
                 ps = con.prepareStatement(query);
                 ps.setString(1, selectedSaleNo);
+                ps.setString(2, selectedStatus);
                 rs = ps.executeQuery();
                 
                 while (rs.next())
@@ -1151,7 +1135,7 @@ public class Sales extends javax.swing.JInternalFrame {
                         rs.getDouble("total"), rs.getString("saleDate"), rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getString("status"));
                     
                     saleDetails = new SaleDetails(sale);
-                    refundSale = new RefundSale(sale);
+                    refundSale = new SaleRefund(sale);
                     
                }
                 
@@ -1178,7 +1162,7 @@ public class Sales extends javax.swing.JInternalFrame {
 
         if(evt.getClickCount() == 2)
         {
-            int confirmDeletion = JOptionPane.showConfirmDialog(null, "Delete This Item ?", "Delete Product|Service", JOptionPane.YES_NO_OPTION);
+            int confirmDeletion = JOptionPane.showConfirmDialog(this, "Delete This Item ?", "Delete Product|Service", JOptionPane.YES_NO_OPTION);
             if(confirmDeletion == 0)
             {
                 dtm.removeRow(table_view_products.getSelectedRow());
@@ -1200,7 +1184,7 @@ public class Sales extends javax.swing.JInternalFrame {
     private javax.swing.JDesktopPane desktop_pane_sales;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JLabel lbl_auto_order_no;
+    private javax.swing.JLabel lbl_auto_sale_no;
     private javax.swing.JLabel lbl_contact;
     private javax.swing.JLabel lbl_email;
     private javax.swing.JLabel lbl_first_name;

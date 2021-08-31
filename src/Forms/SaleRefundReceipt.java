@@ -45,13 +45,16 @@ public class SaleRefundReceipt extends javax.swing.JFrame {
     
     public void loadSaleToPrint()
     {
+        sale.setCash(Math.abs(sale.getCash()));
+        sale.setCard(Math.abs(sale.getCard()));
+        sale.setTotal(Math.abs(sale.getTotal()));
         
         if (sale.getCash() == 0)
             lbl_paid_by.setText("Refunded by Card: €" + sale.getCard());
         else if (sale.getCard() == 0)
-            lbl_paid_by.setText("Refunded by Cash: €" + sale.getCash());
+            lbl_paid_by.setText("Refunded by Cash: €" + (sale.getCash() - sale.getChangeTotal()));
         else
-            lbl_paid_by.setText("Refunded by Cash: €" + sale.getCash() + " | Card: €" + sale.getCard());
+            lbl_paid_by.setText("Refunded by Cash: €" + (sale.getCash() - sale.getChangeTotal()) + " | Card: €" + sale.getCard());
         
         lbl_refund_date.setText("Date: " + sale.getSaleDate());
         lbl_print_order_no.setText("Sale: " + sale.getSaleNo());
@@ -105,8 +108,8 @@ public class SaleRefundReceipt extends javax.swing.JFrame {
         lbl_logo_icon1 = new javax.swing.JLabel();
         lbl_land_line_number1 = new javax.swing.JLabel();
         lbl_mobile_number1 = new javax.swing.JLabel();
-        lbl_address1 = new javax.swing.JLabel();
         line_header = new javax.swing.JSeparator();
+        lbl_address1 = new javax.swing.JLabel();
         panel_products = new javax.swing.JPanel();
         lbl_product_service = new javax.swing.JLabel();
         lbl_unit_price = new javax.swing.JLabel();
@@ -142,6 +145,8 @@ public class SaleRefundReceipt extends javax.swing.JFrame {
         lbl_print_total_products.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
         lbl_print_total_products.setText("totalProducts");
 
+        line_customer_signature.setBackground(new java.awt.Color(0, 0, 0));
+
         jLabel1.setText("Customer Signature");
 
         lbl_refund_receipt.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
@@ -160,6 +165,7 @@ public class SaleRefundReceipt extends javax.swing.JFrame {
         lbl_mobile_number1.setText("+353 (83) 012-8190");
 
         lbl_address1.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
+        lbl_address1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_address.png"))); // NOI18N
         lbl_address1.setText("12A, Frederick Street North, Dublin 1");
 
         javax.swing.GroupLayout panel_headerLayout = new javax.swing.GroupLayout(panel_header);
@@ -173,7 +179,7 @@ public class SaleRefundReceipt extends javax.swing.JFrame {
                         .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_headerLayout.createSequentialGroup()
                         .addComponent(lbl_logo_icon1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                         .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_mobile_number1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lbl_land_line_number1, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -191,7 +197,7 @@ public class SaleRefundReceipt extends javax.swing.JFrame {
                         .addComponent(lbl_land_line_number1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbl_mobile_number1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(0, 0, 0)
                         .addComponent(lbl_address1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -328,7 +334,7 @@ public class SaleRefundReceipt extends javax.swing.JFrame {
                                     .addComponent(lbl_print_contact, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(lbl_print_email, javax.swing.GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE)
                                     .addComponent(panel_products, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(0, 20, Short.MAX_VALUE))
+                                .addGap(0, 16, Short.MAX_VALUE))
                             .addGroup(panel_print_orderLayout.createSequentialGroup()
                                 .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbl_print_total_products, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -373,7 +379,7 @@ public class SaleRefundReceipt extends javax.swing.JFrame {
                 .addComponent(lbl_paid_by)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_refund_date)
-                .addGap(100, 100, 100)
+                .addGap(150, 150, 150)
                 .addComponent(line_customer_signature, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(jLabel1)
@@ -394,7 +400,7 @@ public class SaleRefundReceipt extends javax.swing.JFrame {
         });
 
         lbl_order_print_view.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
-        lbl_order_print_view.setText("Order Refund Print View");
+        lbl_order_print_view.setText("Refund Receipt Print View");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

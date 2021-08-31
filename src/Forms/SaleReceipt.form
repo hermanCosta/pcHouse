@@ -82,17 +82,14 @@
                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="19" max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="lbl_receipt" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="217" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="panel_header" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
+                  <EmptySpace pref="218" max="32767" attributes="0"/>
+                  <Component id="lbl_receipt" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="217" max="-2" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="panel_header" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -223,7 +220,7 @@
                               <Component id="lbl_land_line_number1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="lbl_mobile_number1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Component id="lbl_address1" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -263,15 +260,18 @@
                 <Property name="text" type="java.lang.String" value="+353 (83) 012-8190"/>
               </Properties>
             </Component>
+            <Component class="javax.swing.JSeparator" name="line_header">
+            </Component>
             <Component class="javax.swing.JLabel" name="lbl_address1">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Lucida Grande" size="12" style="0"/>
                 </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/Img/icon_address.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="12A, Frederick Street North, Dublin 1"/>
               </Properties>
-            </Component>
-            <Component class="javax.swing.JSeparator" name="line_header">
             </Component>
           </SubComponents>
         </Container>

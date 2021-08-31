@@ -271,17 +271,25 @@
                                           <Component id="lbl_print_total_cash" min="-2" pref="551" max="-2" attributes="0"/>
                                           <Component id="lbl_print_gross_total" min="-2" pref="551" max="-2" attributes="0"/>
                                           <Component id="lbl_print_total_card" alignment="1" min="-2" pref="551" max="-2" attributes="0"/>
+                                          <Component id="lbl_print_refunds" alignment="1" min="-2" pref="551" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="25" max="32767" attributes="0"/>
+                      <EmptySpace pref="21" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="lbl_till_closing_date" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="208" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="190" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Component id="lbl_full_report" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -293,14 +301,23 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="lbl_till_closing_date" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="panel_orders_sales" min="-2" pref="552" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                      <Component id="lbl_print_gross_total" min="-2" max="-2" attributes="0"/>
+                      <Component id="panel_orders_sales" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="lbl_print_gross_total" min="-2" pref="26" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Component id="lbl_print_total_cash" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Component id="lbl_print_total_card" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Component id="lbl_print_refunds" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Component id="lbl_full_report" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -317,16 +334,16 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                               <Component id="line_header" alignment="1" min="-2" pref="552" max="-2" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="lbl_logo_icon" min="-2" pref="300" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace pref="20" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="lbl_mobile_number" alignment="1" min="-2" max="-2" attributes="0"/>
                                       <Component id="lbl_land_line_number" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbl_address" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbl_address1" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -345,8 +362,8 @@
                                   <Component id="lbl_land_line_number" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="lbl_mobile_number" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbl_address" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                  <Component id="lbl_address1" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -385,15 +402,18 @@
                     <Property name="text" type="java.lang.String" value="+353 (83) 012-8190"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lbl_address">
+                <Component class="javax.swing.JSeparator" name="line_header">
+                </Component>
+                <Component class="javax.swing.JLabel" name="lbl_address1">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Lucida Grande" size="12" style="0"/>
                     </Property>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/Img/icon_address.png"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="12A, Frederick Street North, Dublin 1"/>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JSeparator" name="line_header">
                 </Component>
               </SubComponents>
             </Container>
@@ -453,21 +473,22 @@
                         </LineBorder>
                       </Border>
                     </Property>
+                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[540, 520]"/>
+                    </Property>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="6" y="6" width="540" height="520"/>
+                      <AbsoluteConstraints x="10" y="10" width="540" height="490"/>
                     </Constraint>
                   </Constraints>
 
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="scroll_pane_table_orders" alignment="1" pref="538" max="32767" attributes="0"/>
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="lbl_orders_total" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Component id="scroll_pane_table_orders" min="-2" pref="540" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -475,24 +496,13 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="scroll_pane_table_orders" min="-2" pref="511" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="lbl_orders_total" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="scroll_pane_table_orders" min="-2" pref="490" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JLabel" name="lbl_orders_total">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Lucida Grande" size="14" style="1"/>
-                        </Property>
-                        <Property name="text" type="java.lang.String" value="ordersTotal"/>
-                        <Property name="horizontalTextPosition" type="int" value="2"/>
-                      </Properties>
-                    </Component>
                     <Container class="javax.swing.JScrollPane" name="scroll_pane_table_orders">
                       <Properties>
                         <Property name="enabled" type="boolean" value="false"/>
@@ -573,21 +583,21 @@
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                      <AbsoluteConstraints x="10" y="10" width="530" height="520"/>
+                      <AbsoluteConstraints x="10" y="10" width="540" height="490"/>
                     </Constraint>
                   </Constraints>
 
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="scroll_pane_table_sales" alignment="0" pref="528" max="32767" attributes="0"/>
+                          <Component id="scroll_pane_table_sales" alignment="0" min="-2" pref="540" max="-2" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="scroll_pane_table_sales" pref="489" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                              <Component id="scroll_pane_table_sales" min="-2" pref="490" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -596,6 +606,9 @@
                     <Container class="javax.swing.JScrollPane" name="scroll_pane_table_sales">
                       <Properties>
                         <Property name="enabled" type="boolean" value="false"/>
+                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                          <Dimension value="[540, 500]"/>
+                        </Property>
                       </Properties>
                       <AuxValues>
                         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -659,7 +672,26 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Lucida Grande" size="16" style="1"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="tillClosingDate"/>
+                <Property name="text" type="java.lang.String" value="fullReport"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lbl_print_refunds">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Lucida Grande" size="15" style="0"/>
+                </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/Img/icon_refund_black.png"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="totalRefunds"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lbl_full_report">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Lucida Grande" size="16" style="1"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Full Report - 23/08/2021"/>
               </Properties>
             </Component>
           </SubComponents>

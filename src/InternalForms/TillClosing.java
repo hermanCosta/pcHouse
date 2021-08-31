@@ -49,6 +49,9 @@ public class TillClosing extends javax.swing.JInternalFrame {
     ResultSet rs;
     OrderReport ordersReport;
     SaleReport salesReport;
+    
+    ArrayList<Double> refundList = new ArrayList<>();
+    double refundTotal;
     //Date pickedDate; //= date_picker.getDate();
     //String tillClosingDate; // = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
     
@@ -69,6 +72,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         scroll_pane_table_sales.getViewport().setOpaque(false);
         
         loadOrdersReportOfTheDay();
+        
     }
     
      public void dbConnection() 
@@ -162,6 +166,9 @@ public class TillClosing extends javax.swing.JInternalFrame {
         // This Lists hold all values paid by cash and card
         ArrayList<Double> cashList = new ArrayList<>();
         ArrayList<Double> cardList = new ArrayList<>();
+        //ArrayList<Double> refundList = new ArrayList<>();
+        
+        refundList.clear();
 
         //This Lists hold total due of all orders
         ArrayList<Double> orderDueColumn = new ArrayList<>();
@@ -170,7 +177,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
         DefaultTableModel ordersModel= (DefaultTableModel) table_view_orders.getModel();
         ordersModel.setRowCount(0);
             
-        
             // this object holds each range of elements for setting into the table
             Object[] rowOrders = new Object[5];
             for (int i = 0; i < listOrders.size() ; i++)
@@ -189,8 +195,10 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 rowOrders[3] = 0.0;
                 rowOrders[4] = listOrders.get(i).getTotal();
                 orderDueColumn.add(listOrders.get(i).getTotal());
-                cashList.add(listOrders.get(i).getCash() + listOrders.get(i).getCashDeposit() -listOrders.get(i).getChangeTotal());
+                
+                cashList.add(listOrders.get(i).getCash() + listOrders.get(i).getCashDeposit() + listOrders.get(i).getChangeTotal());
                 cardList.add(listOrders.get(i).getCard() + listOrders.get(i).getCardDeposit());
+                refundList.add(listOrders.get(i).getTotal());
             }
             else
             {
@@ -198,7 +206,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 rowOrders[4] = listOrders.get(i).getDue();
                 
                 orderDueColumn.add(listOrders.get(i).getDue()); 
-                
                 cardList.add(listOrders.get(i).getCard());
                 cashList.add(listOrders.get(i).getCash() - listOrders.get(i).getChangeTotal());
             }
@@ -218,15 +225,19 @@ public class TillClosing extends javax.swing.JInternalFrame {
             double ordersTotal = 0;
             for (double d : orderDueColumn)
                 ordersTotal += d;
+            
+            double refundTotal = 0;
+            for (double d : refundList)
+                refundTotal += d;
 
             //Gross total (cash&card    
             double grossTotal = ordersTotal;
 
             lbl_till_closing_date.setText("Orders Report - " + tillClosingDate);
-            lbl_orders_total.setText("Orders Total ............................... €" + ordersTotal);
-            lbl_print_gross_total.setText("Gross Orders Total ................ €" + String.valueOf(grossTotal));
+            lbl_print_gross_total.setText("Gross Orders Total ............. €" + String.valueOf(grossTotal));
             lbl_print_total_cash.setText("Cash Total ......................... €" + String.valueOf(cashTotal));
             lbl_print_total_card.setText("Card Total ......................... €" + String.valueOf(cardTotal));
+            lbl_print_refunds.setText("Refunds ............................ €" + String.valueOf(refundTotal));
             
     }
      
@@ -253,20 +264,21 @@ public class TillClosing extends javax.swing.JInternalFrame {
         lbl_logo_icon = new javax.swing.JLabel();
         lbl_land_line_number = new javax.swing.JLabel();
         lbl_mobile_number = new javax.swing.JLabel();
-        lbl_address = new javax.swing.JLabel();
         line_header = new javax.swing.JSeparator();
+        lbl_address1 = new javax.swing.JLabel();
         lbl_print_gross_total = new javax.swing.JLabel();
         lbl_print_total_cash = new javax.swing.JLabel();
         lbl_print_total_card = new javax.swing.JLabel();
         panel_orders_sales = new javax.swing.JPanel();
         panel_orders = new javax.swing.JPanel();
-        lbl_orders_total = new javax.swing.JLabel();
         scroll_pane_table_orders = new javax.swing.JScrollPane();
         table_view_orders = new javax.swing.JTable();
         panel_sales = new javax.swing.JPanel();
         scroll_pane_table_sales = new javax.swing.JScrollPane();
         table_view_sales = new javax.swing.JTable();
         lbl_till_closing_date = new javax.swing.JLabel();
+        lbl_print_refunds = new javax.swing.JLabel();
+        lbl_full_report = new javax.swing.JLabel();
 
         setBorder(null);
         setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
@@ -369,24 +381,25 @@ public class TillClosing extends javax.swing.JInternalFrame {
         lbl_mobile_number.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_mobile_number.png"))); // NOI18N
         lbl_mobile_number.setText("+353 (83) 012-8190");
 
-        lbl_address.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
-        lbl_address.setText("12A, Frederick Street North, Dublin 1");
+        lbl_address1.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
+        lbl_address1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_address.png"))); // NOI18N
+        lbl_address1.setText("12A, Frederick Street North, Dublin 1");
 
         javax.swing.GroupLayout panel_headerLayout = new javax.swing.GroupLayout(panel_header);
         panel_header.setLayout(panel_headerLayout);
         panel_headerLayout.setHorizontalGroup(
             panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_headerLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(0, 0, 0)
                 .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panel_headerLayout.createSequentialGroup()
                         .addComponent(lbl_logo_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                         .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_mobile_number, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lbl_land_line_number, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lbl_address, javax.swing.GroupLayout.Alignment.TRAILING))))
+                            .addComponent(lbl_address1, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_headerLayout.setVerticalGroup(
@@ -400,8 +413,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
                         .addComponent(lbl_land_line_number)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbl_mobile_number)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_address)))
+                        .addGap(0, 0, 0)
+                        .addComponent(lbl_address1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -423,10 +436,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
         panel_orders.setBackground(new java.awt.Color(255, 255, 255));
         panel_orders.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
-
-        lbl_orders_total.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
-        lbl_orders_total.setText("ordersTotal");
-        lbl_orders_total.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        panel_orders.setPreferredSize(new java.awt.Dimension(540, 520));
 
         scroll_pane_table_orders.setEnabled(false);
 
@@ -463,28 +473,25 @@ public class TillClosing extends javax.swing.JInternalFrame {
         panel_orders.setLayout(panel_ordersLayout);
         panel_ordersLayout.setHorizontalGroup(
             panel_ordersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scroll_pane_table_orders, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_ordersLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbl_orders_total)
-                .addGap(20, 20, 20))
+            .addGroup(panel_ordersLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(scroll_pane_table_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panel_ordersLayout.setVerticalGroup(
             panel_ordersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_ordersLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(scroll_pane_table_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_orders_total)
-                .addContainerGap())
+                .addComponent(scroll_pane_table_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
 
-        panel_orders_sales.add(panel_orders, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 540, 520));
+        panel_orders_sales.add(panel_orders, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 540, 490));
 
         panel_sales.setBackground(new java.awt.Color(255, 255, 255));
         panel_sales.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
 
         scroll_pane_table_sales.setEnabled(false);
+        scroll_pane_table_sales.setPreferredSize(new java.awt.Dimension(540, 500));
 
         table_view_sales.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
         table_view_sales.setModel(new javax.swing.table.DefaultTableModel(
@@ -518,19 +525,26 @@ public class TillClosing extends javax.swing.JInternalFrame {
         panel_sales.setLayout(panel_salesLayout);
         panel_salesLayout.setHorizontalGroup(
             panel_salesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scroll_pane_table_sales, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+            .addComponent(scroll_pane_table_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         panel_salesLayout.setVerticalGroup(
             panel_salesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_salesLayout.createSequentialGroup()
-                .addComponent(scroll_pane_table_sales, javax.swing.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
-                .addGap(29, 29, 29))
+                .addComponent(scroll_pane_table_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        panel_orders_sales.add(panel_sales, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 530, 520));
+        panel_orders_sales.add(panel_sales, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 540, 490));
 
         lbl_till_closing_date.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
-        lbl_till_closing_date.setText("tillClosingDate");
+        lbl_till_closing_date.setText("fullReport");
+
+        lbl_print_refunds.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        lbl_print_refunds.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_refund_black.png"))); // NOI18N
+        lbl_print_refunds.setText("totalRefunds");
+
+        lbl_full_report.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
+        lbl_full_report.setText("Full Report - 23/08/2021");
 
         javax.swing.GroupLayout panel_print_orderLayout = new javax.swing.GroupLayout(panel_print_order);
         panel_print_order.setLayout(panel_print_orderLayout);
@@ -549,12 +563,18 @@ public class TillClosing extends javax.swing.JInternalFrame {
                                 .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(lbl_print_total_cash, javax.swing.GroupLayout.PREFERRED_SIZE, 551, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lbl_print_gross_total, javax.swing.GroupLayout.PREFERRED_SIZE, 551, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lbl_print_total_card, javax.swing.GroupLayout.PREFERRED_SIZE, 551, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(25, Short.MAX_VALUE))
+                                    .addComponent(lbl_print_total_card, javax.swing.GroupLayout.PREFERRED_SIZE, 551, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbl_print_refunds, javax.swing.GroupLayout.PREFERRED_SIZE, 551, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap(21, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_till_closing_date)
-                .addGap(208, 208, 208))
+                .addGap(190, 190, 190))
+            .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panel_print_orderLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(lbl_full_report)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         panel_print_orderLayout.setVerticalGroup(
             panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -564,14 +584,21 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lbl_till_closing_date)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panel_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(lbl_print_gross_total)
+                .addComponent(panel_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lbl_print_gross_total, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(lbl_print_total_cash)
                 .addGap(0, 0, 0)
                 .addComponent(lbl_print_total_card)
-                .addGap(20, 20, 20))
+                .addGap(0, 0, 0)
+                .addComponent(lbl_print_refunds)
+                .addContainerGap())
+            .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panel_print_orderLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(lbl_full_report)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         scroll_pane_orders_sales.setViewportView(panel_print_order);
@@ -691,6 +718,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
             // This Lists hold all values paid by cash and card
             ArrayList<Double> cashList = new ArrayList<>();
             ArrayList<Double> cardList = new ArrayList<>();
+            
 
             //This Lists hold total due of all orders
             ArrayList<Double> salesTotalColumn = new ArrayList<>();
@@ -701,7 +729,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
             DefaultTableModel salesModel= (DefaultTableModel) table_view_sales.getModel();
             salesModel.setRowCount(0);
 
-            
+            refundList.clear();
 
             Object[] rowSales = new Object[4];
             for (int i = 0 ; i < listSales.size(); i++)
@@ -711,13 +739,17 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 rowSales[2] = listSales.get(i).getProductsService();
                 rowSales[3] = listSales.get(i).getTotal();
                 salesModel.addRow(rowSales);
+                salesTotalColumn.add(listSales.get(i).getTotal());
+                cardList.add(listSales.get(i).getCard());
                 
-//                if (listSales.get(i).getTotal() < 0)
-//                    cashList.add(listSales.get(i).getCash());
-//                else
-               cashList.add(listSales.get(i).getCash() - listSales.get(i).getChangeTotal());
-               cardList.add(listSales.get(i).getCard());
-               salesTotalColumn.add(listSales.get(i).getTotal());
+                if (listSales.get(i).getTotal() < 0)
+                {
+                    cashList.add(listSales.get(i).getCash() + listSales.get(i).getChangeTotal());
+                    refundList.add(listSales.get(i).getTotal());
+                }
+                    
+                else
+                    cashList.add(listSales.get(i).getCash() - listSales.get(i).getChangeTotal());
             }
 
             //Loop the List and sum Cash payments
@@ -732,15 +764,19 @@ public class TillClosing extends javax.swing.JInternalFrame {
             double salesTotal = 0;
             for (double d : salesTotalColumn)
                 salesTotal += d;
-
+            
+            double refundTotal = 0;
+            for (double d : refundList)
+                refundTotal += d;
+            
             //Gross total (cash&card    
             double grossTotal = salesTotal;
 
             lbl_till_closing_date.setText("Sales Report - " + tillClosingDate);
-            lbl_orders_total.setText("Sales Total ............................... €" + salesTotal);
-            lbl_print_gross_total.setText("Gross Sales Total ................ €" + String.valueOf(grossTotal));
+            lbl_print_gross_total.setText("Gross Sales Total .............. €" + String.valueOf(grossTotal));
             lbl_print_total_cash.setText("Cash Total ........................ €" + String.valueOf(cashTotal));
             lbl_print_total_card.setText("Card Total ........................ €" + String.valueOf(cardTotal));
+            lbl_print_refunds.setText("Refunds ........................... €" + String.valueOf(refundTotal));
             
         }
     }//GEN-LAST:event_btn_salesActionPerformed
@@ -807,13 +843,14 @@ public class TillClosing extends javax.swing.JInternalFrame {
     private javax.swing.JButton btn_print;
     private javax.swing.JButton btn_sales;
     private com.toedter.calendar.JCalendar date_picker;
-    private javax.swing.JLabel lbl_address;
+    private javax.swing.JLabel lbl_address1;
+    private javax.swing.JLabel lbl_full_report;
     private javax.swing.JLabel lbl_land_line_number;
     private javax.swing.JLabel lbl_logo_icon;
     private javax.swing.JLabel lbl_mobile_number;
     private javax.swing.JLabel lbl_order_print_view;
-    private javax.swing.JLabel lbl_orders_total;
     private javax.swing.JLabel lbl_print_gross_total;
+    private javax.swing.JLabel lbl_print_refunds;
     private javax.swing.JLabel lbl_print_total_card;
     private javax.swing.JLabel lbl_print_total_cash;
     private javax.swing.JLabel lbl_till_closing_date;

@@ -118,6 +118,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         accessDbColumn(faults, "SELECT * FROM faults","faultName");
         listProductService();
         loadSelectedOrder();
+        
+        System.out.println("Size " + table_view_products.getRowCount());
+        
     }
     
     
@@ -150,6 +153,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         Vector vecUnitPrice = new Vector();
         Vector vecPriceTotal = new Vector();
         
+        
         vecFaults.addAll(Arrays.asList(order.getStringFaults().split(",")));
         vecProducts.addAll(Arrays.asList(order.getStringProducts().replaceAll("   " , " ").split(",")));
         vecQty.addAll(Arrays.asList(order.getStringQty().replaceAll("  " , " ").split(",")));
@@ -175,6 +179,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         // Disable editing
         table_view_products.setDefaultEditor(Object.class, null);
         table_view_faults.setDefaultEditor(Object.class, null);
+        
    }
    
    
@@ -306,12 +311,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
-        jSeparator1 = new javax.swing.JSeparator();
-        jSeparator2 = new javax.swing.JSeparator();
-        buttonGroup1 = new javax.swing.ButtonGroup();
-        jDialog1 = new javax.swing.JDialog();
-        jDialog2 = new javax.swing.JDialog();
         desktop_pane_order_details = new javax.swing.JDesktopPane();
         panel_order_details = new javax.swing.JPanel();
         lbl_order_no = new javax.swing.JLabel();
@@ -354,31 +353,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         editor_pane_important_notes = new javax.swing.JEditorPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         table_view_products = new javax.swing.JTable();
-
-        jCheckBoxMenuItem1.setSelected(true);
-        jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
-
-        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
-        jDialog1.getContentPane().setLayout(jDialog1Layout);
-        jDialog1Layout.setHorizontalGroup(
-            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        jDialog1Layout.setVerticalGroup(
-            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout jDialog2Layout = new javax.swing.GroupLayout(jDialog2.getContentPane());
-        jDialog2.getContentPane().setLayout(jDialog2Layout);
-        jDialog2Layout.setHorizontalGroup(
-            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        jDialog2Layout.setVerticalGroup(
-            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
 
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -614,6 +588,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
         lbl_issued_date_time.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         lbl_issued_date_time.setText("createdOn");
+        lbl_issued_date_time.setEnabled(false);
 
         btn_fix.setBackground(new java.awt.Color(0, 153, 102));
         btn_fix.setFont(new java.awt.Font("Lucida Grande", 1, 22)); // NOI18N
@@ -718,6 +693,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
             }
         ));
+        table_view_products.setEnabled(false);
         table_view_products.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 table_view_productsMouseClicked(evt);
@@ -733,14 +709,18 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_issued_date_time)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addComponent(lbl_order_no)
-                        .addGap(12, 12, 12)
-                        .addComponent(lbl_auto_order_no)
-                        .addGap(237, 237, 237)
-                        .addComponent(lbl_fault)
-                        .addGap(6, 6, 6)
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                .addComponent(lbl_order_no)
+                                .addGap(12, 12, 12)
+                                .addComponent(lbl_auto_order_no)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lbl_fault)
+                                .addGap(6, 6, 6))
+                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                .addComponent(lbl_issued_date_time)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addComponent(txt_fault, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -776,38 +756,45 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                                         .addComponent(lbl_contact)
                                         .addGap(11, 11, 11)
                                         .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(30, 30, 30)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane3)
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addComponent(lbl_service_product)
-                                .addGap(6, 6, 6)
-                                .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(icon_add_table_view))
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addComponent(lbl_due)
-                                .addGap(0, 0, 0)
-                                .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lbl_deposit)
-                                .addGap(0, 0, 0)
-                                .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lbl_price)
-                                .addGap(0, 0, 0)
-                                .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2))))
+                                .addGap(30, 30, 30)
+                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jScrollPane3)
+                                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                        .addComponent(lbl_service_product)
+                                        .addGap(6, 6, 6)
+                                        .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(10, 10, 10)
+                                        .addComponent(icon_add_table_view))
+                                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                        .addComponent(lbl_due)
+                                        .addGap(0, 0, 0)
+                                        .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(lbl_deposit)
+                                        .addGap(0, 0, 0)
+                                        .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(lbl_price)
+                                        .addGap(0, 0, 0)
+                                        .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 571, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_order_detailsLayout.setVerticalGroup(
             panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                .addComponent(lbl_issued_date_time, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_fault, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
+                        .addGap(16, 16, 16)
+                        .addComponent(txt_fault, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lbl_issued_date_time, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_order_no)
                             .addComponent(lbl_auto_order_no)
@@ -868,9 +855,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                                 .addComponent(lbl_service_product))
                             .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(icon_add_table_view))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(3, 3, 3)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addGap(6, 6, 6)
@@ -949,7 +936,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         {
             txt_due.setText(txt_total.getText());
             //txt_deposit.setText(Double.toString(0));
-            deposit = 0;
+            deposit = 0.0;
         }
         else
         {
@@ -1391,14 +1378,12 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             Timestamp currentDate = new Timestamp(date.getTime());
             String updateDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
             
-            //Empty vector before looping, this avoids values in the vector in case the camparison 
-            // between tableView and database
+            //Empty vector before looping to avoid duplicate values on tableView
             vecUpdateFaults.removeAllElements();
             vecUpdateProducts.removeAllElements();
             vecUpdateQty.removeAllElements();
             vecUpdateUnitPrice.removeAllElements();
             vecUpdatePriceTotal.removeAllElements();
-            
 
              //pass table items from faults and products table to vector 
             for(int i = 0; i < table_view_faults.getRowCount(); i++)
@@ -1469,8 +1454,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                             newDeposit -= order.getDeposit();
                             DepositUpdatePayment depositUpdatePayment = new DepositUpdatePayment(order, newDeposit);
                             depositUpdatePayment.setVisible(true);
-                            System.out.println("Old deposit: " + order.getDeposit());
-                            System.out.println("New deposit: " + newDeposit);
                         }
                         else
                         {
@@ -1531,20 +1514,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
     private void table_view_productsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_productsMouseClicked
         // TODO add your handling code here:
-        //Delete products|Service item of the selected row (Function is called with 2 clicks)
-        DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
-        String selectedProduct = table_view_products.getValueAt(table_view_products.getSelectedRow(), 0).toString();
-        if(evt.getClickCount() == 2)
-        {
-            int confirmDeletion = JOptionPane.showConfirmDialog(null, "Remove " + selectedProduct + " ?", "Delete Product|Service", JOptionPane.YES_NO_OPTION);
-            if(confirmDeletion == 0)
-            {
-                dtm.removeRow(table_view_products.getSelectedRow());
-                // Sum price column and set into total textField
-                getPriceSum();
-            }
-        }
-        
     }//GEN-LAST:event_table_view_productsMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1553,19 +1522,13 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     private javax.swing.JButton btn_notes;
     private javax.swing.JButton btn_print;
     private javax.swing.JButton btn_save_changes;
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> combo_box_product_service;
     private javax.swing.JDesktopPane desktop_pane_order_details;
     private javax.swing.JEditorPane editor_pane_important_notes;
     private javax.swing.JLabel icon_add_table_view;
-    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
-    private javax.swing.JDialog jDialog1;
-    private javax.swing.JDialog jDialog2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane_notes;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JLabel lbl_auto_order_no;
     private javax.swing.JLabel lbl_brand;
     private javax.swing.JLabel lbl_contact;

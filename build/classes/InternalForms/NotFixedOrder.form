@@ -75,22 +75,6 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="panel_order_status" min="-2" pref="1010" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <EmptySpace min="136" pref="136" max="-2" attributes="0"/>
-                              <Component id="lbl_auto_order_no" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="213" pref="213" max="-2" attributes="0"/>
-                              <Component id="btn_undo" min="-2" pref="180" max="-2" attributes="0"/>
-                              <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
-                              <Component id="btn_notes" min="-2" pref="180" max="-2" attributes="0"/>
-                              <EmptySpace min="16" pref="16" max="-2" attributes="0"/>
-                              <Component id="btn_pick_up" min="-2" pref="180" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="lbl_order_no" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="829" pref="829" max="-2" attributes="0"/>
-                              <Component id="btn_notes1" min="-2" pref="180" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="lbl_order_created_on" min="-2" pref="1010" max="-2" attributes="0"/>
-                          <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Component id="lbl_first_name" min="-2" max="-2" attributes="0"/>
@@ -153,7 +137,30 @@
                                   </Group>
                               </Group>
                           </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lbl_order_no" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" attributes="0">
+                                              <EmptySpace min="136" pref="136" max="-2" attributes="0"/>
+                                              <Component id="lbl_auto_order_no" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Component id="lbl_order_created_on" min="-2" pref="399" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                                      <Component id="btn_undo" min="-2" pref="180" max="-2" attributes="0"/>
+                                      <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
+                                      <Component id="btn_notes" min="-2" pref="180" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="btn_notes1" min="-2" pref="180" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btn_pick_up" min="-2" pref="180" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
+                      <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -178,15 +185,14 @@
                           </Group>
                           <Group type="102" attributes="0">
                               <EmptySpace min="1" pref="1" max="-2" attributes="0"/>
-                              <Component id="btn_pick_up" min="-2" pref="50" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="btn_pick_up" alignment="3" min="-2" pref="50" max="-2" attributes="0"/>
+                                  <Component id="btn_notes1" alignment="3" min="-2" pref="50" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                           <Group type="102" attributes="0">
                               <EmptySpace min="27" pref="27" max="-2" attributes="0"/>
                               <Component id="lbl_order_no" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <EmptySpace min="1" pref="1" max="-2" attributes="0"/>
-                              <Component id="btn_notes1" min="-2" pref="50" max="-2" attributes="0"/>
                           </Group>
                           <Component id="lbl_order_created_on" min="-2" max="-2" attributes="0"/>
                       </Group>

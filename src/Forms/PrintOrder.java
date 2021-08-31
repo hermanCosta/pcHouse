@@ -125,8 +125,8 @@ public class PrintOrder extends javax.swing.JFrame {
         lbl_logo_icon1 = new javax.swing.JLabel();
         lbl_land_line_number1 = new javax.swing.JLabel();
         lbl_mobile_number1 = new javax.swing.JLabel();
-        lbl_address1 = new javax.swing.JLabel();
         line_header = new javax.swing.JSeparator();
+        lbl_address1 = new javax.swing.JLabel();
         panel_products = new javax.swing.JPanel();
         lbl_product_service = new javax.swing.JLabel();
         lbl_unit_price = new javax.swing.JLabel();
@@ -203,6 +203,8 @@ public class PrintOrder extends javax.swing.JFrame {
         lbl_print_due.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
         lbl_print_due.setText("due");
 
+        line_customer_signature.setBackground(new java.awt.Color(0, 0, 0));
+
         jLabel1.setText("Customer Signature");
 
         jLabel2.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
@@ -221,6 +223,7 @@ public class PrintOrder extends javax.swing.JFrame {
         lbl_mobile_number1.setText("+353 (83) 012-8190");
 
         lbl_address1.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
+        lbl_address1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_address.png"))); // NOI18N
         lbl_address1.setText("12A, Frederick Street North, Dublin 1");
 
         javax.swing.GroupLayout panel_headerLayout = new javax.swing.GroupLayout(panel_header);
@@ -234,7 +237,7 @@ public class PrintOrder extends javax.swing.JFrame {
                         .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_headerLayout.createSequentialGroup()
                         .addComponent(lbl_logo_icon1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                         .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_mobile_number1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lbl_land_line_number1, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -252,7 +255,7 @@ public class PrintOrder extends javax.swing.JFrame {
                         .addComponent(lbl_land_line_number1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbl_mobile_number1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(0, 0, 0)
                         .addComponent(lbl_address1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -403,16 +406,16 @@ public class PrintOrder extends javax.swing.JFrame {
             .addGroup(panel_print_orderLayout.createSequentialGroup()
                 .addGap(236, 236, 236)
                 .addComponent(jLabel2)
-                .addGap(10, 10, 10))
+                .addGap(10, 239, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(232, 232, 232))
+                        .addGap(230, 230, 230))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
                         .addComponent(line_customer_signature, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(105, 105, 105))))
+                        .addGap(102, 102, 102))))
         );
         panel_print_orderLayout.setVerticalGroup(
             panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -453,11 +456,11 @@ public class PrintOrder extends javax.swing.JFrame {
                 .addComponent(lbl_print_deposit)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_print_due)
-                .addGap(52, 52, 52)
+                .addGap(65, 65, 65)
                 .addComponent(line_customer_signature, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(jLabel1)
-                .addGap(20, 20, 20))
+                .addContainerGap())
         );
 
         jScrollPane4.setViewportView(panel_print_order);

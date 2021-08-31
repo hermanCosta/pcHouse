@@ -7,6 +7,7 @@ package InternalForms;
 
 import Forms.OrderNotes;
 import Forms.OrderRefundReceipt;
+import Forms.SalePayment;
 import Forms.SaleReceipt;
 import Forms.SaleRefundReceipt;
 import Model.Customer;
@@ -158,6 +159,43 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         model.getColumn(1).setMaxWidth(40);
         model.getColumn(2).setMaxWidth(80);
         model.getColumn(3).setMaxWidth(80);
+        
+        System.out.println("Size " +table_view_products.getRowCount());
+    }
+    
+    public void updateProductQty()
+    {
+        for (int i = 0; i < table_view_products.getRowCount() ; i++)
+        {
+            String cellProduct = table_view_products.getValueAt(i, 0).toString();
+            int cellQty = (int) table_view_products.getValueAt(i, 1);
+
+            try {
+                dbConnection();
+                String queryCheck = "SELECT * FROM products WHERE productService = ?";
+                ps = con.prepareStatement(queryCheck);
+                ps.setString(1, cellProduct);
+                rs = ps.executeQuery();
+                
+                while(rs.next())
+                {
+                    if (rs.getString("category").equals("Product"))
+                    {
+                        int qty = rs.getInt("qty");
+                        int updateQty = qty + cellQty;
+
+                        String queryUpdate = "UPDATE products SET qty = ? WHERE productService = ?";
+                        ps = con.prepareStatement(queryUpdate);
+                        ps.setInt(1, updateQty);
+                        ps.setString(2, cellProduct);
+                        ps.executeUpdate();
+                    }
+                }
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
     
     @SuppressWarnings("unchecked")
@@ -558,7 +596,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
 
     private void btn_refundActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_refundActionPerformed
         // TODO add your handling code here:
-        int confirmRefund = JOptionPane.showConfirmDialog(this, "Do you really want to Refund Order: " + sale.getSaleNo()+ " ?",
+        int confirmRefund = JOptionPane.showConfirmDialog(this, "Do you really want to Refund " + sale.getSaleNo()+ " ?",
             "Confirm Refund", JOptionPane.YES_NO_OPTION);
 
         if (confirmRefund == 0)
@@ -572,7 +610,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                 sale.setStatus("Refunded");
                 sale.setSaleDate(refundDate);
 
-                sale.setCash(sale.getCash() - sale.getChangeTotal());
+                //sale.setCash(sale.getCash() - sale.getChangeTotal());
 
                 cash = sale.getCash();
                 card = sale.getCard();
@@ -606,8 +644,10 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                     ps.setDouble(14, sale.getChangeTotal());
                     ps.setString(15, sale.getStatus());
                     ps.executeUpdate();
+                    
+                    updateProductQty();
 
-                    JOptionPane.showMessageDialog(this, "Order " + sale.getSaleNo() + " Refunded Successfully!",
+                    JOptionPane.showMessageDialog(this, sale.getSaleNo() + " Refunded Successfully!",
                         "Refund Order", JOptionPane.INFORMATION_MESSAGE);
                     
                     SaleRefundReceipt saleRefundReceipt = new SaleRefundReceipt(sale);

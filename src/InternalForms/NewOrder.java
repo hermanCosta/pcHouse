@@ -117,55 +117,32 @@ public class NewOrder extends javax.swing.JInternalFrame {
         }
     }
     
-    public final void autoID()
+   public final void autoID()
     {
         try {
             dbConnection();
             
-            String queryCheckOrders = "SELECT Max(orderNo) FROM orderDetails";
-            ps = con.prepareStatement(queryCheckOrders);
+            //check orderNo from orderNo table
+            String queryCheck = "SELECT orderNo FROM orderDetails";
+            ps = con.prepareStatement(queryCheck);
             rs = ps.executeQuery();
-            
-            Integer maxOrderNo = 0;
-            Integer maxSaleNo = 0;
-            ResultSet rsSales = null;
-            PreparedStatement psSales = null;
-            boolean isEmpty = false;
-            if (rs.next() == false)
-                isEmpty = true;
-            else
-                maxOrderNo = Integer.parseInt(rs.getString(1));
-                
-                  //check saleNo from saleNo table
-                    String queryCheckSale = "SELECT Max(saleNo) FROM sales";
-                    psSales = con.prepareStatement(queryCheckSale);
-                    psSales = con.prepareStatement(queryCheckSale);
-                    rsSales = psSales.executeQuery();
-            
-            if (rsSales.next() == false)
-                isEmpty = true;
-            else
-                maxSaleNo = Integer.parseInt(rsSales.getString(1));
-            
              
-             if (isEmpty) 
-             {
-                lbl_auto_order_no.setText("0000001");
-             }
-             if (maxOrderNo > maxSaleNo)
-             {
-                 long id = Long.parseLong(rs.getString("Max(orderNo)").substring(2,
-                         rs.getString("Max(orderNo)").length()));
-                 id++;
-                 lbl_auto_order_no.setText(String.format("%07d", id));            
-             }
-             else
-             {
-                 long id = Long.parseLong(rsSales.getString("Max(saleNo)").substring(2,
-                         rsSales.getString("Max(saleNo)").length()));
-                 id++;
-                 lbl_auto_order_no.setText(String.format("%07d", id)); 
-             }
+            if (rs.next())
+            {
+                //get MAX Number orderNo from orderNo table
+                String queryMax = "SELECT Max(orderNo) FROM orderDetails";
+                ps = con.prepareStatement(queryMax);
+                rs = ps.executeQuery();
+                            
+                while(rs.next())
+                {
+                    long id = Long.parseLong(rs.getString("Max(orderNo)").substring(2, rs.getString("Max(orderNo)").length()));
+                    id++;
+                    lbl_auto_order_no.setText(String.format("RO" + id)); 
+                }
+            }
+            else
+                lbl_auto_order_no.setText("RO1"); 
             
         } catch (SQLException ex) {
             Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
@@ -366,6 +343,12 @@ public class NewOrder extends javax.swing.JInternalFrame {
             Timestamp currentDate = new Timestamp(date.getTime());
             issueDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
 
+            //Empty vector before looping to avoid duplicate values on tableView
+            vecFaults.removeAllElements();
+            vecProducts.removeAllElements();
+            vecQty.removeAllElements();
+            vecUnitPrice.removeAllElements();
+            vecPriceTotal.removeAllElements();
             //pass table items from faults and products table to vector 
             for(int i = 0; i < table_view_faults.getRowCount(); i++)
             {
@@ -974,7 +957,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
                         ps = con.prepareStatement(removeSpace);
                         ps.executeUpdate();
 
-                    JOptionPane.showMessageDialog(this, "New order created successfully!");
+                    JOptionPane.showMessageDialog(this, order.getOrderNo() + " Created successfully!");
 
                     cleanAllFields(table_view_faults);
                     cleanAllFields(table_view_products);

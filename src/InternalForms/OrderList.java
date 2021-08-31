@@ -54,6 +54,7 @@ public class OrderList extends javax.swing.JInternalFrame {
         
         
         showRecentOrders();
+        
     }
     
     public void dbConnection() 
@@ -183,31 +184,21 @@ public class OrderList extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
-        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
-        jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
-        jMenu1 = new javax.swing.JMenu();
         desktop_pane_order_list = new javax.swing.JDesktopPane();
+        jPanel1 = new javax.swing.JPanel();
         txt_search_order = new javax.swing.JTextField();
         label_latest_orders_created = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         table_view_orders = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        table_view_orders1 = new javax.swing.JTable();
         lbl_search_icon = new javax.swing.JLabel();
-
-        jCheckBoxMenuItem1.setSelected(true);
-        jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
-
-        jCheckBoxMenuItem2.setSelected(true);
-        jCheckBoxMenuItem2.setText("jCheckBoxMenuItem2");
-
-        jMenu1.setText("jMenu1");
 
         setBorder(null);
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
         getContentPane().setLayout(null);
 
-        desktop_pane_order_list.setBackground(new java.awt.Color(255, 255, 255));
         desktop_pane_order_list.setMaximumSize(new java.awt.Dimension(1049, 827));
 
         txt_search_order.setFont(new java.awt.Font("Lucida Grande", 0, 20)); // NOI18N
@@ -229,7 +220,6 @@ public class OrderList extends javax.swing.JInternalFrame {
         });
 
         label_latest_orders_created.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
-        label_latest_orders_created.setForeground(new java.awt.Color(255, 255, 255));
         label_latest_orders_created.setText("Orders Created Recently");
 
         jScrollPane1.setVerifyInputWhenFocusTarget(false);
@@ -277,41 +267,97 @@ public class OrderList extends javax.swing.JInternalFrame {
             table_view_orders.getColumnModel().getColumn(0).setMaxWidth(80);
         }
 
-        lbl_search_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_search.png"))); // NOI18N
+        jScrollPane2.setVerifyInputWhenFocusTarget(false);
 
-        desktop_pane_order_list.setLayer(txt_search_order, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        desktop_pane_order_list.setLayer(label_latest_orders_created, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        desktop_pane_order_list.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        desktop_pane_order_list.setLayer(lbl_search_icon, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        table_view_orders1.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        table_view_orders1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Order", "First Name", "Last Name", "Contact", "Brand", "Model", "S/N", "Status"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        table_view_orders1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_view_ordersMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(table_view_orders1);
+        if (table_view_orders1.getColumnModel().getColumnCount() > 0) {
+            table_view_orders1.getColumnModel().getColumn(0).setMaxWidth(80);
+        }
+
+        lbl_search_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_search_black.png"))); // NOI18N
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(lbl_search_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txt_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, 860, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(346, 346, 346)
+                        .addComponent(label_latest_orders_created))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1006, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txt_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_search_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(13, 13, 13)
+                .addComponent(label_latest_orders_created)
+                .addGap(27, 27, 27)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(41, Short.MAX_VALUE))
+        );
+
+        desktop_pane_order_list.setLayer(jPanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout desktop_pane_order_listLayout = new javax.swing.GroupLayout(desktop_pane_order_list);
         desktop_pane_order_list.setLayout(desktop_pane_order_listLayout);
         desktop_pane_order_listLayout.setHorizontalGroup(
             desktop_pane_order_listLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(desktop_pane_order_listLayout.createSequentialGroup()
-                .addGap(74, 74, 74)
-                .addComponent(lbl_search_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txt_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, 860, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(desktop_pane_order_listLayout.createSequentialGroup()
-                .addGap(360, 360, 360)
-                .addComponent(label_latest_orders_created))
-            .addGroup(desktop_pane_order_listLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1010, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         desktop_pane_order_listLayout.setVerticalGroup(
             desktop_pane_order_listLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(desktop_pane_order_listLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addGroup(desktop_pane_order_listLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txt_search_order, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_search_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(13, 13, 13)
-                .addComponent(label_latest_orders_created)
-                .addGap(25, 25, 25)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         getContentPane().add(desktop_pane_order_list);
@@ -354,16 +400,15 @@ public class OrderList extends javax.swing.JInternalFrame {
                 
                 
                 if(!rs.next())
-                {
-                    completedOrder = new CompletedOrder("", "", "", "", 0, 0, 0, "", 0, 0, 0);
-                }
+                    completedOrder = new CompletedOrder("", "", "", "", 0, 0, 0, "", 0, 0, 0, 0, 0);
                 
                 else
                 {
                     do {
                         completedOrder = new CompletedOrder(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), 
-                            rs.getString("productService"), rs.getDouble("total"), rs.getDouble("deposit"),rs.getDouble("due"), rs.getString("payDate"),
-                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"));
+                            rs.getString("productService"), rs.getDouble("total"), rs.getDouble("deposit"),rs.getDouble("due"), 
+                            rs.getString("payDate"), rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), 
+                            rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"));
                     } while (rs.next());
                 }  
                 
@@ -382,7 +427,7 @@ public class OrderList extends javax.swing.JInternalFrame {
                         break;
 
                     case "Refunded":
-                       RefundOrder refundOrder = new RefundOrder(order, completedOrder);
+                       OrderRefund refundOrder = new OrderRefund(order, completedOrder);
                        desktop_pane_order_list.removeAll();
                        desktop_pane_order_list.add(refundOrder).setVisible(true);
                        break;
@@ -420,15 +465,14 @@ public class OrderList extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_search_orderKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JDesktopPane desktop_pane_order_list;
-    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
-    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
-    private javax.swing.JMenu jMenu1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel label_latest_orders_created;
     private javax.swing.JLabel lbl_search_icon;
     private javax.swing.JTable table_view_orders;
+    private javax.swing.JTable table_view_orders1;
     private javax.swing.JTextField txt_search_order;
     // End of variables declaration//GEN-END:variables
 }

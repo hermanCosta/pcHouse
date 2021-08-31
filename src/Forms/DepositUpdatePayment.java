@@ -82,6 +82,37 @@ public class DepositUpdatePayment extends javax.swing.JFrame {
         }
     }
     
+    public void payDeposit(double cash, double card)
+    {
+        
+        try {
+            dbConnection();
+            
+            String queryDepositInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, "
+                    + "productService, total, deposit, due, payDate, cash, card, changeTotal, cashDeposit, "
+                    + "cardDeposit, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            ps = con.prepareStatement(queryDepositInsert);
+            ps.setString(1, order.getOrderNo());
+            ps.setString(2, order.getFirstName());
+            ps.setString(3, order.getLastName());
+            ps.setString(4, order.getStringProducts());
+            ps.setDouble(5, 0);
+            ps.setDouble(6, newDeposit);
+            ps.setDouble(7, 0);
+            ps.setString(8, order.getIssueDate());
+            ps.setDouble(9, cash); 
+            ps.setDouble(10, card);
+            ps.setDouble(11, 0);
+            ps.setDouble(12, 0);
+            ps.setDouble(13, 0);
+            ps.setString(14, "Deposit");
+            ps.executeUpdate();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -312,6 +343,7 @@ public class DepositUpdatePayment extends javax.swing.JFrame {
                     //new NewOrder ().setVisible(true);
                     
                     addDepositNote("Cash");
+                    payDeposit(newDeposit, 0);
                     
                     this.dispose();
                     
@@ -380,10 +412,10 @@ public class DepositUpdatePayment extends javax.swing.JFrame {
                        ps.executeUpdate();
 
                    
-                  NewOrder newOrder =  new NewOrder ();
                   //newOrder.setVisible(true);
                   
                   addDepositNote("Card");
+                  payDeposit(0, newDeposit);
                   
                    this.dispose(); 
                    PrintOrder printOrder = new PrintOrder(order);

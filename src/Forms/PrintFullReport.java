@@ -32,6 +32,7 @@ public class PrintFullReport extends javax.swing.JFrame {
     String tillClosingDate;
     ArrayList<SaleReport> salesList;
     ArrayList<OrderReport> ordersList;
+    ArrayList<Double> refundList = new ArrayList<>();
     
     public PrintFullReport() {
         initComponents();
@@ -93,8 +94,10 @@ public class PrintFullReport extends javax.swing.JFrame {
                 rowOrders[4] = listOrders.get(i).getTotal();
                 orderDueColumn.add(listOrders.get(i).getTotal());
                 
-                cashList.add(listOrders.get(i).getCash() + listOrders.get(i).getCashDeposit() - listOrders.get(i).getChangeTotal());
+                cashList.add(listOrders.get(i).getCash() + listOrders.get(i).getCashDeposit() + listOrders.get(i).getChangeTotal());
                 cardList.add(listOrders.get(i).getCard() + listOrders.get(i).getCardDeposit());
+                refundList.add(listOrders.get(i).getTotal());
+                
             }
             else
             {
@@ -118,11 +121,16 @@ public class PrintFullReport extends javax.swing.JFrame {
             rowSales[2] = listSales.get(i).getProductsService();
             rowSales[3] = listSales.get(i).getTotal();
             salesModel.addRow(rowSales);
+            cardList.add(listSales.get(i).getCard());
+            salesTotalColumn.add(listSales.get(i).getTotal());
             
-           cashList.add(listSales.get(i).getCash() - listSales.get(i).getChangeTotal());
-           cardList.add(listSales.get(i).getCard());
-           salesTotalColumn.add(listSales.get(i).getTotal());
-           
+            if (listSales.get(i).getTotal() < 0)
+            {
+                cashList.add(listSales.get(i).getCash() + listSales.get(i).getChangeTotal());
+                refundList.add(listSales.get(i).getTotal());
+            }
+            else
+                cashList.add(listSales.get(i).getCash() - listSales.get(i).getChangeTotal());
         }
         
         //Loop the List and sum Cash payments
@@ -142,6 +150,9 @@ public class PrintFullReport extends javax.swing.JFrame {
         for (double d : salesTotalColumn)
             salesTotal += d;
         
+        double refundTotal = 0;
+        for (double d : refundList)
+            refundTotal += d;
         //Gross total (cash&card    
         double grossTotal = ordersTotal + salesTotal;
         
@@ -152,6 +163,7 @@ public class PrintFullReport extends javax.swing.JFrame {
         lbl_print_gross_total.setText("Gross Total ................ €" + String.valueOf(grossTotal));
         lbl_print_total_cash.setText("Cash Total .................. €" + String.valueOf(cashTotal));
         lbl_print_total_card.setText("Card Total .................. €" + String.valueOf(cardTotal));
+        lbl_print_total_card1.setText("Refunds .................... €" + String.valueOf(refundTotal));
         
     }
 
@@ -185,6 +197,7 @@ public class PrintFullReport extends javax.swing.JFrame {
         lbl_address1 = new javax.swing.JLabel();
         line_header = new javax.swing.JSeparator();
         lbl_full_report = new javax.swing.JLabel();
+        lbl_print_total_card1 = new javax.swing.JLabel();
         panel_print_view = new javax.swing.JPanel();
         lbl_order_print_view = new javax.swing.JLabel();
         btn_print = new javax.swing.JButton();
@@ -214,6 +227,7 @@ public class PrintFullReport extends javax.swing.JFrame {
         lbl_orders_total.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
         scroll_pane_orders.setEnabled(false);
+        scroll_pane_orders.setPreferredSize(new java.awt.Dimension(550, 200));
 
         table_view_orders.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
         table_view_orders.setModel(new javax.swing.table.DefaultTableModel(
@@ -252,7 +266,7 @@ public class PrintFullReport extends javax.swing.JFrame {
             .addGroup(panel_ordersLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(panel_ordersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scroll_pane_orders, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
+                    .addComponent(scroll_pane_orders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_ordersLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(lbl_orders_total)
@@ -263,7 +277,7 @@ public class PrintFullReport extends javax.swing.JFrame {
             panel_ordersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_ordersLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(scroll_pane_orders, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                .addComponent(scroll_pane_orders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(lbl_orders_total)
                 .addContainerGap())
@@ -273,6 +287,8 @@ public class PrintFullReport extends javax.swing.JFrame {
         panel_sales.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
 
         scroll_pane_sales.setEnabled(false);
+        scroll_pane_sales.setPreferredSize(new java.awt.Dimension(550, 240));
+        scroll_pane_sales.setRequestFocusEnabled(false);
 
         table_view_sales.setFont(new java.awt.Font("Lucida Grande", 0, 11)); // NOI18N
         table_view_sales.setModel(new javax.swing.table.DefaultTableModel(
@@ -314,7 +330,7 @@ public class PrintFullReport extends javax.swing.JFrame {
             .addGroup(panel_salesLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(panel_salesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(scroll_pane_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scroll_pane_sales, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_salesLayout.createSequentialGroup()
                         .addComponent(lbl_sales_total)
                         .addGap(16, 16, 16)))
@@ -324,15 +340,16 @@ public class PrintFullReport extends javax.swing.JFrame {
             panel_salesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_salesLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(scroll_pane_sales, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+                .addComponent(scroll_pane_sales, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(lbl_sales_total)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panel_header.setBackground(new java.awt.Color(255, 255, 255));
 
         lbl_logo_icon1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/logo_header.png"))); // NOI18N
+        lbl_logo_icon1.setIconTextGap(0);
 
         lbl_land_line_number1.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         lbl_land_line_number1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_phone_number.png"))); // NOI18N
@@ -343,6 +360,7 @@ public class PrintFullReport extends javax.swing.JFrame {
         lbl_mobile_number1.setText("+353 (83) 012-8190");
 
         lbl_address1.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
+        lbl_address1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_address.png"))); // NOI18N
         lbl_address1.setText("12A, Frederick Street North, Dublin 1");
 
         javax.swing.GroupLayout panel_headerLayout = new javax.swing.GroupLayout(panel_header);
@@ -374,38 +392,43 @@ public class PrintFullReport extends javax.swing.JFrame {
                         .addComponent(lbl_land_line_number1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbl_mobile_number1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(0, 0, 0)
                         .addComponent(lbl_address1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         lbl_full_report.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
-        lbl_full_report.setText("Full Report - 23/08/2021");
+        lbl_full_report.setText("report");
+
+        lbl_print_total_card1.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        lbl_print_total_card1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_refund_black.png"))); // NOI18N
+        lbl_print_total_card1.setText("refunds");
 
         javax.swing.GroupLayout panel_print_orderLayout = new javax.swing.GroupLayout(panel_print_order);
         panel_print_order.setLayout(panel_print_orderLayout);
         panel_print_orderLayout.setHorizontalGroup(
             panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_print_orderLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lbl_print_total_card, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lbl_print_total_cash, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lbl_print_gross_total, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE))
-                        .addComponent(panel_sales, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_print_orderLayout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(panel_orders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(14, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_full_report)
-                .addGap(183, 183, 183))
+                .addGap(190, 190, 190))
+            .addGroup(panel_print_orderLayout.createSequentialGroup()
+                .addGap(9, 9, 9)
+                .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(lbl_print_total_card, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lbl_print_total_cash, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lbl_print_gross_total, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
+                                .addComponent(lbl_print_total_card1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(panel_sales, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(panel_print_orderLayout.createSequentialGroup()
+                            .addGap(1, 1, 1)
+                            .addComponent(panel_orders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         panel_print_orderLayout.setVerticalGroup(
             panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -417,14 +440,16 @@ public class PrintFullReport extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panel_orders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15)
-                .addComponent(panel_sales, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(panel_sales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_print_gross_total)
                 .addGap(0, 0, 0)
                 .addComponent(lbl_print_total_cash)
                 .addGap(0, 0, 0)
                 .addComponent(lbl_print_total_card)
-                .addGap(20, 20, 20))
+                .addGap(0, 0, 0)
+                .addComponent(lbl_print_total_card1)
+                .addContainerGap())
         );
 
         scroll_pane_full_report.setViewportView(panel_print_order);
@@ -432,7 +457,7 @@ public class PrintFullReport extends javax.swing.JFrame {
         panel_print_view.setBackground(new java.awt.Color(204, 204, 204));
 
         lbl_order_print_view.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
-        lbl_order_print_view.setText("Till Closing Print View");
+        lbl_order_print_view.setText("Full Report Print View");
 
         btn_print.setBackground(new java.awt.Color(21, 76, 121));
         btn_print.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
@@ -550,6 +575,7 @@ public class PrintFullReport extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_orders_total;
     private javax.swing.JLabel lbl_print_gross_total;
     private javax.swing.JLabel lbl_print_total_card;
+    private javax.swing.JLabel lbl_print_total_card1;
     private javax.swing.JLabel lbl_print_total_cash;
     private javax.swing.JLabel lbl_sales_total;
     private javax.swing.JSeparator line_header;

@@ -71,7 +71,7 @@ public class OrderNotes extends javax.swing.JFrame {
         try {
             dbConnection();
             
-            lbl_notes_from_order.setText("Notes From Order " + orderNo);
+            lbl_notes_from_order.setText("Notes From " + orderNo);
             
             String query = "SELECT * FROM orderNotes WHERE noteId IN (SELECT noteId FROM orderNotes WHERE orderNo = ?) ";
             ps = con.prepareStatement(query);
@@ -272,8 +272,6 @@ public class OrderNotes extends javax.swing.JFrame {
                     } catch (SQLException ex) {
                         Logger.getLogger(OrderNotes.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
-
                 }
             }
         }

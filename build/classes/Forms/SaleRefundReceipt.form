@@ -84,7 +84,7 @@
                                           <Component id="lbl_print_email" alignment="1" pref="559" max="32767" attributes="0"/>
                                           <Component id="panel_products" alignment="0" max="32767" attributes="0"/>
                                       </Group>
-                                      <EmptySpace min="0" pref="20" max="32767" attributes="0"/>
+                                      <EmptySpace min="0" pref="16" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -142,7 +142,7 @@
                       <Component id="lbl_paid_by" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lbl_refund_date" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="150" max="-2" attributes="0"/>
                       <Component id="line_customer_signature" min="-2" pref="10" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
@@ -184,6 +184,11 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JSeparator" name="line_customer_signature">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="0" green="0" red="0" type="rgb"/>
+                </Property>
+              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
@@ -216,7 +221,7 @@
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="lbl_logo_icon1" min="-2" pref="300" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace pref="20" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="lbl_mobile_number1" alignment="1" min="-2" max="-2" attributes="0"/>
                                       <Component id="lbl_land_line_number1" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -239,7 +244,7 @@
                                   <Component id="lbl_land_line_number1" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="lbl_mobile_number1" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Component id="lbl_address1" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -279,15 +284,18 @@
                     <Property name="text" type="java.lang.String" value="+353 (83) 012-8190"/>
                   </Properties>
                 </Component>
+                <Component class="javax.swing.JSeparator" name="line_header">
+                </Component>
                 <Component class="javax.swing.JLabel" name="lbl_address1">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Lucida Grande" size="12" style="0"/>
                     </Property>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/Img/icon_address.png"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" value="12A, Frederick Street North, Dublin 1"/>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JSeparator" name="line_header">
                 </Component>
               </SubComponents>
             </Container>
@@ -554,7 +562,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="sansserif" size="18" style="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Order Refund Print View"/>
+        <Property name="text" type="java.lang.String" value="Refund Receipt Print View"/>
       </Properties>
     </Component>
   </SubComponents>

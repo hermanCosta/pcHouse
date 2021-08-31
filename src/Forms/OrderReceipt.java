@@ -59,11 +59,12 @@ public class OrderReceipt extends javax.swing.JFrame {
         lbl_change.setText("Change: €" + completedOrders.getChangeTotal());
         
         if (completedOrders.getCash() == 0)
-            lbl_paid_by.setText("Paid by Card: €" + completedOrders.getCard());
+            lbl_paid_by.setText("Paid by Card: €" + (completedOrders.getCard() + completedOrders.getCardDeposit()));
         else if (completedOrders.getCard() == 0)
-            lbl_paid_by.setText("Paid by Cash: €" + completedOrders.getCash());
+            lbl_paid_by.setText("Paid by Cash: €" + (completedOrders.getCash() + completedOrders.getCashDeposit()));
         else
-            lbl_paid_by.setText("Paid by Cash: €" + completedOrders.getCash() + " | Card: €" + completedOrders.getCard());
+            lbl_paid_by.setText("Paid by Cash: €" + (completedOrders.getCash() + completedOrders.getCashDeposit())
+                    + " | Card: €" + (completedOrders.getCard() + completedOrders.getCardDeposit()));
         
         
         String[] arrayProducts = order.getStringProducts().split(",");
@@ -105,8 +106,8 @@ public class OrderReceipt extends javax.swing.JFrame {
         lbl_logo_icon1 = new javax.swing.JLabel();
         lbl_land_line_number1 = new javax.swing.JLabel();
         lbl_mobile_number1 = new javax.swing.JLabel();
-        lbl_address1 = new javax.swing.JLabel();
         line_header = new javax.swing.JSeparator();
+        lbl_address1 = new javax.swing.JLabel();
         panel_products = new javax.swing.JPanel();
         lbl_product_service = new javax.swing.JLabel();
         lbl_unit_price = new javax.swing.JLabel();
@@ -169,6 +170,7 @@ public class OrderReceipt extends javax.swing.JFrame {
         lbl_mobile_number1.setText("+353 (83) 012-8190");
 
         lbl_address1.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
+        lbl_address1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_address.png"))); // NOI18N
         lbl_address1.setText("12A, Frederick Street North, Dublin 1");
 
         javax.swing.GroupLayout panel_headerLayout = new javax.swing.GroupLayout(panel_header);
@@ -176,14 +178,14 @@ public class OrderReceipt extends javax.swing.JFrame {
         panel_headerLayout.setHorizontalGroup(
             panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_headerLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(0, 0, 0)
                 .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_headerLayout.createSequentialGroup()
+                    .addGroup(panel_headerLayout.createSequentialGroup()
                         .addComponent(lbl_logo_icon1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                         .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_mobile_number1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lbl_land_line_number1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lbl_mobile_number1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lbl_address1, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -199,7 +201,7 @@ public class OrderReceipt extends javax.swing.JFrame {
                         .addComponent(lbl_land_line_number1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbl_mobile_number1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(0, 0, 0)
                         .addComponent(lbl_address1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -337,7 +339,7 @@ public class OrderReceipt extends javax.swing.JFrame {
                     .addComponent(lbl_change, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 10, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
-                .addContainerGap(19, Short.MAX_VALUE)
+                .addContainerGap(15, Short.MAX_VALUE)
                 .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
                         .addComponent(lbl_receipt)
