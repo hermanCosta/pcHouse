@@ -119,8 +119,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         listProductService();
         loadSelectedOrder();
         
-        System.out.println("Size " + table_view_products.getRowCount());
-        
     }
     
     

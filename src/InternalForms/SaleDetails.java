@@ -167,8 +167,8 @@ public class SaleDetails extends javax.swing.JInternalFrame {
     {
         for (int i = 0; i < table_view_products.getRowCount() ; i++)
         {
-            String cellProduct = table_view_products.getValueAt(i, 0).toString();
-            int cellQty = (int) table_view_products.getValueAt(i, 1);
+            String cellProduct = table_view_products.getValueAt(i, 0).toString().replaceFirst(" ", "");
+            String cellQty = table_view_products.getValueAt(i, 1).toString().replaceFirst(" ", "");
 
             try {
                 dbConnection();
@@ -182,7 +182,8 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                     if (rs.getString("category").equals("Product"))
                     {
                         int qty = rs.getInt("qty");
-                        int updateQty = qty + cellQty;
+                        
+                        int updateQty = Integer.parseInt(cellQty) + qty;
 
                         String queryUpdate = "UPDATE products SET qty = ? WHERE productService = ?";
                         ps = con.prepareStatement(queryUpdate);
@@ -197,6 +198,8 @@ public class SaleDetails extends javax.swing.JInternalFrame {
             }
         }
     }
+    
+    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

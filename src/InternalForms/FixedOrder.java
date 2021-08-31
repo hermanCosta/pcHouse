@@ -196,8 +196,6 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         tableModel.getColumn(1).setMaxWidth(40);
         tableModel.getColumn(2).setMaxWidth(80);
         tableModel.getColumn(3).setMaxWidth(80);
-        
-        System.out.println("Size " + table_view_products.getRowCount());
    }
    
     public void dbConnection() 
@@ -217,36 +215,32 @@ public class FixedOrder extends javax.swing.JInternalFrame {
             String cellProduct = table_view_products.getValueAt(i, 0).toString().replaceFirst(" ", "");
             String cellQty = table_view_products.getValueAt(i, 1).toString().replaceFirst(" ", "");
             
-            
-            System.out.println("Product " + cellProduct);
-            //System.out.println("Qty " + cellQty - 1);
-//
-//            try {
-//                dbConnection();
-//                String queryCheck = "SELECT * FROM products WHERE productService = ?";
-//                ps = con.prepareStatement(queryCheck);
-//                ps.setString(1, cellProduct);
-//                rs = ps.executeQuery();
-//                
-//                while(rs.next())
-//                {
-//                    if (rs.getString("category").equals("Product"))
-//                    {
-//                        int qty = rs.getInt("qty");
-//                        int updateQty = Integer.parseInt(cellQty) + qty;
-//                        
-//
-//                        String queryUpdate = "UPDATE products SET qty = ? WHERE productService = ?";
-//                        ps = con.prepareStatement(queryUpdate);
-//                        ps.setInt(1, updateQty);
-//                        ps.setString(2, cellProduct);
-//                        ps.executeUpdate();
-//                    }
-//                }
-//                
-//            } catch (SQLException ex) {
-//                Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
-//            }
+            try {
+                dbConnection();
+                String queryCheck = "SELECT * FROM products WHERE productService = ?";
+                ps = con.prepareStatement(queryCheck);
+                ps.setString(1, cellProduct);
+                rs = ps.executeQuery();
+                
+                while(rs.next())
+                {
+                    if (rs.getString("category").equals("Product"))
+                    {
+                        int qty = rs.getInt("qty");
+                        int updateQty = Integer.parseInt(cellQty) + qty;
+                        
+
+                        String queryUpdate = "UPDATE products SET qty = ? WHERE productService = ?";
+                        ps = con.prepareStatement(queryUpdate);
+                        ps.setInt(1, updateQty);
+                        ps.setString(2, cellProduct);
+                        ps.executeUpdate();
+                    }
+                }
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
@@ -696,7 +690,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         desktop_pane_fixed_order.setLayout(desktop_pane_fixed_orderLayout);
         desktop_pane_fixed_orderLayout.setHorizontalGroup(
             desktop_pane_fixed_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, 1037, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, 1037, Short.MAX_VALUE)
         );
         desktop_pane_fixed_orderLayout.setVerticalGroup(
             desktop_pane_fixed_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -869,79 +863,77 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 
         if (confirmRefund == 0)
         {
-            updateProductQty();
-//            try {
-//                dbConnection();
-//                
-//                Date date = new Date();
-//                Timestamp currentDate = new Timestamp(date.getTime());
-//                String refundDate = new SimpleDateFormat("dd/MM/yyy").format(currentDate);
-//                
-//                order.setStatus("Refunded");
-//                completedOrders.setPayDate(refundDate);
-//                
-//                String queryUpdate = "UPDATE orderDetails SET status = ?, refundDate = ? WHERE orderNo = ?";
-//                ps = con.prepareStatement(queryUpdate);
-//                ps.setString(1, order.getStatus());
-//                ps.setString(2, completedOrders.getPayDate());
-//                ps.setString(3, order.getOrderNo());
-//                ps.executeUpdate();
-//                
-//                
-//                double refundCash = completedOrders.getCash();
-//                double refundCard = completedOrders.getCard();
-//                double refundCashDeposit = completedOrders.getCashDeposit();
-//                double refundCardDeposit = completedOrders.getCardDeposit();
-//                double refundTotal = order.getTotal();
-//                double refundDeposit = order.getDeposit();
-//                double refundDue = order.getDue();
-//                
-//                completedOrders.setCash(refundCash *= -1);
-//                completedOrders.setCard(refundCard *= -1);
-//                completedOrders.setCashDeposit(refundCashDeposit *= -1);
-//                completedOrders.setCardDeposit(refundCardDeposit *= -1);
-//                completedOrders.setTotal(refundTotal *= -1);
-//                completedOrders.setDeposit(refundDeposit *= -1);
-//                completedOrders.setDue(refundDue *= -1);
-//                
-//                
-//                completedOrders = new CompletedOrder(completedOrders.getOrderNo(), completedOrders.getFirstName(), completedOrders.getLastName(),
-//                completedOrders.getStringProducts(), completedOrders.getTotal(), completedOrders.getDeposit(), completedOrders.getDue(), 
-//                        completedOrders.getPayDate(), completedOrders.getCash(), completedOrders.getCard(), completedOrders.getChangeTotal(), 
-//                        completedOrders.getCashDeposit(), completedOrders.getCardDeposit());
-//                        
-//                String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, productService, total,"
-//                        + "deposit, due, payDate, cash, card, changeTotal, cashDeposit, cardDeposit, status) "
-//                        + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-//                
-//                ps = con.prepareStatement(queryInsert);
-//                ps.setString(1, completedOrders.getOrderNo());
-//                ps.setString(2, completedOrders.getFirstName());
-//                ps.setString(3, completedOrders.getLastName());
-//                ps.setString(4, completedOrders.getStringProducts());
-//                ps.setDouble(5, completedOrders.getTotal());
-//                ps.setDouble(6, completedOrders.getDeposit());
-//                ps.setDouble(7, completedOrders.getDue());
-//                ps.setString(8, completedOrders.getPayDate());
-//                ps.setDouble(9, completedOrders.getCash());
-//                ps.setDouble(10, completedOrders.getCard());
-//                ps.setDouble(11, completedOrders.getChangeTotal());
-//                ps.setDouble(12, completedOrders.getCashDeposit());
-//                ps.setDouble(13, completedOrders.getCardDeposit());
-//                ps.setString(14, order.getStatus());
-//                ps.executeUpdate();
-//                
-//                updateProductQty();
-//                
-//                JOptionPane.showMessageDialog(this, order.getOrderNo() + " Refunded Successfully!", 
-//                        "Refund Order", JOptionPane.INFORMATION_MESSAGE);
-//
-//                OrderRefundReceipt refundReceipt = new OrderRefundReceipt(order, completedOrders);
-//                refundReceipt.setVisible(true);
-//                
-//            } catch (SQLException ex) {
-//                Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
-//            }
+            try {
+                dbConnection();
+                
+                Date date = new Date();
+                Timestamp currentDate = new Timestamp(date.getTime());
+                String refundDate = new SimpleDateFormat("dd/MM/yyy").format(currentDate);
+                
+                order.setStatus("Refunded");
+                completedOrders.setPayDate(refundDate);
+                
+                String queryUpdate = "UPDATE orderDetails SET status = ?, refundDate = ? WHERE orderNo = ?";
+                ps = con.prepareStatement(queryUpdate);
+                ps.setString(1, order.getStatus());
+                ps.setString(2, completedOrders.getPayDate());
+                ps.setString(3, order.getOrderNo());
+                ps.executeUpdate();
+                
+                double refundCash = completedOrders.getCash();
+                double refundCard = completedOrders.getCard();
+                double refundCashDeposit = completedOrders.getCashDeposit();
+                double refundCardDeposit = completedOrders.getCardDeposit();
+                double refundTotal = order.getTotal();
+                double refundDeposit = order.getDeposit();
+                double refundDue = order.getDue();
+                
+                completedOrders.setCash(refundCash *= -1);
+                completedOrders.setCard(refundCard *= -1);
+                completedOrders.setCashDeposit(refundCashDeposit *= -1);
+                completedOrders.setCardDeposit(refundCardDeposit *= -1);
+                completedOrders.setTotal(refundTotal *= -1);
+                completedOrders.setDeposit(refundDeposit *= -1);
+                completedOrders.setDue(refundDue *= -1);
+                
+                
+                completedOrders = new CompletedOrder(completedOrders.getOrderNo(), completedOrders.getFirstName(), completedOrders.getLastName(),
+                completedOrders.getStringProducts(), completedOrders.getTotal(), completedOrders.getDeposit(), completedOrders.getDue(), 
+                        completedOrders.getPayDate(), completedOrders.getCash(), completedOrders.getCard(), completedOrders.getChangeTotal(), 
+                        completedOrders.getCashDeposit(), completedOrders.getCardDeposit());
+                        
+                String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, productService, total,"
+                        + "deposit, due, payDate, cash, card, changeTotal, cashDeposit, cardDeposit, status) "
+                        + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                
+                ps = con.prepareStatement(queryInsert);
+                ps.setString(1, completedOrders.getOrderNo());
+                ps.setString(2, completedOrders.getFirstName());
+                ps.setString(3, completedOrders.getLastName());
+                ps.setString(4, completedOrders.getStringProducts());
+                ps.setDouble(5, completedOrders.getTotal());
+                ps.setDouble(6, completedOrders.getDeposit());
+                ps.setDouble(7, completedOrders.getDue());
+                ps.setString(8, completedOrders.getPayDate());
+                ps.setDouble(9, completedOrders.getCash());
+                ps.setDouble(10, completedOrders.getCard());
+                ps.setDouble(11, completedOrders.getChangeTotal());
+                ps.setDouble(12, completedOrders.getCashDeposit());
+                ps.setDouble(13, completedOrders.getCardDeposit());
+                ps.setString(14, order.getStatus());
+                ps.executeUpdate();
+                
+                updateProductQty();
+                
+                JOptionPane.showMessageDialog(this, order.getOrderNo() + " Refunded Successfully!", 
+                        "Refund Order", JOptionPane.INFORMATION_MESSAGE);
+
+                OrderRefundReceipt refundReceipt = new OrderRefundReceipt(order, completedOrders);
+                refundReceipt.setVisible(true);
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_btn_refundActionPerformed
 
