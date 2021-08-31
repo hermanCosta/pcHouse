@@ -84,27 +84,28 @@ public class DepositPayment extends javax.swing.JFrame {
     
     public void payDeposit(double cash, double card)
     {
-        
         try {
             dbConnection();
             
             String queryDepositInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, "
-                    + "productService, total, deposit, due, payDate, cash, card, changeTotal, cashDeposit, "
-                    + "cardDeposit) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    + "brand, model, total, deposit, due, cash, card, changeTotal, cashDeposit, "
+                    + "cardDeposit, payDate, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = con.prepareStatement(queryDepositInsert);
             ps.setString(1, order.getOrderNo());
             ps.setString(2, order.getFirstName());
             ps.setString(3, order.getLastName());
-            ps.setString(4, order.getStringProducts());
-            ps.setDouble(5, 0);
-            ps.setDouble(6, order.getDeposit());
-            ps.setDouble(7, 0);
-            ps.setString(8, order.getIssueDate());
+            ps.setString(4, order.getBrand());
+            ps.setString(5, order.getModel());
+            ps.setDouble(6, 0);
+            ps.setDouble(7, order.getDeposit());
+            ps.setDouble(8, 0);
             ps.setDouble(9, cash); 
             ps.setDouble(10, card);
             ps.setDouble(11, 0);
             ps.setDouble(12, 0);
             ps.setDouble(13, 0);
+            ps.setString(14, order.getIssueDate());
+            ps.setString(15, order.getStatus());
             ps.executeUpdate();
             
         } catch (SQLException ex) {
@@ -338,8 +339,9 @@ public class DepositPayment extends javax.swing.JFrame {
                         ps.executeUpdate();
                         
                     addDepositNote("Cash");
-                    payDeposit(order.getDeposit(), 0);
+                    payDeposit(order.getCashDeposit(), 0);
                     this.dispose();
+                    
                     PrintOrder printOrder = new PrintOrder(order);
                     printOrder.setVisible(true);
             } 
@@ -405,7 +407,7 @@ public class DepositPayment extends javax.swing.JFrame {
 
                    
                   addDepositNote("Card");
-                  payDeposit(0, order.getDeposit());
+                  payDeposit(0, order.getCardDeposit());
                   this.dispose();
                   
                    PrintOrder printOrder = new PrintOrder(order);
@@ -415,7 +417,6 @@ public class DepositPayment extends javax.swing.JFrame {
            {
                Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
            }
-           
         }
     }//GEN-LAST:event_btn_pay_by_cardActionPerformed
    

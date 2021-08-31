@@ -5,6 +5,7 @@
  */
 package Forms;
 
+import InternalForms.NewOrder;
 import Model.Order;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -543,6 +544,10 @@ public class PrintOrder extends javax.swing.JFrame {
                 
                 JOptionPane.showMessageDialog(this, "Order: " + order.getOrderNo() + " Printed Successfully", "Print Order", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
+                NewOrder newOrder = new NewOrder();
+                
+                MainMenu mainMenu = new MainMenu();
+                mainMenu.getContentPane().add(newOrder).setVisible(true);
                 
             } catch (PrinterException ex) {
                 Logger.getLogger(PrintOrder.class.getName()).log(Level.SEVERE, null, ex);

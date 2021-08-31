@@ -5,6 +5,7 @@
  */
 package Forms;
 
+import Model.CompletedOrder;
 import Model.OrderReport;
 import Model.SaleReport;
 import java.awt.Graphics;
@@ -31,14 +32,14 @@ public class PrintFullReport extends javax.swing.JFrame {
     
     String tillClosingDate;
     ArrayList<SaleReport> salesList;
-    ArrayList<OrderReport> ordersList;
+    ArrayList<CompletedOrder> ordersList;
     ArrayList<Double> refundList = new ArrayList<>();
     
     public PrintFullReport() {
         initComponents();
     }
     
-    public PrintFullReport(String _TillClosingDate, ArrayList<SaleReport> _saleList, ArrayList<OrderReport> _ordersList )
+    public PrintFullReport(String _TillClosingDate, ArrayList<SaleReport> _saleList, ArrayList<CompletedOrder> _ordersList )
     {
         initComponents();
         this.tillClosingDate = _TillClosingDate;
@@ -59,7 +60,7 @@ public class PrintFullReport extends javax.swing.JFrame {
     public void loadOrderToPrint()
     {
         //Lists for holding list from the constructor
-        ArrayList<OrderReport> listOrders = ordersList;
+        ArrayList<CompletedOrder> listOrders = ordersList;
         ArrayList<SaleReport> listSales = salesList;
         
         // This Lists hold all values paid by cash and card
@@ -82,7 +83,7 @@ public class PrintFullReport extends javax.swing.JFrame {
         {
             rowOrders[0] = listOrders.get(i).getOrderNo();
             rowOrders[1] = listOrders.get(i).getFirstName() + " " + listOrders.get(i).getLastName();;
-            rowOrders[2] = listOrders.get(i).getProductsService();
+            rowOrders[2] = listOrders.get(i).getBrand() + " | " + listOrders.get(i).getModel();
 
             if (listOrders.get(i).getTotal() == 0)
                 orderDueColumn.add(listOrders.get(i).getDeposit());
@@ -235,7 +236,7 @@ public class PrintFullReport extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Order", "Full Name", "Product | Service", "Deposit", "Due"
+                "Order", "Full Name", "Brand | Model", "Deposit", "Due"
             }
         ) {
             boolean[] canEdit = new boolean [] {

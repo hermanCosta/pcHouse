@@ -966,7 +966,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
 
                     PrintOrder printOrder = new PrintOrder(order);
-                        printOrder.setVisible(true);
+                    printOrder.setVisible(true);
 
                 } catch (SQLException ex) {
                     Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);

@@ -113,12 +113,6 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
         TableColumnModel tableModel = table_view_products.getColumnModel();
         
-        
-//        double positiveCash =  Math.abs(completedOrders.getCash());
-//        double positiveCard = Math.abs(completedOrders.getCard());
-//        double positiveCashDeposit = Math.abs(completedOrders.getCashDeposit());
-//        double positiveCardDeposit = Math.abs(completedOrders.getCardDeposit());
-        
         completedOrders.setCash(Math.abs(completedOrders.getCash()));
         completedOrders.setCard(Math.abs(completedOrders.getCard()));
         completedOrders.setCashDeposit(Math.abs(completedOrders.getCashDeposit()));

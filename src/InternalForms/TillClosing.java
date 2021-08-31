@@ -123,9 +123,9 @@ public class TillClosing extends javax.swing.JInternalFrame {
          return salesList;
      }
     
-     public ArrayList<OrderReport> loadOrdersList()
+     public ArrayList<CompletedOrder> loadOrdersList()
      {
-        ArrayList<OrderReport> ordersList = new ArrayList<>();
+        ArrayList<CompletedOrder> ordersList = new ArrayList<>();
          
         try {
             dbConnection();
@@ -139,17 +139,14 @@ public class TillClosing extends javax.swing.JInternalFrame {
             
                 while (rs.next())
                 {
-                    /*
-                        public OrderReport(String _orderNo, String _firstName, String _lastName, String _productsService,
-                double _deposit, double _total, double _due, double _cash, double _card, double _changeTotal,
-                double _cashDeposit, double _cardDeposit) {
-                    */
-                   //double cash = rs.getDouble("cash") - rs.getDouble("changeTotal");
-                   ordersReport = new OrderReport(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"),
-                            rs.getString("productService"), rs.getDouble("deposit"), rs.getDouble("total"), rs.getDouble("due"), rs.getDouble("cash"), 
-                           rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"));
+                    completedOrder = new CompletedOrder(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), 
+                            "","", rs.getString("brand"), rs.getString("model"), 
+                            "", rs.getDouble("total"), rs.getDouble("deposit"),rs.getDouble("due"), 
+                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getDouble("cashDeposit"), 
+                            rs.getDouble("cardDeposit"), rs.getString("payDate"), rs.getString("status"));
 
-                   ordersList.add(ordersReport);
+                   ordersList.add(completedOrder);
+                   
                 }
             
         } catch (SQLException ex) {
@@ -168,7 +165,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
         
         //Lists for holding list from the constructor
-        ArrayList<OrderReport> listOrders = loadOrdersList();
+        ArrayList<CompletedOrder> listOrders = loadOrdersList();
         // This Lists hold all values paid by cash and card
         ArrayList<Double> cashList = new ArrayList<>();
         ArrayList<Double> cardList = new ArrayList<>();
@@ -188,8 +185,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
             for (int i = 0; i < listOrders.size() ; i++)
             {
                 rowOrders[0] = listOrders.get(i).getOrderNo();
-                rowOrders[1] = listOrders.get(i).getFirstName() + " " + listOrders.get(i).getLastName();;
-                rowOrders[2] = listOrders.get(i).getProductsService();
+                rowOrders[1] = listOrders.get(i).getFirstName() + " " + listOrders.get(i).getLastName();
+                rowOrders[2] = listOrders.get(i).getBrand() + " | " + listOrders.get(i).getModel();
             
 
              if (listOrders.get(i).getTotal() == 0)
@@ -453,7 +450,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Order", "Full Name", "Product | Service", "Deposit", "Due"
+                "Order", "Full Name", "Brand | Model", "Deposit", "Due"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -709,7 +706,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
         
         ArrayList<SaleReport> listSales = loadSalesList();
-        ArrayList<OrderReport> listOrders = loadOrdersList();
+        ArrayList<CompletedOrder> listOrders = loadOrdersList();
         
         
         Date dateFullReport = new Date();
@@ -897,9 +894,10 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 
                 while (rs.next())
                         completedOrder = new CompletedOrder(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), 
-                            rs.getString("productService"), rs.getDouble("total"), rs.getDouble("deposit"),rs.getDouble("due"), 
-                            rs.getString("payDate"), rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), 
-                            rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"));
+                            "","", rs.getString("brand"), rs.getString("model"), 
+                            "", rs.getDouble("total"), rs.getDouble("deposit"),rs.getDouble("due"), 
+                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getDouble("cashDeposit"), 
+                            rs.getDouble("cardDeposit"), rs.getString("payDate"), rs.getString("status"));
                 
                 switch (order.getStatus()) 
                 {
@@ -949,10 +947,17 @@ public class TillClosing extends javax.swing.JInternalFrame {
                             rs.getString("priceTotal"),rs.getDouble("total"), rs.getString("saleDate"),  
                             rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getString("status"));
                 
+                    if (rs.getString("status").equals("Paid"))
+                    {
+                        SaleDetails saleDetails = new SaleDetails(sale);
+                        desktop_pane_till_closing.add(saleDetails).setVisible(true);
+                    }
+                    else
+                    {
+                        SaleRefund saleRefund = new SaleRefund(sale);
+                        desktop_pane_till_closing.add(saleRefund).setVisible(true);
+                    }
                 
-                SaleDetails saleDetails = new SaleDetails(sale);
-                //desktop_pane_till_closing.removeAll();
-                desktop_pane_till_closing.add(saleDetails).setVisible(true);
                
                 }
                 

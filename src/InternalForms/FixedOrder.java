@@ -870,14 +870,14 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 Timestamp currentDate = new Timestamp(date.getTime());
                 String refundDate = new SimpleDateFormat("dd/MM/yyy").format(currentDate);
                 
-                order.setStatus("Refunded");
+                completedOrders.setStatus("Refunded");
                 completedOrders.setPayDate(refundDate);
                 
                 String queryUpdate = "UPDATE orderDetails SET status = ?, refundDate = ? WHERE orderNo = ?";
                 ps = con.prepareStatement(queryUpdate);
-                ps.setString(1, order.getStatus());
+                ps.setString(1, completedOrders.getStatus());
                 ps.setString(2, completedOrders.getPayDate());
-                ps.setString(3, order.getOrderNo());
+                ps.setString(3, completedOrders.getOrderNo());
                 ps.executeUpdate();
                 
                 double refundCash = completedOrders.getCash();
@@ -896,31 +896,38 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 completedOrders.setDeposit(refundDeposit *= -1);
                 completedOrders.setDue(refundDue *= -1);
                 
+                      /*
+                         public CompletedOrder(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
+            String _brand, String _model, String _serialNumber,  double _total, double _deposit, 
+            double _due, double _cash, double _card, double _changeTotal, double _cashDeposit, double _cardDeposit, String _payDate, String _status) {
+        super(_firstName, _lastName, _contactNo, _email, _brand, _model, _serialNumber);
+                */
                 
                 completedOrders = new CompletedOrder(completedOrders.getOrderNo(), completedOrders.getFirstName(), completedOrders.getLastName(),
-                completedOrders.getStringProducts(), completedOrders.getTotal(), completedOrders.getDeposit(), completedOrders.getDue(), 
-                        completedOrders.getPayDate(), completedOrders.getCash(), completedOrders.getCard(), completedOrders.getChangeTotal(), 
-                        completedOrders.getCashDeposit(), completedOrders.getCardDeposit());
+                "", "", completedOrders.getBrand(), completedOrders.getModel(), "", completedOrders.getTotal(), completedOrders.getDeposit(), 
+                        completedOrders.getDue(), completedOrders.getCash(), completedOrders.getCard(), completedOrders.getChangeTotal(), 
+                        completedOrders.getCashDeposit(), completedOrders.getCardDeposit(), completedOrders.getPayDate(), completedOrders.getStatus());
                         
-                String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, productService, total,"
-                        + "deposit, due, payDate, cash, card, changeTotal, cashDeposit, cardDeposit, status) "
-                        + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, brand, model, total, "
+                        + "deposit, due, cash, card, changeTotal, cashDeposit, cardDeposit, payDate, status) "
+                        + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 
                 ps = con.prepareStatement(queryInsert);
                 ps.setString(1, completedOrders.getOrderNo());
                 ps.setString(2, completedOrders.getFirstName());
                 ps.setString(3, completedOrders.getLastName());
-                ps.setString(4, completedOrders.getStringProducts());
-                ps.setDouble(5, completedOrders.getTotal());
-                ps.setDouble(6, completedOrders.getDeposit());
-                ps.setDouble(7, completedOrders.getDue());
-                ps.setString(8, completedOrders.getPayDate());
+                ps.setString(4, completedOrders.getBrand());
+                ps.setString(5, completedOrders.getModel());
+                ps.setDouble(6, completedOrders.getTotal());
+                ps.setDouble(7, completedOrders.getDeposit());
+                ps.setDouble(8, completedOrders.getDue());
                 ps.setDouble(9, completedOrders.getCash());
                 ps.setDouble(10, completedOrders.getCard());
                 ps.setDouble(11, completedOrders.getChangeTotal());
                 ps.setDouble(12, completedOrders.getCashDeposit());
                 ps.setDouble(13, completedOrders.getCardDeposit());
-                ps.setString(14, order.getStatus());
+                ps.setString(14, completedOrders.getPayDate());
+                ps.setString(15, completedOrders.getStatus());
                 ps.executeUpdate();
                 
                 updateProductQty();

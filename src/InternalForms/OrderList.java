@@ -398,17 +398,17 @@ public class OrderList extends javax.swing.JInternalFrame {
                 ps.setString(1, selectedOrderNo);
                 rs = ps.executeQuery();
                 
-                
                 if(!rs.next())
-                    completedOrder = new CompletedOrder("", "", "", "", 0, 0, 0, "", 0, 0, 0, 0, 0);
+                    completedOrder = new CompletedOrder("", "", "", "","","","","", 0, 0, 0, 0, 0, 0, 0, 0, "", "");
                 
                 else
                 {
                     do {
                         completedOrder = new CompletedOrder(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), 
-                            rs.getString("productService"), rs.getDouble("total"), rs.getDouble("deposit"),rs.getDouble("due"), 
-                            rs.getString("payDate"), rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), 
-                            rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"));
+                            "", "", rs.getString("brand"), rs.getString("model"), 
+                            "", rs.getDouble("total"), rs.getDouble("deposit"),rs.getDouble("due"), 
+                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getDouble("cashDeposit"), 
+                            rs.getDouble("cardDeposit"), rs.getString("payDate"), rs.getString("status"));
                     } while (rs.next());
                 }  
                 

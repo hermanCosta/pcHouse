@@ -69,35 +69,34 @@ public class OrderPayment extends javax.swing.JFrame {
     {
         for (int i = 0; i < tableViewProducts.getRowCount() ; i++)
         {
-            String cellProduct = tableViewProducts.getValueAt(i, 0).toString();
-            int cellQty = (int) tableViewProducts.getValueAt(i, 1);
-            System.out.println("Product " + cellProduct);
-//
-//            try {
-//                dbConnection();
-//                String queryCheck = "SELECT * FROM products WHERE productService = ?";
-//                ps = con.prepareStatement(queryCheck);
-//                ps.setString(1, cellProduct);
-//                rs = ps.executeQuery();
-//                
-//                while(rs.next())
-//                {
-//                    if (rs.getString("category").equals("Product"))
-//                    {
-//                        int qty = rs.getInt("qty");
-//                        int updateQty = qty - cellQty;
-//
-//                        String queryUpdate = "UPDATE products SET qty = ? WHERE productService = ?";
-//                        ps = con.prepareStatement(queryUpdate);
-//                        ps.setInt(1, updateQty);
-//                        ps.setString(2, cellProduct);
-//                        ps.executeUpdate();
-//                    }
-//                }
-//                
-//            } catch (SQLException ex) {
-//                Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
-//            }
+            String cellProduct = tableViewProducts.getValueAt(i, 0).toString().replaceFirst(" ", "");
+            String cellQty = tableViewProducts.getValueAt(i, 1).toString().replaceFirst(" ", "");
+
+            try {
+                dbConnection();
+                String queryCheck = "SELECT * FROM products WHERE productService = ?";
+                ps = con.prepareStatement(queryCheck);
+                ps.setString(1, cellProduct);
+                rs = ps.executeQuery();
+                
+                while(rs.next())
+                {
+                    if (rs.getString("category").equals("Product"))
+                    {
+                        int qty = rs.getInt("qty");
+                        int updateQty = qty - Integer.parseInt(cellQty);
+
+                        String queryUpdate = "UPDATE products SET qty = ? WHERE productService = ?";
+                        ps = con.prepareStatement(queryUpdate);
+                        ps.setInt(1, updateQty);
+                        ps.setString(2, cellProduct);
+                        ps.executeUpdate();
+                    }
+                }
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
@@ -406,8 +405,9 @@ public class OrderPayment extends javax.swing.JFrame {
         Timestamp currentDate = new Timestamp(date.getTime());
         payDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
         boolean isPaid = false;
-        order.setPickDate(payDate);
-        order.setStatus("Paid");
+        //order.setPickDate(payDate);
+        completedOrders.setPayDate(payDate);
+        completedOrders.setStatus("Paid");
         
         if (txt_cash.getText().isEmpty() && txt_card.getText().isEmpty())
         {
@@ -473,44 +473,43 @@ public class OrderPayment extends javax.swing.JFrame {
             int confirmPayment = JOptionPane.showConfirmDialog(this, "Confirm Payment on Order " + order.getOrderNo() + " ?", "Payment", JOptionPane.YES_NO_OPTION);
             if (confirmPayment == 0)
             {
-                completedOrders = new CompletedOrder(order.getOrderNo(), order.getFirstName(), order.getLastName(),
-                        order.getStringProducts(), order.getTotal(), order.getDeposit(), order.getDue(), completedOrders.getPayDate(),
-                        completedOrders.getCash(), completedOrders.getCard(), completedOrders.getChangeTotal(), order.getCashDeposit(),
-                        order.getCardDeposit());
+                completedOrders = new CompletedOrder(order.getOrderNo(), order.getFirstName(), order.getLastName(), order.getContactNo(),
+                        order.getEmail(), order.getBrand(), order.getModel(), order.getSerialNumber(), 
+                        order.getTotal(), order.getDeposit(), order.getDue(),completedOrders.getCash(), completedOrders.getCard(), completedOrders.getChangeTotal(), order.getCashDeposit(),
+                        order.getCardDeposit(), completedOrders.getPayDate(), completedOrders.getStatus());
 
               try {
                   
                 dbConnection();
 
-                completedOrders.setPayDate(payDate);
-                
-                String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, productService,"
-                        + "total, deposit, due, payDate, cash, card, changeTotal, cashDeposit, cardDeposit, status ) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, brand, model, total, "
+                        + "deposit, due, cash, card, changeTotal, cashDeposit, cardDeposit, payDate, status) "
+                        + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 ps = con.prepareStatement(queryInsert);
                 ps.setString(1, completedOrders.getOrderNo());
                 ps.setString(2, completedOrders.getFirstName());
                 ps.setString(3, completedOrders.getLastName());
-                ps.setString(4, completedOrders.getStringProducts());
-                ps.setDouble(5, completedOrders.getTotal());
-                ps.setDouble(6, completedOrders.getDeposit());
-                ps.setDouble(7, completedOrders.getDue());
-                ps.setString(8, completedOrders.getPayDate());
+                ps.setString(4, completedOrders.getBrand());
+                ps.setString(5, completedOrders.getModel());
+                ps.setDouble(6, completedOrders.getTotal());
+                ps.setDouble(7, completedOrders.getDeposit());
+                ps.setDouble(8, completedOrders.getDue());
                 ps.setDouble(9, completedOrders.getCash());
                 ps.setDouble(10, completedOrders.getCard());
                 ps.setDouble(11, completedOrders.getChangeTotal());
-                ps.setDouble(12, order.getCashDeposit());
-                ps.setDouble(13, order.getCardDeposit());
-                ps.setString(14, order.getStatus());
+                ps.setDouble(12, completedOrders.getCashDeposit());
+                ps.setDouble(13, completedOrders.getCardDeposit());
+                ps.setString(14, completedOrders.getPayDate());
+                ps.setString(15, completedOrders.getStatus());
 
                 ps.executeUpdate();
 
                
                 String queryUpdate = "UPDATE orderDetails SET pickDate = ?, status = ? WHERE orderNo = ?";
                 ps = con.prepareStatement(queryUpdate);
-                ps.setString(1, order.getPickDate());
-                ps.setString(2, order.getStatus());
-                ps.setString(3, order.getOrderNo());
+                ps.setString(1, completedOrders.getPayDate());
+                ps.setString(2, completedOrders.getStatus());
+                ps.setString(3, completedOrders.getOrderNo());
                 ps.executeUpdate();
 
                 JOptionPane.showMessageDialog(this, order.getOrderNo() + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);

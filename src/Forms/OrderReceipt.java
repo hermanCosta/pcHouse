@@ -58,13 +58,14 @@ public class OrderReceipt extends javax.swing.JFrame {
         lbl_date.setText("Date: " + completedOrders.getPayDate());
         lbl_change.setText("Change: €" + completedOrders.getChangeTotal());
         
-        if (completedOrders.getCash() == 0)
-            lbl_paid_by.setText("Paid by Card: €" + (completedOrders.getCard() + completedOrders.getCardDeposit()));
-        else if (completedOrders.getCard() == 0)
-            lbl_paid_by.setText("Paid by Cash: €" + (completedOrders.getCash() + completedOrders.getCashDeposit()));
-        else
+        if (completedOrders.getCash() == 0 && completedOrders.getCashDeposit() == 0)
+                lbl_paid_by.setText("Paid by Card: €" + (completedOrders.getCard() + completedOrders.getCardDeposit()));
+            else if (completedOrders.getCard() == 0 && completedOrders.getCardDeposit() == 0)
+                lbl_paid_by.setText("Paid by Cash: €" + (completedOrders.getCash() + completedOrders.getCashDeposit())); 
+            else
             lbl_paid_by.setText("Paid by Cash: €" + (completedOrders.getCash() + completedOrders.getCashDeposit())
                     + " | Card: €" + (completedOrders.getCard() + completedOrders.getCardDeposit()));
+            
         
         
         String[] arrayProducts = order.getStringProducts().split(",");

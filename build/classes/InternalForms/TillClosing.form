@@ -554,7 +554,7 @@
                                       <Table columnCount="5" rowCount="0">
                                         <Column editable="false" title="Order" type="java.lang.Object"/>
                                         <Column editable="false" title="Full Name" type="java.lang.Object"/>
-                                        <Column editable="false" title="Product | Service" type="java.lang.Object"/>
+                                        <Column editable="false" title="Brand | Model" type="java.lang.Object"/>
                                         <Column editable="false" title="Deposit" type="java.lang.Object"/>
                                         <Column editable="false" title="Due" type="java.lang.Object"/>
                                       </Table>
