@@ -40,7 +40,7 @@ public class Order extends Device {
         this.pickDate = _pickDate;
         this.refundDate = _refundDate;
     }
-    
+
     public String getOrderNo() {
         return orderNo;
     }

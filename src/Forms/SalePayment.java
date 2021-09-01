@@ -441,8 +441,8 @@ public class SalePayment extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this,sale.getSaleNo() + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
               
                 updateProductQty();
-            
-                SaleReceipt saleReceipt =  new SaleReceipt(sale);
+                boolean isSaleDetails = false;
+                SaleReceipt saleReceipt =  new SaleReceipt(sale, isSaleDetails);
                 saleReceipt.setVisible(true);
 
                 this.dispose();

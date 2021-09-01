@@ -6,6 +6,7 @@
 package Forms;
 
 import InternalForms.NewOrder;
+import Model.CompletedOrder;
 import Model.Order;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -28,18 +29,22 @@ public class DepositPayment extends javax.swing.JFrame {
     PreparedStatement ps;
     ResultSet rs;
     Order order;
+    CompletedOrder completedOrder;
     double cashDeposit, cardDeposit;
     double newDeposit;
+    boolean isOrderDetails;
     
     public DepositPayment() {
         initComponents();
     }
 
-    public DepositPayment(Order _order, double _newDeposit) {
+    public DepositPayment(Order _order, double _newDeposit, CompletedOrder _completedOrder, boolean _isOrderDetails) {
         initComponents();
         
         this.order = _order;
         this.newDeposit = _newDeposit;
+        this.completedOrder = _completedOrder;
+        this.isOrderDetails = _isOrderDetails;
         
         lbl_order_no.setText(this.order.getOrderNo());
         lbl_total.setText(String.valueOf(this.order.getTotal()));
@@ -342,7 +347,8 @@ public class DepositPayment extends javax.swing.JFrame {
                     payDeposit(order.getCashDeposit(), 0);
                     this.dispose();
                     
-                    PrintOrder printOrder = new PrintOrder(order);
+                    
+                    PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
                     printOrder.setVisible(true);
             } 
             catch (SQLException ex) 
@@ -410,7 +416,7 @@ public class DepositPayment extends javax.swing.JFrame {
                   payDeposit(0, order.getCardDeposit());
                   this.dispose();
                   
-                   PrintOrder printOrder = new PrintOrder(order);
+                   PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
                    printOrder.setVisible(true);
            } 
            catch (SQLException ex) 

@@ -8,6 +8,7 @@ package InternalForms;
 import Forms.DepositPayment;
 import Forms.PrintOrder;
 import Forms.MainMenu;
+import Model.CompletedOrder;
 import Model.Customer;
 import Model.Order;
 import Model.ProductService;
@@ -69,6 +70,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
     Order order;
     ResultSet rs;
     ResultSetMetaData rsmd;
+    CompletedOrder completedOrder;
     
     String orderNo, firstName,  lastName, contactNo, email,  deviceBrand,  
            deviceModel,  serialNumber, importantNotes, stringFaults, 
@@ -76,6 +78,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
            finishDate = "", pickDate = "", refundDate = ""; 
 
     double total, deposit, cashDeposit = 0, cardDeposit = 0, due;
+    boolean isOrderDetails = false;
     
     public NewOrder() {
         initComponents();
@@ -86,8 +89,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
         ui.setNorthPane(null);
         
         txt_contact.setFocusLostBehavior(JFormattedTextField.PERSIST);//avoid auto old value by focus loosing
-        //jScrollPane_notes.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        //jScrollPane_notes.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         
         tableSettings(table_view_faults);
         tableSettings(table_view_products);
@@ -131,21 +132,25 @@ public class NewOrder extends javax.swing.JInternalFrame {
             {
                 //get MAX Number orderNo from orderNo table
                 String queryMax = "SELECT Max(orderNo) FROM orderDetails";
+                        //"select MAX(CAST(SUBSTRING(orderNo FROM 3) AS UNSIGNED)) from orderDetails";
+                        //"SELECT MAX(CAST(SUBSTRING(orderNo,3, length(orderNo) -2) AS UNSIGNED)) FROM pcHouse.orderDetails";
+                        //SELECT Max(orderNo) FROM orderDetails";
                 ps = con.prepareStatement(queryMax);
                 rs = ps.executeQuery();
+                
                             
                 while(rs.next())
                 {
                     long id = Long.parseLong(rs.getString("Max(orderNo)").substring(2, rs.getString("Max(orderNo)").length()));
                     id++;
-                    lbl_auto_order_no.setText(String.format("RO" + id)); 
+                    lbl_auto_order_no.setText("RO" + String.format("%03d", id)); 
                 }
             }
             else
-                lbl_auto_order_no.setText("RO1"); 
+                lbl_auto_order_no.setText("RO001"); 
             
         } catch (SQLException ex) {
-            Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
         }   
     }
     
@@ -963,9 +968,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     cleanAllFields(table_view_products);
                     //Generate new OrderNo.
                     autoID();
-
-
-                    PrintOrder printOrder = new PrintOrder(order);
+                    
+                    PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
                     printOrder.setVisible(true);
 
                 } catch (SQLException ex) {
@@ -977,7 +981,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         else
         {
             loadOrderList();
-            DepositPayment depositPayment = new DepositPayment(order, 0);
+            DepositPayment depositPayment = new DepositPayment(order, 0, completedOrder, isOrderDetails);
             depositPayment.setVisible(true);
         }
     }//GEN-LAST:event_btn_save_orderActionPerformed

@@ -6,15 +6,19 @@
 package Forms;
 
 import InternalForms.NewOrder;
+import InternalForms.OrderDetails;
+import Model.CompletedOrder;
 import Model.Order;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.WindowEvent;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -27,19 +31,31 @@ public class PrintOrder extends javax.swing.JFrame {
      * Creates new form Print
      */
     Order order;
+    CompletedOrder completedOrder;
+    boolean isOrderDetails;
     
     public PrintOrder() {
         initComponents();
     }
     
-    public PrintOrder(Order _order) {
+    public PrintOrder(Order _order, CompletedOrder _completedOrder, boolean _isOrderDetails) {
         this.order = _order;
+        this.isOrderDetails = _isOrderDetails;
+        this.completedOrder = _completedOrder;
         
         initComponents();
         
         loadOrderToPrint();
     }
 
+    @Override
+    protected void processWindowEvent(WindowEvent e) {
+        super.processWindowEvent(e);
+        if(e.getID() == WindowEvent.WINDOW_CLOSING) {
+            backToPreviousFrame();
+        }
+    }
+    
     public void loadOrderToPrint()
     {
         lbl_print_issue_date.setText("Date: " + order.getIssueDate());
@@ -95,6 +111,22 @@ public class PrintOrder extends javax.swing.JFrame {
             txt_pane_total.setText(txt_pane_total.getText() + "€" + s + "\n");
     }
 
+    public void backToPreviousFrame()
+    {
+        if (isOrderDetails)
+        {
+            OrderDetails orderDetails = new OrderDetails(order, completedOrder);
+            MainMenu.mainMenuPane.removeAll();
+            MainMenu.mainMenuPane.add(orderDetails).setVisible(true);
+        }
+        
+        else
+        {
+            NewOrder newOrder = new NewOrder();
+            MainMenu.mainMenuPane.removeAll();
+            MainMenu.mainMenuPane.add(newOrder).setVisible(true);
+        }
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -514,7 +546,7 @@ public class PrintOrder extends javax.swing.JFrame {
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         PrinterJob printerJob = PrinterJob.getPrinterJob();
-        printerJob.setJobName("Order: " + order.getOrderNo());
+        printerJob.setJobName("Order" + order.getOrderNo());
         
         PageFormat format = printerJob.getPageFormat(null);
         
@@ -542,12 +574,9 @@ public class PrintOrder extends javax.swing.JFrame {
                 
                 printerJob.print();
                 
-                JOptionPane.showMessageDialog(this, "Order: " + order.getOrderNo() + " Printed Successfully", "Print Order", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Order " + order.getOrderNo() + " Printed Successfully", "Print Order", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
-                NewOrder newOrder = new NewOrder();
-                
-                MainMenu mainMenu = new MainMenu();
-                mainMenu.getContentPane().add(newOrder).setVisible(true);
+                backToPreviousFrame();
                 
             } catch (PrinterException ex) {
                 Logger.getLogger(PrintOrder.class.getName()).log(Level.SEVERE, null, ex);

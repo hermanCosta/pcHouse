@@ -9,8 +9,10 @@ import InternalForms.NewOrder;
 import InternalForms.OrderList;
 import InternalForms.TillClosing;
 import InternalForms.ProductsList;
-import InternalForms.Sales;
+import InternalForms.Customers;
+import Model.Customer;
 import java.awt.Color;
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -23,6 +25,7 @@ public class MainMenu extends javax.swing.JFrame {
      * Creates new form MainMenu
      */
     
+    public static JDesktopPane mainMenuPane;
     Color defaultColor, clickedColor;
     
     public MainMenu() {
@@ -34,6 +37,7 @@ public class MainMenu extends javax.swing.JFrame {
         
         expandHome();
         //defaultColorToAll();
+        mainMenuPane = desktop_pane_main_menu; 
     }
     
     public void defaultColorToAll()
@@ -566,8 +570,8 @@ public class MainMenu extends javax.swing.JFrame {
         label_today_orders.setBackground(new java.awt.Color(255, 255, 255));
         label_today_orders.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
         label_today_orders.setForeground(new java.awt.Color(255, 255, 255));
-        label_today_orders.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_today_orders.png"))); // NOI18N
-        label_today_orders.setText(" Today Orders");
+        label_today_orders.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon-customer.png"))); // NOI18N
+        label_today_orders.setText("Customers");
         label_today_orders.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 label_today_ordersMousePressed(evt);
@@ -591,8 +595,9 @@ public class MainMenu extends javax.swing.JFrame {
         panel_today_ordersLayout.setHorizontalGroup(
             panel_today_ordersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_today_ordersLayout.createSequentialGroup()
-                .addGap(0, 6, Short.MAX_VALUE)
-                .addComponent(label_today_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(29, Short.MAX_VALUE)
+                .addComponent(label_today_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         panel_today_ordersLayout.setVerticalGroup(
             panel_today_ordersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -894,7 +899,7 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void label_salesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_salesMouseClicked
         // TODO add your handling code here:
-        Sales sellings = new Sales();
+        Customers sellings = new Customers();
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(sellings).setVisible(true);
         
@@ -963,6 +968,9 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void label_today_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMouseClicked
         // TODO add your handling code here:
+        Customers customers = new Customers();
+        desktop_pane_main_menu.removeAll();
+        desktop_pane_main_menu.add(customers).setVisible(true);
         
         panel_today_orders.setBackground(clickedColor);
         panel_close_till.setBackground(defaultColor);

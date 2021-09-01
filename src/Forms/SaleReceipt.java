@@ -5,9 +5,14 @@
  */
 package Forms;
 
+import InternalForms.NewOrder;
+import InternalForms.OrderDetails;
+import InternalForms.SaleDetails;
+import InternalForms.Customers;
 import Model.Sale;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.WindowEvent;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
@@ -27,14 +32,17 @@ public class SaleReceipt extends javax.swing.JFrame {
      */
     
     Sale sale;
+    boolean isSaleDetails;
+    
     public SaleReceipt() {
         initComponents();
     }
    
 
-    public SaleReceipt(Sale _sale) {
+    public SaleReceipt(Sale _sale, boolean _isSaleDetails) {
         initComponents();
         this.sale = _sale;
+        this.isSaleDetails = _isSaleDetails;
         
         loadOrderToPrint();
     }
@@ -73,6 +81,31 @@ public class SaleReceipt extends javax.swing.JFrame {
         
         for (String s : arrayPriceTotal)
             txt_pane_total.setText(txt_pane_total.getText() + "€" + s + "\n");
+    }
+    
+    public void backToPreviousFrame()
+    {
+        if (isSaleDetails)
+        {
+            SaleDetails saleDetails = new SaleDetails(sale);
+            MainMenu.mainMenuPane.removeAll();
+            MainMenu.mainMenuPane.add(saleDetails).setVisible(true);
+        }
+        
+        else
+        {
+            Customers sales = new Customers();
+            MainMenu.mainMenuPane.removeAll();
+            MainMenu.mainMenuPane.add(sales).setVisible(true);
+        }
+    }
+    
+    @Override
+    protected void processWindowEvent(WindowEvent e) {
+        super.processWindowEvent(e);
+        if(e.getID() == WindowEvent.WINDOW_CLOSING) {
+            backToPreviousFrame();
+        }
     }
 
     /**
@@ -434,6 +467,7 @@ public class SaleReceipt extends javax.swing.JFrame {
                 
                 JOptionPane.showMessageDialog(this, "Receipt: " + sale.getSaleNo() + " Printed Successfully", "Payment Receipt", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
+                backToPreviousFrame();
 
             } catch (PrinterException ex) {
                 Logger.getLogger(SaleReceipt.class.getName()).log(Level.SEVERE, null, ex);

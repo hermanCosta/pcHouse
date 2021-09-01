@@ -74,7 +74,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     Customer customer;
     ProductService productService;
     Order order;
-    CompletedOrder completedOrders;
+    CompletedOrder completedOrder;
     ResultSet rs;
     ResultSetMetaData rsmd;
     
@@ -91,10 +91,10 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         
     }
 
-    OrderDetails(Order _order, CompletedOrder _completedOrders) {
+    public OrderDetails(Order _order, CompletedOrder _completedOrders) {
         initComponents();
         this.order = _order;
-        this.completedOrders = _completedOrders;
+        this.completedOrder = _completedOrders;
         
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
@@ -1318,7 +1318,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 
                 ps.executeUpdate();
                 
-                FixedOrder fixedOrder = new FixedOrder(order, completedOrders);
+                FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
                 desktop_pane_order_details.removeAll();
                 desktop_pane_order_details.add(fixedOrder).setVisible(true);
                 
@@ -1330,7 +1330,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
-        PrintOrder printOrder = new PrintOrder(order);
+        boolean isOrderDetails = true;
+        PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
         printOrder.setVisible(true);
     }//GEN-LAST:event_btn_printActionPerformed
 
@@ -1351,7 +1352,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 ps.setString(3, order.getOrderNo());
                 ps.executeUpdate();
                 
-                NotFixedOrder orderNotFixed = new NotFixedOrder(order, completedOrders);
+                NotFixedOrder orderNotFixed = new NotFixedOrder(order, completedOrder);
                 desktop_pane_order_details.removeAll();
                 desktop_pane_order_details.add(orderNotFixed).setVisible(true);
                 
@@ -1368,7 +1369,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 txt_model.getText().trim().isEmpty() | txt_serial_number.getText().trim().isEmpty() | 
                 table_view_products.getRowCount() == 0 | table_view_faults.getRowCount() == 0)  
         {
-            JOptionPane.showMessageDialog(null, "Please, check Empty fields", "Update Order", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please, check Empty fields", "Update Order", JOptionPane.ERROR_MESSAGE);
             return;
         }
      
@@ -1396,7 +1397,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 vecUpdateUnitPrice.add(table_view_products.getValueAt(j, 2));
                 vecUpdatePriceTotal.add(table_view_products.getValueAt(j, 3));
             }
-            
               //Remove Brackets from the vector to pass to Database  
              stringFaults = vecUpdateFaults.toString().replace("[", "").replace("]", "");
              stringProducts = vecUpdateProducts.toString().replace("[", "").replace("]", "");
@@ -1415,6 +1415,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                       && order.getDue() == Double.parseDouble(txt_due.getText()))
              {
                 JOptionPane.showMessageDialog(null, "No changes to be Updated", "Update Order Details", JOptionPane.ERROR_MESSAGE);
+                
              }
 
              else if (Double.parseDouble(txt_deposit.getText()) < order.getDeposit())
@@ -1436,7 +1437,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 order.setUnitPrice(stringUnitPrice);
                 order.setPriceTotal(stringPriceTotal);
                 order.setTotal(Double.parseDouble(txt_total.getText()));
-//                order.setDeposit(Double.parseDouble(txt_deposit.getText()));
                 order.setDue(Double.parseDouble(txt_due.getText()));
                 order.setIssueDate(updateDate);
                 
@@ -1450,7 +1450,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                         if (newDeposit > order.getDeposit())
                         {
                             newDeposit -= order.getDeposit();
-                            DepositUpdatePayment depositUpdatePayment = new DepositUpdatePayment(order, newDeposit);
+                            DepositUpdatePayment depositUpdatePayment = new DepositUpdatePayment(order, completedOrder, newDeposit);
                             depositUpdatePayment.setVisible(true);
                         }
                         else

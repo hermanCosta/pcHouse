@@ -71,7 +71,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         
     }
 
-    FixedOrder(Order _order, CompletedOrder _completedOrders) {
+    public FixedOrder(Order _order, CompletedOrder _completedOrders) {
         initComponents();
         this.order = _order;
         this.completedOrders = _completedOrders;

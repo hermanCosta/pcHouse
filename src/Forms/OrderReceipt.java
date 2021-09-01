@@ -5,10 +5,14 @@
  */
 package Forms;
 
+import InternalForms.FixedOrder;
+import InternalForms.NewOrder;
+import InternalForms.OrderDetails;
 import Model.CompletedOrder;
 import Model.Order;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.WindowEvent;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
@@ -27,20 +31,19 @@ public class OrderReceipt extends javax.swing.JFrame {
     /**
      * Creates new form Print
      */
-    
     double deposit, due, total;
 
     Order order;
-    CompletedOrder completedOrders;
+    CompletedOrder completedOrder;
     
     public OrderReceipt() {
         initComponents();
     }
     
-    public OrderReceipt(Order _order, CompletedOrder _completedOrders) {
+    public OrderReceipt(Order _order, CompletedOrder _completedOrder) {
         initComponents();
         this.order = _order;
-        this.completedOrders = _completedOrders;
+        this.completedOrder = _completedOrder;
         
         loadOrderToPrint();
     }
@@ -55,19 +58,17 @@ public class OrderReceipt extends javax.swing.JFrame {
         lbl_print_model.setText("Device model: " + order.getModel());
         lbl_print_sn.setText("S/N: " + order.getSerialNumber());
         lbl_print_total_products.setText("Total: €" + String.valueOf(order.getTotal()));
-        lbl_date.setText("Date: " + completedOrders.getPayDate());
-        lbl_change.setText("Change: €" + completedOrders.getChangeTotal());
+        lbl_date.setText("Date: " + completedOrder.getPayDate());
+        lbl_change.setText("Change: €" + completedOrder.getChangeTotal());
         
-        if (completedOrders.getCash() == 0 && completedOrders.getCashDeposit() == 0)
-                lbl_paid_by.setText("Paid by Card: €" + (completedOrders.getCard() + completedOrders.getCardDeposit()));
-            else if (completedOrders.getCard() == 0 && completedOrders.getCardDeposit() == 0)
-                lbl_paid_by.setText("Paid by Cash: €" + (completedOrders.getCash() + completedOrders.getCashDeposit())); 
+        if (completedOrder.getCash() == 0 && completedOrder.getCashDeposit() == 0)
+                lbl_paid_by.setText("Paid by Card: €" + (completedOrder.getCard() + completedOrder.getCardDeposit()));
+            else if (completedOrder.getCard() == 0 && completedOrder.getCardDeposit() == 0)
+                lbl_paid_by.setText("Paid by Cash: €" + (completedOrder.getCash() + completedOrder.getCashDeposit())); 
             else
-            lbl_paid_by.setText("Paid by Cash: €" + (completedOrders.getCash() + completedOrders.getCashDeposit())
-                    + " | Card: €" + (completedOrders.getCard() + completedOrders.getCardDeposit()));
+            lbl_paid_by.setText("Paid by Cash: €" + (completedOrder.getCash() + completedOrder.getCashDeposit())
+                    + " | Card: €" + (completedOrder.getCard() + completedOrder.getCardDeposit()));
             
-        
-        
         String[] arrayProducts = order.getStringProducts().split(",");
         String[] arrayQty = order.getStringQty().split(",");
         String[] arrayUnitPrice = order.getUnitPrice().split(",");
@@ -84,7 +85,21 @@ public class OrderReceipt extends javax.swing.JFrame {
         
         for (String s : arrayPriceTotal)
             txt_pane_total.setText(txt_pane_total.getText() + "€" + s + "\n");
-
+    }
+    
+    public void backToPreviousFrame()
+    {        
+            FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
+            MainMenu.mainMenuPane.removeAll();
+            MainMenu.mainMenuPane.add(fixedOrder).setVisible(true);
+    }
+    
+    @Override
+    protected void processWindowEvent(WindowEvent e) {
+        super.processWindowEvent(e);
+        if(e.getID() == WindowEvent.WINDOW_CLOSING) {
+            backToPreviousFrame();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -463,6 +478,7 @@ public class OrderReceipt extends javax.swing.JFrame {
             } catch (PrinterException ex) {
                 Logger.getLogger(OrderReceipt.class.getName()).log(Level.SEVERE, null, ex);
                 this.dispose();
+                backToPreviousFrame();
             }
             
         }

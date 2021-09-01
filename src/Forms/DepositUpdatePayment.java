@@ -6,6 +6,8 @@
 package Forms;
 
 import InternalForms.NewOrder;
+import InternalForms.OrderDetails;
+import Model.CompletedOrder;
 import Model.Order;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -28,24 +30,24 @@ public class DepositUpdatePayment extends javax.swing.JFrame {
     PreparedStatement ps;
     ResultSet rs;
     Order order;
-    double cashDeposit, cardDeposit;
     double newDeposit;
+    CompletedOrder completedOrder;
     
     public DepositUpdatePayment() {
         initComponents();
     }
 
-    public DepositUpdatePayment(Order _order, double _newDeposit) {
+    public DepositUpdatePayment(Order _order, CompletedOrder _completedOrder, double _newDeposit) {
         initComponents();
         
         this.order = _order;
+        this.completedOrder = _completedOrder;
         this.newDeposit = _newDeposit;
         
         lbl_order_no.setText(this.order.getOrderNo());
         lbl_total.setText(String.valueOf(this.order.getTotal()));
         lbl_deposit.setText(String.valueOf(this.newDeposit));
     }
-
 
     public void dbConnection() 
     {
@@ -89,24 +91,30 @@ public class DepositUpdatePayment extends javax.swing.JFrame {
             dbConnection();
             
             String queryDepositInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, "
-                    + "productService, total, deposit, due, payDate, cash, card, changeTotal, cashDeposit, "
-                    + "cardDeposit, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    + "brand, model, total, deposit, due, cash, card, changeTotal, cashDeposit, "
+                    + "cardDeposit, payDate, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = con.prepareStatement(queryDepositInsert);
             ps.setString(1, order.getOrderNo());
             ps.setString(2, order.getFirstName());
             ps.setString(3, order.getLastName());
-            ps.setString(4, order.getStringProducts());
-            ps.setDouble(5, 0);
-            ps.setDouble(6, newDeposit);
-            ps.setDouble(7, 0);
-            ps.setString(8, order.getIssueDate());
+            ps.setString(4, order.getBrand());
+            ps.setString(5, order.getModel());
+            ps.setDouble(6, 0);
+            ps.setDouble(7, newDeposit);
+            ps.setDouble(8, 0);
             ps.setDouble(9, cash); 
             ps.setDouble(10, card);
             ps.setDouble(11, 0);
             ps.setDouble(12, 0);
             ps.setDouble(13, 0);
-            ps.setString(14, "Deposit");
+            ps.setString(14, order.getIssueDate());
+            ps.setString(15, "Deposit");
             ps.executeUpdate();
+            
+            order.setDeposit((order.getDeposit() + newDeposit));
+            OrderDetails orderDetails = new OrderDetails(order, completedOrder);
+            MainMenu.mainMenuPane.removeAll();
+            MainMenu.mainMenuPane.add(orderDetails).setVisible(true);
             
         } catch (SQLException ex) {
             Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
@@ -291,11 +299,11 @@ public class DepositUpdatePayment extends javax.swing.JFrame {
 
     private void btn_pay_by_cashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pay_by_cashActionPerformed
         // TODO add your handling code here:
-        int confirmCardDeposit = JOptionPane.showConfirmDialog(this, "Confirm €" + order.getDeposit() + " Deposit Payment by CASH ?", "Confirm Payment", JOptionPane.YES_NO_OPTION);
+        int confirmCardDeposit = JOptionPane.showConfirmDialog(this, "Confirm €" + newDeposit + " Deposit Payment by CASH ?", "Confirm Payment", JOptionPane.YES_NO_OPTION);
         if (confirmCardDeposit == 0)
         {
-            order.setCashDeposit(order.getDeposit());
-            
+            order.setCashDeposit((order.getCashDeposit() + newDeposit));
+
             try 
             {
                 dbConnection();
@@ -339,16 +347,9 @@ public class DepositUpdatePayment extends javax.swing.JFrame {
                         ps = con.prepareStatement(removeSpace);
                         ps.executeUpdate();
 
-                    
-                    //new NewOrder ().setVisible(true);
-                    
                     addDepositNote("Cash");
                     payDeposit(newDeposit, 0);
-                    
                     this.dispose();
-                    
-                    PrintOrder printOrder = new PrintOrder(order);
-                    printOrder.setVisible(true);
             } 
             catch (SQLException ex) 
             {
@@ -363,10 +364,13 @@ public class DepositUpdatePayment extends javax.swing.JFrame {
 
     private void btn_pay_by_cardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pay_by_cardActionPerformed
         // TODO add your handling code here:
-        int confirmCardDeposit = JOptionPane.showConfirmDialog(this, "Confirm €" + order.getDeposit() + " Deposit Payment by CARD ?", "Confirm Payment", JOptionPane.YES_NO_OPTION);
+        int confirmCardDeposit = JOptionPane.showConfirmDialog(this, "Confirm €" + newDeposit + " Deposit Payment by CARD ?", "Confirm Payment", JOptionPane.YES_NO_OPTION);
         if (confirmCardDeposit == 0)
         {
-            order.setCardDeposit(order.getDeposit());
+            order.setCardDeposit((order.getCardDeposit()+ newDeposit));
+            
+            System.out.println("NEW Cash Deposit: " + order.getCashDeposit());
+             System.out.println("NEW Card Deposit: " + order.getCardDeposit());
             
             try {
                 dbConnection();
@@ -411,15 +415,9 @@ public class DepositUpdatePayment extends javax.swing.JFrame {
                        ps = con.prepareStatement(removeSpace);
                        ps.executeUpdate();
 
-                   
-                  //newOrder.setVisible(true);
-                  
                   addDepositNote("Card");
                   payDeposit(0, newDeposit);
-                  
-                   this.dispose(); 
-                   PrintOrder printOrder = new PrintOrder(order);
-                   printOrder.setVisible(true);
+                  this.dispose(); 
            } 
            catch (SQLException ex) 
            {
