@@ -10,6 +10,7 @@ import InternalForms.OrderList;
 import InternalForms.TillClosing;
 import InternalForms.ProductsList;
 import InternalForms.Customers;
+import InternalForms.Faults;
 import Model.Customer;
 import java.awt.Color;
 import javax.swing.JDesktopPane;
@@ -59,8 +60,9 @@ public class MainMenu extends javax.swing.JFrame {
         panel_add_new.setVisible(false);
         panel_sellings.setVisible(false);
         
-        panel_today_orders.setVisible(false);
+        panel_customers.setVisible(false);
         panel_close_till.setVisible(false);
+        panel_faults.setVisible(false);
         
         //Set default color to outer labels
         panel_home.setBackground(clickedColor);
@@ -90,8 +92,9 @@ public class MainMenu extends javax.swing.JFrame {
         panel_sellings.setVisible(false);
         
         //Colapse Reports
-        panel_today_orders.setVisible(false);
+        panel_customers.setVisible(false);
         panel_close_till.setVisible(false);
+        panel_faults.setVisible(false);
            
         
     }
@@ -116,17 +119,19 @@ public class MainMenu extends javax.swing.JFrame {
         panel_new_order.setVisible(false);
         
         //Colapse Reports
-        panel_today_orders.setVisible(false);
+        panel_customers.setVisible(false);
         panel_close_till.setVisible(false);
+        panel_faults.setVisible(false);
     }
     
     public void expandReports()
     {
-        panel_today_orders.setVisible(true);
         panel_close_till.setVisible(true);
+        panel_customers.setVisible(true);
+        panel_faults.setVisible(true);
         
         //Set default color to the labels
-        panel_today_orders.setBackground(defaultColor);
+        panel_customers.setBackground(defaultColor);
         panel_close_till.setBackground(defaultColor);
         
         //Set default color to the outer labels
@@ -180,10 +185,12 @@ public class MainMenu extends javax.swing.JFrame {
         label_sales = new javax.swing.JLabel();
         panel_close_till = new javax.swing.JPanel();
         label_close_till = new javax.swing.JLabel();
-        panel_today_orders = new javax.swing.JPanel();
-        label_today_orders = new javax.swing.JLabel();
+        panel_customers = new javax.swing.JPanel();
+        label_customers = new javax.swing.JLabel();
         panel_orders = new javax.swing.JPanel();
         label_orders = new javax.swing.JLabel();
+        panel_faults = new javax.swing.JPanel();
+        label_faults = new javax.swing.JLabel();
         desktop_pane_main_menu = new javax.swing.JDesktopPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -553,55 +560,55 @@ public class MainMenu extends javax.swing.JFrame {
             .addComponent(label_close_till, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        panel_today_orders.setBackground(new java.awt.Color(21, 76, 121));
-        panel_today_orders.setPreferredSize(new java.awt.Dimension(233, 32));
-        panel_today_orders.addMouseListener(new java.awt.event.MouseAdapter() {
+        panel_customers.setBackground(new java.awt.Color(21, 76, 121));
+        panel_customers.setPreferredSize(new java.awt.Dimension(233, 32));
+        panel_customers.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                panel_today_ordersMousePressed(evt);
+                panel_customersMousePressed(evt);
             }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                panel_today_ordersMouseClicked(evt);
+                panel_customersMouseClicked(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                panel_today_ordersMouseExited(evt);
+                panel_customersMouseExited(evt);
             }
         });
 
-        label_today_orders.setBackground(new java.awt.Color(255, 255, 255));
-        label_today_orders.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
-        label_today_orders.setForeground(new java.awt.Color(255, 255, 255));
-        label_today_orders.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon-customer.png"))); // NOI18N
-        label_today_orders.setText("Customers");
-        label_today_orders.addMouseListener(new java.awt.event.MouseAdapter() {
+        label_customers.setBackground(new java.awt.Color(255, 255, 255));
+        label_customers.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        label_customers.setForeground(new java.awt.Color(255, 255, 255));
+        label_customers.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon-customer.png"))); // NOI18N
+        label_customers.setText("Customers");
+        label_customers.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                label_today_ordersMousePressed(evt);
+                label_customersMousePressed(evt);
             }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                label_today_ordersMouseReleased(evt);
+                label_customersMouseReleased(evt);
             }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                label_today_ordersMouseClicked(evt);
+                label_customersMouseClicked(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                label_today_ordersMouseExited(evt);
+                label_customersMouseExited(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                label_today_ordersMouseEntered(evt);
+                label_customersMouseEntered(evt);
             }
         });
 
-        javax.swing.GroupLayout panel_today_ordersLayout = new javax.swing.GroupLayout(panel_today_orders);
-        panel_today_orders.setLayout(panel_today_ordersLayout);
-        panel_today_ordersLayout.setHorizontalGroup(
-            panel_today_ordersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_today_ordersLayout.createSequentialGroup()
+        javax.swing.GroupLayout panel_customersLayout = new javax.swing.GroupLayout(panel_customers);
+        panel_customers.setLayout(panel_customersLayout);
+        panel_customersLayout.setHorizontalGroup(
+            panel_customersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_customersLayout.createSequentialGroup()
                 .addContainerGap(29, Short.MAX_VALUE)
-                .addComponent(label_today_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(label_customers, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        panel_today_ordersLayout.setVerticalGroup(
-            panel_today_ordersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(label_today_orders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        panel_customersLayout.setVerticalGroup(
+            panel_customersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(label_customers, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         panel_orders.setBackground(new java.awt.Color(21, 76, 121));
@@ -642,6 +649,57 @@ public class MainMenu extends javax.swing.JFrame {
             .addComponent(label_orders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
+        panel_faults.setBackground(new java.awt.Color(21, 76, 121));
+        panel_faults.setPreferredSize(new java.awt.Dimension(233, 32));
+        panel_faults.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                panel_faultsMousePressed(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                panel_faultsMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                panel_faultsMouseExited(evt);
+            }
+        });
+
+        label_faults.setBackground(new java.awt.Color(255, 255, 255));
+        label_faults.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        label_faults.setForeground(new java.awt.Color(255, 255, 255));
+        label_faults.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_not_fix.png"))); // NOI18N
+        label_faults.setText("Faults");
+        label_faults.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                label_faultsMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                label_faultsMouseReleased(evt);
+            }
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                label_faultsMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                label_faultsMouseExited(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                label_faultsMouseEntered(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panel_faultsLayout = new javax.swing.GroupLayout(panel_faults);
+        panel_faults.setLayout(panel_faultsLayout);
+        panel_faultsLayout.setHorizontalGroup(
+            panel_faultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_faultsLayout.createSequentialGroup()
+                .addContainerGap(59, Short.MAX_VALUE)
+                .addComponent(label_faults, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
+        );
+        panel_faultsLayout.setVerticalGroup(
+            panel_faultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(label_faults, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout panel_menu_barLayout = new javax.swing.GroupLayout(panel_menu_bar);
         panel_menu_bar.setLayout(panel_menu_barLayout);
         panel_menu_barLayout.setHorizontalGroup(
@@ -659,9 +717,14 @@ public class MainMenu extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(panel_new_order, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(panel_check_existing, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addComponent(panel_today_orders, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panel_close_till, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel_home, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_menu_barLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panel_close_till, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panel_customers, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panel_faults, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0))
         );
         panel_menu_barLayout.setVerticalGroup(
             panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -683,9 +746,11 @@ public class MainMenu extends javax.swing.JFrame {
                 .addGap(30, 30, 30)
                 .addComponent(panel_reports, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panel_today_orders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addComponent(panel_close_till, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(panel_customers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(panel_faults, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -937,8 +1002,9 @@ public class MainMenu extends javax.swing.JFrame {
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(closeTill).setVisible(true);
         
-        panel_today_orders.setBackground(defaultColor);
+        panel_customers.setBackground(defaultColor);
         panel_close_till.setBackground(clickedColor);
+        panel_faults.setBackground(defaultColor);
     }//GEN-LAST:event_label_close_tillMouseClicked
 
     private void label_close_tillMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_close_tillMouseExited
@@ -958,43 +1024,44 @@ public class MainMenu extends javax.swing.JFrame {
         
     }//GEN-LAST:event_panel_close_tillMouseClicked
 
-    private void label_today_ordersMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMousePressed
+    private void label_customersMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_customersMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_label_today_ordersMousePressed
+    }//GEN-LAST:event_label_customersMousePressed
 
-    private void label_today_ordersMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMouseReleased
+    private void label_customersMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_customersMouseReleased
         // TODO add your handling code here:
-    }//GEN-LAST:event_label_today_ordersMouseReleased
+    }//GEN-LAST:event_label_customersMouseReleased
 
-    private void label_today_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMouseClicked
+    private void label_customersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_customersMouseClicked
         // TODO add your handling code here:
         Customers customers = new Customers();
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(customers).setVisible(true);
         
-        panel_today_orders.setBackground(clickedColor);
+        panel_customers.setBackground(clickedColor);
         panel_close_till.setBackground(defaultColor);
-    }//GEN-LAST:event_label_today_ordersMouseClicked
+        panel_faults.setBackground(defaultColor);
+    }//GEN-LAST:event_label_customersMouseClicked
 
-    private void label_today_ordersMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMouseExited
+    private void label_customersMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_customersMouseExited
         // TODO add your handling code here:
-    }//GEN-LAST:event_label_today_ordersMouseExited
+    }//GEN-LAST:event_label_customersMouseExited
 
-    private void label_today_ordersMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_today_ordersMouseEntered
+    private void label_customersMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_customersMouseEntered
         // TODO add your handling code here:
-    }//GEN-LAST:event_label_today_ordersMouseEntered
+    }//GEN-LAST:event_label_customersMouseEntered
 
-    private void panel_today_ordersMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_today_ordersMousePressed
+    private void panel_customersMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_customersMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_panel_today_ordersMousePressed
+    }//GEN-LAST:event_panel_customersMousePressed
 
-    private void panel_today_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_today_ordersMouseClicked
+    private void panel_customersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_customersMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_panel_today_ordersMouseClicked
+    }//GEN-LAST:event_panel_customersMouseClicked
 
-    private void panel_today_ordersMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_today_ordersMouseExited
+    private void panel_customersMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_customersMouseExited
         // TODO add your handling code here:
-    }//GEN-LAST:event_panel_today_ordersMouseExited
+    }//GEN-LAST:event_panel_customersMouseExited
 
     private void label_ordersMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_ordersMousePressed
         // TODO add your handling code here:
@@ -1017,6 +1084,47 @@ public class MainMenu extends javax.swing.JFrame {
         // TODO add your handling code here:
         
     }//GEN-LAST:event_label_check_existingMouseReleased
+
+    private void label_faultsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_faultsMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_label_faultsMousePressed
+
+    private void label_faultsMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_faultsMouseReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_label_faultsMouseReleased
+
+    private void label_faultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_faultsMouseClicked
+        // TODO add your handling code here:
+        Faults faults = new Faults();
+        desktop_pane_main_menu.removeAll();
+        desktop_pane_main_menu.add(faults).setVisible(true);
+        
+        panel_customers.setBackground(defaultColor);
+        panel_close_till.setBackground(defaultColor);
+        panel_faults.setBackground(clickedColor);
+        
+       
+    }//GEN-LAST:event_label_faultsMouseClicked
+
+    private void label_faultsMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_faultsMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_label_faultsMouseExited
+
+    private void label_faultsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_faultsMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_label_faultsMouseEntered
+
+    private void panel_faultsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_faultsMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_panel_faultsMousePressed
+
+    private void panel_faultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_faultsMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_panel_faultsMouseClicked
+
+    private void panel_faultsMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_faultsMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_panel_faultsMouseExited
     
     /**
      * @param args the command line arguments
@@ -1057,6 +1165,8 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JDesktopPane desktop_pane_main_menu;
     private javax.swing.JLabel label_check_existing;
     private javax.swing.JLabel label_close_till;
+    private javax.swing.JLabel label_customers;
+    private javax.swing.JLabel label_faults;
     private javax.swing.JLabel label_home;
     private javax.swing.JLabel label_new_order;
     private javax.swing.JLabel label_orders;
@@ -1064,10 +1174,11 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JLabel label_products_list;
     private javax.swing.JLabel label_reports;
     private javax.swing.JLabel label_sales;
-    private javax.swing.JLabel label_today_orders;
     private javax.swing.JPanel panel_add_new;
     private javax.swing.JPanel panel_check_existing;
     private javax.swing.JPanel panel_close_till;
+    private javax.swing.JPanel panel_customers;
+    private javax.swing.JPanel panel_faults;
     private javax.swing.JPanel panel_header;
     private javax.swing.JPanel panel_home;
     private javax.swing.JPanel panel_menu_bar;
@@ -1076,7 +1187,6 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JPanel panel_products;
     private javax.swing.JPanel panel_reports;
     private javax.swing.JPanel panel_sellings;
-    private javax.swing.JPanel panel_today_orders;
     private javax.swing.JPanel panel_window;
     // End of variables declaration//GEN-END:variables
 }

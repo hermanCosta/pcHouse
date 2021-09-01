@@ -101,14 +101,14 @@ public class Customers extends javax.swing.JInternalFrame {
         try {
             dbConnection();
             
-            String query = "SELECT * FROM customers LIMIT 20";
+            String query = "SELECT * FROM customers";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery(query);
             
             while (rs.next())
             {
                 customer = new Customer(rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"), rs.getString("email"));
-                
+                customer.setCustomerId(rs.getInt("customerId"));
                 list.add(customer);
             }
         } catch (SQLException ex) {
@@ -118,13 +118,14 @@ public class Customers extends javax.swing.JInternalFrame {
         DefaultTableModel dtm = (DefaultTableModel)table_view_customers.getModel();
         dtm.setRowCount(0);
         
-        Object[] row = new Object[4];
+        Object[] row = new Object[5];
         for (int i = 0 ;i < list.size() ; i++)
         {
-                row[0] = list.get(i).getFirstName();
-                row[1] = list.get(i).getLastName();
-                row[2] = list.get(i).getContactNo();
-                row[3] = list.get(i).getEmail();
+                row[0] = list.get(i).getCustomerId();
+                row[1] = list.get(i).getFirstName();
+                row[2] = list.get(i).getLastName();
+                row[3] = list.get(i).getContactNo();
+                row[4] = list.get(i).getEmail();
                 
             dtm.addRow(row);
         }
@@ -352,24 +353,24 @@ public class Customers extends javax.swing.JInternalFrame {
         btn_update.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
         btn_update.setForeground(new java.awt.Color(255, 255, 255));
         btn_update.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_save_changes.png"))); // NOI18N
-        btn_update.setText("Edit");
+        btn_update.setText("Update");
         btn_update.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_updateActionPerformed(evt);
             }
         });
 
-        table_view_customers.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        table_view_customers.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         table_view_customers.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "First Name", "Last Name", "Contact", "Email"
+                "ID", "First Name", "Last Name", "Contact", "Email"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -383,12 +384,14 @@ public class Customers extends javax.swing.JInternalFrame {
         });
         jScrollPane2.setViewportView(table_view_customers);
         if (table_view_customers.getColumnModel().getColumnCount() > 0) {
-            table_view_customers.getColumnModel().getColumn(0).setPreferredWidth(120);
-            table_view_customers.getColumnModel().getColumn(0).setMaxWidth(150);
-            table_view_customers.getColumnModel().getColumn(1).setPreferredWidth(120);
+            table_view_customers.getColumnModel().getColumn(0).setPreferredWidth(40);
+            table_view_customers.getColumnModel().getColumn(0).setMaxWidth(80);
+            table_view_customers.getColumnModel().getColumn(1).setPreferredWidth(100);
             table_view_customers.getColumnModel().getColumn(1).setMaxWidth(150);
             table_view_customers.getColumnModel().getColumn(2).setPreferredWidth(100);
-            table_view_customers.getColumnModel().getColumn(2).setMaxWidth(120);
+            table_view_customers.getColumnModel().getColumn(2).setMaxWidth(150);
+            table_view_customers.getColumnModel().getColumn(3).setPreferredWidth(130);
+            table_view_customers.getColumnModel().getColumn(3).setMaxWidth(150);
         }
 
         txt_search_customer.setFont(new java.awt.Font("sansserif", 1, 16)); // NOI18N
@@ -510,8 +513,8 @@ public class Customers extends javax.swing.JInternalFrame {
                         .addGroup(panel_customersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btn_delete)
                             .addComponent(btn_clear_fields)))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(65, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 554, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(71, Short.MAX_VALUE))
         );
 
         desktop_pane_customers.setLayer(panel_customers, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -526,7 +529,7 @@ public class Customers extends javax.swing.JInternalFrame {
         );
         desktop_pane_customersLayout.setVerticalGroup(
             desktop_pane_customersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel_customers, javax.swing.GroupLayout.DEFAULT_SIZE, 962, Short.MAX_VALUE)
+            .addComponent(panel_customers, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -572,30 +575,25 @@ public class Customers extends javax.swing.JInternalFrame {
             contactNo = txt_contact.getText();
             email = txt_email.getText();
 
-            customer = new Customer(firstName, lastName, contactNo, email);
             
             
             try {
                 
             dbConnection();
             
-            String query = "SELECT * FROM customers WHERE contactNo = ?";
-            ps = con.prepareStatement(query);
-            ps.setString(1, contactNo);
-            rs = ps.executeQuery();
-            
-            //show a message if a costumer is not found in the db
-            if (!rs.isBeforeFirst() && firstName.trim().isEmpty() && lastName.trim().isEmpty())
-                JOptionPane.showMessageDialog(this, "Customer not found in the Database", "New Customer", JOptionPane.ERROR_MESSAGE);
+//            String query = "SELECT contactNo FROM customers WHERE contactNo = ?";
+//            ps = con.prepareStatement(query);
+//            ps.setString(1, customer.getContactNo());
+//            rs = ps.executeQuery();
             
             //add a new customer if not exists AND fields are not empty
-            else if (!rs.isBeforeFirst() && !firstName.trim().isEmpty() && !lastName.trim().isEmpty())
+            if (!customer.getContactNo().equals(contactNo))
             {
-                int confirmInsertion = JOptionPane.showConfirmDialog(null, "Do you want to add a new Customer ?", "Add New Customer", JOptionPane.YES_NO_OPTION);
+                customer = new Customer(firstName, lastName, contactNo, email);
+                
+                int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add a Customer " + customer.getFirstName() + " ?", "Add New Customer", JOptionPane.YES_NO_OPTION);
                 if(confirmInsertion == 0)
                 {
-                    customer = new Customer(firstName, lastName, contactNo, email);
-                    
                     String insertQuery = "INSERT INTO customers (firstName, lastName, contactNo, email) VALUES(?, ?, ?, ?)";
                     
                     ps = con.prepareStatement(insertQuery);
@@ -605,10 +603,17 @@ public class Customers extends javax.swing.JInternalFrame {
                     ps.setString(4, customer.getEmail());
                     ps.executeUpdate();
                     
-                    JOptionPane.showMessageDialog(this, "Customer " + customer.getFirstName() + " " + customer.getLastName());
-                            
+                    JOptionPane.showMessageDialog(this, "Customer " + customer.getFirstName() + " " + customer.getLastName() + " added Successfully");
+                    loadCustomerTable();
                 } 
             }
+                
+                else 
+                    JOptionPane.showMessageDialog(this, "Customer already exist with Contact " + customer.getContactNo() + " into Database", "New Customer", JOptionPane.ERROR_MESSAGE);
+            
+            //show a message if a costumer is not found into db
+            
+            
             
         } catch (SQLException ex) {
             Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
@@ -618,7 +623,7 @@ public class Customers extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btn_addActionPerformed
 
     private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
-            
+        
         if (txt_first_name.getText().trim().isEmpty() || txt_last_name.getText().trim().isEmpty() || 
                 txt_contact.getText().trim().isEmpty())
         {
@@ -626,34 +631,33 @@ public class Customers extends javax.swing.JInternalFrame {
         }
         else
         {
-
             firstName = txt_first_name.getText();
             lastName = txt_last_name.getText();
             contactNo = txt_contact.getText();
             email = txt_email.getText();
-            
       
             try {
+                
                 dbConnection(); 
 
-                    while (rs.next())
-                    {
-//                       if( customer.getFirstName().equals(firstName) && customer.getLastName().equals(lastName) && customer.getContactNo().equals(contactNo) && customer.getEmail().equals(email))
-//                       {
-//                           JOptionPane.showMessageDialog(null, "No changes to be updated !", "Product List", JOptionPane.ERROR_MESSAGE);
-//                       }
-//                       else 
-//                        {
-                            int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Editing " + firstName + " ?", 
-                                    "Edit Product|Service", JOptionPane.YES_NO_OPTION);
+                       if( customer.getFirstName().equals(firstName) && customer.getLastName().equals(lastName) && customer.getContactNo().equals(contactNo) && customer.getEmail().equals(email))
+                       {
+                           JOptionPane.showMessageDialog(null, "No changes to be updated !", "Update Customer", JOptionPane.ERROR_MESSAGE);
+                       }
+                       else 
+                        {
+                            int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Updating " + firstName + " ?", 
+                                    "Update Customer", JOptionPane.YES_NO_OPTION);
+                            
                             if(confirmEditing == 0)
                             {
-                                String query = "UPDATE products SET productService = ?, price = ?, qty = ?, notes = ? WHERE productId = ?";
+                                String query = "UPDATE customers SET firstName = ?, lastName = ?, contactNo = ?, email = ? WHERE customerId = ?";
                                 ps = con.prepareStatement(query);
                                 ps.setString(1, firstName);
                                 ps.setString(2, lastName);
                                 ps.setString(3, contactNo);
                                 ps.setString(4, email);
+                                ps.setInt(5, customer.getCustomerId());
                                 ps.executeUpdate();
 
                                 loadCustomerTable();
@@ -664,14 +668,12 @@ public class Customers extends javax.swing.JInternalFrame {
                                 loadCustomerTable();
                                 cleanFields();
                             }
-                        //}
                     }
 
             } catch (SQLException ex) {
                     Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
     }//GEN-LAST:event_btn_updateActionPerformed
 
     private void txt_first_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_first_nameKeyPressed
@@ -759,7 +761,7 @@ public class Customers extends javax.swing.JInternalFrame {
             while (rs.next())
             {
                 customer = new Customer(rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"), rs.getString("email"));
-                
+                customer.setCustomerId(rs.getInt("customerId"));
                 customerList.add(customer);
             }
         } catch (SQLException ex) {
@@ -769,13 +771,14 @@ public class Customers extends javax.swing.JInternalFrame {
         DefaultTableModel dtm = (DefaultTableModel)table_view_customers.getModel();
         dtm.setRowCount(0);
         
-        Object[] row = new Object[4];
+        Object[] row = new Object[5];
         for (int i = 0 ;i < customerList.size() ; i++)
         {
-                row[0] = customerList.get(i).getFirstName();
-                row[1] = customerList.get(i).getLastName();
-                row[2] = customerList.get(i).getContactNo();
-                row[3] = customerList.get(i).getEmail();
+                row[0] = customerList.get(i).getCustomerId();
+                row[1] = customerList.get(i).getFirstName();
+                row[2] = customerList.get(i).getLastName();
+                row[3] = customerList.get(i).getContactNo();
+                row[4] = customerList.get(i).getEmail();
                 
             dtm.addRow(row);
         }
@@ -788,18 +791,21 @@ public class Customers extends javax.swing.JInternalFrame {
             DefaultTableModel dtm = (DefaultTableModel) table_view_customers.getModel();
             int row = table_view_customers.getSelectedRow();
             
-            String fname = dtm.getValueAt(row, 0).toString();
-            String lname = dtm.getValueAt(row, 1).toString();
-            String contact = dtm.getValueAt(row, 2).toString();
-            String mail = dtm.getValueAt(row, 3).toString();
-            
+            int id = (int) dtm.getValueAt(row, 0);
+            String fname = dtm.getValueAt(row, 1).toString();
+            String lname = dtm.getValueAt(row, 2).toString();
+            String contact = dtm.getValueAt(row, 3).toString();
+            String mail = dtm.getValueAt(row, 4).toString();
             
             txt_first_name.setText(fname);
             txt_last_name.setText(lname);
             txt_contact.setText(contact);
             txt_email.setText(mail);
+            
+            customer = new Customer(fname, lname, contact, mail);
+            customer.setCustomerId(id);
+            
         }
-        
     }//GEN-LAST:event_table_view_customersMouseClicked
 
     private void lbl_search_iconMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_search_iconMouseClicked
@@ -808,6 +814,41 @@ public class Customers extends javax.swing.JInternalFrame {
 
     private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
         // TODO add your handling code here:
+        if (txt_first_name.getText().trim().isEmpty() || txt_last_name.getText().trim().isEmpty() || 
+                txt_contact.getText().trim().isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Costumer", JOptionPane.ERROR_MESSAGE);
+        }
+        else
+        {
+            try {
+                
+                dbConnection(); 
+
+                            int confirmEditing = JOptionPane.showConfirmDialog(this, "Confirm Deletion " + customer.getFirstName() + " ?", 
+                                    "Update Customer", JOptionPane.YES_NO_OPTION);
+                            
+                            if(confirmEditing == 0)
+                            {
+                                String query = "DELETE FROM customers WHERE customerId = ?";
+                                ps = con.prepareStatement(query);
+                                ps.setInt(1, customer.getCustomerId());
+                                ps.executeUpdate();
+
+                                loadCustomerTable();
+                                cleanFields();
+                            }
+                            else
+                            {
+                                loadCustomerTable();
+                                cleanFields();
+                            }
+
+            } catch (SQLException ex) {
+                    Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
     }//GEN-LAST:event_btn_deleteActionPerformed
 
     private void btn_clear_fieldsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clear_fieldsActionPerformed

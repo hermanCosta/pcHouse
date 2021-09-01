@@ -5,10 +5,8 @@
         <group>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/TillClosing.java</file>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/ProductsList.java</file>
-            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Model/Sale.java</file>
-            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/SaleDetails.java</file>
-            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/OrderList.java</file>
-            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/NewOrder.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/Customers.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/MainMenu.java</file>
         </group>
     </open-files>
 </project-private>

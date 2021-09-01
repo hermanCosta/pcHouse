@@ -11,7 +11,7 @@ package Model;
  */
 public class Customer {
     
-    int customerID;
+    int customerId;
     String firstName, lastName, email, contactNo;
     
     
@@ -23,12 +23,12 @@ public class Customer {
         this.email = _email;
     }
 
-    public int getCustomerID() {
-        return customerID;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomerID(int customerID) {
-        this.customerID = customerID;
+    public void setCustomerId(int customerID) {
+        this.customerId = customerID;
     }
 
     

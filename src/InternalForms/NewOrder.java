@@ -1354,7 +1354,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             //add a new customer if not exists AND fields are not empty
             else if (!rs.isBeforeFirst() && !firstName.trim().isEmpty() && !lastName.trim().isEmpty())
             {
-                int confirmInsertion = JOptionPane.showConfirmDialog(null, "Do you want to add a new Customer ?", "Add New Customer", JOptionPane.YES_NO_OPTION);
+                int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add a new Customer ?", "Add New Customer", JOptionPane.YES_NO_OPTION);
                 if(confirmInsertion == 0)
                 {
                     customer = new Customer(firstName, lastName, contactNo, email);

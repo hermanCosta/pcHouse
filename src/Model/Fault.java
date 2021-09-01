@@ -10,11 +10,12 @@ package Model;
  * @author user
  */
 public class Fault {
+    int faultId;
     String fault;
 
-//    public Fault(String fault) {
-//        this.fault = fault;
-//    }
+    public Fault(String _fault) {
+        this.fault = _fault;
+    }
 
     public String getFault() {
         return fault;
@@ -23,6 +24,16 @@ public class Fault {
     public void setFault(String fault) {
         this.fault = fault;
     }
+
+    public int getFaultId() {
+        return faultId;
+    }
+
+    public void setFaultId(int faultId) {
+        this.faultId = faultId;
+    }
+    
+    
     
     
     
