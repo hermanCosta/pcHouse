@@ -9,6 +9,7 @@ import InternalForms.NewOrder;
 import InternalForms.OrderDetails;
 import InternalForms.SaleDetails;
 import InternalForms.Customers;
+import InternalForms.NewSale;
 import InternalForms.Sales;
 import Model.Sale;
 import java.awt.Graphics;
@@ -95,9 +96,9 @@ public class SaleReceipt extends javax.swing.JFrame {
         
         else
         {
-            Sales sales = new Sales();
+            NewSale newSale = new NewSale();
             MainMenu.mainMenuPane.removeAll();
-            MainMenu.mainMenuPane.add(sales).setVisible(true);
+            MainMenu.mainMenuPane.add(newSale).setVisible(true);
         }
     }
     

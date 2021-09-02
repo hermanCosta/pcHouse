@@ -1128,6 +1128,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
     private void txt_faultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_faultActionPerformed
         // TODO add your handling code here:
         String faultText = txt_fault.getText();
+        String tableFault = "";
         Vector faultsList = new Vector();
         DefaultTableModel dtm = (DefaultTableModel)table_view_faults.getModel();
         
@@ -1159,15 +1160,26 @@ public class NewOrder extends javax.swing.JInternalFrame {
                         txt_fault.setText("");
                     }
                     else
-                    {
                         txt_fault.setText("");
-                    }
                 }
                 else
                 {
-                    faultsList.add(faultText);
-                    dtm.addRow(faultsList);
-                    txt_fault.setText("");
+                    for (int i = 0; i < dtm.getRowCount(); i++)
+                        tableFault = dtm.getValueAt(i, 0).toString();
+                    
+                    if (tableFault.equals(faultText))
+                    {
+                        JOptionPane.showMessageDialog(this, "Item '" + faultText + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
+                        txt_fault.setText("");
+                    }
+                    else
+                    {
+                        faultsList.add(faultText);
+                        dtm.addRow(faultsList);
+                        txt_fault.setText("");
+                    }
+                    
+                    
                 }
 
             } 
@@ -1194,10 +1206,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
         // Add selected items to the products table
         Vector vector = new Vector();
         String selectedItem = combo_box_product_service.getSelectedItem().toString();
-        String productName = "";
+        String productName = "", newProdAdd = "", category = "";
         int qty = 0;
         double unitPrice = 0;
-        String category = "";
         double totalPrice = 0;
         
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
@@ -1224,7 +1235,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 {
                     while (rs.next())
                     {
-                        productName = rs.getString("productService");
+                        newProdAdd = rs.getString("productService");
                         unitPrice = rs.getDouble("price");
                         category = rs.getString("category");
                     }
@@ -1245,24 +1256,40 @@ public class NewOrder extends javax.swing.JInternalFrame {
                             }
                         }
                         
-                        totalPrice = unitPrice * qty;
-                        vector.add(productName);
-                        vector.add(qty);
-                        vector.add(unitPrice);
-                        vector.add(totalPrice);
-                        dtm.addRow(vector);
+                        for (int i = 0; i < dtm.getRowCount(); i++)
+                        {
+                            productName = dtm.getValueAt(i, 0).toString();
+                        }
+                        
+                        if (newProdAdd.equals(productName))
+                            JOptionPane.showMessageDialog(this, "Item '" + newProdAdd + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
+                        else
+                        {
+                        
+                            totalPrice = unitPrice * qty;
+                            vector.add(newProdAdd);
+                            vector.add(qty);
+                            vector.add(unitPrice);
+                            vector.add(totalPrice);
+                            dtm.addRow(vector);
+                        }
                         
                     }
                     else
                     {
-                        qty = 1;
-                        totalPrice = unitPrice * qty;
-                        
-                        vector.add(productName);
-                        vector.add(qty);
-                        vector.add(unitPrice);
-                        vector.add(totalPrice);
-                        dtm.addRow(vector);
+                        if (newProdAdd.equals(productName))
+                            JOptionPane.showMessageDialog(this, "Item '" + newProdAdd + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
+                        else
+                        {
+                            qty = 1;
+                            totalPrice = unitPrice * qty;
+
+                            vector.add(newProdAdd);
+                            vector.add(qty);
+                            vector.add(unitPrice);
+                            vector.add(totalPrice);
+                            dtm.addRow(vector);
+                        }
                     }
                     
                     combo_box_product_service.setSelectedIndex(-1);

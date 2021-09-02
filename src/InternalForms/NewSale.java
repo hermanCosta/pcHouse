@@ -963,9 +963,8 @@ public class NewSale extends javax.swing.JInternalFrame {
         String selectedItem = combo_box_product_service.getSelectedItem().toString();
         String productName = "";
         int qty = 0;
-        double unitPrice = 0;
-        String category = "";
-        double totalPrice = 0;
+        double unitPrice = 0, totalPrice = 0;
+        String category = "", newProdAdd = "";
         
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
         
@@ -991,7 +990,7 @@ public class NewSale extends javax.swing.JInternalFrame {
                 {
                     while (rs.next())
                     {
-                        productName = rs.getString("productService");
+                        newProdAdd = rs.getString("productService");
                         unitPrice = rs.getDouble("price");
                         category = rs.getString("category");
                     }
@@ -1012,24 +1011,39 @@ public class NewSale extends javax.swing.JInternalFrame {
                             }
                         }
                         
-                        totalPrice = unitPrice * qty;
-                        vector.add(productName);
-                        vector.add(qty);
-                        vector.add(unitPrice);
-                        vector.add(totalPrice);
-                        dtm.addRow(vector);
+                        for (int i = 0; i < dtm.getRowCount(); i++)
+                        {
+                            productName = dtm.getValueAt(i, 0).toString();
+                        }
+                        
+                        if (newProdAdd.equals(productName))
+                            JOptionPane.showMessageDialog(this, "Item '" + newProdAdd + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
+                        else
+                        {
+                            totalPrice = unitPrice * qty;
+                            vector.add(newProdAdd);
+                            vector.add(qty);
+                            vector.add(unitPrice);
+                            vector.add(totalPrice);
+                            dtm.addRow(vector);
+                        }
                         
                     }
                     else
                     {
-                        qty = 1;
-                        totalPrice = unitPrice * qty;
-                        
-                        vector.add(productName);
-                        vector.add(qty);
-                        vector.add(unitPrice);
-                        vector.add(totalPrice);
-                        dtm.addRow(vector);
+                        if (newProdAdd.equals(productName))
+                            JOptionPane.showMessageDialog(this, "Item '" + newProdAdd + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
+                        else
+                        {
+                            qty = 1;
+                            totalPrice = unitPrice * qty;
+
+                            vector.add(newProdAdd);
+                            vector.add(qty);
+                            vector.add(unitPrice);
+                            vector.add(totalPrice);
+                            dtm.addRow(vector);
+                        }
                     }
                     
                     combo_box_product_service.setSelectedIndex(0);
@@ -1100,16 +1114,30 @@ public class NewSale extends javax.swing.JInternalFrame {
                         
                    compTotal = computer.getPrice() * qty;
                    computer.setQty(qty);
+                   String tableProduct = "";
+                   String compName = "";
+                   
                    
                     Object[] compRow = new Object[4];
                     for (int i = 0; i < compSpecs.size() ; i++)
                     {
-                        compRow[0] = compSpecs.get(i).getBrand() + " | " + compSpecs.get(i).getModel() + " | " + compSpecs.get(i).getSerialNumber();
+                        compName = compSpecs.get(i).getBrand() + " | " + compSpecs.get(i).getModel() + " | " + compSpecs.get(i).getSerialNumber();
+                        compRow[0] = compName;
                         compRow[1] = compSpecs.get(i).getQty();
                         compRow[2] = compSpecs.get(i).getPrice(); // set price in Unit€
                         compRow[3] = compTotal;
 
-                        prodTableModel.addRow(compRow);
+                    
+                        for (int j = 0; j < prodTableModel.getRowCount(); j++)
+                        {
+                            tableProduct = prodTableModel.getValueAt(j, 0).toString();
+                            
+                        }     
+                        
+                        if (compName.equals(tableProduct))
+                            JOptionPane.showMessageDialog(this, "Item '" + compName + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
+                        else
+                            prodTableModel.addRow(compRow);
                     }
                     // Sum price column and set into total textField
                     getPriceSum();
