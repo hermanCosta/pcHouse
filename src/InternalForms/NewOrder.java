@@ -1282,7 +1282,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         
         if(evt.getClickCount() == 2)
         {
-          int confirmDeletion = JOptionPane.showConfirmDialog(null, "Delete This Item ?", "Delete Product|Service", JOptionPane.YES_NO_OPTION);
+          int confirmDeletion = JOptionPane.showConfirmDialog(null, "Remove This Item ?", "Remove Product|Service", JOptionPane.YES_NO_OPTION);
           if(confirmDeletion == 0)
           {
               dtm.removeRow(table_view_products.getSelectedRow());
@@ -1299,7 +1299,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         
         if(evt.getClickCount() == 2)
         {
-          int confirmDeletion = JOptionPane.showConfirmDialog(null, "Delete This Item ?", "Delete Faults", JOptionPane.YES_NO_OPTION);
+          int confirmDeletion = JOptionPane.showConfirmDialog(null, "Remove This Item ?", "Remove Faults", JOptionPane.YES_NO_OPTION);
           if(confirmDeletion == 0)
               dtm.removeRow(table_view_faults.getSelectedRow());
         }

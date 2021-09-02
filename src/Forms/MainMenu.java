@@ -11,6 +11,7 @@ import InternalForms.TillClosing;
 import InternalForms.ProductsList;
 import InternalForms.Customers;
 import InternalForms.Faults;
+import InternalForms.Sales;
 import Model.Customer;
 import java.awt.Color;
 import javax.swing.JDesktopPane;
@@ -964,9 +965,9 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void label_salesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_salesMouseClicked
         // TODO add your handling code here:
-        Customers sellings = new Customers();
+        Sales sales = new Sales();
         desktop_pane_main_menu.removeAll();
-        desktop_pane_main_menu.add(sellings).setVisible(true);
+        desktop_pane_main_menu.add(sales).setVisible(true);
         
         panel_add_new.setBackground(defaultColor);
         panel_sellings.setBackground(clickedColor);

@@ -5,6 +5,7 @@
  */
 package InternalForms;
 
+import Model.Computer;
 import Model.ProductService;
 import java.awt.Color;
 import java.awt.Font;
@@ -236,7 +237,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         btn_device_list.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
         btn_device_list.setForeground(new java.awt.Color(255, 255, 255));
         btn_device_list.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_device_list.png"))); // NOI18N
-        btn_device_list.setText("Device List");
+        btn_device_list.setText("Computers");
         btn_device_list.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_device_listActionPerformed(evt);
@@ -480,7 +481,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addComponent(desktop_pane_product_list, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
 
         pack();
@@ -736,8 +737,9 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
     private void btn_device_listActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_device_listActionPerformed
         // TODO add your handling code here:
-        
-        
+        ComputerList computers = new ComputerList();
+        //desktop_pane_product_list.removeAll();
+        desktop_pane_product_list.add(computers).setVisible(true);
     }//GEN-LAST:event_btn_device_listActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
