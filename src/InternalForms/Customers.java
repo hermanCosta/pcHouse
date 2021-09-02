@@ -184,6 +184,7 @@ public class Customers extends javax.swing.JInternalFrame {
             txt_last_name.setText("");
             txt_contact.setText("");
             txt_email.setText("");
+            txt_search_customer.setText("");
             txt_first_name.requestFocus();
         
     }
