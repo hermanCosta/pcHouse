@@ -6,6 +6,7 @@
 package Forms;
 
 import InternalForms.NewOrder;
+import Model.Computer;
 import Model.Sale;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -30,10 +31,8 @@ public class SalePayment extends javax.swing.JFrame {
     Connection con;
     PreparedStatement ps;
     ResultSet rs;
-    
     Sale sale;
     JTable tableViewProducts;
-    
     double deposit, total, cash, card, totalPaid, changeTotal;
     String saleNo, firstName, lastName, contactNo, email, stringProducts, stringQty, stringUnitprice, 
             stringPriceTotal, saleDate;
@@ -63,15 +62,15 @@ public class SalePayment extends javax.swing.JFrame {
 
     public void updateProductQty()
     {
-         for (int i = 0; i < tableViewProducts.getRowCount() ; i++)
+        for (int i = 0; i < tableViewProducts.getRowCount() ; i++)
         {
             String cellProduct = tableViewProducts.getValueAt(i, 0).toString();
             int cellQty = (int) tableViewProducts.getValueAt(i, 1);
 
             try {
                 dbConnection();
-                String queryCheck = "SELECT * FROM products WHERE productService = ?";
-                ps = con.prepareStatement(queryCheck);
+                String queryCheckProduct = "SELECT qty, category FROM products WHERE productService = ?";
+                ps = con.prepareStatement(queryCheckProduct);
                 ps.setString(1, cellProduct);
                 rs = ps.executeQuery();
                 
@@ -79,17 +78,44 @@ public class SalePayment extends javax.swing.JFrame {
                 {
                     if (rs.getString("category").equals("Product"))
                     {
-                        int qty = rs.getInt("qty");
-                        int updateQty = qty - cellQty;
+                        int productQty = rs.getInt("qty");
+                        int updateProdQty = productQty - cellQty;
 
                         String queryUpdate = "UPDATE products SET qty = ? WHERE productService = ?";
                         ps = con.prepareStatement(queryUpdate);
-                        ps.setInt(1, updateQty);
+                        ps.setInt(1, updateProdQty);
                         ps.setString(2, cellProduct);
                         ps.executeUpdate();
                     }
                 }
                 
+                if (cellProduct.contains("|"))
+                {
+                    String[] split = cellProduct.split("|");
+                    int computerId = Integer.parseInt(split[0]);
+                    
+                    System.out.println("Comp ID: " + computerId);
+                    
+                    String queryCompQty = "SELECT qty FROM computers WHERE computerId = ?";
+                    ps = con.prepareStatement(queryCompQty);
+                    ps.setInt(1, computerId);
+                    rs = ps.executeQuery();
+                    
+                    while (rs.next())
+                    {
+                        int compQty = rs.getInt("qty");
+                        int updateCompQty = compQty - cellQty;
+                        System.out.println("Old Comp Qty: " + compQty);
+                    
+                        String queryUpdateCompQty = "UPDATE computers SET qty = ? WHERE computerId = ?";
+                        ps = con.prepareStatement(queryUpdateCompQty);
+                        ps.setInt(1, updateCompQty);
+                        ps.setInt(2, computerId);
+                        ps.executeUpdate();
+                        
+                        System.out.println("New Comp Qty: " + updateCompQty);
+                    }
+                }
                 
             } catch (SQLException ex) {
                 Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);

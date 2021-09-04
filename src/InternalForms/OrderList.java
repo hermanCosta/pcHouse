@@ -74,7 +74,7 @@ public class OrderList extends javax.swing.JInternalFrame {
         
         try {
             dbConnection();
-            ps = con.prepareStatement("SELECT * FROM orderDetails ORDER BY orderNo DESC");
+            ps = con.prepareStatement("SELECT * FROM orderDetails ORDER BY orderNo DESC LIMIT 18");
             rs = ps.executeQuery();
             
             while (rs.next())

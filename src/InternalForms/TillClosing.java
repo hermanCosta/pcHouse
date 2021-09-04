@@ -679,9 +679,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_ordersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ordersActionPerformed
-        
-//         panel_orders.setVisible(true);
-//        panel_sales.setVisible(false);
         // get date from calendar
         Date pickedDate = pickedDate = date_picker.getDate();
         String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
@@ -692,7 +689,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         
         if (loadOrdersList().isEmpty() || pickedDate.after(currentDate))
         {
-            JOptionPane.showMessageDialog(this, "No Cash Entries on " + tillClosingDate + " !" , "Till Closing", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No Order Entries on " + tillClosingDate + " !" , "Till Closing", JOptionPane.ERROR_MESSAGE);
             loadOrdersReportOfTheDay();
         }
         else
@@ -714,7 +711,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         
         
         if (pickedDate.after(currentDateFull) || listSales.isEmpty() && listOrders.isEmpty())
-            JOptionPane.showMessageDialog(this, "No Cash Entries on " + tillClosingDate + " !" , "Till Closing", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No Entries on " + tillClosingDate + " !" , "Till Closing", JOptionPane.ERROR_MESSAGE);
         else
         {
             PrintFullReport printFullReport = new PrintFullReport(tillClosingDate, listSales, listOrders);
@@ -740,7 +737,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         if (listSales.isEmpty() || pickedDate.after(currentDate))
             
         {
-            JOptionPane.showMessageDialog(this, "No Cash Entries on " + tillClosingDate + " !" , "Till Closing", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No Sales Entries on " + tillClosingDate + " !" , "Till Closing", JOptionPane.ERROR_MESSAGE);
             lbl_till_closing_date.setText("Sales Report - " + tillClosingDate);
         }
             

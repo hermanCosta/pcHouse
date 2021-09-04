@@ -178,17 +178,45 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                 {
                     if (rs.getString("category").equals("Product"))
                     {
-                        int qty = rs.getInt("qty");
-                        
-                        int updateQty = Integer.parseInt(cellQty) + qty;
+                        int productQty = rs.getInt("qty");
+                        int updateProdQty = Integer.parseInt(cellQty) + productQty;
 
                         String queryUpdate = "UPDATE products SET qty = ? WHERE productService = ?";
                         ps = con.prepareStatement(queryUpdate);
-                        ps.setInt(1, updateQty);
+                        ps.setInt(1, updateProdQty);
                         ps.setString(2, cellProduct);
                         ps.executeUpdate();
                     }
                 }
+                
+                if (cellProduct.contains("|"))
+                {
+                    String[] split = cellProduct.split("|");
+                    int computerId = Integer.parseInt(split[0]);
+                    
+                    System.out.println("Comp ID: " + computerId);
+                    
+                    String queryCompQty = "SELECT qty FROM computers WHERE computerId = ?";
+                    ps = con.prepareStatement(queryCompQty);
+                    ps.setInt(1, computerId);
+                    rs = ps.executeQuery();
+                    
+                    while (rs.next())
+                    {
+                        int compQty = rs.getInt("qty");
+                        int updateCompQty = Integer.parseInt(cellQty) + compQty;
+                        System.out.println("Old Comp Qty: " + compQty);
+                    
+                        String queryUpdateCompQty = "UPDATE computers SET qty = ? WHERE computerId = ?";
+                        ps = con.prepareStatement(queryUpdateCompQty);
+                        ps.setInt(1, updateCompQty);
+                        ps.setInt(2, computerId);
+                        ps.executeUpdate();
+                        
+                        System.out.println("New Comp Qty: " + updateCompQty);
+                    }
+                }
+                
                 
             } catch (SQLException ex) {
                 Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
@@ -610,8 +638,6 @@ public class SaleDetails extends javax.swing.JInternalFrame {
 
                 sale.setStatus("Refunded");
                 sale.setSaleDate(refundDate);
-
-                //sale.setCash(sale.getCash() - sale.getChangeTotal());
 
                 cash = sale.getCash();
                 card = sale.getCard();
