@@ -113,8 +113,8 @@ public class DepositUpdatePayment extends javax.swing.JFrame {
             
             order.setDeposit((order.getDeposit() + newDeposit));
             OrderDetails orderDetails = new OrderDetails(order, completedOrder);
-            MainMenu.mainMenuPane.removeAll();
-            MainMenu.mainMenuPane.add(orderDetails).setVisible(true);
+            MainMenu.mainMenuDesktopPane.removeAll();
+            MainMenu.mainMenuDesktopPane.add(orderDetails).setVisible(true);
             
         } catch (SQLException ex) {
             Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);

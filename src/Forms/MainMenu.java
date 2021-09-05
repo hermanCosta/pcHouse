@@ -11,13 +11,27 @@ import InternalForms.TillClosing;
 import InternalForms.ProductsList;
 import InternalForms.Customers;
 import InternalForms.Faults;
+import InternalForms.HomePage;
 import InternalForms.NewSale;
 import InternalForms.Sales;
-import Model.Customer;
+import Model.Order;
+import Model.ProductService;
 import java.awt.Color;
+import java.awt.Font;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -27,20 +41,35 @@ public class MainMenu extends javax.swing.JFrame {
     /**
      * Creates new form MainMenu
      */
-    
-    public static JDesktopPane mainMenuPane;
+    Connection con;
+    PreparedStatement ps;
+    ResultSet rs;
+    Statement stmt;
+    ProductService productService;
+    Order order;
+    public static JDesktopPane mainMenuDesktopPane;
     Color defaultColor, clickedColor;
     
     public MainMenu() {
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         
+        tableSettings(table_view_products_stock);
+        tableSettings(table_view_orders_fixed);
+        
         defaultColor = new Color(21,76,121);
         clickedColor = new Color(118,181,197);
         
         expandHome();
-        //defaultColorToAll();
-        mainMenuPane = desktop_pane_main_menu; 
+        mainMenuDesktopPane = desktop_pane_main_menu; 
+        loadProductsStockTable();
+        loadOrdersFixed();
+    }
+    
+    public void tableSettings (JTable table)
+    {
+        table.setRowHeight(25);
+        table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
     }
     
     public void defaultColorToAll()
@@ -48,7 +77,6 @@ public class MainMenu extends javax.swing.JFrame {
         panel_home.setBackground(defaultColor);
         panel_products.setBackground(defaultColor);
         panel_reports.setBackground(defaultColor);
-        
         
         label_home.setBackground(defaultColor);
         label_products.setBackground(defaultColor);
@@ -61,11 +89,9 @@ public class MainMenu extends javax.swing.JFrame {
         panel_check_existing.setVisible(false);
         panel_products_list.setVisible(false);
         
-        
         panel_products_list.setVisible(false);
         panel_new_sale.setVisible(false);
         panel_sales.setVisible(false);
-        
         
         panel_close_till.setVisible(false);
         panel_customers.setVisible(false);
@@ -76,6 +102,10 @@ public class MainMenu extends javax.swing.JFrame {
         panel_orders.setBackground(defaultColor);
         panel_products.setBackground(defaultColor);
         panel_reports.setBackground(defaultColor);
+        
+//        HomePage homePage = new HomePage();
+//        desktop_pane_main_menu.removeAll();
+//        desktop_pane_main_menu.add(homePage).setVisible(true);
     }
     
 
@@ -143,13 +173,11 @@ public class MainMenu extends javax.swing.JFrame {
         panel_customers.setBackground(defaultColor);
         panel_faults.setBackground(defaultColor);
         
-        
         //Set default color to the outer labels
         panel_home.setBackground(defaultColor);
         panel_orders.setBackground(defaultColor);
         panel_products.setBackground(defaultColor);
         panel_reports.setBackground(clickedColor);
-      
            
         //Colapse Orders
         panel_check_existing.setVisible(false);
@@ -160,7 +188,98 @@ public class MainMenu extends javax.swing.JFrame {
         panel_new_sale.setVisible(false);
         panel_sales.setVisible(false);
     }
-       
+    
+    public void dbConnection() 
+    {
+        try {
+              Class.forName("com.mysql.cj.jdbc.Driver");
+              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void loadProductsStockTable()
+    {
+        ArrayList<ProductService> productList = new ArrayList<>();
+        try {
+            dbConnection();
+            
+            String query = "SELECT * FROM products WHERE category = 'Product' AND qty <= 2";
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery(query);
+            
+            while (rs.next())
+            {
+                productService = new ProductService(rs.getString("productService"), rs.getDouble("price"), 
+                        rs.getInt("qty"), rs.getString("notes"), rs.getString("category"));
+                
+                productList.add(productService);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        DefaultTableModel dtm = (DefaultTableModel)table_view_products_stock.getModel();
+        dtm.setRowCount(0);
+        
+        Object[] row = new Object[2];
+        for (int i = 0 ; i < productList.size() ; i++)
+        {
+                row[0] = productList.get(i).getQty();
+                row[1] = productList.get(i).getProductService();
+                
+            dtm.addRow(row);
+        }
+    }
+    
+    public void loadOrdersFixed()
+    {
+        ArrayList<Order> orderList = new ArrayList<>();
+        
+        try {
+            dbConnection();
+            
+            String query = "SELECT * FROM orderDetails WHERE status = 'Fixed' AND finishDate <= NOW() - INTERVAL 3 MONTH";
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery();
+            
+            while(rs.next())
+            {
+                String dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate("finishDate"));
+                
+                order = new Order(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"),
+                        rs.getString("email"), rs.getString("deviceBrand"), rs.getString("deviceModel"), rs.getString("serialNumber"), 
+                           rs.getString("importantNotes"), rs.getString("fault"), rs.getString("productService"), rs.getString("qty"),
+                           rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getDouble("deposit"), 
+                           rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"), rs.getString("status"),
+                           rs.getString("issueDate"), dateFormat, rs.getString("pickDate"), rs.getString("refundDate"));
+
+                orderList.add(order);
+            }
+            
+            DefaultTableModel dtm = (DefaultTableModel)table_view_orders_fixed.getModel();
+            dtm.setRowCount(0);
+
+            Object[] row = new Object[4];
+            for (int i = 0; i < orderList.size() ; i++)
+            {
+                row[0] = orderList.get(i).getOrderNo();
+                row[1] = orderList.get(i).getFirstName() + " " + orderList.get(i).getLastName();
+                row[2] = orderList.get(i).getContactNo();
+                row[3] = orderList.get(i).getFinishDate();
+
+                dtm.addRow(row);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -199,6 +318,19 @@ public class MainMenu extends javax.swing.JFrame {
         panel_new_sale = new javax.swing.JPanel();
         label_new_sale = new javax.swing.JLabel();
         desktop_pane_main_menu = new javax.swing.JDesktopPane();
+        panel_customers1 = new javax.swing.JPanel();
+        panel_buttons = new javax.swing.JPanel();
+        btn_new_order = new javax.swing.JButton();
+        btn_new_sale = new javax.swing.JButton();
+        btn_products_list = new javax.swing.JButton();
+        btn_orders = new javax.swing.JButton();
+        btn_sales = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        table_view_products_stock = new javax.swing.JTable();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        table_view_orders_fixed = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(21, 76, 121));
@@ -232,7 +364,7 @@ public class MainMenu extends javax.swing.JFrame {
         label_home.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         label_home.setForeground(new java.awt.Color(255, 255, 255));
         label_home.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_home.png"))); // NOI18N
-        label_home.setText("  Home");
+        label_home.setText("Home");
         label_home.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 label_homeMousePressed(evt);
@@ -246,9 +378,9 @@ public class MainMenu extends javax.swing.JFrame {
         panel_home.setLayout(panel_homeLayout);
         panel_homeLayout.setHorizontalGroup(
             panel_homeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_homeLayout.createSequentialGroup()
-                .addComponent(label_home, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_homeLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(label_home, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panel_homeLayout.setVerticalGroup(
             panel_homeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -326,7 +458,7 @@ public class MainMenu extends javax.swing.JFrame {
         panel_reportsLayout.setHorizontalGroup(
             panel_reportsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_reportsLayout.createSequentialGroup()
-                .addGap(0, 14, Short.MAX_VALUE)
+                .addGap(0, 20, Short.MAX_VALUE)
                 .addComponent(label_reports, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panel_reportsLayout.setVerticalGroup(
@@ -765,23 +897,27 @@ public class MainMenu extends javax.swing.JFrame {
             .addComponent(panel_reports, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panel_orders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_menu_barLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 77, Short.MAX_VALUE)
                 .addGroup(panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(panel_sales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panel_sales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(panel_products_list, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(panel_new_order, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panel_check_existing, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(panel_new_sale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(panel_menu_barLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_menu_barLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(panel_products_list, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(panel_new_order, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(panel_check_existing, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addComponent(panel_new_sale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(panel_home, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_menu_barLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panel_close_till, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panel_customers, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panel_faults, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(panel_close_till, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(panel_customers, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(panel_faults, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(panel_menu_barLayout.createSequentialGroup()
+                        .addComponent(panel_home, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, 0))))
         );
         panel_menu_barLayout.setVerticalGroup(
             panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -816,7 +952,189 @@ public class MainMenu extends javax.swing.JFrame {
         desktop_pane_main_menu.setBackground(new java.awt.Color(255, 255, 255));
         desktop_pane_main_menu.setToolTipText("");
         desktop_pane_main_menu.setMaximumSize(new java.awt.Dimension(1049, 700));
-        desktop_pane_main_menu.setSize(new java.awt.Dimension(1049, 700));
+
+        panel_customers1.setPreferredSize(new java.awt.Dimension(1049, 700));
+
+        btn_new_order.setBackground(new java.awt.Color(21, 76, 121));
+        btn_new_order.setFont(new java.awt.Font("Lucida Grande", 1, 17)); // NOI18N
+        btn_new_order.setForeground(new java.awt.Color(255, 255, 255));
+        btn_new_order.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_new_order.png"))); // NOI18N
+        btn_new_order.setText("New Order");
+        btn_new_order.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_new_orderActionPerformed(evt);
+            }
+        });
+        btn_new_order.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btn_new_orderKeyPressed(evt);
+            }
+        });
+
+        btn_new_sale.setBackground(new java.awt.Color(21, 76, 121));
+        btn_new_sale.setFont(new java.awt.Font("Lucida Grande", 1, 17)); // NOI18N
+        btn_new_sale.setForeground(new java.awt.Color(255, 255, 255));
+        btn_new_sale.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_new_sale.png"))); // NOI18N
+        btn_new_sale.setText("New Sale");
+        btn_new_sale.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_new_saleActionPerformed(evt);
+            }
+        });
+
+        btn_products_list.setBackground(new java.awt.Color(21, 76, 121));
+        btn_products_list.setFont(new java.awt.Font("Lucida Grande", 1, 17)); // NOI18N
+        btn_products_list.setForeground(new java.awt.Color(255, 255, 255));
+        btn_products_list.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_product_list.png"))); // NOI18N
+        btn_products_list.setText("Products List");
+        btn_products_list.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_products_listActionPerformed(evt);
+            }
+        });
+
+        btn_orders.setBackground(new java.awt.Color(21, 76, 121));
+        btn_orders.setFont(new java.awt.Font("Lucida Grande", 1, 17)); // NOI18N
+        btn_orders.setForeground(new java.awt.Color(255, 255, 255));
+        btn_orders.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_check_existing.png"))); // NOI18N
+        btn_orders.setText("Orders");
+        btn_orders.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ordersActionPerformed(evt);
+            }
+        });
+
+        btn_sales.setBackground(new java.awt.Color(21, 76, 121));
+        btn_sales.setFont(new java.awt.Font("Lucida Grande", 1, 17)); // NOI18N
+        btn_sales.setForeground(new java.awt.Color(255, 255, 255));
+        btn_sales.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_sellings.png"))); // NOI18N
+        btn_sales.setText("Sales");
+        btn_sales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_salesActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panel_buttonsLayout = new javax.swing.GroupLayout(panel_buttons);
+        panel_buttons.setLayout(panel_buttonsLayout);
+        panel_buttonsLayout.setHorizontalGroup(
+            panel_buttonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_buttonsLayout.createSequentialGroup()
+                .addContainerGap(39, Short.MAX_VALUE)
+                .addComponent(btn_new_order, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btn_new_sale, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btn_products_list, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btn_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(38, Short.MAX_VALUE))
+        );
+        panel_buttonsLayout.setVerticalGroup(
+            panel_buttonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_buttonsLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(panel_buttonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_new_order, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_new_sale, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_products_list, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
+
+        jLabel1.setFont(new java.awt.Font("sansserif", 0, 15)); // NOI18N
+        jLabel1.setText("Products Stock BELOW or  STOCKOUT");
+
+        jLabel2.setFont(new java.awt.Font("sansserif", 0, 15)); // NOI18N
+        jLabel2.setText("Orders  Fixed OVER three months");
+
+        table_view_products_stock.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        table_view_products_stock.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Qty", "Product Name"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        table_view_products_stock.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_view_products_stockMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(table_view_products_stock);
+
+        table_view_orders_fixed.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        table_view_orders_fixed.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Order", "FullName", "Contact No", "Date of Fixing"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        table_view_orders_fixed.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_view_orders_fixedMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(table_view_orders_fixed);
+
+        javax.swing.GroupLayout panel_customers1Layout = new javax.swing.GroupLayout(panel_customers1);
+        panel_customers1.setLayout(panel_customers1Layout);
+        panel_customers1Layout.setHorizontalGroup(
+            panel_customers1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panel_buttons, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(panel_customers1Layout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 574, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(panel_customers1Layout.createSequentialGroup()
+                .addGap(96, 96, 96)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addGap(205, 205, 205))
+        );
+        panel_customers1Layout.setVerticalGroup(
+            panel_customers1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_customers1Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(panel_buttons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
+                .addGroup(panel_customers1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel_customers1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(183, Short.MAX_VALUE))
+        );
+
+        desktop_pane_main_menu.add(panel_customers1);
+        panel_customers1.setBounds(0, 0, 1049, 810);
 
         javax.swing.GroupLayout panel_windowLayout = new javax.swing.GroupLayout(panel_window);
         panel_window.setLayout(panel_windowLayout);
@@ -893,8 +1211,11 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void label_homeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_homeMouseClicked
         // TODO add your handling code here:
-       expandHome();
-       new MainMenu().setVisible(true);
+          new MainMenu().setVisible(true);
+//        expandHome();
+//        HomePage homePage = new HomePage();
+//        desktop_pane_main_menu.removeAll();
+//        desktop_pane_main_menu.add(homePage).setVisible(true);
     }//GEN-LAST:event_label_homeMouseClicked
 
     private void panel_homeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_homeMouseClicked
@@ -988,7 +1309,6 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void label_products_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_products_listMouseClicked
         // TODO add your handling code here:
-        //Open ProductsLis Class
         ProductsList productsList = new ProductsList();
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(productsList).setVisible(true);
@@ -1197,6 +1517,7 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void label_new_saleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_new_saleMouseClicked
         // TODO add your handling code here:
+        expandProducts();
         NewSale newSale = new NewSale();
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(newSale).setVisible(true);
@@ -1204,7 +1525,6 @@ public class MainMenu extends javax.swing.JFrame {
         panel_products_list.setBackground(defaultColor);
         panel_sales.setBackground(defaultColor);
         panel_new_sale.setBackground(clickedColor);
-        
     }//GEN-LAST:event_label_new_saleMouseClicked
 
     private void label_new_saleMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_new_saleMouseExited
@@ -1226,6 +1546,75 @@ public class MainMenu extends javax.swing.JFrame {
     private void panel_new_saleMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_new_saleMouseExited
         // TODO add your handling code here:
     }//GEN-LAST:event_panel_new_saleMouseExited
+
+    private void btn_new_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_new_orderActionPerformed
+        // TODO add your handling code here:
+        expandOrders();
+        NewOrder newOrder = new NewOrder();
+        desktop_pane_main_menu.add(newOrder).setVisible(true);
+
+        panel_check_existing.setBackground(defaultColor);
+        panel_new_order.setBackground(clickedColor);
+    }//GEN-LAST:event_btn_new_orderActionPerformed
+
+    private void btn_new_orderKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btn_new_orderKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_new_orderKeyPressed
+
+    private void btn_new_saleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_new_saleActionPerformed
+        // TODO add your handling code here:
+        expandProducts();
+        NewSale newSale = new NewSale();
+        desktop_pane_main_menu.removeAll();
+        desktop_pane_main_menu.add(newSale).setVisible(true);
+        
+        panel_products_list.setBackground(defaultColor);
+        panel_sales.setBackground(defaultColor);
+        panel_new_sale.setBackground(clickedColor);
+    }//GEN-LAST:event_btn_new_saleActionPerformed
+
+    private void btn_products_listActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_products_listActionPerformed
+        // TODO add your handling code here:
+        expandProducts();
+        ProductsList productsList = new ProductsList();
+        desktop_pane_main_menu.removeAll();
+        desktop_pane_main_menu.add(productsList).setVisible(true);
+        
+        panel_products_list.setBackground(clickedColor);
+        panel_sales.setBackground(defaultColor);
+        panel_new_sale.setBackground(defaultColor);
+    }//GEN-LAST:event_btn_products_listActionPerformed
+
+    private void btn_ordersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ordersActionPerformed
+        // TODO add your handling code here:
+        expandOrders();
+        OrderList orderlist = new OrderList();
+        desktop_pane_main_menu.removeAll();
+        desktop_pane_main_menu.add(orderlist).setVisible(true);
+        
+        panel_check_existing.setBackground(clickedColor);
+        panel_new_order.setBackground(defaultColor);
+    }//GEN-LAST:event_btn_ordersActionPerformed
+
+    private void btn_salesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_salesActionPerformed
+        // TODO add your handling code here:
+        expandProducts();
+        Sales sales = new Sales();
+        desktop_pane_main_menu.removeAll();
+        desktop_pane_main_menu.add(sales).setVisible(true);
+        
+        panel_products_list.setBackground(defaultColor);
+        panel_sales.setBackground(clickedColor);
+        panel_new_sale.setBackground(defaultColor);
+    }//GEN-LAST:event_btn_salesActionPerformed
+
+    private void table_view_products_stockMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_products_stockMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_table_view_products_stockMouseClicked
+
+    private void table_view_orders_fixedMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_orders_fixedMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_table_view_orders_fixedMouseClicked
     
     /**
      * @param args the command line arguments
@@ -1257,13 +1646,23 @@ public class MainMenu extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                
                 new MainMenu().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_new_order;
+    private javax.swing.JButton btn_new_sale;
+    private javax.swing.JButton btn_orders;
+    private javax.swing.JButton btn_products_list;
+    private javax.swing.JButton btn_sales;
     private javax.swing.JDesktopPane desktop_pane_main_menu;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel label_check_existing;
     private javax.swing.JLabel label_close_till;
     private javax.swing.JLabel label_customers;
@@ -1276,9 +1675,11 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JLabel label_products_list;
     private javax.swing.JLabel label_reports;
     private javax.swing.JLabel label_sales;
+    private javax.swing.JPanel panel_buttons;
     private javax.swing.JPanel panel_check_existing;
     private javax.swing.JPanel panel_close_till;
     private javax.swing.JPanel panel_customers;
+    private javax.swing.JPanel panel_customers1;
     private javax.swing.JPanel panel_faults;
     private javax.swing.JPanel panel_header;
     private javax.swing.JPanel panel_home;
@@ -1291,5 +1692,7 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JPanel panel_reports;
     private javax.swing.JPanel panel_sales;
     private javax.swing.JPanel panel_window;
+    private javax.swing.JTable table_view_orders_fixed;
+    private javax.swing.JTable table_view_products_stock;
     // End of variables declaration//GEN-END:variables
 }

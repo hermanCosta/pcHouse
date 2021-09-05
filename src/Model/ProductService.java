@@ -17,9 +17,10 @@ public class ProductService {
    String notes;
    String category;
    
-    public ProductService(String _serviceProduct, int qty, double _price, String _notes, String _category) {
+    public ProductService(String _serviceProduct, double _price, int _qty, String _notes, String _category) {
         this.productService = _serviceProduct;
         this.price = _price;
+        this.qty = _qty;
         this.notes = _notes;
         this.category = _category;
     }

@@ -501,7 +501,6 @@ public class OrderPayment extends javax.swing.JFrame {
                 ps.setDouble(13, completedOrders.getCardDeposit());
                 ps.setString(14, completedOrders.getPayDate());
                 ps.setString(15, completedOrders.getStatus());
-
                 ps.executeUpdate();
 
                
@@ -530,7 +529,7 @@ public class OrderPayment extends javax.swing.JFrame {
         }   
             else
             {
-               JOptionPane.showMessageDialog(null, "Values don't match! please, check !", "Order Payment",  JOptionPane.ERROR_MESSAGE);
+               JOptionPane.showMessageDialog(null, "Values don't match! please, check !", "Payment",  JOptionPane.ERROR_MESSAGE);
             }
         
     }//GEN-LAST:event_btn_payActionPerformed

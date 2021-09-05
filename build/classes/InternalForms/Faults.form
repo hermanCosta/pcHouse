@@ -32,18 +32,18 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-              <Component id="desktop_pane_customers" min="-2" max="-2" attributes="0"/>
+              <Component id="desktop_pane_faults" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="desktop_pane_customers" alignment="1" max="32767" attributes="0"/>
+          <Component id="desktop_pane_faults" alignment="1" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="javax.swing.JDesktopPane" name="desktop_pane_customers">
+    <Container class="javax.swing.JDesktopPane" name="desktop_pane_faults">
 
       <Layout>
         <DimensionLayout dim="0">

@@ -90,8 +90,8 @@ public class OrderReceipt extends javax.swing.JFrame {
     public void backToPreviousFrame()
     {        
             FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
-            MainMenu.mainMenuPane.removeAll();
-            MainMenu.mainMenuPane.add(fixedOrder).setVisible(true);
+            MainMenu.mainMenuDesktopPane.removeAll();
+            MainMenu.mainMenuDesktopPane.add(fixedOrder).setVisible(true);
     }
     
     @Override
@@ -322,12 +322,14 @@ public class OrderReceipt extends javax.swing.JFrame {
                     .addComponent(lbl_qty)
                     .addComponent(lbl_unit_price)
                     .addComponent(lbl_total))
-                .addGap(0, 0, 0)
-                .addGroup(panel_productsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGap(4, 4, 4)
+                .addGroup(panel_productsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane11)
                     .addComponent(jScrollPane10)
-                    .addComponent(jScrollPane8)
-                    .addComponent(jScrollPane11, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panel_productsLayout.createSequentialGroup()
+                        .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane8))
                 .addContainerGap())
         );
 
@@ -395,7 +397,7 @@ public class OrderReceipt extends javax.swing.JFrame {
                 .addComponent(lbl_change)
                 .addGap(3, 3, 3)
                 .addComponent(lbl_date)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
 
         jButton1.setBackground(new java.awt.Color(21, 76, 121));

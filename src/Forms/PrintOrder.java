@@ -116,15 +116,15 @@ public class PrintOrder extends javax.swing.JFrame {
         if (isOrderDetails)
         {
             OrderDetails orderDetails = new OrderDetails(order, completedOrder);
-            MainMenu.mainMenuPane.removeAll();
-            MainMenu.mainMenuPane.add(orderDetails).setVisible(true);
+            MainMenu.mainMenuDesktopPane.removeAll();
+            MainMenu.mainMenuDesktopPane.add(orderDetails).setVisible(true);
         }
         
         else
         {
             NewOrder newOrder = new NewOrder();
-            MainMenu.mainMenuPane.removeAll();
-            MainMenu.mainMenuPane.add(newOrder).setVisible(true);
+            MainMenu.mainMenuDesktopPane.removeAll();
+            MainMenu.mainMenuDesktopPane.add(newOrder).setVisible(true);
         }
     }
 
@@ -393,12 +393,14 @@ public class PrintOrder extends javax.swing.JFrame {
                     .addComponent(lbl_qty)
                     .addComponent(lbl_unit_price)
                     .addComponent(lbl_total))
-                .addGap(0, 0, 0)
-                .addGroup(panel_productsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane10)
-                    .addComponent(jScrollPane8)
+                .addGap(3, 3, 3)
+                .addGroup(panel_productsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane11, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panel_productsLayout.createSequentialGroup()
+                        .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane10)
+                    .addComponent(jScrollPane8))
                 .addContainerGap())
         );
 

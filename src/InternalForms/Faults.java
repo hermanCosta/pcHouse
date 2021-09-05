@@ -129,7 +129,7 @@ public class Faults extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        desktop_pane_customers = new javax.swing.JDesktopPane();
+        desktop_pane_faults = new javax.swing.JDesktopPane();
         panel_customers = new javax.swing.JPanel();
         btn_add = new javax.swing.JButton();
         btn_update = new javax.swing.JButton();
@@ -280,18 +280,18 @@ public class Faults extends javax.swing.JInternalFrame {
                 .addContainerGap(40, Short.MAX_VALUE))
         );
 
-        desktop_pane_customers.setLayer(panel_customers, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktop_pane_faults.setLayer(panel_customers, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        javax.swing.GroupLayout desktop_pane_customersLayout = new javax.swing.GroupLayout(desktop_pane_customers);
-        desktop_pane_customers.setLayout(desktop_pane_customersLayout);
-        desktop_pane_customersLayout.setHorizontalGroup(
-            desktop_pane_customersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(desktop_pane_customersLayout.createSequentialGroup()
+        javax.swing.GroupLayout desktop_pane_faultsLayout = new javax.swing.GroupLayout(desktop_pane_faults);
+        desktop_pane_faults.setLayout(desktop_pane_faultsLayout);
+        desktop_pane_faultsLayout.setHorizontalGroup(
+            desktop_pane_faultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(desktop_pane_faultsLayout.createSequentialGroup()
                 .addComponent(panel_customers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        desktop_pane_customersLayout.setVerticalGroup(
-            desktop_pane_customersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        desktop_pane_faultsLayout.setVerticalGroup(
+            desktop_pane_faultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panel_customers, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
         );
 
@@ -301,11 +301,11 @@ public class Faults extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(desktop_pane_customers, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(desktop_pane_faults, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktop_pane_customers, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(desktop_pane_faults, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
         pack();
@@ -519,7 +519,7 @@ public class Faults extends javax.swing.JInternalFrame {
     private javax.swing.JButton btn_clear_fields;
     private javax.swing.JButton btn_delete;
     private javax.swing.JButton btn_update;
-    private javax.swing.JDesktopPane desktop_pane_customers;
+    private javax.swing.JDesktopPane desktop_pane_faults;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lbl_search_icon;
     private javax.swing.JPanel panel_customers;

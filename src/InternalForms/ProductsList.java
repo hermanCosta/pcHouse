@@ -582,7 +582,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
                 String addNotes = txt_add_notes.getText();
                 addCategory = combo_box_category.getSelectedItem().toString();
 
-                    productService = new ProductService(addProductService, addQty, addPrice, addNotes, addCategory);
+                    productService = new ProductService(addProductService, addPrice, addQty, addNotes, addCategory);
 
                     try {
                         dbConnection();

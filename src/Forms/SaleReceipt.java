@@ -90,15 +90,15 @@ public class SaleReceipt extends javax.swing.JFrame {
         if (isSaleDetails)
         {
             SaleDetails saleDetails = new SaleDetails(sale);
-            MainMenu.mainMenuPane.removeAll();
-            MainMenu.mainMenuPane.add(saleDetails).setVisible(true);
+            MainMenu.mainMenuDesktopPane.removeAll();
+            MainMenu.mainMenuDesktopPane.add(saleDetails).setVisible(true);
         }
         
         else
         {
             NewSale newSale = new NewSale();
-            MainMenu.mainMenuPane.removeAll();
-            MainMenu.mainMenuPane.add(newSale).setVisible(true);
+            MainMenu.mainMenuDesktopPane.removeAll();
+            MainMenu.mainMenuDesktopPane.add(newSale).setVisible(true);
         }
     }
     
@@ -330,12 +330,12 @@ public class SaleReceipt extends javax.swing.JFrame {
                     .addComponent(lbl_qty)
                     .addComponent(lbl_unit_price)
                     .addComponent(lbl_total))
-                .addGap(0, 0, 0)
-                .addGroup(panel_productsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane10)
+                .addGap(4, 4, 4)
+                .addGroup(panel_productsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
                     .addComponent(jScrollPane11, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
-                    .addComponent(jScrollPane8))
+                    .addComponent(jScrollPane10)
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
 
@@ -390,7 +390,7 @@ public class SaleReceipt extends javax.swing.JFrame {
                 .addComponent(lbl_change)
                 .addGap(3, 3, 3)
                 .addComponent(lbl_date)
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addContainerGap(80, Short.MAX_VALUE))
         );
 
         jButton1.setBackground(new java.awt.Color(21, 76, 121));
