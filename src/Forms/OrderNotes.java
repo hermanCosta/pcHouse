@@ -17,12 +17,10 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -44,9 +42,10 @@ public class OrderNotes extends javax.swing.JFrame {
         initComponents();
     }
 
-    public OrderNotes(String _orderNo) {
+    public OrderNotes(String _orderNo, String _user) {
         initComponents();
         this.orderNo = _orderNo;
+        this.user = _user;
         
         loadTableNotes();
     }
@@ -78,18 +77,10 @@ public class OrderNotes extends javax.swing.JFrame {
             ps.setString(1, orderNo);
             rs = ps.executeQuery();
             
-//            Vector dates = new Vector();
-//            Vector notes = new Vector();
-//            Vector users = new Vector();
-            
             while (rs.next())
             {
-                
-//                    dates.add(rs.getString("date"));
-//                    notes.add(rs.getString("note"));
-//                    users.add(rs.getString("user"));
-                    
-                    orderNote = new OrderNote(rs.getString("date"), rs.getString("note"), rs.getString("user"));
+                    String dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate("date"));
+                    orderNote = new OrderNote(dateFormat, rs.getString("note"), rs.getString("user"));
                     noteList.add(orderNote);
                     
             }
@@ -103,16 +94,9 @@ public class OrderNotes extends javax.swing.JFrame {
                 
                 dtm.addRow(noteRow);
             }
-//            
-//            dtm.addColumn("Date",dates);
-//            dtm.addColumn("Notes",notes);
-//            dtm.addColumn("User",users);
-//            
-//            tableModel.getColumn(0).setMaxWidth(160);
-//            tableModel.getColumn(2).setMaxWidth(90);
+            rs.close();
+            ps.close();
 
-//            rs.close();
-//            ps.close();
             
         } catch (SQLException ex) {
             Logger.getLogger(OrderNotes.class.getName()).log(Level.SEVERE, null, ex);
@@ -163,8 +147,8 @@ public class OrderNotes extends javax.swing.JFrame {
         if (table_view_notes.getColumnModel().getColumnCount() > 0) {
             table_view_notes.getColumnModel().getColumn(0).setPreferredWidth(100);
             table_view_notes.getColumnModel().getColumn(0).setMaxWidth(120);
-            table_view_notes.getColumnModel().getColumn(2).setPreferredWidth(100);
-            table_view_notes.getColumnModel().getColumn(2).setMaxWidth(120);
+            table_view_notes.getColumnModel().getColumn(2).setPreferredWidth(120);
+            table_view_notes.getColumnModel().getColumn(2).setMaxWidth(150);
         }
 
         txt_note.setFont(new java.awt.Font("sansserif", 0, 13)); // NOI18N
@@ -208,10 +192,10 @@ public class OrderNotes extends javax.swing.JFrame {
         
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
-        noteDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
+        noteDate = new SimpleDateFormat("yyyy/MM/dd").format(currentDate);
         note = txt_note.getText();    
         
-        int confirmInsertion = JOptionPane.showConfirmDialog(null, "Do you want to add note: " + note + " to the Database ?","Order Notes", JOptionPane.YES_OPTION);
+        int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add note: " + note + " to the Database ?","Order Notes", JOptionPane.YES_OPTION);
         if (confirmInsertion == 0)
         {
             
@@ -223,7 +207,7 @@ public class OrderNotes extends javax.swing.JFrame {
                 ps.setString(1, orderNo);
                 ps.setString(2, noteDate);
                 ps.setString(3, note);
-                ps.setString(4, "User");
+                ps.setString(4, user);
                 ps.executeUpdate();
 
             } catch (SQLException ex) {
@@ -233,11 +217,6 @@ public class OrderNotes extends javax.swing.JFrame {
             txt_note.setText("");
             loadTableNotes();
         }
-//        else
-//        {
-//            txt_note.setText("");
-//            //loadTableNotes();
-//        }
     }//GEN-LAST:event_txt_noteActionPerformed
 
     private void table_view_notesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_notesMouseClicked

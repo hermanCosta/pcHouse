@@ -411,8 +411,8 @@
                   <Group type="102" attributes="0">
                       <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lbl_sale_paid_on" min="-2" pref="385" max="-2" attributes="0"/>
-                          <Component id="lbl_paid_by" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbl_sale_paid_on" max="32767" attributes="0"/>
+                          <Component id="lbl_paid_by" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>

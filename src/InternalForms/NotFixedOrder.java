@@ -5,6 +5,7 @@
  */
 package InternalForms;
 
+import Forms.DepositPayment;
 import Forms.OrderNotes;
 import Model.CompletedOrder;
 import Model.Customer;
@@ -19,9 +20,11 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -188,6 +191,34 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
               con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(NotFixedOrder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void addEventNote(String updateNote)
+    {
+        Date date = new Date();
+        Timestamp currentDate = new Timestamp(date.getTime());
+        String dateFormat = new SimpleDateFormat("yyyy/MM/dd").format(currentDate);
+        
+        try {
+            dbConnection();
+            
+            String note = "Order tagged as '" + updateNote + "' by " + order.getCreatedBy();
+            String user = "System";
+          
+                    String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
+                    ps = con.prepareStatement(queryUpdate);
+                    ps.setString(1, order.getOrderNo());
+                    ps.setString(2, dateFormat);
+                    ps.setString(3, note);
+                    ps.setString(4, user);
+                    ps.executeUpdate();
+            
+            ps.close();
+            con.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -840,24 +871,10 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
     private void txt_first_nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_first_nameKeyReleased
         // TODO add your handling code here:
         
-        //Set the first Letter to UpperCase
-//        String firstName = txt_first_name.getText();
-//        StringBuilder sb = new StringBuilder(firstName);
-//        sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-//        firstName = sb.toString();
-//        txt_first_name.setText(firstName);
-//        
     }//GEN-LAST:event_txt_first_nameKeyReleased
 
     private void txt_last_nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_last_nameKeyReleased
         // TODO add your handling code here:
-        
-        //Set the first Letter to Uppercase
-//        String lastName = txt_last_name.getText();
-//        StringBuilder sb = new StringBuilder(lastName);
-//        sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-//        lastName = sb.toString();
-//        txt_last_name.setText(lastName);
     }//GEN-LAST:event_txt_last_nameKeyReleased
 
     private void txt_totalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_totalKeyPressed
@@ -876,16 +893,10 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
 
     private void txt_depositKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_depositKeyPressed
         // TODO add your handling code here:
-        char c = evt.getKeyChar();
-        
-        if(Character.isLetter(c))
-        {
+        if(Character.isLetter(evt.getKeyChar()))
             txt_deposit.setEditable(false);
-        }
         else
-        {
             txt_deposit.setEditable(true);
-        }
     }//GEN-LAST:event_txt_depositKeyPressed
 
     private void table_view_productsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_productsMouseClicked
@@ -958,20 +969,24 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                             + order.getOrderNo() + " ?", "Undo Order", JOptionPane.YES_NO_OPTION);
         if (confirmUndoing == 0)
         {
-           String  status = "In Progress";
-           
-            order.setStatus(status);
+            order.setStatus("In Progress");
+            order.setFinishDate("");
+            
             try {
                 dbConnection();
-                String query = "UPDATE orderDetails SET status = ? WHERE orderNo = ? ";
+                String query = "UPDATE orderDetails SET status = ?, finishDate = ? WHERE orderNo = ? ";
                 ps = con.prepareStatement(query);
                 ps.setString(1, order.getStatus());
                 ps.setString(2, order.getOrderNo());
+                ps.setString(3, order.getFinishDate());
                 ps.executeUpdate();
                
+                addEventNote("In Progress");
+                
                 OrderDetails orderDetails = new OrderDetails(order, completedOrders);
                 desktop_pane_not_fixed_order.removeAll();
                 desktop_pane_not_fixed_order.add(orderDetails).setVisible(true);
+                
             } catch (SQLException ex) {
                 Logger.getLogger(NotFixedOrder.class.getName()).log(Level.SEVERE, null, ex);
           } 
@@ -980,13 +995,13 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
 
     private void btn_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notesActionPerformed
         // TODO add your handling code here:
-        OrderNotes orderNotes = new OrderNotes(order.getOrderNo());
+        OrderNotes orderNotes = new OrderNotes(order.getOrderNo(), order.getCreatedBy());
         orderNotes.setVisible(true);
     }//GEN-LAST:event_btn_notesActionPerformed
 
     private void btn_notes1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notes1ActionPerformed
         // TODO add your handling code here:
-        OrderNotes orderNotes = new OrderNotes(order.getOrderNo());
+        OrderNotes orderNotes = new OrderNotes(order.getOrderNo(), order.getCreatedBy());
         orderNotes.setVisible(true);
     }//GEN-LAST:event_btn_notes1ActionPerformed
 

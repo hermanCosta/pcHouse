@@ -5,16 +5,10 @@
  */
 package InternalForms;
 
-import Forms.MainMenu;
-import Forms.SalePayment;
 import Model.CompletedOrder;
 import Model.Customer;
-import Model.Sale;
 import Model.ProductService;
 import Model.Sale;
-import com.sun.glass.events.KeyEvent;
-import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,24 +17,13 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.InputVerifier;
-import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
@@ -79,7 +62,7 @@ public class Sales extends javax.swing.JInternalFrame {
     public Sales() {
         initComponents();
         
-        //Remove bsas
+        //Remove border
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
@@ -127,7 +110,7 @@ public class Sales extends javax.swing.JInternalFrame {
                         rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), 
                         rs.getString("qty"), rs.getString("unitPrice"), rs.getString("priceTotal"),
                         rs.getDouble("total"), rs.getString("saleDate"), rs.getDouble("cash"), rs.getDouble("card"),
-                        rs.getDouble("changeTotal"), rs.getString("status"));
+                        rs.getDouble("changeTotal"), rs.getString("status"), rs.getString("createdBy"));
                 
                 saleList.add(sale);
                 
@@ -146,7 +129,6 @@ public class Sales extends javax.swing.JInternalFrame {
                 row[4] = saleList.get(i).getStringQty();
                 row[5] = saleList.get(i).getStringPriceTotal();
                 row[6] = saleList.get(i).getStatus();
-                
                 
             dtm.addRow(row);
         }
@@ -174,7 +156,7 @@ public class Sales extends javax.swing.JInternalFrame {
                         rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), 
                         rs.getString("qty"), rs.getString("unitPrice"), rs.getString("priceTotal"),
                         rs.getDouble("total"), rs.getString("saleDate"), rs.getDouble("cash"), rs.getDouble("card"),
-                        rs.getDouble("changeTotal"), rs.getString("status"));
+                        rs.getDouble("changeTotal"), rs.getString("status"), rs.getString("createdBy"));
                 
                 list.add(sale);
             }
@@ -198,7 +180,6 @@ public class Sales extends javax.swing.JInternalFrame {
                 
             dtm.addRow(row);
         }
-            
                     
         } catch (SQLException ex) {
             Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
@@ -386,7 +367,7 @@ public class Sales extends javax.swing.JInternalFrame {
                     sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
                         rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), rs.getString("qty"),
                         rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getString("saleDate"),
-                        rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getString("status"));
+                        rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getString("status"), rs.getString("createdBy"));
 
                     if (rs.getString("status").equals("Paid"))
                     {

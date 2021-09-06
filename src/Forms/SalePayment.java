@@ -6,7 +6,6 @@
 package Forms;
 
 import InternalForms.NewOrder;
-import Model.Computer;
 import Model.Sale;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -384,7 +382,6 @@ public class SalePayment extends javax.swing.JFrame {
         else if(txt_cash.getText().isEmpty() && !txt_card.getText().isEmpty())
         {
             sale.setCard(Double.parseDouble(txt_card.getText()));
-            //sale.setCash(0);
             
             if (sale.getCard() > sale.getTotal())
             {
@@ -444,8 +441,8 @@ public class SalePayment extends javax.swing.JFrame {
               dbConnection();
 
                    String query = "INSERT INTO sales(saleNo, firstName, lastName, contactNo, "
-                           + "email, productService, qty, unitPrice, priceTotal, total, saleDate, cash, card, changeTotal, status) "
-                           + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                           + "email, productService, qty, unitPrice, priceTotal, total, saleDate, cash, card, changeTotal, status, createdBy) "
+                           + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                   ps = con.prepareStatement(query);
                   ps.setString(1, sale.getSaleNo());
                   ps.setString(2, sale.getFirstName());
@@ -462,6 +459,7 @@ public class SalePayment extends javax.swing.JFrame {
                   ps.setDouble(13, sale.getCard());
                   ps.setDouble(14, sale.getChangeTotal());
                   ps.setString(15, sale.getStatus());
+                  ps.setString(16, sale.getCreatedBy());
                   ps.executeUpdate();
                  
                 JOptionPane.showMessageDialog(this,sale.getSaleNo() + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
@@ -488,7 +486,6 @@ public class SalePayment extends javax.swing.JFrame {
 
     private void txt_cashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cashActionPerformed
         // TODO add your handling code here:
-        
     }//GEN-LAST:event_txt_cashActionPerformed
 
     private void txt_cashKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cashKeyReleased
@@ -497,31 +494,19 @@ public class SalePayment extends javax.swing.JFrame {
 
     private void txt_cashKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cashKeyPressed
          // TODO add your handling code here:
-         char c = evt.getKeyChar();
-        
-        if (Character.isLetter(c)) {
-            
-            txt_cash.setEditable(false);
-        }
+         if (Character.isLetter(evt.getKeyChar())) 
+            txt_card.setEditable(false);
         else
-        {
-            txt_cash.setEditable(true);
-        }   
+            txt_card.setEditable(true);
         
     }//GEN-LAST:event_txt_cashKeyPressed
 
     private void txt_cardKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cardKeyPressed
         // TODO add your handling code here:
-        char c = evt.getKeyChar();
-        
-        if (Character.isLetter(c)) {
-            
+        if (Character.isLetter(evt.getKeyChar())) 
             txt_card.setEditable(false);
-        }
         else
-        {
             txt_card.setEditable(true);
-        }       
     }//GEN-LAST:event_txt_cardKeyPressed
 
 

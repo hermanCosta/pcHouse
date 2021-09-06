@@ -5,12 +5,12 @@
  */
 package InternalForms;
 
+import Forms.Login;
 import Forms.MainMenu;
 import Forms.SalePayment;
 import Model.CompletedOrder;
 import Model.Computer;
 import Model.Customer;
-import Model.Sale;
 import Model.ProductService;
 import Model.Sale;
 import com.sun.glass.events.KeyEvent;
@@ -54,8 +54,6 @@ public class NewSale extends javax.swing.JInternalFrame {
      */
     ArrayList firstNames = new ArrayList();
     ArrayList lastNames = new ArrayList();
-    ArrayList<Integer> computerList = new ArrayList<>();
-    
     Vector vecProducts = new Vector();
     Vector vecQty = new Vector();
     Vector vecUnitPrice = new Vector();
@@ -334,11 +332,9 @@ public class NewSale extends javax.swing.JInternalFrame {
             stringPriceTotal = vecPriceTotal.toString().replace("[", " ").replace("]", "");
             
             sale = new Sale(saleNo, firstName, lastName, contactNo, email,stringProducts, 
-                    stringQty, stringUnitPrice, stringPriceTotal, total, saleDate, cash, card, changeTotal, status);
+                    stringQty, stringUnitPrice, stringPriceTotal, total, saleDate, cash, card, changeTotal, status, Login.fullName);
         }
     }
-    
-    
     
     public void getPriceSum()
     {
@@ -882,14 +878,10 @@ public class NewSale extends javax.swing.JInternalFrame {
 
     private void btn_save_saleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save_saleActionPerformed
         // TODO add your handling code here:
-        
-            int confirmNewsale = JOptionPane.showConfirmDialog(this, "Do you want to save this new Sale " + saleNo + " ?");
-            if (confirmNewsale == 0)
-            {
+
                 getSaleValues();
                 SalePayment salePayment = new SalePayment(sale, table_view_products);
                 salePayment.setVisible(true);
-            }
     }//GEN-LAST:event_btn_save_saleActionPerformed
 
     private void txt_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_totalActionPerformed
@@ -905,7 +897,7 @@ public class NewSale extends javax.swing.JInternalFrame {
 
     private void btn_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelActionPerformed
             
-        int confirmCancelling = JOptionPane.showConfirmDialog(null, "Do you want to cancel this ?", "New Sale", 
+        int confirmCancelling = JOptionPane.showConfirmDialog(this, "Do you want to cancel this ?", "New Sale", 
                 JOptionPane.YES_NO_OPTION);
         if (confirmCancelling == 0)
         {

@@ -11,12 +11,12 @@ package Model;
  */
 public class Sale extends Customer {
     
-    String saleNo, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, saleDate, status;
+    String saleNo, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, saleDate, status, createdBy;
     double total, cash, card, changeTotal;
     
     public Sale(String _saleNo, String _firstName, String _lastName, String _contactNo, String _email,
             String _stringProducts, String _stringQty, String _stringUnitPrice, String _stringPriceTotal, 
-            double _total, String _saleDate, double _cash, double _card, double _changeTotal, String _status) {
+            double _total, String _saleDate, double _cash, double _card, double _changeTotal, String _status, String _createdBy) {
         super(_firstName, _lastName, _contactNo, _email);
         
         this.saleNo = _saleNo;
@@ -30,6 +30,7 @@ public class Sale extends Customer {
         this.card = _card;
         this.changeTotal = _changeTotal;
         this.status = _status;
+        this.createdBy = _createdBy;
     }
 
     public String getSaleNo() {
@@ -119,6 +120,16 @@ public class Sale extends Customer {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+    
+    
     
     
 }

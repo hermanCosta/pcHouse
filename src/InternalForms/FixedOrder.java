@@ -5,6 +5,7 @@
  */
 package InternalForms;
 
+import Forms.DepositPayment;
 import Forms.OrderPayment;
 import Forms.OrderNotes;
 import Forms.OrderReceipt;
@@ -241,6 +242,34 @@ public class FixedOrder extends javax.swing.JInternalFrame {
             } catch (SQLException ex) {
                 Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+    }
+    
+    public void addEventNote(String updateNote)
+    {
+        Date date = new Date();
+        Timestamp currentDate = new Timestamp(date.getTime());
+        String dateFormat = new SimpleDateFormat("yyyy/MM/dd").format(currentDate);
+        
+        try {
+            dbConnection();
+            
+            String note = "Order tagged as '" + updateNote + "' by " + order.getCreatedBy();
+            String user = "System";
+          
+                    String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
+                    ps = con.prepareStatement(queryUpdate);
+                    ps.setString(1, order.getOrderNo());
+                    ps.setString(2, dateFormat);
+                    ps.setString(3, note);
+                    ps.setString(4, user);
+                    ps.executeUpdate();
+            
+            ps.close();
+            con.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -812,18 +841,23 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         if (confirmUndoing == 0)
         {
             order.setStatus("In Progress");
+            order.setFinishDate("");
             
             try {
                 dbConnection();
-                String query = "UPDATE orderDetails SET status = ? WHERE orderNo = ?";
+                String query = "UPDATE orderDetails SET status = ?, finishDate = ? WHERE orderNo = ?";
                 ps = con.prepareStatement(query);
                 ps.setString(1, order.getStatus());
                 ps.setString(2, order.getOrderNo());
+                ps.setString(3, order.getFinishDate());
                 ps.executeUpdate();
+                
+                addEventNote("In Progress");
                 
                 OrderDetails orderDetails = new OrderDetails(order, completedOrders);
                 desktop_pane_fixed_order.removeAll();
                 desktop_pane_fixed_order.add(orderDetails).setVisible(true);
+                
                 
             } catch (SQLException ex) {
                 Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
@@ -833,7 +867,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
 
     private void btn_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notesActionPerformed
         // TODO add your handling code here:
-        OrderNotes orderNotes = new OrderNotes(order.getOrderNo());
+        OrderNotes orderNotes = new OrderNotes(order.getOrderNo(), order.getCreatedBy());
         orderNotes.setVisible(true);
         
     }//GEN-LAST:event_btn_notesActionPerformed
@@ -896,13 +930,6 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 completedOrders.setDeposit(refundDeposit *= -1);
                 completedOrders.setDue(refundDue *= -1);
                 
-                      /*
-                         public CompletedOrder(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
-            String _brand, String _model, String _serialNumber,  double _total, double _deposit, 
-            double _due, double _cash, double _card, double _changeTotal, double _cashDeposit, double _cardDeposit, String _payDate, String _status) {
-        super(_firstName, _lastName, _contactNo, _email, _brand, _model, _serialNumber);
-                */
-                
                 completedOrders = new CompletedOrder(completedOrders.getOrderNo(), completedOrders.getFirstName(), completedOrders.getLastName(),
                 "", "", completedOrders.getBrand(), completedOrders.getModel(), "", completedOrders.getTotal(), completedOrders.getDeposit(), 
                         completedOrders.getDue(), completedOrders.getCash(), completedOrders.getCard(), completedOrders.getChangeTotal(), 
@@ -931,6 +958,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 ps.executeUpdate();
                 
                 updateProductQty();
+                addEventNote("Refunded");
                 
                 JOptionPane.showMessageDialog(this, order.getOrderNo() + " Refunded Successfully!", 
                         "Refund Order", JOptionPane.INFORMATION_MESSAGE);

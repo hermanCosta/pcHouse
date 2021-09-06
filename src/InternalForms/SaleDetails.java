@@ -5,8 +5,8 @@
  */
 package InternalForms;
 
+import Forms.DepositPayment;
 import Forms.OrderNotes;
-import Forms.OrderRefundReceipt;
 import Forms.SalePayment;
 import Forms.SaleReceipt;
 import Forms.SaleRefundReceipt;
@@ -30,14 +30,12 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import static org.bouncycastle.pqc.math.linearalgebra.IntegerFunctions.order;
 
 /**
  *
@@ -50,8 +48,6 @@ public class SaleDetails extends javax.swing.JInternalFrame {
      */
     ArrayList firstNames = new ArrayList();
     ArrayList lastNames = new ArrayList();
-    //Vector vecProducts = new Vector();
-    //Vector vecPrices = new Vector();
     Connection con;
     PreparedStatement ps;
     Statement stmt;
@@ -64,7 +60,6 @@ public class SaleDetails extends javax.swing.JInternalFrame {
     String saleNo, firstName,  lastName, contactNo, email, stringProducts, stringQty, 
             stringUnitPrice, stringPriceTotal, saleDate; 
     double total, cash = 0, card = 0, change;
-    
     
     public SaleDetails() {
         initComponents();
@@ -107,28 +102,20 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         TableColumnModel model = table_view_products.getColumnModel();
         dtm.setRowCount(0);
         
-        
         lbl_auto_order_no.setText(sale.getSaleNo());
         txt_first_name.setText(sale.getFirstName());
         txt_last_name.setText(sale.getLastName());
         txt_contact.setText(sale.getContactNo());
         txt_email.setText(sale.getEmail());
         txt_total.setText(String.valueOf(sale.getTotal()));
-        lbl_sale_paid_on.setText("Sale Date: " + sale.getSaleDate());
-        
+        lbl_sale_paid_on.setText("Sale Date: " + sale.getSaleDate() + " - by " + sale.getCreatedBy());
         
         if (sale.getCash() == 0)
-        {
             lbl_paid_by.setText("Paid by Card: €" + sale.getCard());
-        }
         else if (sale.getCard() == 0)
-        {
             lbl_paid_by.setText("Paid by Cash: €" + sale.getCash() + " | Change: €" + sale.getChangeTotal());
-        }
         else 
-        {
             lbl_paid_by.setText("Paid by Cash: €" + sale.getCash() + " | Card: €" + sale.getCard() + " | Change: €" + sale.getChangeTotal());
-        }
         
         String[] arrayProducts = sale.getStringProducts().split(",");
         String[] arrayQty = sale.getStringQty().split(",");
@@ -194,8 +181,6 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                     String[] split = cellProduct.split("|");
                     int computerId = Integer.parseInt(split[0]);
                     
-                    System.out.println("Comp ID: " + computerId);
-                    
                     String queryCompQty = "SELECT qty FROM computers WHERE computerId = ?";
                     ps = con.prepareStatement(queryCompQty);
                     ps.setInt(1, computerId);
@@ -205,15 +190,12 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                     {
                         int compQty = rs.getInt("qty");
                         int updateCompQty = Integer.parseInt(cellQty) + compQty;
-                        System.out.println("Old Comp Qty: " + compQty);
                     
                         String queryUpdateCompQty = "UPDATE computers SET qty = ? WHERE computerId = ?";
                         ps = con.prepareStatement(queryUpdateCompQty);
                         ps.setInt(1, updateCompQty);
                         ps.setInt(2, computerId);
                         ps.executeUpdate();
-                        
-                        System.out.println("New Comp Qty: " + updateCompQty);
                     }
                 }
                 
@@ -224,6 +206,33 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         }
     }
     
+    public void addEventNote(String updateNote)
+    {
+        Date date = new Date();
+        Timestamp currentDate = new Timestamp(date.getTime());
+        String dateFormat = new SimpleDateFormat("yyyy/MM/dd").format(currentDate);
+        
+        try {
+            dbConnection();
+            
+            String note = "Sale tagged as '" + updateNote + "' by " + sale.getCreatedBy();
+            String user = "System";
+          
+                    String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
+                    ps = con.prepareStatement(queryUpdate);
+                    ps.setString(1, sale.getSaleNo());
+                    ps.setString(2, dateFormat);
+                    ps.setString(3, note);
+                    ps.setString(4, user);
+                    ps.executeUpdate();
+            
+            ps.close();
+            con.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     
     @SuppressWarnings("unchecked")
@@ -434,8 +443,8 @@ public class SaleDetails extends javax.swing.JInternalFrame {
             .addGroup(panel_sale_statusLayout.createSequentialGroup()
                 .addGap(6, 6, 6)
                 .addGroup(panel_sale_statusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_sale_paid_on, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_paid_by))
+                    .addComponent(lbl_sale_paid_on, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_paid_by, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_sale_statusLayout.setVerticalGroup(
@@ -569,7 +578,6 @@ public class SaleDetails extends javax.swing.JInternalFrame {
 
     private void txt_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_totalActionPerformed
         // TODO add your handling code here:
-        
     }//GEN-LAST:event_txt_totalActionPerformed
 
     private void txt_first_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_first_nameKeyPressed
@@ -612,14 +620,12 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         boolean isSaleDetails = true;
         SaleReceipt saleReceipt =  new SaleReceipt(sale, isSaleDetails);
-            saleReceipt.setVisible(true);
-            
-        
+        saleReceipt.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btn_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notesActionPerformed
         // TODO add your handling code here:
-        OrderNotes orderNotes = new OrderNotes(sale.getSaleNo());
+        OrderNotes orderNotes = new OrderNotes(sale.getSaleNo(), sale.getCreatedBy());
         orderNotes.setVisible(true);
     }//GEN-LAST:event_btn_notesActionPerformed
 
@@ -649,10 +655,10 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                 
                     sale = new Sale(sale.getSaleNo(), sale.getFirstName(), sale.getLastName(), sale.getContactNo(), sale.getEmail(),
                         sale.getStringProducts(), sale.getStringQty(), sale.getStringUnitPrice(), sale.getStringPriceTotal(), sale.getTotal(), 
-                            sale.getSaleDate(), sale.getCash(), sale.getCard(), sale.getChangeTotal(), sale.getStatus());
+                            sale.getSaleDate(), sale.getCash(), sale.getCard(), sale.getChangeTotal(), sale.getStatus(), sale.getCreatedBy());
 
                     String queryInsert = "INSERT INTO sales(saleNo, firstName, lastName, contactNo, email, productService, qty, unitPrice, priceTotal, total, "
-                    + "saleDate, cash, card, changeTotal, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    + "saleDate, cash, card, changeTotal, status, createdBy) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                     ps = con.prepareStatement(queryInsert);
                     ps.setString(1, sale.getSaleNo());
@@ -670,18 +676,19 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                     ps.setDouble(13, sale.getCard());
                     ps.setDouble(14, sale.getChangeTotal());
                     ps.setString(15, sale.getStatus());
+                    ps.setString(16, sale.getCreatedBy());
                     ps.executeUpdate();
-                    
                     updateProductQty();
 
-                    JOptionPane.showMessageDialog(this, sale.getSaleNo() + " Refunded Successfully!",
-                        "Refund Order", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, sale.getSaleNo() + "Refunded Successfully!");
+
+                    addEventNote("Refunded");
                     
                     SaleRefundReceipt saleRefundReceipt = new SaleRefundReceipt(sale);
                     saleRefundReceipt.setVisible(true);
 
                 } catch (SQLException ex) {
-                    Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(SaleDetails.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
     }//GEN-LAST:event_btn_refundActionPerformed

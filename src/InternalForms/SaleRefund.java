@@ -6,8 +6,6 @@
 package InternalForms;
 
 import Forms.OrderNotes;
-import Forms.OrderRefundReceipt;
-import Forms.SaleReceipt;
 import Forms.SaleRefundReceipt;
 import Model.Customer;
 import Model.ProductService;
@@ -21,22 +19,16 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFormattedTextField;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import static org.bouncycastle.pqc.math.linearalgebra.IntegerFunctions.order;
 
 /**
  *
@@ -49,8 +41,6 @@ public class SaleRefund extends javax.swing.JInternalFrame {
      */
     ArrayList firstNames = new ArrayList();
     ArrayList lastNames = new ArrayList();
-    //Vector vecProducts = new Vector();
-    //Vector vecPrices = new Vector();
     Connection con;
     PreparedStatement ps;
     Statement stmt;
@@ -72,6 +62,7 @@ public class SaleRefund extends javax.swing.JInternalFrame {
     public SaleRefund(Sale _sale) {
         initComponents();
         this.sale = _sale;
+        
         
         //Remove borders
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
@@ -104,7 +95,6 @@ public class SaleRefund extends javax.swing.JInternalFrame {
     {
         try {
             dbConnection();
-            
             
             String query = "SELECT * FROM sales WHERE saleNo = ? AND status = ?";
             ps = con.prepareStatement(query);
@@ -142,9 +132,8 @@ public class SaleRefund extends javax.swing.JInternalFrame {
         txt_contact.setText(sale.getContactNo());
         txt_email.setText(sale.getEmail());
         txt_total.setText(String.valueOf(sale.getTotal()));
-        lbl_sale_refunded_on.setText("Refund Date: " + sale.getSaleDate());
-        lbl_sale_created_on.setText("Created On: " + createdOn);
-        
+        lbl_sale_refunded_on.setText("Refund Date: " + sale.getSaleDate() + " - by " + sale.getCreatedBy());
+        lbl_sale_created_on.setText("Created On: " + sale.getSaleDate() + " - by " + sale.getCreatedBy());
         
         if (sale.getCash() == 0)
             lbl_refunded_by.setText("Refunded by Card: €" + sale.getCard());
@@ -167,7 +156,6 @@ public class SaleRefund extends javax.swing.JInternalFrame {
         Vector vecQty = new Vector();
         Vector vecUnitPrice = new Vector();
         Vector vecPriceTotal = new Vector();
-        
         
         vecProducts.addAll(Arrays.asList(arrayProducts)); 
         vecQty.addAll(Arrays.asList(arrayQty));
@@ -380,8 +368,8 @@ public class SaleRefund extends javax.swing.JInternalFrame {
             .addGroup(panel_sale_statusLayout.createSequentialGroup()
                 .addGap(6, 6, 6)
                 .addGroup(panel_sale_statusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_sale_refunded_on, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_refunded_by))
+                    .addComponent(lbl_sale_refunded_on, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
+                    .addComponent(lbl_refunded_by, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(724, Short.MAX_VALUE))
         );
         panel_sale_statusLayout.setVerticalGroup(
@@ -407,7 +395,7 @@ public class SaleRefund extends javax.swing.JInternalFrame {
                     .addComponent(panel_sale_status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                            .addComponent(lbl_sale_created_on, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbl_sale_created_on, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(15, 15, 15)
@@ -451,19 +439,17 @@ public class SaleRefund extends javax.swing.JInternalFrame {
             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panel_sale_status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lbl_sale_created_on)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_auto_order_no, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_order_no)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
@@ -482,7 +468,7 @@ public class SaleRefund extends javax.swing.JInternalFrame {
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_email)
                             .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 19, Short.MAX_VALUE)
+                        .addGap(18, 18, Short.MAX_VALUE)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_total)
                             .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -500,7 +486,7 @@ public class SaleRefund extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, 740, Short.MAX_VALUE)
+            .addComponent(panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE)
         );
 
         pack();
@@ -568,7 +554,7 @@ public class SaleRefund extends javax.swing.JInternalFrame {
 
     private void btn_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notesActionPerformed
         // TODO add your handling code here:
-        OrderNotes orderNotes = new OrderNotes(sale.getSaleNo());
+        OrderNotes orderNotes = new OrderNotes(sale.getSaleNo(), sale.getCreatedBy());
         orderNotes.setVisible(true);
     }//GEN-LAST:event_btn_notesActionPerformed
 

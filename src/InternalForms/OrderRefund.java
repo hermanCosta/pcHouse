@@ -20,20 +20,16 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFormattedTextField;
-import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-
 
 /**
  *
@@ -84,7 +80,6 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         tableSettings();
     }
 
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -128,7 +123,7 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         
         lbl_order_status.setText("Order Refunded");
         lbl_date.setText("date: " + order.getRefundDate());
-        lbl_order_created_on.setText("Created on: " + order.getIssueDate() + " - By " + order.getCreatedBy());
+        lbl_order_created_on.setText("Created on: " + order.getIssueDate() + " - by " + order.getCreatedBy());
         lbl_order_paid_on.setText("Paid on: " + order.getPickDate());
         lbl_auto_order_no.setText(order.getOrderNo());
         txt_first_name.setText(order.getFirstName());
@@ -797,30 +792,18 @@ public class OrderRefund extends javax.swing.JInternalFrame {
 
     private void txt_totalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_totalKeyPressed
          // TODO add your handling code here:
-        char c = evt.getKeyChar();
-        
-        if (Character.isLetter(c)) {
-            
+        if (Character.isLetter(evt.getKeyChar()))
             txt_total.setEditable(false);
-        }
         else
-        {
             txt_total.setEditable(true);
-        }       
     }//GEN-LAST:event_txt_totalKeyPressed
 
     private void txt_depositKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_depositKeyPressed
         // TODO add your handling code here:
-        char c = evt.getKeyChar();
-        
-        if(Character.isLetter(c))
-        {
+        if(Character.isLetter(evt.getKeyChar()))
             txt_deposit.setEditable(false);
-        }
         else
-        {
             txt_deposit.setEditable(true);
-        }
     }//GEN-LAST:event_txt_depositKeyPressed
 
     private void table_view_productsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_productsMouseClicked
@@ -856,13 +839,13 @@ public class OrderRefund extends javax.swing.JInternalFrame {
 
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
-         OrderRefundReceipt refundReceipt = new OrderRefundReceipt(order, completedOrders);
-         refundReceipt.setVisible(true);
+        OrderRefundReceipt refundReceipt = new OrderRefundReceipt(order, completedOrders);
+        refundReceipt.setVisible(true);
     }//GEN-LAST:event_btn_printActionPerformed
 
     private void btn_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notesActionPerformed
         // TODO add your handling code here:
-        OrderNotes orderNotes = new OrderNotes(order.getOrderNo());
+        OrderNotes orderNotes = new OrderNotes(order.getOrderNo(), order.getCreatedBy());
         orderNotes.setVisible(true);
     }//GEN-LAST:event_btn_notesActionPerformed
 

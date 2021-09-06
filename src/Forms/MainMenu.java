@@ -1084,7 +1084,7 @@ public class MainMenu extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Order", "FullName", "Contact No", "Date of Fixing"
+                "Order", "Full Name", "Contact No", "Date of Fixing"
             }
         ) {
             boolean[] canEdit = new boolean [] {

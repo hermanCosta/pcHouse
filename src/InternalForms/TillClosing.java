@@ -744,7 +744,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
             
         else
         {
-            
             // This Lists hold all values paid by cash and card
             ArrayList<Double> cashList = new ArrayList<>();
             ArrayList<Double> cardList = new ArrayList<>();
@@ -866,7 +865,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
             int orderSelected = table_view_orders.getSelectedRow();
             String selectedOrderNo = dtm.getValueAt(orderSelected, 0).toString();
         
-            ////select exists(select * from table where condition=value limit 1)
             try {
                 dbConnection();
                 String queryOrder = "SELECT * FROM orderDetails WHERE orderNo = ? ";
@@ -943,7 +941,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
                             rs.getString("contactNo"), rs.getString("email"), 
                             rs.getString("productService"), rs.getString("qty"), rs.getString("unitPrice"),
                             rs.getString("priceTotal"),rs.getDouble("total"), rs.getString("saleDate"),  
-                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getString("status"));
+                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), 
+                            rs.getString("status"), rs.getString("createdBy"));
                 
                     if (rs.getString("status").equals("Paid"))
                     {
