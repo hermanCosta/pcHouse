@@ -98,7 +98,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
-        finishedDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
+        finishedDate = new SimpleDateFormat("yyyy/MM/dd").format(currentDate);
         order.setFinishDate(finishedDate);
         
         //Remove borders
@@ -142,7 +142,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         txt_total.setText(String.valueOf(order.getTotal()));
         txt_deposit.setText(String.valueOf(order.getDeposit()));
         txt_due.setText(String.valueOf(order.getDue()));
-        lbl_issued_date_time.setText("Created on: " + order.getIssueDate());
+        lbl_issue_date.setText("Created on: " + order.getIssueDate() + " - By " + order.getCreatedBy());
         
         // Pass arrayPrices to a vector and add as a new column
         Vector vecFaults = new Vector();
@@ -305,6 +305,33 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         });
     }
     
+    public void addEventNote(String updateNote)
+    {
+        Date date = new Date();
+        Timestamp currentDate = new Timestamp(date.getTime());
+        String dateFormat = new SimpleDateFormat("yyyy/MM/dd").format(currentDate);
+        
+        try {
+            dbConnection();
+            
+            String note = "Order tagged as '" + updateNote + "' by " + order.getCreatedBy();
+            String user = "System";
+          
+                    String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
+                    ps = con.prepareStatement(queryUpdate);
+                    ps.setString(1, order.getOrderNo());
+                    ps.setString(2, dateFormat);
+                    ps.setString(3, note); // add new Deposit note
+                    ps.setString(4, user);
+                    ps.executeUpdate();
+            
+            ps.close();
+            con.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -340,7 +367,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         table_view_faults = new javax.swing.JTable();
         icon_add_table_view = new javax.swing.JLabel();
         txt_due = new javax.swing.JTextField();
-        lbl_issued_date_time = new javax.swing.JLabel();
+        lbl_issue_date = new javax.swing.JLabel();
         panel_buttons = new javax.swing.JPanel();
         btn_fix = new javax.swing.JButton();
         btn_not_fix = new javax.swing.JButton();
@@ -584,9 +611,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             }
         });
 
-        lbl_issued_date_time.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
-        lbl_issued_date_time.setText("createdOn");
-        lbl_issued_date_time.setEnabled(false);
+        lbl_issue_date.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        lbl_issue_date.setText("createdOn");
+        lbl_issue_date.setEnabled(false);
 
         btn_fix.setBackground(new java.awt.Color(0, 153, 102));
         btn_fix.setFont(new java.awt.Font("Lucida Grande", 1, 22)); // NOI18N
@@ -717,7 +744,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                                 .addComponent(lbl_fault)
                                 .addGap(6, 6, 6))
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addComponent(lbl_issued_date_time)
+                                .addComponent(lbl_issue_date)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addComponent(txt_fault, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
@@ -791,7 +818,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                         .addComponent(txt_fault, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(lbl_issued_date_time, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbl_issue_date, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_order_no)
@@ -1138,7 +1165,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 
                 if (!rs.isBeforeFirst())
                 {
-                   JOptionPane.showMessageDialog(null, "Item not Found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
+                   JOptionPane.showMessageDialog(this, "Item not Found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
                 }
                 else
                 {
@@ -1301,7 +1328,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     private void btn_fixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_fixActionPerformed
         // TODO add your handling code here:
         
-       int confirmFixing = JOptionPane.showConfirmDialog(null, "Do you really want to Tag Order: " 
+       int confirmFixing = JOptionPane.showConfirmDialog(this, "Do you really want to Tag Order: " 
                + order.getOrderNo() + " as Fixed Order", "Update Order", JOptionPane.YES_NO_OPTION);
        
        if (confirmFixing == 0)
@@ -1315,8 +1342,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 ps.setString(1, order.getStatus());
                 ps.setString(2, order.getFinishDate());
                 ps.setString(3, order.getOrderNo());
-                
                 ps.executeUpdate();
+
+                addEventNote("Fixed Order");
                 
                 FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
                 desktop_pane_order_details.removeAll();
@@ -1351,6 +1379,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 ps.setString(2, order.getFinishDate());
                 ps.setString(3, order.getOrderNo());
                 ps.executeUpdate();
+                
+                addEventNote("Not Fixed Order");
                 
                 NotFixedOrder orderNotFixed = new NotFixedOrder(order, completedOrder);
                 desktop_pane_order_details.removeAll();
@@ -1535,7 +1565,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lbl_email;
     private javax.swing.JLabel lbl_fault;
     private javax.swing.JLabel lbl_first_name;
-    private javax.swing.JLabel lbl_issued_date_time;
+    private javax.swing.JLabel lbl_issue_date;
     private javax.swing.JLabel lbl_last_name;
     private javax.swing.JLabel lbl_model;
     private javax.swing.JLabel lbl_order_no;

@@ -128,7 +128,7 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         
         lbl_order_status.setText("Order Refunded");
         lbl_date.setText("date: " + order.getRefundDate());
-        lbl_order_created_on.setText("Created on: " + order.getIssueDate());
+        lbl_order_created_on.setText("Created on: " + order.getIssueDate() + " - By " + order.getCreatedBy());
         lbl_order_paid_on.setText("Paid on: " + order.getPickDate());
         lbl_auto_order_no.setText(order.getOrderNo());
         txt_first_name.setText(order.getFirstName());
@@ -616,16 +616,17 @@ public class OrderRefund extends javax.swing.JInternalFrame {
                                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                         .addGap(136, 136, 136)
-                                        .addComponent(lbl_auto_order_no))
+                                        .addComponent(lbl_auto_order_no)
+                                        .addGap(374, 374, 374))
                                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                        .addComponent(lbl_order_created_on, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(29, 29, 29)
-                                        .addComponent(lbl_order_paid_on, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(85, 85, 85)
+                                        .addComponent(lbl_order_created_on, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lbl_order_paid_on, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                                 .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(16, 16, 16)
                         .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_order_detailsLayout.setVerticalGroup(
             panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -720,7 +721,7 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         desktop_pane_refund_order.setLayout(desktop_pane_refund_orderLayout);
         desktop_pane_refund_orderLayout.setHorizontalGroup(
             desktop_pane_refund_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, 1037, Short.MAX_VALUE)
         );
         desktop_pane_refund_orderLayout.setVerticalGroup(
             desktop_pane_refund_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -6,6 +6,7 @@
 package InternalForms;
 
 import Forms.DepositPayment;
+import Forms.Login;
 import Forms.PrintOrder;
 import Forms.MainMenu;
 import Model.CompletedOrder;
@@ -379,11 +380,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
             order = new Order(orderNo, firstName, lastName, contactNo, email, deviceBrand, 
                     deviceModel, serialNumber,importantNotes, stringFaults, stringProducts, 
                     stringQty, stringUnitPrice, stringPriceTotal, total, deposit, cashDeposit, 
-                    cardDeposit, due, status, issueDate, finishDate, pickDate, refundDate);
+                    cardDeposit, due, status, issueDate, finishDate, pickDate, refundDate, Login.fullName);
         }
     }
-    
-    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -914,7 +913,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void btn_save_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save_orderActionPerformed
         // TODO add your handling code here:
-        
         if (deposit <= 0)
         {
             int confirmNewOrder = JOptionPane.showConfirmDialog(this, "Do you want to save this new Order " + orderNo +" ?");
@@ -927,7 +925,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     String query = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
                             + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
                             + "productService, qty, unitPrice, priceTotal, total, deposit, cashDeposit, cardDeposit, "
-                            + "due, status, issueDate) VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                            + "due, status, issueDate, createdBy) VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                     ps = con.prepareStatement(query);
                     ps.setString(1, order.getOrderNo());
@@ -951,6 +949,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     ps.setDouble(19, order.getDue());
                     ps.setString(20, order.getStatus());
                     ps.setString(21, order.getIssueDate());
+                    ps.setString(22, order.getCreatedBy());
                     
                     ps.executeUpdate();
 

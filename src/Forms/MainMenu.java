@@ -254,7 +254,7 @@ public class MainMenu extends javax.swing.JFrame {
                            rs.getString("importantNotes"), rs.getString("fault"), rs.getString("productService"), rs.getString("qty"),
                            rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getDouble("deposit"), 
                            rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"), rs.getString("status"),
-                           rs.getString("issueDate"), dateFormat, rs.getString("pickDate"), rs.getString("refundDate"));
+                           rs.getString("issueDate"), dateFormat, rs.getString("pickDate"), rs.getString("refundDate"), Login.fullName);
 
                 orderList.add(order);
             }
@@ -325,8 +325,6 @@ public class MainMenu extends javax.swing.JFrame {
         btn_products_list = new javax.swing.JButton();
         btn_orders = new javax.swing.JButton();
         btn_sales = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         table_view_products_stock = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -906,18 +904,13 @@ public class MainMenu extends javax.swing.JFrame {
                             .addComponent(panel_new_order, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(panel_check_existing, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(panel_new_sale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addGroup(panel_menu_barLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_menu_barLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_menu_barLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(panel_close_till, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(panel_customers, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(panel_faults, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panel_menu_barLayout.createSequentialGroup()
-                        .addComponent(panel_home, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0))))
+                    .addComponent(panel_close_till, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panel_customers, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panel_faults, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addComponent(panel_home, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         panel_menu_barLayout.setVerticalGroup(
             panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -953,13 +946,17 @@ public class MainMenu extends javax.swing.JFrame {
         desktop_pane_main_menu.setToolTipText("");
         desktop_pane_main_menu.setMaximumSize(new java.awt.Dimension(1049, 700));
 
+        panel_customers1.setBackground(new java.awt.Color(240, 248, 255));
         panel_customers1.setPreferredSize(new java.awt.Dimension(1049, 700));
+
+        panel_buttons.setBackground(new java.awt.Color(240, 248, 255));
 
         btn_new_order.setBackground(new java.awt.Color(21, 76, 121));
         btn_new_order.setFont(new java.awt.Font("Lucida Grande", 1, 17)); // NOI18N
         btn_new_order.setForeground(new java.awt.Color(255, 255, 255));
         btn_new_order.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_new_order.png"))); // NOI18N
         btn_new_order.setText("New Order");
+        btn_new_order.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         btn_new_order.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_new_orderActionPerformed(evt);
@@ -976,6 +973,7 @@ public class MainMenu extends javax.swing.JFrame {
         btn_new_sale.setForeground(new java.awt.Color(255, 255, 255));
         btn_new_sale.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_new_sale.png"))); // NOI18N
         btn_new_sale.setText("New Sale");
+        btn_new_sale.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         btn_new_sale.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_new_saleActionPerformed(evt);
@@ -987,6 +985,7 @@ public class MainMenu extends javax.swing.JFrame {
         btn_products_list.setForeground(new java.awt.Color(255, 255, 255));
         btn_products_list.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_product_list.png"))); // NOI18N
         btn_products_list.setText("Products List");
+        btn_products_list.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         btn_products_list.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_products_listActionPerformed(evt);
@@ -998,6 +997,7 @@ public class MainMenu extends javax.swing.JFrame {
         btn_orders.setForeground(new java.awt.Color(255, 255, 255));
         btn_orders.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_check_existing.png"))); // NOI18N
         btn_orders.setText("Orders");
+        btn_orders.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         btn_orders.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_ordersActionPerformed(evt);
@@ -1009,6 +1009,7 @@ public class MainMenu extends javax.swing.JFrame {
         btn_sales.setForeground(new java.awt.Color(255, 255, 255));
         btn_sales.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_sellings.png"))); // NOI18N
         btn_sales.setText("Sales");
+        btn_sales.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         btn_sales.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_salesActionPerformed(evt);
@@ -1045,11 +1046,7 @@ public class MainMenu extends javax.swing.JFrame {
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        jLabel1.setFont(new java.awt.Font("sansserif", 0, 15)); // NOI18N
-        jLabel1.setText("Products Stock BELOW or  STOCKOUT");
-
-        jLabel2.setFont(new java.awt.Font("sansserif", 0, 15)); // NOI18N
-        jLabel2.setText("Orders  Fixed OVER three months");
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Products Stock Below or Stockout", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("sansserif", 0, 14))); // NOI18N
 
         table_view_products_stock.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         table_view_products_stock.setModel(new javax.swing.table.DefaultTableModel(
@@ -1074,6 +1071,12 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
         jScrollPane2.setViewportView(table_view_products_stock);
+        if (table_view_products_stock.getColumnModel().getColumnCount() > 0) {
+            table_view_products_stock.getColumnModel().getColumn(0).setPreferredWidth(50);
+            table_view_products_stock.getColumnModel().getColumn(0).setMaxWidth(100);
+        }
+
+        jScrollPane3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Orders fixed Over Three Months", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("sansserif", 0, 14))); // NOI18N
 
         table_view_orders_fixed.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         table_view_orders_fixed.setModel(new javax.swing.table.DefaultTableModel(
@@ -1085,7 +1088,7 @@ public class MainMenu extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true, true
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1098,6 +1101,12 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
         jScrollPane3.setViewportView(table_view_orders_fixed);
+        if (table_view_orders_fixed.getColumnModel().getColumnCount() > 0) {
+            table_view_orders_fixed.getColumnModel().getColumn(0).setPreferredWidth(100);
+            table_view_orders_fixed.getColumnModel().getColumn(0).setMaxWidth(150);
+            table_view_orders_fixed.getColumnModel().getColumn(3).setPreferredWidth(100);
+            table_view_orders_fixed.getColumnModel().getColumn(3).setMaxWidth(150);
+        }
 
         javax.swing.GroupLayout panel_customers1Layout = new javax.swing.GroupLayout(panel_customers1);
         panel_customers1.setLayout(panel_customers1Layout);
@@ -1110,27 +1119,17 @@ public class MainMenu extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 574, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(panel_customers1Layout.createSequentialGroup()
-                .addGap(96, 96, 96)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addGap(205, 205, 205))
         );
         panel_customers1Layout.setVerticalGroup(
             panel_customers1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_customers1Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(panel_buttons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addGroup(panel_customers1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(30, 30, 30)
                 .addGroup(panel_customers1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(183, Short.MAX_VALUE))
+                .addContainerGap(194, Short.MAX_VALUE))
         );
 
         desktop_pane_main_menu.add(panel_customers1);
@@ -1659,8 +1658,6 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JButton btn_products_list;
     private javax.swing.JButton btn_sales;
     private javax.swing.JDesktopPane desktop_pane_main_menu;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel label_check_existing;

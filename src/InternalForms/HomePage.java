@@ -5,6 +5,7 @@
  */
 package InternalForms;
 
+import Forms.Login;
 import Model.Order;
 import Model.ProductService;
 import java.awt.Color;
@@ -132,7 +133,7 @@ public class HomePage extends javax.swing.JInternalFrame {
                            rs.getString("importantNotes"), rs.getString("fault"), rs.getString("productService"), rs.getString("qty"),
                            rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getDouble("deposit"), 
                            rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"), rs.getString("status"),
-                           rs.getString("issueDate"), dateFormat, rs.getString("pickDate"), rs.getString("refundDate"));
+                           rs.getString("issueDate"), dateFormat, rs.getString("pickDate"), rs.getString("refundDate"), Login.fullName);
 
                 orderList.add(order);
             }

@@ -11,7 +11,7 @@ package Model;
  */
 public class Order extends Device {
     String orderNo, importantNotes, stringFaults, stringProducts, stringQty, unitPrice, priceTotal, status, 
-            issueDate, finishDate, pickDate, refundDate;
+            issueDate, finishDate, pickDate, refundDate, createdBy;
     double deposit, cashDeposit, cardDeposit, due, total ;
     
     
@@ -19,7 +19,7 @@ public class Order extends Device {
             String _brand, String _model, String _serialNumber, String _importantNotes, String _stringFaults, 
             String _stringProducts, String _stringQty, String _unitPrice, String _priceTotal, double _total, 
             double _deposit, double _cashDeposit, double _cardDeposit,double _due, String _status, String _issuedDate, 
-            String _finishDate, String _pickDate, String _refundDate) {
+            String _finishDate, String _pickDate, String _refundDate, String _createdBy) {
         super(_brand, _model, _serialNumber, _firstName, _lastName, _contactNo, _email);
         
         this.orderNo = _orderNo;
@@ -39,6 +39,7 @@ public class Order extends Device {
         this.finishDate = _finishDate;
         this.pickDate = _pickDate;
         this.refundDate = _refundDate;
+        this.createdBy = _createdBy;
     }
 
     public String getOrderNo() {
@@ -73,8 +74,7 @@ public class Order extends Device {
         this.unitPrice = unitPrice;
     }
     
-    
-     public String getStringFaults() {
+    public String getStringFaults() {
         return stringFaults;
     }
 
@@ -113,8 +113,6 @@ public class Order extends Device {
     public void setCardDeposit(double cardDeposit) {
         this.cardDeposit = cardDeposit;
     }
-    
-    
     
     public String getImportantNotes() {
         return importantNotes;
@@ -179,5 +177,12 @@ public class Order extends Device {
     public void setRefundDate(String refundDate) {
         this.refundDate = refundDate;
     }
-    
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 }

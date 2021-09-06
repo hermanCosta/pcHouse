@@ -145,7 +145,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         
         lbl_order_status.setText("Order Fixed Successfully");
         lbl_date.setText("date: " + order.getFinishDate());
-        lbl_order_created_on.setText("Created on: " + order.getIssueDate());
+        lbl_order_created_on.setText("Created on: " + order.getIssueDate() + " - By " + order.getCreatedBy());
         lbl_auto_order_no.setText(order.getOrderNo());
         txt_first_name.setText(order.getFirstName());
         txt_last_name.setText(order.getLastName());

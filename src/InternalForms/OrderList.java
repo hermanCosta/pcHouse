@@ -5,6 +5,7 @@
  */
 package InternalForms;
 
+import Forms.Login;
 import Model.CompletedOrder;
 import Model.Order;
 import java.awt.Color;
@@ -84,7 +85,7 @@ public class OrderList extends javax.swing.JInternalFrame {
                        rs.getString("importantNotes"), rs.getString("fault"), rs.getString("productService"), rs.getString("qty"),
                        rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getDouble("deposit"), 
                        rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"), rs.getString("status"),
-                       rs.getString("issueDate"), rs.getString("finishDate"), rs.getString("pickDate"), rs.getString("refundDate"));
+                       rs.getString("issueDate"), rs.getString("finishDate"), rs.getString("pickDate"), rs.getString("refundDate"), Login.fullName);
                 
                orderList.add(order);
             }
@@ -390,7 +391,7 @@ public class OrderList extends javax.swing.JInternalFrame {
                    rs.getString("fault"), rs.getString("productService"), rs.getString("qty"),rs.getString("unitPrice"), rs.getString("priceTotal"),
                    rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"),
                    rs.getString("status"), rs.getString("issueDate"), rs.getString("finishDate"), rs.getString("pickDate"),
-                   rs.getString("refundDate"));
+                   rs.getString("refundDate"), Login.fullName);
                 }
                 
                 String queryPayDate = "SELECT * FROM completedOrders WHERE orderNo = ?"; 

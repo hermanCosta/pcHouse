@@ -6,6 +6,7 @@
 package InternalForms;
 
 import Common.DBConnection;
+import Forms.Login;
 import Forms.PrintFullReport;
 import Model.CompletedOrder;
 import Model.Order;
@@ -880,7 +881,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
                    rs.getString("fault"), rs.getString("productService"), rs.getString("qty"),rs.getString("unitPrice"), rs.getString("priceTotal"),
                    rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"),
                    rs.getString("status"), rs.getString("issueDate"), rs.getString("finishDate"), rs.getString("pickDate"),
-                   rs.getString("refundDate"));
+                   rs.getString("refundDate"), Login.fullName);
                 }
                 
                 String queryCompletedOrder = "SELECT * FROM completedOrders WHERE orderNo = ?"; 
