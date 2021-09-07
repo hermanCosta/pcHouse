@@ -32,7 +32,7 @@ import javax.swing.table.TableColumnModel;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class SaleRefund extends javax.swing.JInternalFrame {
 

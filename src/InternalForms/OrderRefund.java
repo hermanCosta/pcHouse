@@ -34,7 +34,7 @@ import javax.swing.table.TableColumnModel;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class OrderRefund extends javax.swing.JInternalFrame {
 

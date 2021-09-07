@@ -7,7 +7,7 @@ package Model;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class CompletedOrder extends Device {
 

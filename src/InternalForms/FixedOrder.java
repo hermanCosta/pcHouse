@@ -41,7 +41,7 @@ import javax.swing.table.TableColumnModel;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class FixedOrder extends javax.swing.JInternalFrame {
 

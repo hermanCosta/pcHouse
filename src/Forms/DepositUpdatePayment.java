@@ -20,7 +20,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class DepositUpdatePayment extends javax.swing.JFrame {
 

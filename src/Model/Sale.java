@@ -7,7 +7,7 @@ package Model;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class Sale extends Customer {
 

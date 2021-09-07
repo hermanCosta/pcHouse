@@ -48,7 +48,7 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class OrderDetails extends javax.swing.JInternalFrame {
 

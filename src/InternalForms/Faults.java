@@ -23,7 +23,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class Faults extends javax.swing.JInternalFrame {
 

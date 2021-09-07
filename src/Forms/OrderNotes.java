@@ -5,7 +5,6 @@
  */
 package Forms;
 
-import Common.DBConnection;
 import Model.OrderNote;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,7 +23,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class OrderNotes extends javax.swing.JFrame {
 
@@ -56,7 +55,7 @@ public class OrderNotes extends javax.swing.JFrame {
             con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
 
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OrderNotes.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

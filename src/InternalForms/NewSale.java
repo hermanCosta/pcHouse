@@ -45,7 +45,7 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class NewSale extends javax.swing.JInternalFrame {
 

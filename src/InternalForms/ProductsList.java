@@ -24,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author Herman Costa
+ * @author HermanCosta
  */
 public class ProductsList extends javax.swing.JInternalFrame {
 

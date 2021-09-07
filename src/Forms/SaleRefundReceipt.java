@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class SaleRefundReceipt extends javax.swing.JFrame {
 

@@ -21,7 +21,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class PrintFullReport extends javax.swing.JFrame {
 

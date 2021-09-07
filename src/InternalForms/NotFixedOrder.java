@@ -38,7 +38,7 @@ import javax.swing.table.TableColumnModel;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class NotFixedOrder extends javax.swing.JInternalFrame {
 

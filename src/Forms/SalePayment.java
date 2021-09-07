@@ -22,7 +22,7 @@ import javax.swing.JTable;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class SalePayment extends javax.swing.JFrame {
 

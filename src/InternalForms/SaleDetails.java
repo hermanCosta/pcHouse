@@ -39,7 +39,7 @@ import javax.swing.table.TableColumnModel;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class SaleDetails extends javax.swing.JInternalFrame {
 

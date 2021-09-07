@@ -40,7 +40,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class MainMenu extends javax.swing.JFrame {
 

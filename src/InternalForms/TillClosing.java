@@ -5,7 +5,6 @@
  */
 package InternalForms;
 
-import Common.DBConnection;
 import Forms.Login;
 import Forms.PrintFullReport;
 import Model.CompletedOrder;
@@ -25,7 +24,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,7 +36,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class TillClosing extends javax.swing.JInternalFrame {
 
@@ -81,7 +79,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TillClosing.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
