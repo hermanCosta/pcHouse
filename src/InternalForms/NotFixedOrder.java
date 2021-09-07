@@ -36,25 +36,21 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-
 /**
  *
  * @author user
  */
 public class NotFixedOrder extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form NewOrder
-     */
     ArrayList firstNames = new ArrayList();
     ArrayList faults = new ArrayList();
     ArrayList lastNames = new ArrayList();
-    
+
     Vector faultsTable;
     Vector vecUpdateFaults = new Vector();
     Vector vecUpdateProducts = new Vector();
     Vector vecUpdatePrices = new Vector();
-    
+
     Connection con;
     PreparedStatement ps;
     Statement stmt;
@@ -64,71 +60,66 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
     CompletedOrder completedOrders;
     ResultSet rs;
     ResultSetMetaData rsmd;
-    
-    
+
     public NotFixedOrder() {
         initComponents();
-        
+
     }
 
     NotFixedOrder(Order _order, CompletedOrder _completedOrders) {
         initComponents();
         this.order = _order;
         this.completedOrders = _completedOrders;
-        
+
         //Remove borders
-        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
         txt_contact.setFocusLostBehavior(JFormattedTextField.PERSIST);//avoid auto old value by focus loosing
-        
-        loadSelectedOrder();
+
         tableSettings(table_view_faults);
         tableSettings(table_view_products);
         loadSelectedOrder();
-        
     }
-    
-    public void tableSettings (JTable table)
-    {
+
+    public void tableSettings(JTable table) {
         table.getTableHeader().setEnabled(false);
         table.setRowHeight(25);
         table.getTableHeader().setForeground(Color.gray);
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
-        ((DefaultTableCellRenderer)table.getDefaultRenderer(Object.class)).setForeground(Color.gray);
+        ((DefaultTableCellRenderer) table.getDefaultRenderer(Object.class)).setForeground(Color.gray);
     }
-    
-    
-   public void loadSelectedOrder()
-   {
+
+    public void loadSelectedOrder() {
         DefaultTableModel faultsModel = (DefaultTableModel) table_view_faults.getModel();
         faultsModel.setRowCount(0);
         DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
         TableColumnModel tableModel = table_view_products.getColumnModel();
 
-        if (order.getPickDate() != null && !order.getPickDate().trim().isEmpty())
-        {
+        if (order.getPickDate() != null && !order.getPickDate().trim().isEmpty()) {
             lbl_order_picked_on.setVisible(true);
             lbl_order_picked_on.setText("Picked on: " + order.getPickDate());
-            
-            if (order.getCashDeposit() == 0 && order.getCardDeposit() == 0) lbl_refunded_by.setVisible(false);
-            else if (order.getCashDeposit() == 0) lbl_refunded_by.setText("Deposit Refunded by Card: €" + order.getCardDeposit());
-            else lbl_refunded_by.setText("Deposit Refunded by Cash: €" + order.getCashDeposit());
-            
+
+            if (order.getCashDeposit() == 0 && order.getCardDeposit() == 0)
+                lbl_refunded_by.setVisible(false);
+            else if (order.getCashDeposit() == 0)
+                lbl_refunded_by.setText("Deposit Refunded by Card: €" + order.getCardDeposit());
+            else
+                lbl_refunded_by.setText("Deposit Refunded by Cash: €" + order.getCashDeposit());
+
             btn_undo.setVisible(false);
             btn_pick_up.setVisible(false);
             btn_notes.setVisible(false);
             btn_notes1.setVisible(true);
-        }
-        else
-        {
+        } else {
             lbl_order_picked_on.setVisible(false);
+            lbl_refunded_by.setVisible(false);
             btn_undo.setVisible(true);
             btn_pick_up.setVisible(true);
             btn_notes.setVisible(true);
             btn_notes1.setVisible(false);
         }
-        
+
         lbl_order_status.setText("Order Not Fixed");
         lbl_date.setText("date: " + order.getFinishDate());
         lbl_order_created_on.setText("Created on: " + order.getIssueDate() + " - by " + order.getUsername());
@@ -144,78 +135,75 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         txt_total.setText(String.valueOf(order.getTotal()));
         txt_deposit.setText(String.valueOf(order.getDeposit()));
         txt_due.setText(String.valueOf(order.getDue()));
-        
-       // Array for holding database String 
+
+        // Array for holding database String 
         String[] arrayFaults = order.getStringFaults().split(",");
         String[] arrayProducts = order.getStringProducts().split(",");
         String[] arrayQty = order.getStringQty().split(",");
         String[] arrayUnitPrice = order.getUnitPrice().split(",");
         String[] arrayPriceTotal = order.getPriceTotal().split(",");
-        
+
         //Iterate arrayProducts and pass elements to faults table
-        for (Object objFaults : arrayFaults)
-        {
-            faultsModel.addRow(new Object[] {objFaults});
+        for (Object objFaults : arrayFaults) {
+            faultsModel.addRow(new Object[]{objFaults});
         }
-        
-         // Pass arrayPrices to a vector and add as a new column
+
+        // Pass arrayPrices to a vector and add as a new column
         Vector vecProducts = new Vector();
         Vector vecQty = new Vector();
         Vector vecUnitPrice = new Vector();
         Vector vecPriceTotal = new Vector();
-        
-        vecProducts.addAll(Arrays.asList(arrayProducts)); 
+
+        vecProducts.addAll(Arrays.asList(arrayProducts));
         vecQty.addAll(Arrays.asList(arrayQty));
-        vecUnitPrice.addAll(Arrays.asList(arrayUnitPrice)); 
-        vecPriceTotal.addAll(Arrays.asList(arrayPriceTotal)); 
-        
+        vecUnitPrice.addAll(Arrays.asList(arrayUnitPrice));
+        vecPriceTotal.addAll(Arrays.asList(arrayPriceTotal));
+
         //Add New Columns into the table_view_products with data as a vector
         productsModel.addColumn("Product | Service", vecProducts);
         productsModel.addColumn("Qty", vecQty);
         productsModel.addColumn("Unit €", vecUnitPrice);
         productsModel.addColumn("Total €", vecPriceTotal);
-        
+
         // Set width size for columns through its index
         tableModel.getColumn(1).setMaxWidth(40);
         tableModel.getColumn(2).setMaxWidth(80);
         tableModel.getColumn(3).setMaxWidth(80);
-   }
-   
-    public void dbConnection() 
-    {
+    }
+
+    public void dbConnection() {
         try {
-              Class.forName("com.mysql.cj.jdbc.Driver");
-              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(NotFixedOrder.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void addNoteEvent(String updateNote)
-    {
+
+    public void addNoteEvent(String updateNote) {
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
         String dateFormat = new SimpleDateFormat("yyyy/MM/dd").format(currentDate);
-        
+
         try {
             dbConnection();
-            
+
             String note = "Order tagged as '" + updateNote + "' by " + order.getUsername();
             String user = "System";
-          
-                    String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
-                    ps = con.prepareStatement(queryUpdate);
-                    ps.setString(1, order.getOrderNo());
-                    ps.setString(2, dateFormat);
-                    ps.setString(3, note);
-                    ps.setString(4, user);
-                    ps.executeUpdate();
-            
+
+            String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
+            ps = con.prepareStatement(queryUpdate);
+            ps.setString(1, order.getOrderNo());
+            ps.setString(2, dateFormat);
+            ps.setString(3, note);
+            ps.setString(4, user);
+            ps.executeUpdate();
+
         } catch (SQLException ex) {
             Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -685,27 +673,20 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
 
     private void txt_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_totalActionPerformed
         // TODO add your handling code here:
-        
         double sum = 0;
-        for(int i = 0; i < table_view_products.getRowCount(); i++)
-        {
+        for (int i = 0; i < table_view_products.getRowCount(); i++)
             sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 1).toString());
-        }
-        
+
         txt_total.setText(Double.toString(sum));
     }//GEN-LAST:event_txt_totalActionPerformed
 
     private void txt_depositKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_depositKeyReleased
         // TODO add your handling code here:
-
         //Calculate deposit paid and display due value
-        if (txt_deposit.getText() == null || txt_deposit.getText().trim().isEmpty())
-        {
+        if (txt_deposit.getText() == null || txt_deposit.getText().trim().isEmpty()) {
             txt_due.setText(txt_total.getText());
             txt_deposit.setText(Double.toString(0));
-        }
-        else
-        {
+        } else {
             double priceTotal = Double.parseDouble(txt_total.getText());
             double deposit = Double.parseDouble(txt_deposit.getText());
             double total = priceTotal - deposit;
@@ -738,7 +719,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
 
     private void txt_first_nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_first_nameKeyReleased
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_txt_first_nameKeyReleased
 
     private void txt_last_nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_last_nameKeyReleased
@@ -746,22 +727,17 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameKeyReleased
 
     private void txt_totalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_totalKeyPressed
-         // TODO add your handling code here:
-        char c = evt.getKeyChar();
-        
-        if (Character.isLetter(c)) {
-            
+        // TODO add your handling code here:
+        if (Character.isLetter(evt.getKeyChar()))
+
             txt_total.setEditable(false);
-        }
         else
-        {
             txt_total.setEditable(true);
-        }       
     }//GEN-LAST:event_txt_totalKeyPressed
 
     private void txt_depositKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_depositKeyPressed
         // TODO add your handling code here:
-        if(Character.isLetter(evt.getKeyChar()))
+        if (Character.isLetter(evt.getKeyChar()))
             txt_deposit.setEditable(false);
         else
             txt_deposit.setEditable(true);
@@ -773,12 +749,10 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
 
     private void table_view_faultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_faultsMouseClicked
         // TODO add your handling code here:
-        
     }//GEN-LAST:event_table_view_faultsMouseClicked
 
     private void txt_depositActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_depositActionPerformed
         // TODO add your handling code here:
-                //Calculate deposit paid and display due value
     }//GEN-LAST:event_txt_depositActionPerformed
 
     private void txt_dueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_dueActionPerformed
@@ -787,11 +761,10 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
 
     private void txt_last_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_last_nameKeyPressed
         // TODO add your handling code here:
-        //Sugest autoComplete firstNames from Database
     }//GEN-LAST:event_txt_last_nameKeyPressed
 
     private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
-        
+        // TODO add your handling code here:
     }//GEN-LAST:event_txt_contactActionPerformed
 
     private void txt_contactKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_contactKeyReleased
@@ -800,101 +773,97 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
 
     private void btn_pick_upActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pick_upActionPerformed
         // TODO add your handling code here:
-        int confirmUndoing = JOptionPane.showConfirmDialog(null, "Confirm Picking Order: " 
-                            + order.getOrderNo() + " ?", "Order Not Fixed", JOptionPane.YES_NO_OPTION);
-        if (confirmUndoing == 0)
-        {
+        int confirmUndoing = JOptionPane.showConfirmDialog(null, "Confirm Picking Order: "
+                + order.getOrderNo() + " ?", "Order Not Fixed", JOptionPane.YES_NO_OPTION);
+        if (confirmUndoing == 0) {
             try {
                 dbConnection();
-                
+
                 java.util.Date date = new java.util.Date();
                 java.sql.Timestamp currentDateTime = new java.sql.Timestamp(date.getTime());
                 String pickDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDateTime);
                 order.setPickDate(pickDate);
-                
+
                 String query = "UPDATE orderDetails SET pickDate = ? WHERE orderNo = ?";
                 ps = con.prepareStatement(query);
                 ps.setString(1, order.getPickDate());
                 ps.setString(2, order.getOrderNo());
                 ps.executeUpdate();
-                
+
                 lbl_order_picked_on.setText("Picked on: " + order.getPickDate());
                 lbl_order_picked_on.setVisible(true);
                 btn_undo.setVisible(false);
                 btn_pick_up.setVisible(false);
                 btn_notes.setVisible(false);
                 btn_notes1.setVisible(true);
-                
+
                 addNoteEvent("Picked");
-                
-            if (order.getDeposit() > 0)
-            {
-                double negativeDeposit = order.getDeposit();
-                double negativeCash = order.getCashDeposit();
-                double negativeCard = order.getCardDeposit();
-                
-                order.setDeposit(negativeDeposit *= -1);
-                order.setCashDeposit(negativeCash *= -1);
-                order.setCardDeposit(negativeCard *= -1);
-                
-                String queryDepositRefund = "INSERT INTO completedOrders(orderNo, firstName, lastName, "
-                    + "brand, model, total, deposit, due, cash, card, changeTotal, cashDeposit, "
-                    + "cardDeposit, payDate, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                
-                ps = con.prepareStatement(queryDepositRefund);
-                ps.setString(1, order.getOrderNo());
-                ps.setString(2, order.getFirstName());
-                ps.setString(3, order.getLastName());
-                ps.setString(4, order.getBrand());
-                ps.setString(5, order.getModel());
-                ps.setDouble(6, 0);
-                ps.setDouble(7, order.getDeposit());
-                ps.setDouble(8, 0);
-                ps.setDouble(9, order.getCashDeposit()); 
-                ps.setDouble(10, order.getCardDeposit());
-                ps.setDouble(11, 0);
-                ps.setDouble(12, 0);
-                ps.setDouble(13, 0);
-                ps.setString(14, order.getPickDate());
-                ps.setString(15, order.getStatus());
-                ps.executeUpdate();
+
+                if (order.getDeposit() > 0) {
+                    double negativeDeposit = order.getDeposit();
+                    double negativeCash = order.getCashDeposit();
+                    double negativeCard = order.getCardDeposit();
+
+                    order.setDeposit(negativeDeposit *= -1);
+                    order.setCashDeposit(negativeCash *= -1);
+                    order.setCardDeposit(negativeCard *= -1);
+
+                    String queryDepositRefund = "INSERT INTO completedOrders(orderNo, firstName, lastName, "
+                            + "brand, model, total, deposit, due, cash, card, changeTotal, cashDeposit, "
+                            + "cardDeposit, payDate, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+                    ps = con.prepareStatement(queryDepositRefund);
+                    ps.setString(1, order.getOrderNo());
+                    ps.setString(2, order.getFirstName());
+                    ps.setString(3, order.getLastName());
+                    ps.setString(4, order.getBrand());
+                    ps.setString(5, order.getModel());
+                    ps.setDouble(6, 0);
+                    ps.setDouble(7, order.getDeposit());
+                    ps.setDouble(8, 0);
+                    ps.setDouble(9, order.getCashDeposit());
+                    ps.setDouble(10, order.getCardDeposit());
+                    ps.setDouble(11, 0);
+                    ps.setDouble(12, 0);
+                    ps.setDouble(13, 0);
+                    ps.setString(14, order.getPickDate());
+                    ps.setString(15, order.getStatus());
+                    ps.executeUpdate();
                 }
-                
+
             } catch (SQLException ex) {
                 Logger.getLogger(NotFixedOrder.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
         }
     }//GEN-LAST:event_btn_pick_upActionPerformed
 
     private void btn_undoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_undoActionPerformed
         // TODO add your handling code here:
-        int confirmUndoing = JOptionPane.showConfirmDialog(this, "Do you really want to 'UNDO' Order: " 
-                            + order.getOrderNo() + " ?", "Undo Order", JOptionPane.YES_NO_OPTION);
-        if (confirmUndoing == 0)
-        {
+        int confirmUndoing = JOptionPane.showConfirmDialog(this, "Do you really want to 'UNDO' Order: "
+                + order.getOrderNo() + " ?", "Undo Order", JOptionPane.YES_NO_OPTION);
+        if (confirmUndoing == 0) {
             String status = "In Progress";
             order.setStatus(status);
-            
+
             try {
                 dbConnection();
-                
+
                 String query = "UPDATE orderDetails SET status = ?, finishDate = ? WHERE orderNo = ? ";
                 ps = con.prepareStatement(query);
                 ps.setString(1, order.getStatus());
                 ps.setString(2, null);
                 ps.setString(3, order.getOrderNo());
                 ps.executeUpdate();
-               
+
                 addNoteEvent(status);
-                
+
                 OrderDetails orderDetails = new OrderDetails(order, completedOrders);
                 desktop_pane_not_fixed_order.removeAll();
                 desktop_pane_not_fixed_order.add(orderDetails).setVisible(true);
-                
+
             } catch (SQLException ex) {
                 Logger.getLogger(NotFixedOrder.class.getName()).log(Level.SEVERE, null, ex);
-          } 
+            }
         }
     }//GEN-LAST:event_btn_undoActionPerformed
 

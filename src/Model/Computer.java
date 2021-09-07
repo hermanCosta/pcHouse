@@ -10,12 +10,12 @@ package Model;
  * @author user
  */
 public class Computer {
-    
+
     String brand, model, serialNumber, processor, ram, storage, gpu, screen, notes;
     int computerId, qty;
     double price;
 
-    public Computer(String brand, String _model, String _serialNumber, String _processor, String _ram, String _storage, 
+    public Computer(String brand, String _model, String _serialNumber, String _processor, String _ram, String _storage,
             String _gpu, String _screen, String _notes, int _qty, double _price) {
         this.brand = brand;
         this.model = _model;
@@ -125,9 +125,4 @@ public class Computer {
     public void setPrice(double price) {
         this.price = price;
     }
-    
-    
-    
-    
-    
 }

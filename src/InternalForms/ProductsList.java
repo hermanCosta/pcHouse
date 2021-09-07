@@ -5,7 +5,6 @@
  */
 package InternalForms;
 
-import Model.Computer;
 import Model.ProductService;
 import java.awt.Color;
 import java.awt.Font;
@@ -19,12 +18,7 @@ import java.sql.Statement;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.InputVerifier;
-import javax.swing.JComponent;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.border.Border;
-import javax.swing.border.TitledBorder;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 
@@ -34,61 +28,52 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ProductsList extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form OrdersMenu
-     */
-    
-     Color defaultColor, mouseEnteredColor;
-     Connection con;
-     PreparedStatement ps;
-     ProductService productService;
-     DefaultTableModel dtm;
-     ResultSet rs;
-     ResultSetMetaData rsmd;
-     Vector vector;
-     Statement statement;
-     int productId;
-     int id;
-     String addCategory = "";
+    Color defaultColor, mouseEnteredColor;
+    Connection con;
+    PreparedStatement ps;
+    ProductService productService;
+    DefaultTableModel dtm;
+    ResultSet rs;
+    ResultSetMetaData rsmd;
+    Vector vector;
+    Statement statement;
+    int productId;
+    int id;
+    String addCategory = "";
 
     @SuppressWarnings("unchecked")
-     
+
     public ProductsList() {
         initComponents();
-        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
-        
+
         table_view_products_list.setRowHeight(25);
         table_view_products_list.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
-        defaultColor = new Color(21,76,121);
-        mouseEnteredColor = new Color(118,181,197);
-        
+        defaultColor = new Color(21, 76, 121);
+        mouseEnteredColor = new Color(118, 181, 197);
+
         displayProductList();
-        //avoidEmptyField(txt_product_service_list,"product|service");
-        //avoidEmptyField(txt_add_price, "price");
     }
 
-    public final void displayProductList()
-    {
-         try {
+    public final void displayProductList() {
+        try {
             dbConnection();
-            
-            String query = "SELECT * FROM products ORDER BY productService ASC LIMIT 17"; 
+
+            String query = "SELECT * FROM products ORDER BY productService ASC LIMIT 17";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
             rsmd = rs.getMetaData();
-            
-            int count; 
+
+            int count;
             count = rsmd.getColumnCount();
-            dtm = (DefaultTableModel)table_view_products_list.getModel();
+            dtm = (DefaultTableModel) table_view_products_list.getModel();
             dtm.setRowCount(0);
-            
-            while(rs.next())
-            {
+
+            while (rs.next()) {
                 vector = new Vector();
-                for(int i = 1; i <= count; i++)
-                {
+                for (int i = 1; i <= count; i++) {
                     vector.add(rs.getInt("productId"));
                     vector.add(rs.getString("productService"));
                     vector.add(rs.getDouble("price"));
@@ -96,37 +81,32 @@ public class ProductsList extends javax.swing.JInternalFrame {
                     vector.add(rs.getString("notes"));
                     vector.add(rs.getString("category"));
                 }
-                
-                
+
                 dtm.addRow(vector);
             }
         } catch (SQLException ex) {
             Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-        
+
     public void searchProductService() {
-        
-        
+
         String searchProduct = txt_product_service_list.getText();
-         
-         try {
-            String query = "SELECT * FROM products WHERE productService LIKE '%" + searchProduct + "%' ORDER BY productService ASC"; 
+
+        try {
+            String query = "SELECT * FROM products WHERE productService LIKE '%" + searchProduct + "%' ORDER BY productService ASC";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
             rsmd = rs.getMetaData();
-            
-            int count; 
+
+            int count;
             count = rsmd.getColumnCount();
-            dtm = (DefaultTableModel)table_view_products_list.getModel();
-            dtm .setRowCount(0);
-            
-            while(rs.next())
-            {
+            dtm = (DefaultTableModel) table_view_products_list.getModel();
+            dtm.setRowCount(0);
+
+            while (rs.next()) {
                 vector = new Vector();
-                for(int i = 1; i <= count; i++)
-                {
+                for (int i = 1; i <= count; i++) {
                     vector.add(rs.getInt("productId"));
                     vector.add(rs.getString("productService"));
                     vector.add(rs.getDouble("price"));
@@ -140,10 +120,8 @@ public class ProductsList extends javax.swing.JInternalFrame {
             Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    public void clearFields()
-    {
+
+    public void clearFields() {
         txt_product_service_list.setText("");
         txt_add_price.setText("");
         txt_add_qty.setText("");
@@ -151,19 +129,16 @@ public class ProductsList extends javax.swing.JInternalFrame {
         combo_box_category.setSelectedIndex(0);
         displayProductList();
     }
-        
-    public void dbConnection() 
-    {
+
+    public void dbConnection() {
         try {
-              Class.forName("com.mysql.cj.jdbc.Driver");
-              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-     
-     
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -494,47 +469,35 @@ public class ProductsList extends javax.swing.JInternalFrame {
     private void btn_edit_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_edit_product_serviceActionPerformed
         // TODO add your handling code here:
         if (txt_product_service_list.getText().trim().isEmpty() || txt_add_price.getText().trim().isEmpty()
-               || txt_add_qty.getText().trim().isEmpty() || combo_box_category.getSelectedItem().equals("Select"))
-            {
-                JOptionPane.showMessageDialog(this, "Please check empty fields !", "Product List", JOptionPane.ERROR_MESSAGE);
-            }
-        else
-        {
+                || txt_add_qty.getText().trim().isEmpty() || combo_box_category.getSelectedItem().equals("Select")) {
+            JOptionPane.showMessageDialog(this, "Please check empty fields !", "Product List", JOptionPane.ERROR_MESSAGE);
+        } else {
 
-        
-        String productName = txt_product_service_list.getText();
-        double price = Double.parseDouble(txt_add_price.getText());
-        int qty = Integer.parseInt(txt_add_qty.getText());
-        String notes = txt_add_notes.getText();
-        String category = combo_box_category.getSelectedItem().toString();
-        
-        if (category.equals("Select"))
-        {
-            JOptionPane.showMessageDialog(null, "Please, select a Category", "Product List", JOptionPane.ERROR_MESSAGE);
-        }
-        else
-        {
-            try {
-                dbConnection(); 
+            String productName = txt_product_service_list.getText();
+            double price = Double.parseDouble(txt_add_price.getText());
+            int qty = Integer.parseInt(txt_add_qty.getText());
+            String notes = txt_add_notes.getText();
+            String category = combo_box_category.getSelectedItem().toString();
+
+            if (category.equals("Select")) {
+                JOptionPane.showMessageDialog(null, "Please, select a Category", "Product List", JOptionPane.ERROR_MESSAGE);
+            } else {
+                try {
+                    dbConnection();
 
                     String queryCheck = "SELECT * FROM products WHERE productService = ?";
                     ps = con.prepareStatement(queryCheck);
                     ps.setString(1, productName);
                     rs = ps.executeQuery();
 
-                    while (rs.next())
-                    {
-                       if( productName.equals(rs.getString("productService")) && price == rs.getDouble("price") && qty == rs.getInt("qty") 
-                               && notes.equals(rs.getString("notes")) && category.equals(rs.getString("category")))
-                       {
-                           JOptionPane.showMessageDialog(null, "No changes to be updated !", "Product List", JOptionPane.ERROR_MESSAGE);
-                       }
-                       else 
-                        {
-                            int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Editing " + productName + " ?", 
+                    while (rs.next()) {
+                        if (productName.equals(rs.getString("productService")) && price == rs.getDouble("price") && qty == rs.getInt("qty")
+                                && notes.equals(rs.getString("notes")) && category.equals(rs.getString("category"))) {
+                            JOptionPane.showMessageDialog(null, "No changes to be updated !", "Product List", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Editing " + productName + " ?",
                                     "Edit Product|Service", JOptionPane.YES_NO_OPTION);
-                            if(confirmEditing == 0)
-                            {
+                            if (confirmEditing == 0) {
                                 String query = "UPDATE products SET productService = ?, price = ?, qty = ?, notes = ? WHERE productId = ?";
                                 ps = con.prepareStatement(query);
                                 ps.setString(1, productName);
@@ -546,100 +509,86 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
                                 displayProductList();
                                 clearFields();
-                            }
-                            else
-                            {
+                            } else {
                                 displayProductList();
                                 clearFields();
                             }
                         }
                     }
 
-            } catch (SQLException ex) {
+                } catch (SQLException ex) {
                     Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-        }
         }
     }//GEN-LAST:event_btn_edit_product_serviceActionPerformed
 
     private void btn_add_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add_product_serviceActionPerformed
-             // TODO add your handling code here:
-        
-            if (txt_product_service_list.getText().trim().isEmpty() || txt_add_price.getText().trim().isEmpty()
-               || txt_add_qty.getText().trim().isEmpty() || combo_box_category.getSelectedItem().equals("Select"))
-            {
-                JOptionPane.showMessageDialog(this, "Please check empty fields !", "Product List", JOptionPane.ERROR_MESSAGE);
+        // TODO add your handling code here:
+        if (txt_product_service_list.getText().trim().isEmpty() || txt_add_price.getText().trim().isEmpty()
+                || txt_add_qty.getText().trim().isEmpty() || combo_box_category.getSelectedItem().equals("Select")) {
+            JOptionPane.showMessageDialog(this, "Please check empty fields !", "Product List", JOptionPane.ERROR_MESSAGE);
+        } else {
+
+            String addProductService = txt_product_service_list.getText();
+            double addPrice = Double.parseDouble(txt_add_price.getText());
+            int addQty = Integer.parseInt(txt_add_qty.getText());
+            String addNotes = txt_add_notes.getText();
+            addCategory = combo_box_category.getSelectedItem().toString();
+
+            productService = new ProductService(addProductService, addPrice, addQty, addNotes, addCategory);
+
+            try {
+                dbConnection();
+                String queryCheck = "SELECT productService FROM products WHERE productService = ? ";
+                ps = con.prepareStatement(queryCheck);
+                ps.setString(1, addProductService);
+                rs = ps.executeQuery();
+
+                if (rs.isBeforeFirst()) {
+                    JOptionPane.showMessageDialog(null, addProductService + " already exist in the Database !", "Products List", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    String queryInsert = "INSERT INTO products(productService, price, qty, notes, category) VALUES(?, ?, ?, ?, ?)";
+                    ps = con.prepareStatement(queryInsert);
+
+                    ps.setString(1, productService.getProductService());
+                    ps.setDouble(2, productService.getPrice());
+                    ps.setInt(3, productService.getQty());
+                    ps.setString(4, productService.getNotes());
+                    ps.setString(5, productService.getCategory());
+                    ps.executeUpdate();
+
+                    JOptionPane.showMessageDialog(this, productService.getProductService() + " added successfully!");
+
+                    displayProductList();
+                    clearFields();
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
             }
-            else
-            {
-                
-                String addProductService = txt_product_service_list.getText();
-                double addPrice = Double.parseDouble(txt_add_price.getText());
-                int addQty =  Integer.parseInt(txt_add_qty.getText());
-                String addNotes = txt_add_notes.getText();
-                addCategory = combo_box_category.getSelectedItem().toString();
+        }
 
-                    productService = new ProductService(addProductService, addPrice, addQty, addNotes, addCategory);
-
-                    try {
-                        dbConnection();
-                         String queryCheck = "SELECT productService FROM products WHERE productService = ? ";
-                            ps = con.prepareStatement(queryCheck);
-                            ps.setString(1, addProductService);
-                            rs = ps.executeQuery();
-
-                            if (rs.isBeforeFirst())
-                            {
-                               JOptionPane.showMessageDialog(null, addProductService + " already exist in the Database !", "Products List", JOptionPane.ERROR_MESSAGE);
-                            }
-                            else
-                            {
-                                String queryInsert = "INSERT INTO products(productService, price, qty, notes, category) VALUES(?, ?, ?, ?, ?)";
-                                ps = con.prepareStatement(queryInsert);
-
-                                ps.setString(1, productService.getProductService());
-                                ps.setDouble(2, productService.getPrice());
-                                ps.setInt(3,  productService.getQty());
-                                ps.setString(4, productService.getNotes());
-                                ps.setString(5, productService.getCategory());
-                                ps.executeUpdate();
-
-                                JOptionPane.showMessageDialog(this, productService.getProductService() + " added successfully!");
-
-
-                                displayProductList();
-                                clearFields();
-                            }
-
-                    } catch (SQLException ex) {
-                       Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-            }
-        
     }//GEN-LAST:event_btn_add_product_serviceActionPerformed
 
     private void txt_delete_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_delete_product_serviceActionPerformed
         // TODO add your handling code here:
         int selectedRow = table_view_products_list.getSelectedRow();
-        
-        if (selectedRow == -1 )
-            JOptionPane.showMessageDialog(this, "Select a item to Delete !", "Delete Product | Service", JOptionPane.ERROR_MESSAGE);
 
-        else
-        {
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Select a item to Delete !", "Delete Product | Service", JOptionPane.ERROR_MESSAGE);
+        } else {
             selectedRow = table_view_products_list.getSelectedRow();
-            
-            dtm = (DefaultTableModel)table_view_products_list.getModel();
+
+            dtm = (DefaultTableModel) table_view_products_list.getModel();
             productId = Integer.parseInt(dtm.getValueAt(selectedRow, 0).toString());
 
             String productName = dtm.getValueAt(selectedRow, 1).toString();
 
+            int confirmDeletion = JOptionPane.showConfirmDialog(this, "Do you really want to delete '"
+                    + productName + "' from Database ?", "Delete Product|Service", JOptionPane.YES_NO_OPTION);
 
-            int confirmDeletion = JOptionPane.showConfirmDialog(this, "Do you really want to delete '" 
-                    + productName +"' from Database ?", "Delete Product|Service", JOptionPane.YES_NO_OPTION);
-
-            if(confirmDeletion == 0)
-            {
+            if (confirmDeletion == 0) {
                 try {
                     dbConnection();
 
@@ -664,15 +613,14 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
     private void btn_clear_fieldsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clear_fieldsActionPerformed
         // TODO add your handling code here:
-       clearFields();
+        clearFields();
     }//GEN-LAST:event_btn_clear_fieldsActionPerformed
 
     private void table_view_products_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_products_listMouseClicked
         // TODO add your handling code here:
-        if(evt.getClickCount() == 2)
-        {
+        if (evt.getClickCount() == 2) {
             int selectedRow = table_view_products_list.getSelectedRow();
-            dtm = (DefaultTableModel)table_view_products_list.getModel();
+            dtm = (DefaultTableModel) table_view_products_list.getModel();
             table_view_products_list.getModel().addTableModelListener(table_view_products_list);
             id = (Integer) dtm.getValueAt(selectedRow, 0);
 
@@ -686,33 +634,22 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
     private void txt_add_priceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_add_priceKeyReleased
         // TODO add your handling code here:
-        
     }//GEN-LAST:event_txt_add_priceKeyReleased
 
     private void txt_add_priceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_add_priceKeyPressed
         // TODO add your handling code here:
-        char c = evt.getKeyChar();
-        
-        if (Character.isLetter(c)) {
+        if (Character.isLetter(evt.getKeyChar()))
             txt_add_price.setEditable(false);
-        }
         else
-        {
             txt_add_price.setEditable(true);
-        }
     }//GEN-LAST:event_txt_add_priceKeyPressed
 
     private void txt_add_qtyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_add_qtyKeyPressed
         // TODO add your handling code here:
-        char c = evt.getKeyChar();
-        
-        if (Character.isLetter(c)) {
+        if (Character.isLetter(evt.getKeyChar()))
             txt_add_qty.setEditable(false);
-        }
         else
-        {
             txt_add_qty.setEditable(true);
-        }
     }//GEN-LAST:event_txt_add_qtyKeyPressed
 
     private void txt_add_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_add_notesActionPerformed
@@ -734,10 +671,9 @@ public class ProductsList extends javax.swing.JInternalFrame {
     private void btn_device_listActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_device_listActionPerformed
         // TODO add your handling code here:
         ComputerList computers = new ComputerList();
-        //desktop_pane_product_list.removeAll();
         desktop_pane_product_list.add(computers).setVisible(true);
     }//GEN-LAST:event_btn_device_listActionPerformed
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_add_product_service;
     private javax.swing.JButton btn_clear_fields;

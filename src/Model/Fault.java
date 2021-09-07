@@ -10,6 +10,7 @@ package Model;
  * @author user
  */
 public class Fault {
+
     int faultId;
     String fault;
 
@@ -32,11 +33,4 @@ public class Fault {
     public void setFaultId(int faultId) {
         this.faultId = faultId;
     }
-    
-    
-    
-    
-    
-    
-    
 }

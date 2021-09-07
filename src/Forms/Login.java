@@ -25,27 +25,25 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
-    
     PreparedStatement ps;
     ResultSet rs;
     Statement stmt;
     Connection con;
     public static String fullName;
-    
+
     public Login() {
         initComponents();
     }
 
-    public void dbConnection() 
-    {
+    public void dbConnection() {
         try {
-              Class.forName("com.mysql.cj.jdbc.Driver");
-              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -213,39 +211,33 @@ public class Login extends javax.swing.JFrame {
 
     private void btn_sign_inActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_sign_inActionPerformed
         // TODO add your handling code here:
-        if (txt_username.getText().trim().isEmpty() || txt_password.getPassword().length == 0)
-            JOptionPane.showMessageDialog(this, "Please, Check Empty Fields !", "Login", JOptionPane.ERROR_MESSAGE );
-        else
-        {
+        if (txt_username.getText().trim().isEmpty() || txt_password.getPassword().length == 0) {
+            JOptionPane.showMessageDialog(this, "Please, Check Empty Fields !", "Login", JOptionPane.ERROR_MESSAGE);
+        } else {
             try {
                 dbConnection();
-                
+
                 String username = txt_username.getText();
                 String password = new String(txt_password.getPassword());
-                
+
                 String query = "SELECT * FROM users WHERE username = ? AND password = ?";
                 ps = con.prepareStatement(query);
                 ps.setString(1, username);
                 ps.setString(2, password);
                 rs = ps.executeQuery();
-                
-                if (rs.next())
-                {
+
+                if (rs.next()) {
                     fullName = rs.getString("fullName");
                     new MainMenu().setVisible(true);
                     this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Login Failed ! please check username or password", "Login", JOptionPane.ERROR_MESSAGE);
                 }
-                else
-                    JOptionPane.showMessageDialog(this, "Login Failed ! please check username or password", "Login", JOptionPane.ERROR_MESSAGE );
-                    
-                    
+
             } catch (SQLException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
         }
-        
-     
     }//GEN-LAST:event_btn_sign_inActionPerformed
 
     private void btn_sign_inKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btn_sign_inKeyPressed
@@ -254,7 +246,6 @@ public class Login extends javax.swing.JFrame {
 
     private void btn_closeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_closeMouseClicked
         // TODO add your handling code here:
-//        this.dispose();
         System.exit(0);
     }//GEN-LAST:event_btn_closeMouseClicked
 

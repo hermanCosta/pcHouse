@@ -10,10 +10,11 @@ package Model;
  * @author user
  */
 public class TableProductService {
+
     String productService, qty, unitPrice, priceTotal;
 
     public TableProductService(String _productService, String _qty, String _unitPrice, String _priceTotal) {
-        
+
         this.productService = _productService;
         this.qty = _qty;
         this.unitPrice = _unitPrice;
@@ -51,10 +52,4 @@ public class TableProductService {
     public void setQty(String qty) {
         this.qty = qty;
     }
-    
-    
-    
-    
-    
-    
 }

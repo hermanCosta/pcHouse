@@ -5,11 +5,7 @@
  */
 package InternalForms;
 
-import Forms.MainMenu;
-import Forms.SalePayment;
 import Model.Customer;
-import Model.ProductService;
-import Model.Sale;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -18,14 +14,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.InputVerifier;
@@ -38,7 +28,6 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
@@ -46,179 +35,153 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
  */
 public class Customers extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form NewOrder
-     */
     ArrayList firstNames = new ArrayList();
     ArrayList lastNames = new ArrayList();
-    
+
     Connection con;
     PreparedStatement ps;
     ResultSet rs;
-    Statement stmt;
     Customer customer;
     String firstName, lastName, contactNo, email;
-    
-    
+
     public Customers() {
         initComponents();
-        
+
         //Remove borders
-        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
-        
+
         txt_contact.setFocusLostBehavior(JFormattedTextField.PERSIST);//avoid auto old value by focus loosing
-        
+
         tableSettings(table_view_customers);
         checkEmailFormat();
         accessDbColumn(firstNames, "SELECT * FROM customers", "firstName");
         accessDbColumn(lastNames, "SELECT * FROM customers", "lastName");
-        
+
         loadCustomerTable();
     }
 
-    public void tableSettings (JTable table)
-    {
+    public void tableSettings(JTable table) {
         table.setRowHeight(25);
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
     }
-    
-    public void dbConnection() 
-    {
+
+    public void dbConnection() {
         try {
-              Class.forName("com.mysql.cj.jdbc.Driver");
-              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
+
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void loadCustomerTable()
-    {
+
+    public void loadCustomerTable() {
         ArrayList<Customer> list = new ArrayList<>();
-        
+
         try {
             dbConnection();
-            
+
             String query = "SELECT * FROM customers";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery(query);
-            
-            while (rs.next())
-            {
+
+            while (rs.next()) {
                 customer = new Customer(rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"), rs.getString("email"));
                 customer.setCustomerId(rs.getInt("customerId"));
                 list.add(customer);
             }
+
         } catch (SQLException ex) {
             Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        DefaultTableModel dtm = (DefaultTableModel)table_view_customers.getModel();
+
+        DefaultTableModel dtm = (DefaultTableModel) table_view_customers.getModel();
         dtm.setRowCount(0);
-        
+
         Object[] row = new Object[5];
-        for (int i = 0 ;i < list.size() ; i++)
-        {
-                row[0] = list.get(i).getCustomerId();
-                row[1] = list.get(i).getFirstName();
-                row[2] = list.get(i).getLastName();
-                row[3] = list.get(i).getContactNo();
-                row[4] = list.get(i).getEmail();
-                
+        for (int i = 0; i < list.size(); i++) {
+            row[0] = list.get(i).getCustomerId();
+            row[1] = list.get(i).getFirstName();
+            row[2] = list.get(i).getLastName();
+            row[3] = list.get(i).getContactNo();
+            row[4] = list.get(i).getEmail();
+
             dtm.addRow(row);
         }
-        
     }
-    
-    
-    public void autoCompleteFromDb(ArrayList list, String text, JTextField field)
-    {
+
+    public void autoCompleteFromDb(ArrayList list, String text, JTextField field) {
         String complete = "";
         int start = text.length();
         int last = text.length();
-        
-        for(int i = 0 ; i < list.size() ; i++)
-        {
-            if(list.get(i).toString().startsWith(text))
-            {
+
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).toString().startsWith(text)) {
                 complete = list.get(i).toString();
                 last = complete.length();
                 break;
             }
         }
-        
-        if(last > start)
-        {
+
+        if (last > start) {
             field.setText(complete);
             field.setCaretPosition(last);
             field.moveCaretPosition(start);
         }
     }
-    
-   
-    
-    public final void accessDbColumn(ArrayList list, String query, String columnName)
-    {
+
+    public final void accessDbColumn(ArrayList list, String query, String columnName) {
         try {
             dbConnection();
-            
+
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
-            
-                while (rs.next())
-                {
-                    list.add(rs.getString(columnName));
-                }
-            
+
+            while (rs.next()) {
+                list.add(rs.getString(columnName));
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void cleanFields()
-    {
+
+    public void cleanFields() {
         //Clean all Fields 
-            txt_first_name.setText("");
-            txt_last_name.setText("");
-            txt_contact.setText("");
-            txt_email.setText("");
-            txt_search_customer.setText("");
-            txt_first_name.requestFocus();
-        
+        txt_first_name.setText("");
+        txt_last_name.setText("");
+        txt_contact.setText("");
+        txt_email.setText("");
+        txt_search_customer.setText("");
+        txt_first_name.requestFocus();
     }
-    
-    public final void checkEmailFormat()
-    {
+
+    public final void checkEmailFormat() {
         txt_email.setInputVerifier(new InputVerifier() {
-           
-           Border originalBorder;
-           String emailFormat = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-           String email = txt_email.getText();
-           
-           
-           @Override
-           public boolean verify(JComponent input) {
-               JTextField comp = (JTextField) input;
-               //return !comp.getText().trim().isEmpty();
-               return comp.getText().matches(emailFormat) | comp.getText().trim().isEmpty();
-           }
-           
-           @Override
-           public boolean shouldYieldFocus(JComponent input)
-           {
-               boolean isValid = verify(input);
-               
-               if (!isValid)
-               {
-                   originalBorder = originalBorder == null ? input.getBorder() : originalBorder;
-                  //input.setBorder(BorderFactory.createLineBorder(Color.red, 2));
-                  input.setBorder(new LineBorder(Color.RED));
-               } 
-               else 
-               {
-                    if(originalBorder != null) {
+
+            Border originalBorder;
+            String emailFormat = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+            String email = txt_email.getText();
+
+            @Override
+            public boolean verify(JComponent input) {
+                JTextField comp = (JTextField) input;
+                //return !comp.getText().trim().isEmpty();
+                return comp.getText().matches(emailFormat) | comp.getText().trim().isEmpty();
+            }
+
+            @Override
+            public boolean shouldYieldFocus(JComponent input) {
+                boolean isValid = verify(input);
+
+                if (!isValid) {
+                    originalBorder = originalBorder == null ? input.getBorder() : originalBorder;
+                    //input.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+                    input.setBorder(new LineBorder(Color.RED));
+                } else {
+                    if (originalBorder != null) {
                         input.setBorder(originalBorder);
                         originalBorder = null;
                     }
@@ -227,17 +190,7 @@ public class Customers extends javax.swing.JInternalFrame {
             }
         });
     }
-    
-    public boolean checkEmptyFields()
-    {
-        if (txt_first_name.getText().trim().isEmpty() || txt_last_name.getText().trim().isEmpty() || 
-                txt_contact.getText().trim().isEmpty() || table_view_customers.getRowCount() == 0)
-        {
-            JOptionPane.showMessageDialog(null, "Please, check Empty fields", "New Customer", JOptionPane.ERROR_MESSAGE);
-        }
-        return true;
-    }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -551,7 +504,7 @@ public class Customers extends javax.swing.JInternalFrame {
 
     private void txt_emailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_emailActionPerformed
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_txt_emailActionPerformed
 
     private void txt_last_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_last_nameActionPerformed
@@ -559,120 +512,99 @@ public class Customers extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameActionPerformed
 
     private void txt_first_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_first_nameActionPerformed
-       // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_txt_first_nameActionPerformed
 
     private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
         // TODO add your handling code here:
-       if (txt_first_name.getText().trim().isEmpty() || txt_last_name.getText().trim().isEmpty() || 
-                txt_contact.getText().trim().isEmpty())
-        {
+        if (txt_first_name.getText().trim().isEmpty() || txt_last_name.getText().trim().isEmpty()
+                || txt_contact.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Costumer", JOptionPane.ERROR_MESSAGE);
-        }
-        else
-        {
+        } else {
             firstName = txt_first_name.getText();
             lastName = txt_last_name.getText();
             contactNo = txt_contact.getText();
             email = txt_email.getText();
 
-            
-            
             try {
-                
-            dbConnection();
-            
+
+                dbConnection();
+
 //            String query = "SELECT contactNo FROM customers WHERE contactNo = ?";
 //            ps = con.prepareStatement(query);
 //            ps.setString(1, customer.getContactNo());
 //            rs = ps.executeQuery();
-            
-            //add a new customer if not exists AND fields are not empty
-            if (!customer.getContactNo().equals(contactNo))
-            {
-                customer = new Customer(firstName, lastName, contactNo, email);
-                
-                int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add a Customer " + customer.getFirstName() + " ?", "Add New Customer", JOptionPane.YES_NO_OPTION);
-                if(confirmInsertion == 0)
-                {
-                    String insertQuery = "INSERT INTO customers (firstName, lastName, contactNo, email) VALUES(?, ?, ?, ?)";
-                    
-                    ps = con.prepareStatement(insertQuery);
-                    ps.setString(1, customer.getFirstName());
-                    ps.setString(2, customer.getLastName());
-                    ps.setString(3, customer.getContactNo());
-                    ps.setString(4, customer.getEmail());
-                    ps.executeUpdate();
-                    
-                    JOptionPane.showMessageDialog(this, "Customer " + customer.getFirstName() + " " + customer.getLastName() + " added Successfully");
-                    loadCustomerTable();
-                } 
-            }
-                
-                else 
+                //add a new customer if not exists AND fields are not empty
+                if (!customer.getContactNo().equals(contactNo)) {
+                    customer = new Customer(firstName, lastName, contactNo, email);
+
+                    int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add a Customer " + customer.getFirstName() + " ?", "Add New Customer", JOptionPane.YES_NO_OPTION);
+                    if (confirmInsertion == 0) {
+                        String insertQuery = "INSERT INTO customers (firstName, lastName, contactNo, email) VALUES(?, ?, ?, ?)";
+
+                        ps = con.prepareStatement(insertQuery);
+                        ps.setString(1, customer.getFirstName());
+                        ps.setString(2, customer.getLastName());
+                        ps.setString(3, customer.getContactNo());
+                        ps.setString(4, customer.getEmail());
+                        ps.executeUpdate();
+
+                        JOptionPane.showMessageDialog(this, "Customer " + customer.getFirstName() + " " + customer.getLastName() + " added Successfully");
+                        loadCustomerTable();
+                    }
+                } else {
                     JOptionPane.showMessageDialog(this, "Customer already exist with Contact " + customer.getContactNo() + " into Database", "New Customer", JOptionPane.ERROR_MESSAGE);
-            
-            //show a message if a costumer is not found into db
-            
-            
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                //show a message if a costumer is not found into db
+            } catch (SQLException ex) {
+                Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
-            
-       }
     }//GEN-LAST:event_btn_addActionPerformed
 
     private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
-        
-        if (txt_first_name.getText().trim().isEmpty() || txt_last_name.getText().trim().isEmpty() || 
-                txt_contact.getText().trim().isEmpty())
-        {
+
+        if (txt_first_name.getText().trim().isEmpty() || txt_last_name.getText().trim().isEmpty()
+                || txt_contact.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Costumer", JOptionPane.ERROR_MESSAGE);
-        }
-        else
-        {
+        } else {
             firstName = txt_first_name.getText();
             lastName = txt_last_name.getText();
             contactNo = txt_contact.getText();
             email = txt_email.getText();
-      
+
             try {
-                
-                dbConnection(); 
 
-                       if( customer.getFirstName().equals(firstName) && customer.getLastName().equals(lastName) && customer.getContactNo().equals(contactNo) && customer.getEmail().equals(email))
-                       {
-                           JOptionPane.showMessageDialog(null, "No changes to be updated !", "Update Customer", JOptionPane.ERROR_MESSAGE);
-                       }
-                       else 
-                        {
-                            int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Updating " + firstName + " ?", 
-                                    "Update Customer", JOptionPane.YES_NO_OPTION);
-                            
-                            if(confirmEditing == 0)
-                            {
-                                String query = "UPDATE customers SET firstName = ?, lastName = ?, contactNo = ?, email = ? WHERE customerId = ?";
-                                ps = con.prepareStatement(query);
-                                ps.setString(1, firstName);
-                                ps.setString(2, lastName);
-                                ps.setString(3, contactNo);
-                                ps.setString(4, email);
-                                ps.setInt(5, customer.getCustomerId());
-                                ps.executeUpdate();
+                dbConnection();
 
-                                loadCustomerTable();
-                                cleanFields();
-                            }
-                            else
-                            {
-                                loadCustomerTable();
-                                cleanFields();
-                            }
+                if (customer.getFirstName().equals(firstName) && customer.getLastName().equals(lastName) && customer.getContactNo().equals(contactNo) && customer.getEmail().equals(email)) {
+                    JOptionPane.showMessageDialog(null, "No changes to be updated !", "Update Customer", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Updating " + firstName + " ?",
+                            "Update Customer", JOptionPane.YES_NO_OPTION);
+
+                    if (confirmEditing == 0) {
+                        String query = "UPDATE customers SET firstName = ?, lastName = ?, contactNo = ?, email = ? WHERE customerId = ?";
+                        ps = con.prepareStatement(query);
+                        ps.setString(1, firstName);
+                        ps.setString(2, lastName);
+                        ps.setString(3, contactNo);
+                        ps.setString(4, email);
+                        ps.setInt(5, customer.getCustomerId());
+                        ps.executeUpdate();
+
+                        loadCustomerTable();
+                        cleanFields();
+                    } else {
+                        loadCustomerTable();
+                        cleanFields();
                     }
+                }
 
             } catch (SQLException ex) {
-                    Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btn_updateActionPerformed
@@ -680,11 +612,10 @@ public class Customers extends javax.swing.JInternalFrame {
     private void txt_first_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_first_nameKeyPressed
         // TODO add your handling code here:
         //Sugest autoComplete firstNames from Database
-        switch(evt.getKeyCode())
-        {
+        switch (evt.getKeyCode()) {
             case KeyEvent.VK_BACKSPACE:
                 break;
-            
+
             case KeyEvent.VK_ENTER:
                 txt_first_name.setText(txt_first_name.getText());
                 break;
@@ -692,7 +623,7 @@ public class Customers extends javax.swing.JInternalFrame {
                 EventQueue.invokeLater(() -> {
                     String text = txt_first_name.getText();
                     autoCompleteFromDb(firstNames, text, txt_first_name);
-            });
+                });
         }
     }//GEN-LAST:event_txt_first_nameKeyPressed
 
@@ -711,30 +642,29 @@ public class Customers extends javax.swing.JInternalFrame {
     private void txt_last_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_last_nameKeyPressed
         // TODO add your handling code here:
         //Sugest autoComplete firstNames from Database
-        switch(evt.getKeyCode())
-        {
+        switch (evt.getKeyCode()) {
             case KeyEvent.VK_BACKSPACE:
-            break;
+                break;
 
             case KeyEvent.VK_ENTER:
-            txt_last_name.setText(txt_last_name.getText());
-            break;
+                txt_last_name.setText(txt_last_name.getText());
+                break;
             default:
-            EventQueue.invokeLater(() -> {
-                String text = txt_last_name.getText();
-                autoCompleteFromDb(lastNames, text, txt_last_name);
-            });
+                EventQueue.invokeLater(() -> {
+                    String text = txt_last_name.getText();
+                    autoCompleteFromDb(lastNames, text, txt_last_name);
+                });
         }
     }//GEN-LAST:event_txt_last_nameKeyPressed
 
     private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
-        
+
         firstName = txt_first_name.getText();
         lastName = txt_last_name.getText();
         contactNo = txt_contact.getText();
         email = txt_email.getText();
-        
-       
+
+
     }//GEN-LAST:event_txt_contactActionPerformed
 
     private void txt_contactKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_contactKeyReleased
@@ -742,25 +672,24 @@ public class Customers extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_contactKeyReleased
 
     private void txt_search_customerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_search_customerActionPerformed
-     
+
     }//GEN-LAST:event_txt_search_customerActionPerformed
 
     private void txt_search_customerKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_search_customerKeyReleased
         // TODO add your handling code here:
-        ArrayList<Customer> customerList = new ArrayList<>();   
+        ArrayList<Customer> customerList = new ArrayList<>();
         String searchCustomer = txt_search_customer.getText();
-        
+
         try {
             dbConnection();
-            
-             String query = "SELECT * FROM customers WHERE firstName LIKE '%" + searchCustomer + "%'"
-                     + "OR lastName LIKE '%" + searchCustomer + "%' OR contactNo LIKE '%" + searchCustomer + "%'"
-                     + " OR email LIKE '%" + searchCustomer + "%'";
+
+            String query = "SELECT * FROM customers WHERE firstName LIKE '%" + searchCustomer + "%'"
+                    + "OR lastName LIKE '%" + searchCustomer + "%' OR contactNo LIKE '%" + searchCustomer + "%'"
+                    + " OR email LIKE '%" + searchCustomer + "%'";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery(query);
-            
-            while (rs.next())
-            {
+
+            while (rs.next()) {
                 customer = new Customer(rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"), rs.getString("email"));
                 customer.setCustomerId(rs.getInt("customerId"));
                 customerList.add(customer);
@@ -768,44 +697,41 @@ public class Customers extends javax.swing.JInternalFrame {
         } catch (SQLException ex) {
             Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        DefaultTableModel dtm = (DefaultTableModel)table_view_customers.getModel();
+
+        DefaultTableModel dtm = (DefaultTableModel) table_view_customers.getModel();
         dtm.setRowCount(0);
-        
+
         Object[] row = new Object[5];
-        for (int i = 0 ;i < customerList.size() ; i++)
-        {
-                row[0] = customerList.get(i).getCustomerId();
-                row[1] = customerList.get(i).getFirstName();
-                row[2] = customerList.get(i).getLastName();
-                row[3] = customerList.get(i).getContactNo();
-                row[4] = customerList.get(i).getEmail();
-                
+        for (int i = 0; i < customerList.size(); i++) {
+            row[0] = customerList.get(i).getCustomerId();
+            row[1] = customerList.get(i).getFirstName();
+            row[2] = customerList.get(i).getLastName();
+            row[3] = customerList.get(i).getContactNo();
+            row[4] = customerList.get(i).getEmail();
+
             dtm.addRow(row);
         }
     }//GEN-LAST:event_txt_search_customerKeyReleased
 
     private void table_view_customersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_customersMouseClicked
         // TODO add your handling code here:
-        if (evt.getClickCount() == 2)
-        {
+        if (evt.getClickCount() == 2) {
             DefaultTableModel dtm = (DefaultTableModel) table_view_customers.getModel();
             int row = table_view_customers.getSelectedRow();
-            
             int id = (int) dtm.getValueAt(row, 0);
+            
             String fname = dtm.getValueAt(row, 1).toString();
             String lname = dtm.getValueAt(row, 2).toString();
             String contact = dtm.getValueAt(row, 3).toString();
             String mail = dtm.getValueAt(row, 4).toString();
-            
+
             txt_first_name.setText(fname);
             txt_last_name.setText(lname);
             txt_contact.setText(contact);
             txt_email.setText(mail);
-            
+
             customer = new Customer(fname, lname, contact, mail);
             customer.setCustomerId(id);
-            
         }
     }//GEN-LAST:event_table_view_customersMouseClicked
 
@@ -815,41 +741,35 @@ public class Customers extends javax.swing.JInternalFrame {
 
     private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
         // TODO add your handling code here:
-        if (txt_first_name.getText().trim().isEmpty() || txt_last_name.getText().trim().isEmpty() || 
-                txt_contact.getText().trim().isEmpty())
-        {
+        if (txt_first_name.getText().trim().isEmpty() || txt_last_name.getText().trim().isEmpty()
+                || txt_contact.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Costumer", JOptionPane.ERROR_MESSAGE);
-        }
-        else
-        {
+            
+        } else {
             try {
-                
-                dbConnection(); 
 
-                            int confirmEditing = JOptionPane.showConfirmDialog(this, "Confirm Deletion " + customer.getFirstName() + " ?", 
-                                    "Update Customer", JOptionPane.YES_NO_OPTION);
-                            
-                            if(confirmEditing == 0)
-                            {
-                                String query = "DELETE FROM customers WHERE customerId = ?";
-                                ps = con.prepareStatement(query);
-                                ps.setInt(1, customer.getCustomerId());
-                                ps.executeUpdate();
+                dbConnection();
 
-                                loadCustomerTable();
-                                cleanFields();
-                            }
-                            else
-                            {
-                                loadCustomerTable();
-                                cleanFields();
-                            }
+                int confirmEditing = JOptionPane.showConfirmDialog(this, "Confirm Deletion " + customer.getFirstName() + " ?",
+                        "Update Customer", JOptionPane.YES_NO_OPTION);
+
+                if (confirmEditing == 0) {
+                    String query = "DELETE FROM customers WHERE customerId = ?";
+                    ps = con.prepareStatement(query);
+                    ps.setInt(1, customer.getCustomerId());
+                    ps.executeUpdate();
+
+                    loadCustomerTable();
+                    cleanFields();
+                } else {
+                    loadCustomerTable();
+                    cleanFields();
+                }
 
             } catch (SQLException ex) {
-                    Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
     }//GEN-LAST:event_btn_deleteActionPerformed
 
     private void btn_clear_fieldsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clear_fieldsActionPerformed

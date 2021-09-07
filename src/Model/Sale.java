@@ -10,15 +10,15 @@ package Model;
  * @author user
  */
 public class Sale extends Customer {
-    
+
     String saleNo, stringProducts, stringQty, stringUnitPrice, stringPriceTotal, saleDate, status, createdBy;
     double total, cash, card, changeTotal;
-    
+
     public Sale(String _saleNo, String _firstName, String _lastName, String _contactNo, String _email,
-            String _stringProducts, String _stringQty, String _stringUnitPrice, String _stringPriceTotal, 
+            String _stringProducts, String _stringQty, String _stringUnitPrice, String _stringPriceTotal,
             double _total, String _saleDate, double _cash, double _card, double _changeTotal, String _status, String _createdBy) {
         super(_firstName, _lastName, _contactNo, _email);
-        
+
         this.saleNo = _saleNo;
         this.stringProducts = _stringProducts;
         this.stringQty = _stringQty;
@@ -64,7 +64,7 @@ public class Sale extends Customer {
     public void setStringUnitPrice(String stringUnitPrice) {
         this.stringUnitPrice = stringUnitPrice;
     }
-    
+
     public String getStringPriceTotal() {
         return stringPriceTotal;
     }
@@ -128,8 +128,4 @@ public class Sale extends Customer {
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
-    
-    
-    
-    
 }

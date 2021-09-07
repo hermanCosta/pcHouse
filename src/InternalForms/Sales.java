@@ -31,17 +31,14 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Sales extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form NewSale
-     */
     ArrayList firstNames = new ArrayList();
     ArrayList lastNames = new ArrayList();
-    
+
     Vector vecProducts = new Vector();
     Vector vecQty = new Vector();
     Vector vecUnitPrice = new Vector();
     Vector vecPriceTotal = new Vector();
-    
+
     Connection con;
     PreparedStatement ps;
     Statement stmt;
@@ -52,75 +49,69 @@ public class Sales extends javax.swing.JInternalFrame {
     ResultSet rs;
     ResultSetMetaData rsmd;
     CompletedOrder completedOrder;
-    
-    String saleNo, firstName,  lastName, contactNo, email,  
-           stringProducts, stringPriceTotal, stringQty, stringUnitPrice, saleDate, status;
+
+    String saleNo, firstName, lastName, contactNo, email,
+            stringProducts, stringPriceTotal, stringQty, stringUnitPrice, saleDate, status;
 
     double total, cash, card, changeTotal;
     boolean isSaleDetails = false;
-    
+
     public Sales() {
         initComponents();
-        
+
         //Remove border
-        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
-        
+
         tableSettings(table_view_sales);
         showRecentSales();
-        
     }
 
-    
-    public void tableSettings (JTable table)
-    {
+    public void tableSettings(JTable table) {
         table.setRowHeight(25);
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
     }
-    
-    public void dbConnection() 
-    {
+
+    public void dbConnection() {
         try {
-              Class.forName("com.mysql.cj.jdbc.Driver");
-              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void searchSale()
-    {
-        ArrayList<Sale> saleList = new ArrayList<>();   
+
+    public void searchSale() {
+        ArrayList<Sale> saleList = new ArrayList<>();
         String searchSale = txt_search_sale.getText();
-        
+
         try {
             dbConnection();
+
+            String query = "SELECT * FROM sales WHERE firstName LIKE '%" + searchSale + "%'"
+                    + "OR lastName LIKE '%" + searchSale + "%' OR contactNo LIKE '%" + searchSale + "%'"
+                    + " OR email LIKE '%" + searchSale + "%'";
             
-             String query = "SELECT * FROM sales WHERE firstName LIKE '%" + searchSale + "%'"
-                     + "OR lastName LIKE '%" + searchSale + "%' OR contactNo LIKE '%" + searchSale + "%'"
-                     + " OR email LIKE '%" + searchSale + "%'";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery(query);
-            
-            while (rs.next())
-            {
-                sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"), 
-                        rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), 
+
+            while (rs.next()) {
+                sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
+                        rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"),
                         rs.getString("qty"), rs.getString("unitPrice"), rs.getString("priceTotal"),
                         rs.getDouble("total"), rs.getString("saleDate"), rs.getDouble("cash"), rs.getDouble("card"),
                         rs.getDouble("changeTotal"), rs.getString("status"), rs.getString("createdBy"));
-                
+
                 saleList.add(sale);
-                
+
             }
-            
-        DefaultTableModel dtm = (DefaultTableModel)table_view_sales.getModel();
-        dtm.setRowCount(0);
-        
-        Object[] row = new Object[7];
-        for (int i = 0 ;i < saleList.size() ; i++)
-        {
+
+            DefaultTableModel dtm = (DefaultTableModel) table_view_sales.getModel();
+            dtm.setRowCount(0);
+
+            Object[] row = new Object[7];
+            for (int i = 0; i < saleList.size(); i++) {
                 row[0] = saleList.get(i).getSaleNo();
                 row[1] = saleList.get(i).getFirstName() + " " + saleList.get(i).getLastName();
                 row[2] = saleList.get(i).getContactNo();
@@ -128,44 +119,39 @@ public class Sales extends javax.swing.JInternalFrame {
                 row[4] = saleList.get(i).getStringQty();
                 row[5] = saleList.get(i).getTotal();
                 row[6] = saleList.get(i).getStatus();
-                
-            dtm.addRow(row);
-        }
+
+                dtm.addRow(row);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
+
     }
-    
-    public void showRecentSales()
-    {
+
+    public void showRecentSales() {
         ArrayList<Sale> list = new ArrayList<>();
         try {
-            
             dbConnection();
-            
+
             String query = "SELECT * FROM sales ORDER BY saleNo DESC LIMIT 19";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
-            
-            while (rs.next())
-            {
-                sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"), 
-                        rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), 
+
+            while (rs.next()) {
+                sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
+                        rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"),
                         rs.getString("qty"), rs.getString("unitPrice"), rs.getString("priceTotal"),
                         rs.getDouble("total"), rs.getString("saleDate"), rs.getDouble("cash"), rs.getDouble("card"),
                         rs.getDouble("changeTotal"), rs.getString("status"), rs.getString("createdBy"));
-                
+
                 list.add(sale);
             }
-            
-        DefaultTableModel dtm = (DefaultTableModel)table_view_sales.getModel();
-        dtm.setRowCount(0);
-        
-        Object[] row = new Object[7];
-        for (int i = 0 ;i < list.size() ; i++)
-        {
+
+            DefaultTableModel dtm = (DefaultTableModel) table_view_sales.getModel();
+            dtm.setRowCount(0);
+
+            Object[] row = new Object[7];
+            for (int i = 0; i < list.size(); i++) {
                 row[0] = list.get(i).getSaleNo();
                 row[1] = list.get(i).getFirstName() + " " + list.get(i).getLastName();
                 row[2] = list.get(i).getContactNo();
@@ -173,17 +159,15 @@ public class Sales extends javax.swing.JInternalFrame {
                 row[4] = list.get(i).getStringQty();
                 row[5] = list.get(i).getTotal();
                 row[6] = list.get(i).getStatus();
-                
-            dtm.addRow(row);
-        }
-                    
+
+                dtm.addRow(row);
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
         }
-                
     }
-    
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -345,8 +329,7 @@ public class Sales extends javax.swing.JInternalFrame {
         int row = table_view_sales.getSelectedRow();
         DefaultTableModel dtm = (DefaultTableModel) table_view_sales.getModel();
 
-        if(evt.getClickCount() == 2)
-        {
+        if (evt.getClickCount() == 2) {
             saleNo = dtm.getValueAt(row, 0).toString();
 
             try {
@@ -358,21 +341,17 @@ public class Sales extends javax.swing.JInternalFrame {
                 ps.setString(1, saleNo);
                 rs = ps.executeQuery();
 
-                while(rs.next())
-                {
+                while (rs.next()) {
                     sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
-                        rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), rs.getString("qty"),
-                        rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getString("saleDate"),
-                        rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getString("status"), rs.getString("createdBy"));
+                            rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), rs.getString("qty"),
+                            rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getString("saleDate"),
+                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getString("status"), rs.getString("createdBy"));
 
-                    if (rs.getString("status").equals("Paid"))
-                    {
+                    if (rs.getString("status").equals("Paid")) {
                         SaleDetails saleDetails = new SaleDetails(sale);
                         //desktop_pane_sales.removeAll();
                         desktop_pane_sales.add(saleDetails).setVisible(true);
-                    }
-                    else
-                    {
+                    } else {
                         SaleRefund saleRefund = new SaleRefund(sale);
                         //desktop_pane_sales.removeAll();
                         desktop_pane_sales.add(saleRefund).setVisible(true);

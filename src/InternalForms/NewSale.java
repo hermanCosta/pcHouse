@@ -49,16 +49,13 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
  */
 public class NewSale extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form NewSale
-     */
     ArrayList firstNames = new ArrayList();
     ArrayList lastNames = new ArrayList();
     Vector vecProducts = new Vector();
     Vector vecQty = new Vector();
     Vector vecUnitPrice = new Vector();
     Vector vecPriceTotal = new Vector();
-    
+
     Connection con;
     PreparedStatement ps;
     Statement stmt;
@@ -69,24 +66,23 @@ public class NewSale extends javax.swing.JInternalFrame {
     ResultSet rs;
     ResultSetMetaData rsmd;
     CompletedOrder completedOrder;
-    
-    
-    String saleNo, firstName,  lastName, contactNo, email,  
-           stringProducts, stringPriceTotal, stringQty, stringUnitPrice, saleDate, status;
+
+    String saleNo, firstName, lastName, contactNo, email,
+            stringProducts, stringPriceTotal, stringQty, stringUnitPrice, saleDate, status;
 
     double total, cash, card, changeTotal;
     boolean isSaleDetails = false;
-    
+
     public NewSale() {
         initComponents();
-        
+
         //Remove bsas
-        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
-        
+
         txt_contact.setFocusLostBehavior(JFormattedTextField.PERSIST);//avoid auto old value by focus loosing
-        
+
         tableSettings(table_view_products);
         tableSettings(table_view_computers);
         autoID();
@@ -95,180 +91,150 @@ public class NewSale extends javax.swing.JInternalFrame {
         accessDbColumn(lastNames, "SELECT * FROM customers", "lastName");
         listProductService();
         loadComputerTable();
-        
     }
 
-    
-    public void tableSettings (JTable table)
-    {
+    public void tableSettings(JTable table) {
         table.setRowHeight(25);
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
     }
-    
-    public void dbConnection() 
-    {
+
+    public void dbConnection() {
         try {
-              Class.forName("com.mysql.cj.jdbc.Driver");
-              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-   public final void autoID()
-    {
+
+    public final void autoID() {
         try {
             dbConnection();
-            
+
             //check saleNo from saleNo table
             String queryCheck = "SELECT saleNo FROM sales";
             ps = con.prepareStatement(queryCheck);
             rs = ps.executeQuery();
-             
-            if (rs.next())
-            {
-                //get MAX Number saleNo from saleNo table
+
+            if (rs.next()) {
                 String queryMax = "SELECT Max(saleNo) FROM sales";
-                        //"select MAX(CAST(SUBSTRING(saleNo FROM 3) AS UNSIGNED)) from saDetails";
-                        //"SELECT MAX(CAST(SUBSTRING(saleNo,3, length(saleNo) -2) AS UNSIGNED)) FROM pcHouse.saDetails";
-                        //SELECT Max(saleNo) FROM saDetails";
                 ps = con.prepareStatement(queryMax);
                 rs = ps.executeQuery();
-                
-                            
-                while(rs.next())
-                {
+
+                while (rs.next()) {
                     long id = Long.parseLong(rs.getString("Max(saleNo)").substring(3, rs.getString("Max(saleNo)").length()));
                     id++;
-                    lbl_auto_sale_no.setText("SNO" + String.format("%03d", id)); 
+                    lbl_auto_sale_no.setText("SNO" + String.format("%03d", id));
                 }
+            } else {
+                lbl_auto_sale_no.setText("SNO001");
             }
-            else
-                lbl_auto_sale_no.setText("SNO001"); 
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
-        }   
+        }
     }
-    
-    public void autoCompleteFromDb(ArrayList list, String text, JTextField field)
-    {
+
+    public void autoCompleteFromDb(ArrayList list, String text, JTextField field) {
         String complete = "";
         int start = text.length();
         int last = text.length();
-        
-        for(int i = 0 ; i < list.size() ; i++)
-        {
-            if(list.get(i).toString().startsWith(text))
-            {
+
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).toString().startsWith(text)) {
                 complete = list.get(i).toString();
                 last = complete.length();
                 break;
             }
         }
-        
-        if(last > start)
-        {
+
+        if (last > start) {
             field.setText(complete);
             field.setCaretPosition(last);
             field.moveCaretPosition(start);
         }
     }
-    
-    public void listProductService()
-    {
+
+    public void listProductService() {
         AutoCompleteDecorator.decorate(combo_box_product_service);
 
         try {
             dbConnection();
-            
+
             String query = "SELECT productService FROM products";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
-            
-            while (rs.next())
-            {
+
+            while (rs.next()) {
                 combo_box_product_service.addItem(rs.getString("productService"));
             }
             con.close();
             ps.close();
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    public final void accessDbColumn(ArrayList list, String query, String columnName)
-    {
+
+    public final void accessDbColumn(ArrayList list, String query, String columnName) {
         try {
             dbConnection();
-            
+
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
-            
-                while (rs.next())
-                {
-                    list.add(rs.getString(columnName));
-                }
-            
+
+            while (rs.next()) {
+                list.add(rs.getString(columnName));
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void cleanFields(JTable table)
-    {
+
+    public void cleanFields(JTable table) {
         //Clean all Fields 
-            lbl_auto_sale_no.setText("");
-            txt_first_name.setText("");
-            txt_last_name.setText("");
-            txt_contact.setText("");
-            txt_email.setText("");
-            combo_box_product_service.setSelectedIndex(-1);
-            txt_total.setText("");
-            
-            txt_first_name.requestFocus();
-        
-          //Clean table Fields
-          DefaultTableModel dtm = (DefaultTableModel) table.getModel();
-        
-          while (dtm.getRowCount() > 0)
-          {
-             dtm.removeRow(0);
-          }
+        lbl_auto_sale_no.setText("");
+        txt_first_name.setText("");
+        txt_last_name.setText("");
+        txt_contact.setText("");
+        txt_email.setText("");
+        combo_box_product_service.setSelectedIndex(-1);
+        txt_total.setText("");
+
+        txt_first_name.requestFocus();
+
+        //Clean table Fields
+        DefaultTableModel dtm = (DefaultTableModel) table.getModel();
+
+        while (dtm.getRowCount() > 0) {
+            dtm.removeRow(0);
+        }
     }
-    
-    public final void checkEmailFormat()
-    {
+
+    public final void checkEmailFormat() {
         txt_email.setInputVerifier(new InputVerifier() {
-           
-           Border originalBorder;
-           String emailFormat = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-           String email = txt_email.getText();
-           
-           
-           @Override
-           public boolean verify(JComponent input) {
-               JTextField comp = (JTextField) input;
-               //return !comp.getText().trim().isEmpty();
-               return comp.getText().matches(emailFormat) | comp.getText().trim().isEmpty();
-           }
-           
+
+            Border originalBorder;
+            String emailFormat = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+            String email = txt_email.getText();
+
             @Override
-           public boolean shouldYieldFocus(JComponent input)
-           {
-               boolean isValid = verify(input);
-               
-               if (!isValid)
-               {
-                   originalBorder = originalBorder == null ? input.getBorder() : originalBorder;
-                  //input.setBorder(BorderFactory.createLineBorder(Color.red, 2));
-                  input.setBorder(new LineBorder(Color.RED));
-               } 
-               else 
-               {
-                    if(originalBorder != null) {
+            public boolean verify(JComponent input) {
+                JTextField comp = (JTextField) input;
+                return comp.getText().matches(emailFormat) | comp.getText().trim().isEmpty();
+            }
+
+            @Override
+            public boolean shouldYieldFocus(JComponent input) {
+                boolean isValid = verify(input);
+
+                if (!isValid) {
+                    originalBorder = originalBorder == null ? input.getBorder() : originalBorder;
+                    //input.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+                    input.setBorder(new LineBorder(Color.RED));
+                } else {
+                    if (originalBorder != null) {
                         input.setBorder(originalBorder);
                         originalBorder = null;
                     }
@@ -277,33 +243,26 @@ public class NewSale extends javax.swing.JInternalFrame {
             }
         });
     }
-    
-    public boolean checkEmptyFields()
-    {
-        if (txt_first_name.getText().trim().isEmpty() | txt_last_name.getText().trim().isEmpty() | 
-                txt_contact.getText().trim().isEmpty() | table_view_products.getRowCount() == 0)
-        {
+
+    public boolean checkEmptyFields() {
+        if (txt_first_name.getText().trim().isEmpty() | txt_last_name.getText().trim().isEmpty()
+                | txt_contact.getText().trim().isEmpty() | table_view_products.getRowCount() == 0) {
             JOptionPane.showMessageDialog(null, "Please, check Empty fields", "New Sale", JOptionPane.ERROR_MESSAGE);
         }
         return true;
     }
-    
-    public void getSaleValues()
-    {
-        if (txt_first_name.getText().trim().isEmpty() || txt_last_name.getText().trim().isEmpty() ||
-                txt_contact.getText().trim().isEmpty() || table_view_products.getRowCount() == 0)
-        {
+
+    public void getSaleValues() {
+        if (txt_first_name.getText().trim().isEmpty() || txt_last_name.getText().trim().isEmpty()
+                || txt_contact.getText().trim().isEmpty() || table_view_products.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Sale", JOptionPane.ERROR_MESSAGE);
-        }
-         else
-        {
+        } else {
             saleNo = lbl_auto_sale_no.getText();
             firstName = txt_first_name.getText();
             lastName = txt_last_name.getText();
             contactNo = txt_contact.getText();
             email = txt_email.getText();
             total = Double.parseDouble(txt_total.getText());
-            
 
             Date date = new java.util.Date();
             Timestamp currentDate = new Timestamp(date.getTime());
@@ -316,128 +275,116 @@ public class NewSale extends javax.swing.JInternalFrame {
             vecPriceTotal.removeAllElements();
             //pass table items from faults and products table to vector 
 
-            for(int j = 0; j < table_view_products.getRowCount(); j++)
-            {
-               vecProducts.add(table_view_products.getValueAt(j, 0));
-               vecQty.add(table_view_products.getValueAt(j, 1));
-               vecUnitPrice.add(table_view_products.getValueAt(j, 2));
-               vecPriceTotal.add(table_view_products.getValueAt(j, 3));
+            for (int j = 0; j < table_view_products.getRowCount(); j++) {
+                vecProducts.add(table_view_products.getValueAt(j, 0));
+                vecQty.add(table_view_products.getValueAt(j, 1));
+                vecUnitPrice.add(table_view_products.getValueAt(j, 2));
+                vecPriceTotal.add(table_view_products.getValueAt(j, 3));
             }
-            
+
             // pass vector elemnets to a String splitted by a comma,
             // in sa to save into DB
             stringProducts = vecProducts.toString().replace("[", " ").replace("]", "");
             stringQty = vecQty.toString().replace("[", " ").replace("]", "");
             stringUnitPrice = vecUnitPrice.toString().replace("[", " ").replace("]", "");
             stringPriceTotal = vecPriceTotal.toString().replace("[", " ").replace("]", "");
-            
-            sale = new Sale(saleNo, firstName, lastName, contactNo, email,stringProducts, 
+
+            sale = new Sale(saleNo, firstName, lastName, contactNo, email, stringProducts,
                     stringQty, stringUnitPrice, stringPriceTotal, total, saleDate, cash, card, changeTotal, status, Login.fullName);
         }
     }
-    
-    public void getPriceSum()
-    {
+
+    public void getPriceSum() {
         double sum = 0;
-        for(int i = 0; i < table_view_products.getRowCount(); i++)
-        {
+        for (int i = 0; i < table_view_products.getRowCount(); i++) {
             sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 3).toString());
         }
-        
         txt_total.setText(Double.toString(sum));
     }
-    
-    public void searchSale()
-    {
-        ArrayList<Computer> computerList = new ArrayList<>();   
+
+    public void searchSale() {
+        ArrayList<Computer> computerList = new ArrayList<>();
         String searchComputer = txt_search_computer.getText();
-        
+
         try {
             dbConnection();
-            
-             String query = "SELECT * FROM computer WHERE brand LIKE '%" + searchComputer + "%'"
-                     + "OR model LIKE '%" + searchComputer + "%' OR serialNumber LIKE '%" + searchComputer + "%'"
-                     + " OR processor LIKE '%" + searchComputer + "%'";
-             
+
+            String query = "SELECT * FROM computer WHERE brand LIKE '%" + searchComputer + "%'"
+                    + "OR model LIKE '%" + searchComputer + "%' OR serialNumber LIKE '%" + searchComputer + "%'"
+                    + " OR processor LIKE '%" + searchComputer + "%'";
+
             ps = con.prepareStatement(query);
             rs = ps.executeQuery(query);
-            
-            while (rs.next())
-            {
-                computer = new Computer(rs.getString("brand"), rs.getString("model"), rs.getString("serialNumber"), 
-                        rs.getString("processor"), rs.getString("ram"), rs.getString("storage"), 
+
+            while (rs.next()) {
+                computer = new Computer(rs.getString("brand"), rs.getString("model"), rs.getString("serialNumber"),
+                        rs.getString("processor"), rs.getString("ram"), rs.getString("storage"),
                         rs.getString("gpu"), rs.getString("screen"), rs.getString("notes"),
                         rs.getInt("qty"), rs.getDouble("price"));
-                
+
                 computerList.add(computer);
                 computer.setComputerId(rs.getInt("computerId"));
             }
-            
-        DefaultTableModel dtm = (DefaultTableModel)table_view_computers.getModel();
-        dtm.setRowCount(0);
-        
-        Object[] row = new Object[3];
-        for (int i = 0 ;i < computerList.size() ; i++)
-        {
+
+            DefaultTableModel dtm = (DefaultTableModel) table_view_computers.getModel();
+            dtm.setRowCount(0);
+
+            Object[] row = new Object[3];
+            for (int i = 0; i < computerList.size(); i++) {
                 row[0] = computerList.get(i).getComputerId();
                 row[1] = computerList.get(i).getBrand() + " | " + computerList.get(i).getModel() + " | " + computerList.get(i).getSerialNumber()
                         + computerList.get(i).getProcessor() + " | " + computerList.get(i).getRam() + " | " + computerList.get(i).getStorage()
                         + computerList.get(i).getScreen();
-                
+
                 row[2] = computerList.get(i).getPrice();
-                
-            dtm.addRow(row);
-        }
+
+                dtm.addRow(row);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void loadComputerTable()
-    {
+
+    public void loadComputerTable() {
         ArrayList<Computer> computerList = new ArrayList<>();
-        
+
         try {
             dbConnection();
-            
+
             String query = "SELECT * FROM computers";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery(query);
-            
-            while (rs.next())
-            {
-                computer = new Computer(rs.getString("brand"), rs.getString("model"), rs.getString("serialNumber"), rs.getString("processor"), 
-                rs.getString("ram"), rs.getString("storage"), rs.getString("gpu"), rs.getString("screen"), rs.getString("notes"), 
+
+            while (rs.next()) {
+                computer = new Computer(rs.getString("brand"), rs.getString("model"), rs.getString("serialNumber"), rs.getString("processor"),
+                        rs.getString("ram"), rs.getString("storage"), rs.getString("gpu"), rs.getString("screen"), rs.getString("notes"),
                         rs.getInt("qty"), rs.getDouble("price"));
                 computer.setComputerId(rs.getInt("computerId"));
-                
+
                 computerList.add(computer);
             }
         } catch (SQLException ex) {
             Logger.getLogger(ComputerList.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        DefaultTableModel dtm = (DefaultTableModel)table_view_computers.getModel();
+
+        DefaultTableModel dtm = (DefaultTableModel) table_view_computers.getModel();
         dtm.setRowCount(0);
-        
+
         Object[] row = new Object[9];
-        for (int i = 0 ;i < computerList.size() ; i++)
-        {
-                row[0] = computerList.get(i).getComputerId();
-                row[1] = computerList.get(i).getBrand();
-                row[2] = computerList.get(i).getModel();
-                row[3] = computerList.get(i).getSerialNumber();
-                row[4] = computerList.get(i).getProcessor(); 
-                row[5] = computerList.get(i).getRam();
-                row[6] = computerList.get(i).getStorage();
-                row[7] = computerList.get(i).getQty();
-                row[8] = computerList.get(i).getPrice();
+        for (int i = 0; i < computerList.size(); i++) {
+            row[0] = computerList.get(i).getComputerId();
+            row[1] = computerList.get(i).getBrand();
+            row[2] = computerList.get(i).getModel();
+            row[3] = computerList.get(i).getSerialNumber();
+            row[4] = computerList.get(i).getProcessor();
+            row[5] = computerList.get(i).getRam();
+            row[6] = computerList.get(i).getStorage();
+            row[7] = computerList.get(i).getQty();
+            row[8] = computerList.get(i).getPrice();
             dtm.addRow(row);
         }
-        
     }
-    
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -865,7 +812,7 @@ public class NewSale extends javax.swing.JInternalFrame {
 
     private void txt_emailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_emailActionPerformed
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_txt_emailActionPerformed
 
     private void txt_last_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_last_nameActionPerformed
@@ -873,34 +820,31 @@ public class NewSale extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameActionPerformed
 
     private void txt_first_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_first_nameActionPerformed
-       // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_txt_first_nameActionPerformed
 
     private void btn_save_saleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save_saleActionPerformed
         // TODO add your handling code here:
-
-                getSaleValues();
-                SalePayment salePayment = new SalePayment(sale, table_view_products);
-                salePayment.setVisible(true);
+        getSaleValues();
+        SalePayment salePayment = new SalePayment(sale, table_view_products);
+        salePayment.setVisible(true);
     }//GEN-LAST:event_btn_save_saleActionPerformed
 
     private void txt_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_totalActionPerformed
         // TODO add your handling code here:
         double sum = 0;
-        for(int i = 0; i < table_view_products.getRowCount(); i++)
-        {
+        for (int i = 0; i < table_view_products.getRowCount(); i++) {
             sum += Double.parseDouble(table_view_products.getValueAt(i, 3).toString());
         }
-        
+
         txt_total.setText(Double.toString(sum));
     }//GEN-LAST:event_txt_totalActionPerformed
 
     private void btn_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelActionPerformed
-            
-        int confirmCancelling = JOptionPane.showConfirmDialog(this, "Do you want to cancel this ?", "New Sale", 
+
+        int confirmCancelling = JOptionPane.showConfirmDialog(this, "Do you want to cancel this ?", "New Sale",
                 JOptionPane.YES_NO_OPTION);
-        if (confirmCancelling == 0)
-        {
+        if (confirmCancelling == 0) {
             new MainMenu().setVisible(true);
         }
     }//GEN-LAST:event_btn_cancelActionPerformed
@@ -908,11 +852,10 @@ public class NewSale extends javax.swing.JInternalFrame {
     private void txt_first_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_first_nameKeyPressed
         // TODO add your handling code here:
         //Sugest autoComplete firstNames from Database
-        switch(evt.getKeyCode())
-        {
+        switch (evt.getKeyCode()) {
             case KeyEvent.VK_BACKSPACE:
                 break;
-            
+
             case KeyEvent.VK_ENTER:
                 txt_first_name.setText(txt_first_name.getText());
                 break;
@@ -920,7 +863,7 @@ public class NewSale extends javax.swing.JInternalFrame {
                 EventQueue.invokeLater(() -> {
                     String text = txt_first_name.getText();
                     autoCompleteFromDb(firstNames, text, txt_first_name);
-            });
+                });
         }
     }//GEN-LAST:event_txt_first_nameKeyPressed
 
@@ -937,18 +880,12 @@ public class NewSale extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameKeyReleased
 
     private void txt_totalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_totalKeyPressed
-         // TODO add your handling code here:
-         //Accepts number characters only
-        char c = evt.getKeyChar();
-        
-        if (Character.isLetter(c)) {
-            
+        // TODO add your handling code here:
+        //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar()))
             txt_total.setEditable(false);
-        }
         else
-        {
             txt_total.setEditable(true);
-        }       
     }//GEN-LAST:event_txt_totalKeyPressed
 
     private void btn_add_table_viewMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_add_table_viewMousePressed
@@ -960,62 +897,49 @@ public class NewSale extends javax.swing.JInternalFrame {
         int qty = 0;
         double unitPrice = 0, totalPrice = 0;
         String category = "", newProdAdd = "";
-        
+
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
-        
-        if(selectedItem.isEmpty() || selectedItem.matches("Select or Type"))
-        {
+
+        if (selectedItem.isEmpty() || selectedItem.matches("Select or Type")) {
             JOptionPane.showMessageDialog(null, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
-        }
-        else
-        {
-            try 
-            {
+        } else {
+            try {
                 dbConnection();
-                
+
                 String query = "SELECT * FROM products WHERE productService = ?";
                 ps = con.prepareStatement(query);
                 ps.setString(1, selectedItem);
                 rs = ps.executeQuery();
-                
-                if (!rs.isBeforeFirst())
-                {
-                   JOptionPane.showMessageDialog(null, "Item not Found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
-                }
-                else
-                {
-                    while (rs.next())
-                    {
+
+                if (!rs.isBeforeFirst()) {
+                    JOptionPane.showMessageDialog(null, "Item not Found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    while (rs.next()) {
                         newProdAdd = rs.getString("productService");
                         unitPrice = rs.getDouble("price");
                         category = rs.getString("category");
                     }
-                    
-                    if (category.equals("Product"))
-                    {
+
+                    if (category.equals("Product")) {
                         boolean valid = false;
-                        while (!valid)
-                        {
-                            try
-                            {
+                        while (!valid) {
+                            try {
                                 qty = Integer.parseInt(JOptionPane.showInputDialog("Enter '" + selectedItem + "' Qty:"));
-                                if (qty > 0) valid = true;
-                            }
-                            catch (NumberFormatException e)
-                            {
+                                if (qty > 0) {
+                                    valid = true;
+                                }
+                            } catch (NumberFormatException e) {
                                 JOptionPane.showMessageDialog(this, "Qty must be an Integer!", "Product | Service", JOptionPane.ERROR_MESSAGE);
                             }
                         }
-                        
-                        for (int i = 0; i < dtm.getRowCount(); i++)
-                        {
+
+                        for (int i = 0; i < dtm.getRowCount(); i++) {
                             productName = dtm.getValueAt(i, 0).toString();
                         }
-                        
-                        if (newProdAdd.equals(productName))
+
+                        if (newProdAdd.equals(productName)) {
                             JOptionPane.showMessageDialog(this, "Item '" + newProdAdd + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
-                        else
-                        {
+                        } else {
                             totalPrice = unitPrice * qty;
                             vector.add(newProdAdd);
                             vector.add(qty);
@@ -1023,14 +947,11 @@ public class NewSale extends javax.swing.JInternalFrame {
                             vector.add(totalPrice);
                             dtm.addRow(vector);
                         }
-                        
-                    }
-                    else
-                    {
-                        if (newProdAdd.equals(productName))
+
+                    } else {
+                        if (newProdAdd.equals(productName)) {
                             JOptionPane.showMessageDialog(this, "Item '" + newProdAdd + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
-                        else
-                        {
+                        } else {
                             qty = 1;
                             totalPrice = unitPrice * qty;
 
@@ -1041,13 +962,13 @@ public class NewSale extends javax.swing.JInternalFrame {
                             dtm.addRow(vector);
                         }
                     }
-                    
+
                     combo_box_product_service.setSelectedIndex(0);
                     // Sum price column and set into total textField
                     getPriceSum();
                 }
             } catch (SQLException ex) {
-                    Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btn_add_table_viewMousePressed
@@ -1061,52 +982,45 @@ public class NewSale extends javax.swing.JInternalFrame {
         Vector vecComputers = new Vector();
         boolean valid = false;
         String tableProduct = "";
-        
-        if(evt.getClickCount() == 2)
-        {
+
+        if (evt.getClickCount() == 2) {
             int computerId = (int) compTableModel.getValueAt(row, 0);
             String brand = compTableModel.getValueAt(row, 1).toString();
             String model = compTableModel.getValueAt(row, 2).toString();
             String serialNumber = compTableModel.getValueAt(row, 3).toString();
             double price = Double.parseDouble(compTableModel.getValueAt(row, 8).toString());
-            
+
             String newProduct = computerId + "| " + brand + " | " + model + " | " + serialNumber;
-            
+
             int qty = 0;
-            while (!valid)
-            {
-                try
-                {
-                    qty = Integer.parseInt(JOptionPane.showInputDialog("Enter '" + computer.getBrand() + " | " + 
-                        computer.getModel() + " | " + computer.getSerialNumber() + "' Qty:"));
-                    if (qty > 0) valid = true;
-                }
-                            
-                catch (NumberFormatException e)
-                {
+            while (!valid) {
+                try {
+                    qty = Integer.parseInt(JOptionPane.showInputDialog("Enter '" + computer.getBrand() + " | "
+                            + computer.getModel() + " | " + computer.getSerialNumber() + "' Qty:"));
+                    if (qty > 0) {
+                        valid = true;
+                    }
+                } catch (NumberFormatException e) {
                     JOptionPane.showMessageDialog(this, "Qty must be an Integer!", "Add Computer", JOptionPane.ERROR_MESSAGE);
                 }
             }
-            
-                        
+
             double priceTotal = price * qty;
             vecComputers.add(newProduct);
             vecComputers.add(qty);
             vecComputers.add(price);
             vecComputers.add(priceTotal);
-            
-            for (int i = 0; i < prodTableModel.getRowCount(); i++)
-            {
+
+            for (int i = 0; i < prodTableModel.getRowCount(); i++) {
                 tableProduct = prodTableModel.getValueAt(i, 0).toString();
-            }     
-                        
-            if (newProduct.equals(tableProduct))
+            }
+
+            if (newProduct.equals(tableProduct)) {
                 JOptionPane.showMessageDialog(this, "Item '" + newProduct + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
-            else
-            {
+            } else {
                 prodTableModel.addRow(vecComputers);
             }
-                        
+
             // Sum price column and set into total textField
             getPriceSum();
         }
@@ -1115,52 +1029,48 @@ public class NewSale extends javax.swing.JInternalFrame {
     private void txt_last_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_last_nameKeyPressed
         // TODO add your handling code here:
         //Sugest autoComplete firstNames from Database
-        switch(evt.getKeyCode())
-        {
+        switch (evt.getKeyCode()) {
             case KeyEvent.VK_BACKSPACE:
-            break;
+                break;
 
             case KeyEvent.VK_ENTER:
-            txt_last_name.setText(txt_last_name.getText());
-            break;
+                txt_last_name.setText(txt_last_name.getText());
+                break;
             default:
-            EventQueue.invokeLater(() -> {
-                String text = txt_last_name.getText();
-                autoCompleteFromDb(lastNames, text, txt_last_name);
-            });
+                EventQueue.invokeLater(() -> {
+                    String text = txt_last_name.getText();
+                    autoCompleteFromDb(lastNames, text, txt_last_name);
+                });
         }
     }//GEN-LAST:event_txt_last_nameKeyPressed
 
     private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
-        
+
         saleNo = lbl_auto_sale_no.getText();
         firstName = txt_first_name.getText();
         lastName = txt_last_name.getText();
         contactNo = txt_contact.getText();
         email = txt_email.getText();
-        
+
         try {
             dbConnection();
-            
+
             String query = "SELECT * FROM customers WHERE contactNo = ? ";
             ps = con.prepareStatement(query);
             ps.setString(1, contactNo);
-            
+
             rs = ps.executeQuery();
-            
+
             //show a message if a costumer is not found in the db
-            if (!rs.isBeforeFirst() && firstName.trim().isEmpty() && lastName.trim().isEmpty())
+            if (!rs.isBeforeFirst() && firstName.trim().isEmpty() && lastName.trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Customer not found in the Database", "New Sale", JOptionPane.ERROR_MESSAGE);
-            
-            //add a new customer if not exists AND fields are not empty
-            else if (!rs.isBeforeFirst() && !firstName.trim().isEmpty() && !lastName.trim().isEmpty())
-            {
+            } //add a new customer if not exists AND fields are not empty
+            else if (!rs.isBeforeFirst() && !firstName.trim().isEmpty() && !lastName.trim().isEmpty()) {
                 int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add a new Customer ?", "Add New Customer", JOptionPane.YES_NO_OPTION);
-                if(confirmInsertion == 0)
-                {
+                if (confirmInsertion == 0) {
                     customer = new Customer(firstName, lastName, contactNo, email);
                     String insertQuery = "INSERT INTO customers (firstName, lastName, contactNo, email) VALUES(?, ?, ?, ?)";
-                    
+
                     ps = con.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
                     ps.setString(1, customer.getFirstName());
                     ps.setString(2, customer.getLastName());
@@ -1168,23 +1078,20 @@ public class NewSale extends javax.swing.JInternalFrame {
                     ps.setString(4, customer.getEmail());
                     ps.executeUpdate();
                 }
-            } 
-            else
-            {
+            } else {
                 String fillQuery = "SELECT * FROM customers WHERE contactNo = ?";
                 ps = con.prepareStatement(fillQuery);
                 ps.setString(1, contactNo);
                 rs = ps.executeQuery();
-                
-                while(rs.next())
-                {
+
+                while (rs.next()) {
                     txt_first_name.setText(rs.getString("firstName"));
                     txt_last_name.setText(rs.getString("lastName"));
                     txt_contact.setText(rs.getString("contactNo"));
                     txt_email.setText(rs.getString("email"));
                 }
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1208,18 +1115,16 @@ public class NewSale extends javax.swing.JInternalFrame {
 
     private void table_view_productsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_productsMouseClicked
         // TODO add your handling code here:
- //Delete products|Service item of the selected row (Function is called with 2 clicks) 
+        //Delete products|Service item of the selected row (Function is called with 2 clicks) 
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
-        
-        if(evt.getClickCount() == 2)
-        {
-          int confirmDeletion = JOptionPane.showConfirmDialog(null, "Remove This Item ?", "Remove Product|Service", JOptionPane.YES_NO_OPTION);
-          if(confirmDeletion == 0)
-          {
-              dtm.removeRow(table_view_products.getSelectedRow());
-              // Sum price column and set into total textField
-              getPriceSum();
-          }
+
+        if (evt.getClickCount() == 2) {
+            int confirmDeletion = JOptionPane.showConfirmDialog(null, "Remove This Item ?", "Remove Product|Service", JOptionPane.YES_NO_OPTION);
+            if (confirmDeletion == 0) {
+                dtm.removeRow(table_view_products.getSelectedRow());
+                // Sum price column and set into total textField
+                getPriceSum();
+            }
         }
     }//GEN-LAST:event_table_view_productsMouseClicked
 
@@ -1245,7 +1150,6 @@ public class NewSale extends javax.swing.JInternalFrame {
     private void btn_computersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_computersActionPerformed
         // TODO add your handling code here:
         ComputerList computerList = new ComputerList();
-//        desktop_pane_new_sale.removeAll();
         desktop_pane_new_sale.add(computerList).setVisible(true);
     }//GEN-LAST:event_btn_computersActionPerformed
 

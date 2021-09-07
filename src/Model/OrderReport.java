@@ -10,14 +10,14 @@ package Model;
  * @author user
  */
 public class OrderReport {
-    
+
     String orderNo, firstName, lastName, productsService;
     double deposit, total, due, cash, card, changeTotal, cashDeposit, cardDeposit;
-    
+
     public OrderReport(String _orderNo, String _firstName, String _lastName, String _productsService,
-                double _deposit, double _total, double _due, double _cash, double _card, double _changeTotal,
-                double _cashDeposit, double _cardDeposit) {
-        
+            double _deposit, double _total, double _due, double _cash, double _card, double _changeTotal,
+            double _cashDeposit, double _cardDeposit) {
+
         this.orderNo = _orderNo;
         this.firstName = _firstName;
         this.lastName = _lastName;
@@ -95,7 +95,7 @@ public class OrderReport {
     public void setTotal(double total) {
         this.total = total;
     }
-    
+
     public double getDue() {
         return due;
     }
@@ -127,6 +127,5 @@ public class OrderReport {
     public void setCardDeposit(double cardDeposit) {
         this.cardDeposit = cardDeposit;
     }
-    
-    
+
 }

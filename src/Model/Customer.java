@@ -10,12 +10,10 @@ package Model;
  * @author user
  */
 public class Customer {
-    
+
     int customerId;
     String firstName, lastName, email, contactNo;
-    
-    
-    
+
     public Customer(String _firstName, String _lastName, String _contactNo, String _email) {
         this.firstName = _firstName;
         this.lastName = _lastName;
@@ -31,7 +29,6 @@ public class Customer {
         this.customerId = customerID;
     }
 
-    
     public String getFirstName() {
         return firstName;
     }
@@ -63,6 +60,4 @@ public class Customer {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    
 }

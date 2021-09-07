@@ -27,12 +27,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,6 +43,7 @@ import javax.swing.table.DefaultTableModel;
  * @author user
  */
 public class MainMenu extends javax.swing.JFrame {
+
     /**
      * Creates new form MainMenu
      */
@@ -62,239 +59,115 @@ public class MainMenu extends javax.swing.JFrame {
     int hour, minute, second;
     Timer updateTimer;
     int DELAY = 100;
-    
+
     public MainMenu() {
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        
+
         tableSettings(table_view_products_stock);
         tableSettings(table_view_orders);
-        
-        defaultColor = new Color(21,76,121);
-        clickedColor = new Color(118,181,197);
-        
+        mainMenuDesktopPane = desktop_pane_main_menu;
+
+        defaultColor = new Color(21, 76, 121);
+        clickedColor = new Color(118, 181, 197);
+
         expandHome();
-        mainMenuDesktopPane = desktop_pane_main_menu; 
         loadProductsStockTable();
         loadOrdersFixed();
         loadHeaderDetails();
     }
-    
-    public void tableSettings (JTable table)
-    {
+
+    public void tableSettings(JTable table) {
         table.setRowHeight(25);
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
     }
-    
-    public void loadHeaderDetails()
-    {
-        
+
+    public void loadHeaderDetails() {
         updateTimer = new Timer(DELAY, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                
+
                 Date currentDate = new Date();
-                SimpleDateFormat dtf = new SimpleDateFormat("dd, MMMM-yyyy  - HH:mm:ss aa");  
+                SimpleDateFormat dtf = new SimpleDateFormat("dd, MMMM-yyyy  - HH:mm:ss aa");
                 String dateTime = dtf.format(currentDate);
-                lbl_time_stamp.setText("Today is: " + dateTime);
+                lbl_time_stamp.setText("Today is " + dateTime);
             }
         });
-        
-        updateTimer.start();
-        lbl_username.setText("Hello, " + order.getUsername());
-        
-    }
-    
-    public void defaultColorToAll()
-    {
-        panel_home.setBackground(defaultColor);
-        panel_products.setBackground(defaultColor);
-        panel_reports.setBackground(defaultColor);
-        
-        label_home.setBackground(defaultColor);
-        label_products.setBackground(defaultColor);
-        label_reports.setBackground(defaultColor);
-    }
-            
-    public void expandHome()
-    {
-        panel_new_order.setVisible(false);
-        panel_check_existing.setVisible(false);
-        panel_products_list.setVisible(false);
-        
-        panel_products_list.setVisible(false);
-        panel_new_sale.setVisible(false);
-        panel_sales.setVisible(false);
-        
-        panel_close_till.setVisible(false);
-        panel_customers.setVisible(false);
-        panel_faults.setVisible(false);
-        
-        //Set default color to outer panels
-        panel_home.setBackground(clickedColor);
-        panel_orders.setBackground(defaultColor);
-        panel_products.setBackground(defaultColor);
-        panel_reports.setBackground(defaultColor);
-        
-    }
-    
 
-    public void expandOrders()
-    {
-        panel_check_existing.setVisible(true);
-        panel_new_order.setVisible(true);
-        
-        //Set default color to the inner labels
-        panel_check_existing.setBackground(defaultColor);
-        panel_new_order.setBackground(defaultColor);
-        
-        //Set default color to the outer labels
-        panel_home.setBackground(defaultColor);
-        panel_orders.setBackground(clickedColor);
-        panel_products.setBackground(defaultColor);
-        panel_reports.setBackground(defaultColor);
-        
-        //Colapse Products
-        panel_products_list.setVisible(false);
-        panel_new_sale.setVisible(false);
-        panel_sales.setVisible(false);
-        
-        //Colapse Reports
-        panel_customers.setVisible(false);
-        panel_close_till.setVisible(false);
-        panel_faults.setVisible(false);
+        updateTimer.start();
+        lbl_username.setText("Hello, " + Login.fullName);
     }
     
-    public void expandProducts()
-    {
-        panel_products_list.setVisible(true);
-        panel_new_sale.setVisible(true);
-        panel_sales.setVisible(true);
-        
-        //Set default color to the labels
-        panel_products_list.setBackground(defaultColor);
-        panel_new_sale.setBackground(defaultColor);
-        panel_sales.setBackground(defaultColor);
-        
-        //Set default color to the outer labels
-        panel_home.setBackground(defaultColor);
-        panel_orders.setBackground(defaultColor);
-        panel_products.setBackground(clickedColor);
-        panel_reports.setBackground(defaultColor);
-                
-        //Colapse Orders
-        panel_check_existing.setVisible(false);
-        panel_new_order.setVisible(false);
-        
-        //Colapse Reports
-        panel_close_till.setVisible(false);
-        panel_customers.setVisible(false);
-        panel_faults.setVisible(false);
-    }
-    
-    public void expandReports()
-    {
-        panel_close_till.setVisible(true);
-        panel_customers.setVisible(true);
-        panel_faults.setVisible(true);
-        
-        //Set default color to the labels
-        panel_close_till.setBackground(defaultColor);
-        panel_customers.setBackground(defaultColor);
-        panel_faults.setBackground(defaultColor);
-        
-        //Set default color to the outer labels
-        panel_home.setBackground(defaultColor);
-        panel_orders.setBackground(defaultColor);
-        panel_products.setBackground(defaultColor);
-        panel_reports.setBackground(clickedColor);
-           
-        //Colapse Orders
-        panel_check_existing.setVisible(false);
-        panel_new_order.setVisible(false);
-        
-        //Colapse Orders
-        panel_products_list.setVisible(false);
-        panel_new_sale.setVisible(false);
-        panel_sales.setVisible(false);
-    }
-    
-    public void dbConnection() 
-    {
+    public void dbConnection() {
         try {
-              Class.forName("com.mysql.cj.jdbc.Driver");
-              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
+            
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void loadProductsStockTable()
-    {
+    public void loadProductsStockTable() {
         ArrayList<ProductService> productList = new ArrayList<>();
         try {
             dbConnection();
-            
+
             String query = "SELECT * FROM products WHERE category = 'Product' AND qty <= 2";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery(query);
-            
-            while (rs.next())
-            {
-                productService = new ProductService(rs.getString("productService"), rs.getDouble("price"), 
+
+            while (rs.next()) {
+                productService = new ProductService(rs.getString("productService"), rs.getDouble("price"),
                         rs.getInt("qty"), rs.getString("notes"), rs.getString("category"));
-                
+
                 productList.add(productService);
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        DefaultTableModel dtm = (DefaultTableModel)table_view_products_stock.getModel();
+
+        DefaultTableModel dtm = (DefaultTableModel) table_view_products_stock.getModel();
         dtm.setRowCount(0);
-        
+
         Object[] row = new Object[2];
-        for (int i = 0 ; i < productList.size() ; i++)
-        {
-                row[0] = productList.get(i).getQty();
-                row[1] = productList.get(i).getProductService();
-                
+        for (int i = 0; i < productList.size(); i++) {
+            row[0] = productList.get(i).getQty();
+            row[1] = productList.get(i).getProductService();
+
             dtm.addRow(row);
         }
     }
-    
-    public void loadOrdersFixed()
-    {
+
+    public void loadOrdersFixed() {
         ArrayList<Order> orderList = new ArrayList<>();
-        
+
         try {
             dbConnection();
-            
+
             String query = "SELECT * FROM orderDetails WHERE status = 'Fixed' AND finishDate <= NOW() - INTERVAL 3 MONTH";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
-            
-            while(rs.next())
-            {
+
+            while (rs.next()) {
                 String dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate("finishDate"));
-                
+
                 order = new Order(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"),
-                        rs.getString("email"), rs.getString("deviceBrand"), rs.getString("deviceModel"), rs.getString("serialNumber"), 
-                           rs.getString("importantNotes"), rs.getString("fault"), rs.getString("productService"), rs.getString("qty"),
-                           rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getDouble("deposit"), 
-                           rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"), rs.getString("status"),
-                           rs.getString("issueDate"), dateFormat, rs.getString("pickDate"), rs.getString("refundDate"), Login.fullName);
+                        rs.getString("email"), rs.getString("deviceBrand"), rs.getString("deviceModel"), rs.getString("serialNumber"),
+                        rs.getString("importantNotes"), rs.getString("fault"), rs.getString("productService"), rs.getString("qty"),
+                        rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getDouble("deposit"),
+                        rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"), rs.getString("status"),
+                        rs.getString("issueDate"), dateFormat, rs.getString("pickDate"), rs.getString("refundDate"), Login.fullName);
 
                 orderList.add(order);
             }
-            
-            DefaultTableModel dtm = (DefaultTableModel)table_view_orders.getModel();
+
+            DefaultTableModel dtm = (DefaultTableModel) table_view_orders.getModel();
             dtm.setRowCount(0);
 
             Object[] row = new Object[4];
-            for (int i = 0; i < orderList.size() ; i++)
-            {
+            for (int i = 0; i < orderList.size(); i++) {
                 row[0] = orderList.get(i).getOrderNo();
                 row[1] = orderList.get(i).getFirstName() + " " + orderList.get(i).getLastName();
                 row[2] = orderList.get(i).getContactNo();
@@ -302,20 +175,119 @@ public class MainMenu extends javax.swing.JFrame {
 
                 dtm.addRow(row);
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
     }
-    
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    
+
+    public void defaultColorToAll() {
+        panel_home.setBackground(defaultColor);
+        panel_products.setBackground(defaultColor);
+        panel_reports.setBackground(defaultColor);
+
+        label_home.setBackground(defaultColor);
+        label_products.setBackground(defaultColor);
+        label_reports.setBackground(defaultColor);
+    }
+
+    public void expandHome() {
+        panel_new_order.setVisible(false);
+        panel_check_existing.setVisible(false);
+        panel_products_list.setVisible(false);
+
+        panel_products_list.setVisible(false);
+        panel_new_sale.setVisible(false);
+        panel_sales.setVisible(false);
+
+        panel_close_till.setVisible(false);
+        panel_customers.setVisible(false);
+        panel_faults.setVisible(false);
+
+        //Set default color to outer panels
+        panel_home.setBackground(clickedColor);
+        panel_orders.setBackground(defaultColor);
+        panel_products.setBackground(defaultColor);
+        panel_reports.setBackground(defaultColor);
+    }
+
+    public void expandOrders() {
+        panel_check_existing.setVisible(true);
+        panel_new_order.setVisible(true);
+
+        //Set default color to the inner labels
+        panel_check_existing.setBackground(defaultColor);
+        panel_new_order.setBackground(defaultColor);
+
+        //Set default color to the outer labels
+        panel_home.setBackground(defaultColor);
+        panel_orders.setBackground(clickedColor);
+        panel_products.setBackground(defaultColor);
+        panel_reports.setBackground(defaultColor);
+
+        //Colapse Products
+        panel_products_list.setVisible(false);
+        panel_new_sale.setVisible(false);
+        panel_sales.setVisible(false);
+
+        //Colapse Reports
+        panel_customers.setVisible(false);
+        panel_close_till.setVisible(false);
+        panel_faults.setVisible(false);
+    }
+
+    public void expandProducts() {
+        panel_products_list.setVisible(true);
+        panel_new_sale.setVisible(true);
+        panel_sales.setVisible(true);
+
+        //Set default color to the labels
+        panel_products_list.setBackground(defaultColor);
+        panel_new_sale.setBackground(defaultColor);
+        panel_sales.setBackground(defaultColor);
+
+        //Set default color to the outer labels
+        panel_home.setBackground(defaultColor);
+        panel_orders.setBackground(defaultColor);
+        panel_products.setBackground(clickedColor);
+        panel_reports.setBackground(defaultColor);
+
+        //Colapse Orders
+        panel_check_existing.setVisible(false);
+        panel_new_order.setVisible(false);
+
+        //Colapse Reports
+        panel_close_till.setVisible(false);
+        panel_customers.setVisible(false);
+        panel_faults.setVisible(false);
+    }
+
+    public void expandReports() {
+        panel_close_till.setVisible(true);
+        panel_customers.setVisible(true);
+        panel_faults.setVisible(true);
+
+        //Set default color to the labels
+        panel_close_till.setBackground(defaultColor);
+        panel_customers.setBackground(defaultColor);
+        panel_faults.setBackground(defaultColor);
+
+        //Set default color to the outer labels
+        panel_home.setBackground(defaultColor);
+        panel_orders.setBackground(defaultColor);
+        panel_products.setBackground(defaultColor);
+        panel_reports.setBackground(clickedColor);
+
+        //Colapse Orders
+        panel_check_existing.setVisible(false);
+        panel_new_order.setVisible(false);
+
+        //Colapse Orders
+        panel_products_list.setVisible(false);
+        panel_new_sale.setVisible(false);
+        panel_sales.setVisible(false);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1251,45 +1223,35 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void label_homeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_homeMousePressed
         // TODO add your handling code here:
-     
     }//GEN-LAST:event_label_homeMousePressed
 
     private void panel_homeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_homeMousePressed
- 
+         // TODO add your handling code here:
     }//GEN-LAST:event_panel_homeMousePressed
 
     private void label_productsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_productsMousePressed
         // TODO add your handling code here:
-        
     }//GEN-LAST:event_label_productsMousePressed
 
     private void panel_productsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_productsMousePressed
         // TODO add your handling code here:
-    
     }//GEN-LAST:event_panel_productsMousePressed
 
     private void label_reportsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_reportsMousePressed
         // TODO add your handling code here:
-
     }//GEN-LAST:event_label_reportsMousePressed
 
     private void panel_reportsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_reportsMousePressed
         // TODO add your handling code here:
-  
     }//GEN-LAST:event_panel_reportsMousePressed
 
     private void label_homeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_homeMouseClicked
         // TODO add your handling code here:
-          new MainMenu().setVisible(true);
-//        expandHome();
-//        HomePage homePage = new HomePage();
-//        desktop_pane_main_menu.removeAll();
-//        desktop_pane_main_menu.add(homePage).setVisible(true);
+        new MainMenu().setVisible(true);
     }//GEN-LAST:event_label_homeMouseClicked
 
     private void panel_homeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_homeMouseClicked
         // TODO add your handling code here:
-        
     }//GEN-LAST:event_panel_homeMouseClicked
 
     private void label_productsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_productsMouseClicked
@@ -1304,7 +1266,6 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void panel_productsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_productsMouseClicked
         // TODO add your handling code here:
-        
     }//GEN-LAST:event_panel_productsMouseClicked
 
     private void panel_reportsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_reportsMouseClicked
@@ -1320,7 +1281,7 @@ public class MainMenu extends javax.swing.JFrame {
         OrderList orderlist = new OrderList();
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(orderlist).setVisible(true);
-        
+
         panel_check_existing.setBackground(clickedColor);
         panel_new_order.setBackground(defaultColor);
     }//GEN-LAST:event_label_check_existingMouseClicked
@@ -1350,7 +1311,7 @@ public class MainMenu extends javax.swing.JFrame {
         NewOrder newOrder = new NewOrder();
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(newOrder).setVisible(true);
-        
+
         panel_check_existing.setBackground(defaultColor);
         panel_new_order.setBackground(clickedColor);
     }//GEN-LAST:event_label_new_orderMouseClicked
@@ -1369,7 +1330,6 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void panel_new_orderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_new_orderMouseClicked
         // TODO add your handling code here:
-        
     }//GEN-LAST:event_panel_new_orderMouseClicked
 
     private void label_products_listMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_products_listMousePressed
@@ -1381,7 +1341,7 @@ public class MainMenu extends javax.swing.JFrame {
         ProductsList productsList = new ProductsList();
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(productsList).setVisible(true);
-        
+
         panel_products_list.setBackground(clickedColor);
         panel_sales.setBackground(defaultColor);
         panel_new_sale.setBackground(defaultColor);
@@ -1416,7 +1376,7 @@ public class MainMenu extends javax.swing.JFrame {
         Sales sales = new Sales();
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(sales).setVisible(true);
-        
+
         panel_products_list.setBackground(defaultColor);
         panel_sales.setBackground(clickedColor);
         panel_new_sale.setBackground(defaultColor);
@@ -1451,7 +1411,7 @@ public class MainMenu extends javax.swing.JFrame {
         TillClosing closeTill = new TillClosing();
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(closeTill).setVisible(true);
-        
+
         panel_customers.setBackground(defaultColor);
         panel_close_till.setBackground(clickedColor);
         panel_faults.setBackground(defaultColor);
@@ -1471,7 +1431,6 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void panel_close_tillMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_close_tillMouseClicked
         // TODO add your handling code here:
-        
     }//GEN-LAST:event_panel_close_tillMouseClicked
 
     private void label_customersMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_customersMousePressed
@@ -1487,7 +1446,7 @@ public class MainMenu extends javax.swing.JFrame {
         Customers customers = new Customers();
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(customers).setVisible(true);
-        
+
         panel_customers.setBackground(clickedColor);
         panel_close_till.setBackground(defaultColor);
         panel_faults.setBackground(defaultColor);
@@ -1532,7 +1491,6 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void label_check_existingMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_check_existingMouseReleased
         // TODO add your handling code here:
-        
     }//GEN-LAST:event_label_check_existingMouseReleased
 
     private void label_faultsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_faultsMousePressed
@@ -1548,12 +1506,12 @@ public class MainMenu extends javax.swing.JFrame {
         Faults faults = new Faults();
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(faults).setVisible(true);
-        
+
         panel_customers.setBackground(defaultColor);
         panel_close_till.setBackground(defaultColor);
         panel_faults.setBackground(clickedColor);
-        
-       
+
+
     }//GEN-LAST:event_label_faultsMouseClicked
 
     private void label_faultsMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_faultsMouseExited
@@ -1590,7 +1548,7 @@ public class MainMenu extends javax.swing.JFrame {
         NewSale newSale = new NewSale();
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(newSale).setVisible(true);
-        
+
         panel_products_list.setBackground(defaultColor);
         panel_sales.setBackground(defaultColor);
         panel_new_sale.setBackground(clickedColor);
@@ -1636,7 +1594,7 @@ public class MainMenu extends javax.swing.JFrame {
         NewSale newSale = new NewSale();
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(newSale).setVisible(true);
-        
+
         panel_products_list.setBackground(defaultColor);
         panel_sales.setBackground(defaultColor);
         panel_new_sale.setBackground(clickedColor);
@@ -1648,7 +1606,7 @@ public class MainMenu extends javax.swing.JFrame {
         ProductsList productsList = new ProductsList();
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(productsList).setVisible(true);
-        
+
         panel_products_list.setBackground(clickedColor);
         panel_sales.setBackground(defaultColor);
         panel_new_sale.setBackground(defaultColor);
@@ -1660,7 +1618,7 @@ public class MainMenu extends javax.swing.JFrame {
         OrderList orderlist = new OrderList();
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(orderlist).setVisible(true);
-        
+
         panel_check_existing.setBackground(clickedColor);
         panel_new_order.setBackground(defaultColor);
     }//GEN-LAST:event_btn_ordersActionPerformed
@@ -1671,7 +1629,7 @@ public class MainMenu extends javax.swing.JFrame {
         Sales sales = new Sales();
         desktop_pane_main_menu.removeAll();
         desktop_pane_main_menu.add(sales).setVisible(true);
-        
+
         panel_products_list.setBackground(defaultColor);
         panel_sales.setBackground(clickedColor);
         panel_new_sale.setBackground(defaultColor);
@@ -1683,46 +1641,45 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void table_view_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_ordersMouseClicked
         // TODO add your handling code here:
-         if(evt.getClickCount() == 2)
-        {
-            dbConnection();
-            DefaultTableModel dtm = (DefaultTableModel)table_view_orders.getModel();
+        if (evt.getClickCount() == 2) {
+            
+            DefaultTableModel dtm = (DefaultTableModel) table_view_orders.getModel();
             int orderSelected = table_view_orders.getSelectedRow();
             String selectedOrderNo = dtm.getValueAt(orderSelected, 0).toString();
-        
+
             try {
+                dbConnection();
+                
                 String query = "SELECT * FROM orderDetails WHERE orderNo = ? ";
                 ps = con.prepareStatement(query);
                 ps.setString(1, selectedOrderNo);
                 rs = ps.executeQuery();
-                
-                while(rs.next())
-                {
-                   order  = new Order(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"),
-                   rs.getString("email"), rs.getString("deviceBrand"), rs.getString("deviceModel"), rs.getString("serialNumber"), rs.getString("importantNotes"),
-                   rs.getString("fault"), rs.getString("productService"), rs.getString("qty"),rs.getString("unitPrice"), rs.getString("priceTotal"),
-                   rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"),
-                   rs.getString("status"), rs.getString("issueDate"), rs.getString("finishDate"), rs.getString("pickDate"),
-                   rs.getString("refundDate"), Login.fullName);
+
+                while (rs.next()) {
+                    order = new Order(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"),
+                            rs.getString("email"), rs.getString("deviceBrand"), rs.getString("deviceModel"), rs.getString("serialNumber"), rs.getString("importantNotes"),
+                            rs.getString("fault"), rs.getString("productService"), rs.getString("qty"), rs.getString("unitPrice"), rs.getString("priceTotal"),
+                            rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"),
+                            rs.getString("status"), rs.getString("issueDate"), rs.getString("finishDate"), rs.getString("pickDate"),
+                            rs.getString("refundDate"), Login.fullName);
                 }
-                
-                String queryPayDate = "SELECT * FROM completedOrders WHERE orderNo = ?"; 
+
+                String queryPayDate = "SELECT * FROM completedOrders WHERE orderNo = ?";
                 ps = con.prepareStatement(queryPayDate);
                 ps.setString(1, selectedOrderNo);
                 rs = ps.executeQuery();
-                
-                while (rs.next())
-                {
-                    completedOrder = new CompletedOrder(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), 
-                        "", "", rs.getString("brand"), rs.getString("model"), 
-                        "", rs.getDouble("total"), rs.getDouble("deposit"),rs.getDouble("due"), 
-                    rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getDouble("cashDeposit"), 
-                    rs.getDouble("cardDeposit"), rs.getString("payDate"), rs.getString("status"));
+
+                while (rs.next()) {
+                    completedOrder = new CompletedOrder(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"),
+                            "", "", rs.getString("brand"), rs.getString("model"),
+                            "", rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("due"),
+                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getDouble("cashDeposit"),
+                            rs.getDouble("cardDeposit"), rs.getString("payDate"), rs.getString("status"));
                 }
-                    FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
-                    desktop_pane_main_menu.removeAll();
-                    desktop_pane_main_menu.add(fixedOrder).setVisible(true);
-                
+                FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
+                desktop_pane_main_menu.removeAll();
+                desktop_pane_main_menu.add(fixedOrder).setVisible(true);
+
             } catch (SQLException ex) {
                 Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1736,10 +1693,9 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void btn_closeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_closeMouseClicked
         // TODO add your handling code here:
-        //        this.dispose();
         System.exit(0);
     }//GEN-LAST:event_btn_closeMouseClicked
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btn_close;
     private javax.swing.JLabel btn_minimize;

@@ -18,7 +18,6 @@ import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -39,11 +38,11 @@ public class PrintOrder extends javax.swing.JFrame {
     }
     
     public PrintOrder(Order _order, CompletedOrder _completedOrder, boolean _isOrderDetails) {
+        initComponents();
+        
         this.order = _order;
         this.isOrderDetails = _isOrderDetails;
         this.completedOrder = _completedOrder;
-        
-        initComponents();
         
         loadOrderToPrint();
     }
@@ -549,7 +548,6 @@ public class PrintOrder extends javax.swing.JFrame {
         // TODO add your handling code here:
         PrinterJob printerJob = PrinterJob.getPrinterJob();
         printerJob.setJobName("Order" + order.getOrderNo());
-        
         PageFormat format = printerJob.getPageFormat(null);
         
         printerJob.setPrintable(new Printable() {

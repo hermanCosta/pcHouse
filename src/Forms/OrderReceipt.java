@@ -24,29 +24,24 @@ import javax.swing.JOptionPane;
  * @author user
  */
 public class OrderReceipt extends javax.swing.JFrame {
-
-    /**
-     * Creates new form Print
-     */
-    double deposit, due, total;
-
+    
     Order order;
     CompletedOrder completedOrder;
-    
+    double deposit, due, total;
+
     public OrderReceipt() {
         initComponents();
     }
-    
+
     public OrderReceipt(Order _order, CompletedOrder _completedOrder) {
         initComponents();
         this.order = _order;
         this.completedOrder = _completedOrder;
-        
+
         loadOrderToPrint();
     }
-    
-    public void loadOrderToPrint()
-    {
+
+    public void loadOrderToPrint() {
         lbl_print_order_no.setText("Order: " + order.getOrderNo());
         lbl_print_first_name.setText("Customer name: " + order.getFirstName() + " " + order.getLastName());
         lbl_print_contact.setText("Contact no.: " + order.getContactNo());
@@ -57,44 +52,43 @@ public class OrderReceipt extends javax.swing.JFrame {
         lbl_print_total_products.setText("Total: €" + String.valueOf(order.getTotal()));
         lbl_date.setText("Date: " + completedOrder.getPayDate());
         lbl_change.setText("Change: €" + completedOrder.getChangeTotal());
-        
+
         if (completedOrder.getCash() == 0 && completedOrder.getCashDeposit() == 0)
-                lbl_paid_by.setText("Paid by Card: €" + (completedOrder.getCard() + completedOrder.getCardDeposit()));
-            else if (completedOrder.getCard() == 0 && completedOrder.getCardDeposit() == 0)
-                lbl_paid_by.setText("Paid by Cash: €" + (completedOrder.getCash() + completedOrder.getCashDeposit())); 
-            else
+            lbl_paid_by.setText("Paid by Card: €" + (completedOrder.getCard() + completedOrder.getCardDeposit()));
+        else if (completedOrder.getCard() == 0 && completedOrder.getCardDeposit() == 0)
+            lbl_paid_by.setText("Paid by Cash: €" + (completedOrder.getCash() + completedOrder.getCashDeposit()));
+        else
             lbl_paid_by.setText("Paid by Cash: €" + (completedOrder.getCash() + completedOrder.getCashDeposit())
                     + " | Card: €" + (completedOrder.getCard() + completedOrder.getCardDeposit()));
-            
+
         String[] arrayProducts = order.getStringProducts().split(",");
         String[] arrayQty = order.getStringQty().split(",");
         String[] arrayUnitPrice = order.getUnitPrice().split(",");
         String[] arrayPriceTotal = order.getPriceTotal().split(",");
-        
+
         for (String s : arrayProducts)
             txt_pane_products.setText(txt_pane_products.getText() + " - " + s + " \n");
-        
+
         for (String s : arrayQty)
-            txt_pane_qty.setText(txt_pane_qty.getText()+ s + "\n");
-        
+            txt_pane_qty.setText(txt_pane_qty.getText() + s + "\n");
+
         for (String s : arrayUnitPrice)
             txt_pane_unit_price.setText(txt_pane_unit_price.getText() + "€" + s + "\n");
-        
+
         for (String s : arrayPriceTotal)
             txt_pane_total.setText(txt_pane_total.getText() + "€" + s + "\n");
     }
-    
-    public void backToPreviousFrame()
-    {        
+
+    public void backToPreviousFrame() {
         FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
         MainMenu.mainMenuDesktopPane.removeAll();
         MainMenu.mainMenuDesktopPane.add(fixedOrder).setVisible(true);
     }
-    
+
     @Override
     protected void processWindowEvent(WindowEvent e) {
         super.processWindowEvent(e);
-        if(e.getID() == WindowEvent.WINDOW_CLOSING) {
+        if (e.getID() == WindowEvent.WINDOW_CLOSING) {
             backToPreviousFrame();
         }
     }
@@ -445,32 +439,29 @@ public class OrderReceipt extends javax.swing.JFrame {
         // TODO add your handling code here:
         PrinterJob printerJob = PrinterJob.getPrinterJob();
         printerJob.setJobName("ReceiptOrder" + this.order.getOrderNo());
-        
         PageFormat format = printerJob.getPageFormat(null);
-        
+
         printerJob.setPrintable(new Printable() {
-            
+
             @Override
             public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-                
-                if(pageIndex > 0)
-                {
+
+                if (pageIndex > 0) {
                     return Printable.NO_SUCH_PAGE;
                 }
-                Graphics2D graphics2D = (Graphics2D)graphics;
+                Graphics2D graphics2D = (Graphics2D) graphics;
                 panel_print_order.paint(graphics2D);
-                
-              return Printable.PAGE_EXISTS;
+
+                return Printable.PAGE_EXISTS;
             }
         }, format);
-        
+
         boolean returningResult = printerJob.printDialog();
-        
-        if(returningResult)
-        {
+
+        if (returningResult) {
             try {
                 printerJob.print();
-                
+
                 JOptionPane.showMessageDialog(this, "Receipt: " + order.getOrderNo() + " Printed Successfully", "Payment Receipt", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
 
@@ -478,13 +469,9 @@ public class OrderReceipt extends javax.swing.JFrame {
                 Logger.getLogger(OrderReceipt.class.getName()).log(Level.SEVERE, null, ex);
                 this.dispose();
                 backToPreviousFrame();
-                
-                
             }
-            
         }
     }//GEN-LAST:event_btn_printActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_print;

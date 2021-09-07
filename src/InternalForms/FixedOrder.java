@@ -39,25 +39,21 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-
 /**
  *
  * @author user
  */
 public class FixedOrder extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form NewOrder
-     */
     ArrayList firstNames = new ArrayList();
     ArrayList faults = new ArrayList();
     ArrayList lastNames = new ArrayList();
-    
+
     Vector faultsTable;
     Vector vecUpdateFaults = new Vector();
     Vector vecUpdateProducts = new Vector();
     Vector vecUpdatePrices = new Vector();
-    
+
     Connection con;
     PreparedStatement ps;
     Statement stmt;
@@ -67,80 +63,71 @@ public class FixedOrder extends javax.swing.JInternalFrame {
     CompletedOrder completedOrders;
     ResultSet rs;
     ResultSetMetaData rsmd;
-    
+
     public FixedOrder() {
         initComponents();
-        
     }
 
     public FixedOrder(Order _order, CompletedOrder _completedOrders) {
         initComponents();
         this.order = _order;
         this.completedOrders = _completedOrders;
-        
-         //Remove borders
-        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
+
+        //Remove borders
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
-        
+
         tableSettings(table_view_faults);
         tableSettings(table_view_products);
         loadSelectedOrder();
-        
     }
-    
-    public void tableSettings (JTable table)
-    {
+
+    public void tableSettings(JTable table) {
         table.getTableHeader().setEnabled(false);
         table.setRowHeight(25);
         table.getTableHeader().setForeground(Color.gray);
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
-        ((DefaultTableCellRenderer)table.getDefaultRenderer(Object.class)).setForeground(Color.gray);
+        ((DefaultTableCellRenderer) table.getDefaultRenderer(Object.class)).setForeground(Color.gray);
     }
 
-   public void loadSelectedOrder()
-   {
-       if (order.getPickDate() != null && !order.getPickDate().trim().isEmpty())
-        {
+    public void loadSelectedOrder() {
+        if (order.getPickDate() != null && !order.getPickDate().trim().isEmpty()) {
             lbl_order_picked_on.setText("Paid on: " + order.getPickDate());
             lbl_order_picked_on.setVisible(true);
-            
+
             btn_pay.setVisible(false);
             btn_notes.setVisible(true);
             btn_receipt.setVisible(true);
             btn_undo.setVisible(false);
             btn_refund.setVisible(true);
-            
+
             if (completedOrders.getCash() == 0 && completedOrders.getCashDeposit() == 0)
                 lbl_paid_by.setText("Paid by Card: €" + (completedOrders.getCard() + completedOrders.getCardDeposit()));
             else if (completedOrders.getCard() == 0 && completedOrders.getCardDeposit() == 0)
-                lbl_paid_by.setText("Paid by Cash: €" + (completedOrders.getCash() + completedOrders.getCashDeposit()) 
+                lbl_paid_by.setText("Paid by Cash: €" + (completedOrders.getCash() + completedOrders.getCashDeposit())
                         + " | Change: €" + completedOrders.getChangeTotal());
             else
-            lbl_paid_by.setText("Paid by Cash: €" + (completedOrders.getCash() + completedOrders.getCashDeposit())
-                    + " | Card: €" + (completedOrders.getCard() + completedOrders.getCardDeposit()) + " | Change: €" + completedOrders.getChangeTotal());
-            
+                lbl_paid_by.setText("Paid by Cash: €" + (completedOrders.getCash() + completedOrders.getCashDeposit())
+                        + " | Card: €" + (completedOrders.getCard() + completedOrders.getCardDeposit()) + " | Change: €" + completedOrders.getChangeTotal());
+
             lbl_paid_by.setVisible(true);
-        }
-       
-        else
-        {
+        } else {
             lbl_order_picked_on.setVisible(false);
             lbl_paid_by.setVisible(false);
-            
+
             btn_pay.setEnabled(true);
             btn_notes.setVisible(true);
             btn_receipt.setVisible(false);
             btn_undo.setEnabled(true);
             btn_refund.setEnabled(false);
-            
         }
-       
+
         DefaultTableModel faultsModel = (DefaultTableModel) table_view_faults.getModel();
         faultsModel.setRowCount(0);
         DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
         TableColumnModel tableModel = table_view_products.getColumnModel();
-        
+
         lbl_order_status.setText("Order Fixed Successfully");
         lbl_date.setText("date: " + order.getFinishDate());
         lbl_order_created_on.setText("Created on: " + order.getIssueDate() + " - By " + order.getUsername());
@@ -156,77 +143,67 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         txt_total.setText(String.valueOf(order.getTotal()));
         txt_deposit.setText(String.valueOf(order.getDeposit()));
         txt_due.setText(String.valueOf(order.getDue()));
-        
-        
+
         // Array for holding database String 
         String[] arrayFaults = order.getStringFaults().split(",");
         String[] arrayProducts = order.getStringProducts().split(",");
         String[] arrayQty = order.getStringQty().split(",");
         String[] arrayUnitPrice = order.getUnitPrice().split(",");
         String[] arrayPriceTotal = order.getPriceTotal().split(",");
-        
+
         //Iterate arrayProducts and pass elements to faults table
         for (Object objFaults : arrayFaults)
-        {
-            faultsModel.addRow(new Object[] {objFaults});
-        }
-        
-         // Pass arrayPrices to a vector and add as a new column
+            faultsModel.addRow(new Object[]{objFaults});
+
+        // Pass arrayPrices to a vector and add as a new column
         Vector vecProducts = new Vector();
         Vector vecQty = new Vector();
         Vector vecUnitPrice = new Vector();
         Vector vecPriceTotal = new Vector();
-        
-        vecProducts.removeAllElements();
-        
-        vecProducts.addAll(Arrays.asList(arrayProducts)); 
+
+        vecProducts.addAll(Arrays.asList(arrayProducts));
         vecQty.addAll(Arrays.asList(arrayQty));
-        vecUnitPrice.addAll(Arrays.asList(arrayUnitPrice)); 
-        vecPriceTotal.addAll(Arrays.asList(arrayPriceTotal)); 
-        
+        vecUnitPrice.addAll(Arrays.asList(arrayUnitPrice));
+        vecPriceTotal.addAll(Arrays.asList(arrayPriceTotal));
+
         //Add New Columns into the table_view_products with data as a vector
         productsModel.addColumn("Product | Service", vecProducts);
         productsModel.addColumn("Qty", vecQty);
         productsModel.addColumn("Unit €", vecUnitPrice);
         productsModel.addColumn("Total €", vecPriceTotal);
-        
+
         // Set width size for columns through its index
         tableModel.getColumn(1).setMaxWidth(40);
         tableModel.getColumn(2).setMaxWidth(80);
         tableModel.getColumn(3).setMaxWidth(80);
-   }
-   
-    public void dbConnection() 
-    {
+    }
+
+    public void dbConnection() {
         try {
-              Class.forName("com.mysql.cj.jdbc.Driver");
-              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
+            
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void updateProductQty()
-    {
-        for (int i = 0; i < table_view_products.getRowCount() ; i++)
-        {
+
+    public void updateProductQty() {
+        for (int i = 0; i < table_view_products.getRowCount(); i++) {
             String cellProduct = table_view_products.getValueAt(i, 0).toString().replaceFirst(" ", "");
             String cellQty = table_view_products.getValueAt(i, 1).toString().replaceFirst(" ", "");
-            
+
             try {
                 dbConnection();
                 String queryCheck = "SELECT * FROM products WHERE productService = ?";
                 ps = con.prepareStatement(queryCheck);
                 ps.setString(1, cellProduct);
                 rs = ps.executeQuery();
-                
-                while(rs.next())
-                {
-                    if (rs.getString("category").equals("Product"))
-                    {
+
+                while (rs.next()) {
+                    if (rs.getString("category").equals("Product")) {
                         int qty = rs.getInt("qty");
                         int updateQty = Integer.parseInt(cellQty) + qty;
-                        
 
                         String queryUpdate = "UPDATE products SET qty = ? WHERE productService = ?";
                         ps = con.prepareStatement(queryUpdate);
@@ -235,41 +212,39 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                         ps.executeUpdate();
                     }
                 }
-                
             } catch (SQLException ex) {
                 Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
-    
-    public void addEventNote(String updateNote)
-    {
+
+    public void addEventNote(String updateNote) {
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
         String dateFormat = new SimpleDateFormat("yyyy/MM/dd").format(currentDate);
-        
+
         try {
             dbConnection();
-            
+
             String note = "Order tagged as '" + updateNote + "' by " + order.getUsername();
             String user = "System";
-          
-                    String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
-                    ps = con.prepareStatement(queryUpdate);
-                    ps.setString(1, order.getOrderNo());
-                    ps.setString(2, dateFormat);
-                    ps.setString(3, note);
-                    ps.setString(4, user);
-                    ps.executeUpdate();
-            
+
+            String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
+            ps = con.prepareStatement(queryUpdate);
+            ps.setString(1, order.getOrderNo());
+            ps.setString(2, dateFormat);
+            ps.setString(3, note);
+            ps.setString(4, user);
+            ps.executeUpdate();
+
             ps.close();
             con.close();
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -790,7 +765,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameKeyReleased
 
     private void txt_totalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_totalKeyPressed
-         // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_txt_totalKeyPressed
 
     private void txt_depositKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_depositKeyPressed
@@ -799,12 +774,12 @@ public class FixedOrder extends javax.swing.JInternalFrame {
 
     private void table_view_faultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_faultsMouseClicked
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_table_view_faultsMouseClicked
 
     private void txt_depositActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_depositActionPerformed
         // TODO add your handling code here:
-                //Calculate deposit paid and display due value
+        //Calculate deposit paid and display due value
     }//GEN-LAST:event_txt_depositActionPerformed
 
     private void txt_dueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_dueActionPerformed
@@ -817,7 +792,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameKeyPressed
 
     private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
-        
+
     }//GEN-LAST:event_txt_contactActionPerformed
 
     private void txt_contactKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_contactKeyReleased
@@ -832,30 +807,29 @@ public class FixedOrder extends javax.swing.JInternalFrame {
 
     private void btn_undoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_undoActionPerformed
         // TODO add your handling code here:
-        int confirmUndoing = JOptionPane.showConfirmDialog(this, "Do you really want to 'UNDO' Order: " 
-                            + order.getOrderNo() + " ?", "Undo Order", JOptionPane.YES_NO_OPTION);
-        
-        if (confirmUndoing == 0)
-        {
+        int confirmUndoing = JOptionPane.showConfirmDialog(this, "Do you really want to 'UNDO' Order: "
+                + order.getOrderNo() + " ?", "Undo Order", JOptionPane.YES_NO_OPTION);
+
+        if (confirmUndoing == 0) {
             String status = "In Progress";
             order.setStatus(status);
-            
+
             try {
                 dbConnection();
                 String query = "UPDATE orderDetails SET status = ?, finishDate = ? WHERE orderNo = ?";
-                
+
                 ps = con.prepareStatement(query);
                 ps.setString(1, order.getStatus());
                 ps.setString(2, null);
                 ps.setString(3, order.getOrderNo());
                 ps.executeUpdate();
-                
+
                 addEventNote(status);
-                
+
                 OrderDetails orderDetails = new OrderDetails(order, completedOrders);
                 desktop_pane_fixed_order.removeAll();
                 desktop_pane_fixed_order.add(orderDetails).setVisible(true);
-                
+
             } catch (SQLException ex) {
                 Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -866,22 +840,21 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         OrderNotes orderNotes = new OrderNotes(order.getOrderNo(), order.getUsername());
         orderNotes.setVisible(true);
-        
     }//GEN-LAST:event_btn_notesActionPerformed
 
     private void btn_receiptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_receiptActionPerformed
         // TODO add your handling code here:
         try {
             dbConnection();
-            
+
             String query = "SELECT cash, card, changeTotal FROM completedOrders WHERE orderNo = ?";
             ps = con.prepareStatement(query);
             ps.setString(1, order.getOrderNo());
             rs = ps.executeQuery();
-            
-            OrderReceipt orderReceipt =  new OrderReceipt(order, completedOrders);
+
+            OrderReceipt orderReceipt = new OrderReceipt(order, completedOrders);
             orderReceipt.setVisible(true);
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -891,26 +864,25 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         int confirmRefund = JOptionPane.showConfirmDialog(this, "Do you really want to Refund " + order.getOrderNo() + " ?",
                 "Confirm Refund", JOptionPane.YES_NO_OPTION);
-                
-        if (confirmRefund == 0)
-        {
+
+        if (confirmRefund == 0) {
             try {
                 dbConnection();
-                
+
                 Date date = new Date();
                 Timestamp currentDate = new Timestamp(date.getTime());
                 String refundDate = new SimpleDateFormat("dd/MM/yyy").format(currentDate);
-                
+
                 completedOrders.setStatus("Refunded");
                 completedOrders.setPayDate(refundDate);
-                
+
                 String queryUpdate = "UPDATE orderDetails SET status = ?, refundDate = ? WHERE orderNo = ?";
                 ps = con.prepareStatement(queryUpdate);
                 ps.setString(1, completedOrders.getStatus());
                 ps.setString(2, completedOrders.getPayDate());
                 ps.setString(3, completedOrders.getOrderNo());
                 ps.executeUpdate();
-                
+
                 double refundCash = completedOrders.getCash();
                 double refundCard = completedOrders.getCard();
                 double refundCashDeposit = completedOrders.getCashDeposit();
@@ -918,7 +890,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 double refundTotal = order.getTotal();
                 double refundDeposit = order.getDeposit();
                 double refundDue = order.getDue();
-                
+
                 completedOrders.setCash(refundCash *= -1);
                 completedOrders.setCard(refundCard *= -1);
                 completedOrders.setCashDeposit(refundCashDeposit *= -1);
@@ -926,16 +898,16 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 completedOrders.setTotal(refundTotal *= -1);
                 completedOrders.setDeposit(refundDeposit *= -1);
                 completedOrders.setDue(refundDue *= -1);
-                
+
                 completedOrders = new CompletedOrder(completedOrders.getOrderNo(), completedOrders.getFirstName(), completedOrders.getLastName(),
-                "", "", completedOrders.getBrand(), completedOrders.getModel(), "", completedOrders.getTotal(), completedOrders.getDeposit(), 
-                        completedOrders.getDue(), completedOrders.getCash(), completedOrders.getCard(), completedOrders.getChangeTotal(), 
+                        "", "", completedOrders.getBrand(), completedOrders.getModel(), "", completedOrders.getTotal(), completedOrders.getDeposit(),
+                        completedOrders.getDue(), completedOrders.getCash(), completedOrders.getCard(), completedOrders.getChangeTotal(),
                         completedOrders.getCashDeposit(), completedOrders.getCardDeposit(), completedOrders.getPayDate(), completedOrders.getStatus());
-                        
+
                 String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, brand, model, total, "
                         + "deposit, due, cash, card, changeTotal, cashDeposit, cardDeposit, payDate, status) "
                         + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                
+
                 ps = con.prepareStatement(queryInsert);
                 ps.setString(1, completedOrders.getOrderNo());
                 ps.setString(2, completedOrders.getFirstName());
@@ -953,16 +925,16 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 ps.setString(14, completedOrders.getPayDate());
                 ps.setString(15, completedOrders.getStatus());
                 ps.executeUpdate();
-                
+
                 updateProductQty();
                 addEventNote("Refunded");
-                
-                JOptionPane.showMessageDialog(this, order.getOrderNo() + " Refunded Successfully!", 
+
+                JOptionPane.showMessageDialog(this, order.getOrderNo() + " Refunded Successfully!",
                         "Refund Order", JOptionPane.INFORMATION_MESSAGE);
 
                 OrderRefundReceipt refundReceipt = new OrderRefundReceipt(order, completedOrders);
                 refundReceipt.setVisible(true);
-                
+
             } catch (SQLException ex) {
                 Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
             }

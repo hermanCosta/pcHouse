@@ -5,41 +5,21 @@
  */
 package InternalForms;
 
-import Forms.MainMenu;
-import Forms.SalePayment;
-import Model.Customer;
 import Model.Fault;
-import Model.ProductService;
-import Model.Sale;
-import com.sun.glass.events.KeyEvent;
-import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.InputVerifier;
-import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
@@ -47,60 +27,50 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
  */
 public class Faults extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form NewOrder
-     */
-    
     Connection con;
     PreparedStatement ps;
     ResultSet rs;
     Statement stmt;
     Fault fault;
     String faultName;
-    
-    
+
     public Faults() {
         initComponents();
-        
+
         //Remove borders
-        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
-        
+
         tableSettings(table_view_faults);
-        
         loadFaultTable();
     }
 
-    public void tableSettings (JTable table)
-    {
+    public void tableSettings(JTable table) {
         table.setRowHeight(25);
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
     }
-    
-    public void dbConnection() 
-    {
+
+    public void dbConnection() {
         try {
-              Class.forName("com.mysql.cj.jdbc.Driver");
-              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Faults.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void loadFaultTable()
-    {
+
+    public void loadFaultTable() {
         ArrayList<Fault> list = new ArrayList<>();
-        
+
         try {
             dbConnection();
-            
+
             String query = "SELECT * FROM faults";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery(query);
-            
-            while (rs.next())
-            {
+
+            while (rs.next()) {
                 fault = new Fault(rs.getString("faultName"));
                 fault.setFaultId(rs.getInt("faultId"));
                 list.add(fault);
@@ -108,23 +78,19 @@ public class Faults extends javax.swing.JInternalFrame {
         } catch (SQLException ex) {
             Logger.getLogger(Faults.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        DefaultTableModel dtm = (DefaultTableModel)table_view_faults.getModel();
+
+        DefaultTableModel dtm = (DefaultTableModel) table_view_faults.getModel();
         dtm.setRowCount(0);
-        
+
         Object[] row = new Object[2];
-        for (int i = 0 ;i < list.size() ; i++)
-        {
-                row[0] = list.get(i).getFaultId();
-                row[1] = list.get(i).getFault();
-                
+        for (int i = 0; i < list.size(); i++) {
+            row[0] = list.get(i).getFaultId();
+            row[1] = list.get(i).getFault();
+
             dtm.addRow(row);
         }
-        
     }
-    
-    
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -313,157 +279,134 @@ public class Faults extends javax.swing.JInternalFrame {
 
     private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
         // TODO add your handling code here:
-       if (txt_fault.getText().trim().isEmpty())
-        {
+        if (txt_fault.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Fault", JOptionPane.ERROR_MESSAGE);
-        }
-        else
-        {
+        } else {
             faultName = txt_fault.getText();
-            
+
             try {
-                
-            dbConnection();
-            
-//            String query = "SELECT contactNo FROM customers WHERE contactNo = ?";
-//            ps = con.prepareStatement(query);
-//            ps.setString(1, customer.getContactNo());
-//            rs = ps.executeQuery();
-            
-            //add a new customer if not exists AND fields are not empty
-            if (!fault.getFault().equals(faultName))
-            {
-                fault = new Fault(faultName);
-                
-                int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add fault " + fault.getFault() + " ?", "Add New Fault", JOptionPane.YES_NO_OPTION);
-                if(confirmInsertion == 0)
-                {
-                    String insertQuery = "INSERT INTO faults (faultName) VALUES(?)";
-                    
-                    ps = con.prepareStatement(insertQuery);
-                    ps.setString(1, fault.getFault());
-                    ps.executeUpdate();
-                    
-                    JOptionPane.showMessageDialog(this, "'" + fault.getFault() +  "' added Successfully");
-                    loadFaultTable();
-                    txt_fault.setText("");
+                dbConnection();
+
+                //add a new customer if not exists AND fields are not empty
+                if (!fault.getFault().equals(faultName)) {
+                    fault = new Fault(faultName);
+
+                    int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add fault " + fault.getFault() + " ?", "Add New Fault", JOptionPane.YES_NO_OPTION);
+                    if (confirmInsertion == 0) {
+                        String insertQuery = "INSERT INTO faults (faultName) VALUES(?)";
+
+                        ps = con.prepareStatement(insertQuery);
+                        ps.setString(1, fault.getFault());
+                        ps.executeUpdate();
+
+                        JOptionPane.showMessageDialog(this, "'" + fault.getFault() + "' added Successfully");
+                        loadFaultTable();
+                        txt_fault.setText("");
+                    }
                 } 
-            }
-                //show a message if a costumer is not found into db
-                else 
+                
+                else {
                     JOptionPane.showMessageDialog(this, "Fault '" + fault.getFault() + "' already exist into Database !", "New Fault", JOptionPane.ERROR_MESSAGE);
-            
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(Faults.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(Faults.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-            
-       }
     }//GEN-LAST:event_btn_addActionPerformed
 
     private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
-        
-        if (txt_fault.getText().trim().isEmpty())
-        {
+
+        if (txt_fault.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please, check Empty field", "New Fault", JOptionPane.ERROR_MESSAGE);
-        }
-        else
-        {
+            
+        } else {
             faultName = txt_fault.getText();
-      
+
             try {
-                
-                dbConnection(); 
 
-                       if( fault.getFault().equals(faultName))
-                       {
-                           JOptionPane.showMessageDialog(null, "No changes to be updated !", "Update Fault", JOptionPane.ERROR_MESSAGE);
-                       }
-                       else 
-                        {
-                            int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Updating '" + faultName + "' ?", 
-                                    "Update Fault", JOptionPane.YES_NO_OPTION);
-                            
-                            if(confirmEditing == 0)
-                            {
-                                String query = "UPDATE faults SET faultName = ? WHERE faultId = ?";
-                                ps = con.prepareStatement(query);
-                                ps.setString(1, faultName);
-                                ps.setInt(2, fault.getFaultId());
-                                ps.executeUpdate();
+                dbConnection();
 
-                                loadFaultTable();
-                                txt_fault.setText("");
-                            }
-                            else
-                            {
-                                loadFaultTable();
-                                txt_fault.setText("");
-                            }
+                if (fault.getFault().equals(faultName)) {
+                    JOptionPane.showMessageDialog(null, "No changes to be updated !", "Update Fault", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Updating '" + faultName + "' ?",
+                            "Update Fault", JOptionPane.YES_NO_OPTION);
+
+                    if (confirmEditing == 0) {
+                        String query = "UPDATE faults SET faultName = ? WHERE faultId = ?";
+                        ps = con.prepareStatement(query);
+                        ps.setString(1, faultName);
+                        ps.setInt(2, fault.getFaultId());
+                        ps.executeUpdate();
+
+                        loadFaultTable();
+                        txt_fault.setText("");
+                    } else {
+                        loadFaultTable();
+                        txt_fault.setText("");
                     }
+                }
 
             } catch (SQLException ex) {
-                    Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btn_updateActionPerformed
 
     private void txt_faultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_faultActionPerformed
-     
+
     }//GEN-LAST:event_txt_faultActionPerformed
 
     private void txt_faultKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_faultKeyReleased
         // TODO add your handling code here:
-        ArrayList<Fault> faultList = new ArrayList<>();   
+        ArrayList<Fault> faultList = new ArrayList<>();
         String faultText = txt_fault.getText();
-        
+
         try {
             dbConnection();
-            
+
             String query = "SELECT * FROM faults WHERE faultName LIKE '%" + faultText + "%'";
-                     
+
             ps = con.prepareStatement(query);
             rs = ps.executeQuery(query);
-            
-            while (rs.next())
-            {
+
+            while (rs.next()) {
                 fault = new Fault(rs.getString("faultName"));
                 fault.setFaultId(rs.getInt("faultId"));
                 faultList.add(fault);
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(Faults.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        DefaultTableModel dtm = (DefaultTableModel)table_view_faults.getModel();
+
+        DefaultTableModel dtm = (DefaultTableModel) table_view_faults.getModel();
         dtm.setRowCount(0);
-        
+
         Object[] row = new Object[2];
-        for (int i = 0 ;i < faultList.size() ; i++)
-        {
-                row[0] = faultList.get(i).getFaultId();
-                row[1] = faultList.get(i).getFault();
-                
+        for (int i = 0; i < faultList.size(); i++) {
+            row[0] = faultList.get(i).getFaultId();
+            row[1] = faultList.get(i).getFault();
+
             dtm.addRow(row);
         }
     }//GEN-LAST:event_txt_faultKeyReleased
 
     private void table_view_faultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_faultsMouseClicked
         // TODO add your handling code here:
-        if (evt.getClickCount() == 2)
-        {
+        if (evt.getClickCount() == 2) {
             DefaultTableModel dtm = (DefaultTableModel) table_view_faults.getModel();
             int row = table_view_faults.getSelectedRow();
-            
+
             int id = (int) dtm.getValueAt(row, 0);
             String faultText = dtm.getValueAt(row, 1).toString();
-            
+
             txt_fault.setText(faultText);
-            
+
             fault = new Fault(faultText);
             fault.setFaultId(id);
-            
+
         }
     }//GEN-LAST:event_table_view_faultsMouseClicked
 
@@ -473,40 +416,33 @@ public class Faults extends javax.swing.JInternalFrame {
 
     private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
         // TODO add your handling code here:
-        if (txt_fault.getText().trim().isEmpty())
-        {
+        if (txt_fault.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please, check Empty field", "New Fault", JOptionPane.ERROR_MESSAGE);
-        }
-        else
-        {
+        } else {
             try {
-                
-                dbConnection(); 
 
-                            int confirmEditing = JOptionPane.showConfirmDialog(this, "Confirm Deletion '" + fault.getFault() + "' ?", 
-                                    "Update Fault", JOptionPane.YES_NO_OPTION);
-                            
-                            if(confirmEditing == 0)
-                            {
-                                String query = "DELETE FROM faults WHERE faultId = ?";
-                                ps = con.prepareStatement(query);
-                                ps.setInt(1, fault.getFaultId());
-                                ps.executeUpdate();
+                dbConnection();
 
-                                loadFaultTable();
-                                txt_fault.setText("");
-                            }
-                            else
-                            {
-                                loadFaultTable();
-                                txt_fault.setText("");
-                            }
+                int confirmEditing = JOptionPane.showConfirmDialog(this, "Confirm Deletion '" + fault.getFault() + "' ?",
+                        "Update Fault", JOptionPane.YES_NO_OPTION);
+
+                if (confirmEditing == 0) {
+                    String query = "DELETE FROM faults WHERE faultId = ?";
+                    ps = con.prepareStatement(query);
+                    ps.setInt(1, fault.getFaultId());
+                    ps.executeUpdate();
+
+                    loadFaultTable();
+                    txt_fault.setText("");
+                } else {
+                    loadFaultTable();
+                    txt_fault.setText("");
+                }
 
             } catch (SQLException ex) {
-                    Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
     }//GEN-LAST:event_btn_deleteActionPerformed
 
     private void btn_clear_fieldsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clear_fieldsActionPerformed

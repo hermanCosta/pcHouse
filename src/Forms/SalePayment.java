@@ -41,6 +41,7 @@ public class SalePayment extends javax.swing.JFrame {
 
     public SalePayment(Sale _sale, JTable _tableViewProducts) {
         initComponents();
+        
         this.sale = _sale;
         this.tableViewProducts = _tableViewProducts;
         
@@ -53,6 +54,7 @@ public class SalePayment extends javax.swing.JFrame {
         try {
               Class.forName("com.mysql.cj.jdbc.Driver");
               con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
+              
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -114,7 +116,6 @@ public class SalePayment extends javax.swing.JFrame {
                         System.out.println("New Comp Qty: " + updateCompQty);
                     }
                 }
-                
             } catch (SQLException ex) {
                 Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -360,7 +361,6 @@ public class SalePayment extends javax.swing.JFrame {
 
     private void btn_payMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_payMouseClicked
         // TODO add your handling code here:
-
     }//GEN-LAST:event_btn_payMouseClicked
 
     private void btn_payActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_payActionPerformed
@@ -371,7 +371,6 @@ public class SalePayment extends javax.swing.JFrame {
         sale.setSaleDate(saleDate);
         sale.setStatus("Paid");
         boolean isPaid = false;
-        
         
         if (txt_cash.getText().isEmpty() && txt_card.getText().isEmpty())
         {

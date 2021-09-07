@@ -10,6 +10,7 @@ package Model;
  * @author user
  */
 public class OrderNote {
+
     String date, note, user;
 
     public OrderNote(String _date, String _note, String _user) {
@@ -41,7 +42,4 @@ public class OrderNote {
     public void setUser(String user) {
         this.user = user;
     }
-    
-    
-    
 }

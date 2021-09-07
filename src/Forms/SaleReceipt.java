@@ -25,28 +25,22 @@ import javax.swing.JOptionPane;
  */
 public class SaleReceipt extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Print
-     */
-    
     Sale sale;
     boolean isSaleDetails;
-    
+
     public SaleReceipt() {
         initComponents();
     }
-   
 
     public SaleReceipt(Sale _sale, boolean _isSaleDetails) {
         initComponents();
         this.sale = _sale;
         this.isSaleDetails = _isSaleDetails;
-        
+
         loadOrderToPrint();
     }
-    
-    public void loadOrderToPrint()
-    {
+
+    public void loadOrderToPrint() {
         lbl_print_order_no.setText("Order: " + sale.getSaleNo());
         lbl_print_first_name.setText("Customer name: " + sale.getFirstName() + " " + sale.getLastName());
         lbl_print_contact.setText("Contact no.: " + sale.getContactNo());
@@ -54,54 +48,49 @@ public class SaleReceipt extends javax.swing.JFrame {
         lbl_print_total_products.setText("Total: €" + String.valueOf(sale.getTotal()));
         lbl_date.setText("Date: " + sale.getSaleDate());
         lbl_change.setText("Change: €" + sale.getChangeTotal());
-        
+
         if (sale.getCash() == 0)
             lbl_paid_by.setText("Paid by Card: €" + sale.getCard());
         else if (sale.getCard() == 0)
             lbl_paid_by.setText("Paid by Cash: €" + sale.getCash());
         else
             lbl_paid_by.setText("Paid by Cash: €" + sale.getCash() + " | Card: €" + sale.getCard());
-        
-        
+
         String[] arrayProducts = sale.getStringProducts().split(",");
         String[] arrayQty = sale.getStringQty().split(",");
         String[] arrayUnitPrice = sale.getStringUnitPrice().split(",");
         String[] arrayPriceTotal = sale.getStringPriceTotal().split(",");
-        
+
         for (String s : arrayProducts)
             txt_pane_products.setText(txt_pane_products.getText() + " - " + s + " \n");
-        
+
         for (String s : arrayQty)
-            txt_pane_qty.setText(txt_pane_qty.getText()+ s + "\n");
-        
+            txt_pane_qty.setText(txt_pane_qty.getText() + s + "\n");
+
         for (String s : arrayUnitPrice)
             txt_pane_unit_price.setText(txt_pane_unit_price.getText() + "€" + s + "\n");
-        
+
         for (String s : arrayPriceTotal)
             txt_pane_total.setText(txt_pane_total.getText() + "€" + s + "\n");
     }
-    
-    public void backToPreviousFrame()
-    {
-        if (isSaleDetails)
-        {
+
+    public void backToPreviousFrame() {
+        if (isSaleDetails) {
             SaleDetails saleDetails = new SaleDetails(sale);
             MainMenu.mainMenuDesktopPane.removeAll();
             MainMenu.mainMenuDesktopPane.add(saleDetails).setVisible(true);
-        }
-        
-        else
-        {
+            
+        } else {
             NewSale newSale = new NewSale();
             MainMenu.mainMenuDesktopPane.removeAll();
             MainMenu.mainMenuDesktopPane.add(newSale).setVisible(true);
         }
     }
-    
+
     @Override
     protected void processWindowEvent(WindowEvent e) {
         super.processWindowEvent(e);
-        if(e.getID() == WindowEvent.WINDOW_CLOSING) {
+        if (e.getID() == WindowEvent.WINDOW_CLOSING) {
             backToPreviousFrame();
         }
     }
@@ -437,32 +426,30 @@ public class SaleReceipt extends javax.swing.JFrame {
         // TODO add your handling code here:
         PrinterJob printerJob = PrinterJob.getPrinterJob();
         printerJob.setJobName("Sale" + sale.getSaleNo());
-        
+
         PageFormat format = printerJob.getPageFormat(null);
-        
+
         printerJob.setPrintable(new Printable() {
-            
+
             @Override
             public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-                
-                if(pageIndex > 0)
-                {
+
+                if (pageIndex > 0) {
                     return Printable.NO_SUCH_PAGE;
                 }
-                Graphics2D graphics2D = (Graphics2D)graphics;
+                Graphics2D graphics2D = (Graphics2D) graphics;
                 panel_print_order.paint(graphics2D);
-                
-              return Printable.PAGE_EXISTS;
+
+                return Printable.PAGE_EXISTS;
             }
         }, format);
-        
+
         boolean returningResult = printerJob.printDialog();
-        
-        if(returningResult)
-        {
+
+        if (returningResult) {
             try {
                 printerJob.print();
-                
+
                 JOptionPane.showMessageDialog(this, "Receipt: " + sale.getSaleNo() + " Printed Successfully", "Payment Receipt", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
                 backToPreviousFrame();
@@ -471,10 +458,8 @@ public class SaleReceipt extends javax.swing.JFrame {
                 Logger.getLogger(SaleReceipt.class.getName()).log(Level.SEVERE, null, ex);
                 this.dispose();
             }
-            
         }
     }//GEN-LAST:event_jButton1ActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

@@ -38,18 +38,15 @@ import javax.swing.table.TableColumnModel;
  */
 public class OrderRefund extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form NewOrder
-     */
- ArrayList firstNames = new ArrayList();
+    ArrayList firstNames = new ArrayList();
     ArrayList faults = new ArrayList();
     ArrayList lastNames = new ArrayList();
-    
+
     Vector faultsTable;
     Vector vecUpdateFaults = new Vector();
     Vector vecUpdateProducts = new Vector();
     Vector vecUpdatePrices = new Vector();
-    
+
     Connection con;
     PreparedStatement ps;
     Statement stmt;
@@ -59,47 +56,42 @@ public class OrderRefund extends javax.swing.JInternalFrame {
     CompletedOrder completedOrders;
     ResultSet rs;
     ResultSetMetaData rsmd;
-    
-    
+
     public OrderRefund() {
         initComponents();
-        
     }
 
     OrderRefund(Order _order, CompletedOrder _completedOrders) {
-     initComponents();
-     this.order = _order;
-     this.completedOrders = _completedOrders;
-     
-     //Remove borders
-        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
+        initComponents();
+        
+        this.order = _order;
+        this.completedOrders = _completedOrders;
+
+        //Remove borders
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
         txt_contact.setFocusLostBehavior(JFormattedTextField.PERSIST);//avoid auto old value by focus loosing
-        
-        loadSelectedOrder();
+
         tableSettings(table_view_faults);
         tableSettings(table_view_products);
         loadSelectedOrder();
-        
     }
-    
-    public void tableSettings (JTable table)
-    {
+
+    public void tableSettings(JTable table) {
         table.getTableHeader().setEnabled(false);
         table.setRowHeight(25);
         table.getTableHeader().setForeground(Color.gray);
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
-        ((DefaultTableCellRenderer)table.getDefaultRenderer(Object.class)).setForeground(Color.gray);
+        ((DefaultTableCellRenderer) table.getDefaultRenderer(Object.class)).setForeground(Color.gray);
     }
-    
-   public void loadSelectedOrder()
-   {
+
+    public void loadSelectedOrder() {
         DefaultTableModel faultsModel = (DefaultTableModel) table_view_faults.getModel();
         faultsModel.setRowCount(0);
         DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
         TableColumnModel tableModel = table_view_products.getColumnModel();
-        
+
         completedOrders.setCash(Math.abs(completedOrders.getCash()));
         completedOrders.setCard(Math.abs(completedOrders.getCard()));
         completedOrders.setCashDeposit(Math.abs(completedOrders.getCashDeposit()));
@@ -112,7 +104,7 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         else
             lbl_refunded_by.setText("Refunded by Cash: €" + ((completedOrders.getCash() + completedOrders.getCashDeposit()) - completedOrders.getChangeTotal())
                     + " | Card: €" + (completedOrders.getCard() + completedOrders.getCardDeposit()));
-        
+
         lbl_order_status.setText("Order Refunded");
         lbl_date.setText("date: " + order.getRefundDate());
         lbl_order_created_on.setText("Created on: " + order.getIssueDate() + " - by " + order.getUsername());
@@ -129,58 +121,55 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         txt_total.setText(String.valueOf(order.getTotal()));
         txt_deposit.setText(String.valueOf(order.getDeposit()));
         txt_due.setText(String.valueOf(order.getDue()));
-        
-       // Array for holding database String 
+
+        // Array for holding database String 
         String[] arrayFaults = order.getStringFaults().split(",");
         String[] arrayProducts = order.getStringProducts().split(",");
         String[] arrayQty = order.getStringQty().split(",");
         String[] arrayUnitPrice = order.getUnitPrice().split(",");
         String[] arrayPriceTotal = order.getPriceTotal().split(",");
-        
+
         //Iterate arrayProducts and pass elements to faults table
         for (Object objFaults : arrayFaults)
-        {
-            faultsModel.addRow(new Object[] {objFaults});
-        }
-        
-         // Pass arrayPrices to a vector and add as a new column
+            faultsModel.addRow(new Object[]{objFaults});
+
+        // Pass arrayPrices to a vector and add as a new column
         Vector vecProducts = new Vector();
         Vector vecQty = new Vector();
         Vector vecUnitPrice = new Vector();
         Vector vecPriceTotal = new Vector();
-        
+
         vecProducts.removeAllElements();
         vecQty.removeAllElements();
         vecUnitPrice.removeAllElements();
         vecPriceTotal.removeAllElements();
-        
-        vecProducts.addAll(Arrays.asList(arrayProducts)); 
+
+        vecProducts.addAll(Arrays.asList(arrayProducts));
         vecQty.addAll(Arrays.asList(arrayQty));
-        vecUnitPrice.addAll(Arrays.asList(arrayUnitPrice)); 
-        vecPriceTotal.addAll(Arrays.asList(arrayPriceTotal)); 
-        
+        vecUnitPrice.addAll(Arrays.asList(arrayUnitPrice));
+        vecPriceTotal.addAll(Arrays.asList(arrayPriceTotal));
+
         //Add New Columns into the table_view_products with data as a vector
         productsModel.addColumn("Product | Service", vecProducts);
         productsModel.addColumn("Qty", vecQty);
         productsModel.addColumn("Unit €", vecUnitPrice);
         productsModel.addColumn("Total €", vecPriceTotal);
-        
+
         // Set width size for columns through its index
         tableModel.getColumn(1).setMaxWidth(40);
         tableModel.getColumn(2).setMaxWidth(80);
         tableModel.getColumn(3).setMaxWidth(80);
-   }
-   
-    public void dbConnection() 
-    {
+    }
+
+    public void dbConnection() {
         try {
-              Class.forName("com.mysql.cj.jdbc.Driver");
-              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(OrderRefund.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -788,7 +777,7 @@ public class OrderRefund extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameKeyReleased
 
     private void txt_totalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_totalKeyPressed
-         // TODO add your handling code here:
+        // TODO add your handling code here:
         if (Character.isLetter(evt.getKeyChar()))
             txt_total.setEditable(false);
         else
@@ -797,7 +786,7 @@ public class OrderRefund extends javax.swing.JInternalFrame {
 
     private void txt_depositKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_depositKeyPressed
         // TODO add your handling code here:
-        if(Character.isLetter(evt.getKeyChar()))
+        if (Character.isLetter(evt.getKeyChar()))
             txt_deposit.setEditable(false);
         else
             txt_deposit.setEditable(true);
@@ -809,12 +798,10 @@ public class OrderRefund extends javax.swing.JInternalFrame {
 
     private void table_view_faultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_faultsMouseClicked
         // TODO add your handling code here:
-        
     }//GEN-LAST:event_table_view_faultsMouseClicked
 
     private void txt_depositActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_depositActionPerformed
         // TODO add your handling code here:
-                //Calculate deposit paid and display due value
     }//GEN-LAST:event_txt_depositActionPerformed
 
     private void txt_dueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_dueActionPerformed
@@ -823,11 +810,10 @@ public class OrderRefund extends javax.swing.JInternalFrame {
 
     private void txt_last_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_last_nameKeyPressed
         // TODO add your handling code here:
-        //Sugest autoComplete firstNames from Database
     }//GEN-LAST:event_txt_last_nameKeyPressed
 
     private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
-        
+
     }//GEN-LAST:event_txt_contactActionPerformed
 
     private void txt_contactKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_contactKeyReleased

@@ -10,19 +10,16 @@ package Model;
  * @author user
  */
 public class CompletedOrder extends Device {
+
     String orderNo, payDate, status;
     double total, deposit, due, cash, card, changeTotal, cashDeposit, cardDeposit;
-    
-    public CompletedOrder(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email, 
-            String _brand, String _model, String _serialNumber, double _total, double _deposit, 
-            double _due, double _cash, double _card, double _changeTotal, double _cashDeposit, 
+
+    public CompletedOrder(String _orderNo, String _firstName, String _lastName, String _contactNo, String _email,
+            String _brand, String _model, String _serialNumber, double _total, double _deposit,
+            double _due, double _cash, double _card, double _changeTotal, double _cashDeposit,
             double _cardDeposit, String _payDate, String _status) {
         super(_firstName, _lastName, _contactNo, _email, _brand, _model, _serialNumber);
-    
-    
-//    public CompletedOrder(String _orderNo, String _firstName, String _lastName, String _stringProducts, 
-//            double _total, double _deposit, double _due, String _payDate, double _cash, double _card, 
-//            double _changeTotal, double _cashDeposit, double _cardDeposit) {
+
         this.orderNo = _orderNo;
         this.firstName = _firstName;
         this.lastName = _lastName;
@@ -130,7 +127,4 @@ public class CompletedOrder extends Device {
     public void setCardDeposit(double cardDeposit) {
         this.cardDeposit = cardDeposit;
     }
-
-    
-    
 }

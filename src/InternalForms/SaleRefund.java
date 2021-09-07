@@ -36,25 +36,18 @@ import javax.swing.table.TableColumnModel;
  */
 public class SaleRefund extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form NewOrder
-     */
     ArrayList firstNames = new ArrayList();
     ArrayList lastNames = new ArrayList();
     Connection con;
     PreparedStatement ps;
-    Statement stmt;
     Customer customer;
     ProductService productService;
     Sale sale;
     ResultSet rs;
     ResultSetMetaData rsmd;
-    
     String createdOn, paidOn;
-    
     double total, cash = 0, card = 0, change;
-    
-    
+
     public SaleRefund() {
         initComponents();
     }
@@ -62,71 +55,67 @@ public class SaleRefund extends javax.swing.JInternalFrame {
     public SaleRefund(Sale _sale) {
         initComponents();
         this.sale = _sale;
-        
-        
+
         //Remove borders
-        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
-        
+
         tableSettings(table_view_products);
         loadSaleDetails();
     }
 
-    public void tableSettings (JTable table)
-    {
+    public void tableSettings(JTable table) {
         table.getTableHeader().setEnabled(false);
         table.setRowHeight(25);
         table.getTableHeader().setForeground(Color.gray);
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
-        ((DefaultTableCellRenderer)table.getDefaultRenderer(Object.class)).setForeground(Color.gray);
+        ((DefaultTableCellRenderer) table.getDefaultRenderer(Object.class)).setForeground(Color.gray);
     }
-    
-    public void dbConnection() 
-    {
+
+    public void dbConnection() {
         try {
-              Class.forName("com.mysql.cj.jdbc.Driver");
-              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(SaleRefund.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void getPaidSale()
-    {
+
+    public void getPaidSale() {
         try {
             dbConnection();
-            
+
             String query = "SELECT * FROM sales WHERE saleNo = ? AND status = ?";
             ps = con.prepareStatement(query);
             ps.setString(1, sale.getSaleNo());
             ps.setString(2, "Paid");
             rs = ps.executeQuery();
-            
-            while (rs.next())
+
+            while (rs.next()) {
                 createdOn = rs.getString("saleDate");
-            
+            }
+
             con.close();
             ps.close();
             rs.close();
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(SaleRefund.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void loadSaleDetails()
-    {
+
+    public void loadSaleDetails() {
         getPaidSale();
-        
+
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
         TableColumnModel model = table_view_products.getColumnModel();
         dtm.setRowCount(0);
-        
+
         sale.setCash(Math.abs(sale.getCash()));
         sale.setCard(Math.abs(sale.getCard()));
         sale.setTotal(Math.abs(sale.getTotal()));
-        
+
         lbl_auto_order_no.setText(sale.getSaleNo());
         txt_first_name.setText(sale.getFirstName());
         txt_last_name.setText(sale.getLastName());
@@ -135,44 +124,42 @@ public class SaleRefund extends javax.swing.JInternalFrame {
         txt_total.setText(String.valueOf(sale.getTotal()));
         lbl_sale_refunded_on.setText("Refund Date: " + sale.getSaleDate() + " - by " + sale.getCreatedBy());
         lbl_sale_created_on.setText("Created On: " + sale.getSaleDate() + " - by " + sale.getCreatedBy());
-        
+
         if (sale.getCash() == 0)
             lbl_refunded_by.setText("Refunded by Card: €" + sale.getCard());
         else if (sale.getCard() == 0)
             lbl_refunded_by.setText("Refunded by Cash: €" + (sale.getCash() - sale.getChangeTotal()));
-        else 
+        else
             lbl_refunded_by.setText("Refunded by Cash: €" + (sale.getCash() - sale.getChangeTotal()) + " | Card: €" + sale.getCard());
-        
+
         String[] arrayProducts = sale.getStringProducts().split(",");
         String[] arrayQty = sale.getStringQty().split(",");
         String[] arrayUnitPrice = sale.getStringUnitPrice().split(",");
         String[] arrayPriceTotal = sale.getStringPriceTotal().split(",");
-        
+
         for (Object objProducts : arrayProducts)
-        {
-            dtm.addRow(new Object[] {objProducts});
-        }  
-        
+            dtm.addRow(new Object[]{objProducts});
+
         Vector vecProducts = new Vector();
         Vector vecQty = new Vector();
         Vector vecUnitPrice = new Vector();
         Vector vecPriceTotal = new Vector();
-        
-        vecProducts.addAll(Arrays.asList(arrayProducts)); 
+
+        vecProducts.addAll(Arrays.asList(arrayProducts));
         vecQty.addAll(Arrays.asList(arrayQty));
-        vecUnitPrice.addAll(Arrays.asList(arrayUnitPrice)); 
-        vecPriceTotal.addAll(Arrays.asList(arrayPriceTotal)); 
-        
+        vecUnitPrice.addAll(Arrays.asList(arrayUnitPrice));
+        vecPriceTotal.addAll(Arrays.asList(arrayPriceTotal));
+
         dtm.addColumn("Product | Service", vecProducts);
         dtm.addColumn("Qty", vecQty);
         dtm.addColumn("Unit €", vecUnitPrice);
         dtm.addColumn("Total €", vecPriceTotal);
-            
+
         model.getColumn(1).setMaxWidth(40);
         model.getColumn(2).setMaxWidth(80);
         model.getColumn(3).setMaxWidth(80);
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -496,7 +483,7 @@ public class SaleRefund extends javax.swing.JInternalFrame {
 
     private void txt_emailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_emailActionPerformed
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_txt_emailActionPerformed
 
     private void txt_last_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_last_nameActionPerformed
@@ -504,12 +491,11 @@ public class SaleRefund extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameActionPerformed
 
     private void txt_first_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_first_nameActionPerformed
-       // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_txt_first_nameActionPerformed
 
     private void txt_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_totalActionPerformed
         // TODO add your handling code here:
-        
     }//GEN-LAST:event_txt_totalActionPerformed
 
     private void txt_first_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_first_nameKeyPressed
@@ -529,7 +515,7 @@ public class SaleRefund extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameKeyReleased
 
     private void txt_totalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_totalKeyPressed
-         // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_txt_totalKeyPressed
 
     private void table_view_productsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_productsMouseClicked
@@ -541,7 +527,7 @@ public class SaleRefund extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameKeyPressed
 
     private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
-        
+
     }//GEN-LAST:event_txt_contactActionPerformed
 
     private void txt_contactKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_contactKeyReleased
@@ -550,8 +536,8 @@ public class SaleRefund extends javax.swing.JInternalFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        SaleRefundReceipt saleRefundReceipt =  new SaleRefundReceipt(sale);
-            saleRefundReceipt.setVisible(true);
+        SaleRefundReceipt saleRefundReceipt = new SaleRefundReceipt(sale);
+        saleRefundReceipt.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btn_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notesActionPerformed

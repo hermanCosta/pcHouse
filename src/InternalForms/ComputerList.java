@@ -31,12 +31,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ComputerList extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form NewOrder
-     */
     ArrayList brands = new ArrayList();
     ArrayList models = new ArrayList();
-    
+
     Connection con;
     PreparedStatement ps;
     ResultSet rs;
@@ -46,125 +43,112 @@ public class ComputerList extends javax.swing.JInternalFrame {
     int computerId, qty;
     double price;
     boolean isTableEmpty = false;
-    
+
     public ComputerList() {
         initComponents();
-        
+
         //Remove borders
-        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
-        
+
         tableSettings(table_view_computers);
         accessDbColumn(brands, "SELECT * FROM computers", "brand");
         accessDbColumn(models, "SELECT * FROM computers", "model");
-        
+
         loadComputerTable();
     }
 
-    public void tableSettings (JTable table)
-    {
+    public void tableSettings(JTable table) {
         table.setRowHeight(25);
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
     }
-    
-    public void dbConnection() 
-    {
+
+    public void dbConnection() {
         try {
-              Class.forName("com.mysql.cj.jdbc.Driver");
-              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
+            
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ComputerList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void loadComputerTable()
-    {
+
+    public void loadComputerTable() {
         ArrayList<Computer> list = new ArrayList<>();
-        
+
         try {
             dbConnection();
-            
+
             String query = "SELECT * FROM computers";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery(query);
-            
-            while (rs.next())
-            {
-                computer = new Computer(rs.getString("brand"), rs.getString("model"), rs.getString("serialNumber"), rs.getString("processor"), 
-                rs.getString("ram"), rs.getString("storage"), rs.getString("gpu"), rs.getString("screen"), rs.getString("notes"), 
+
+            while (rs.next()) {
+                computer = new Computer(rs.getString("brand"), rs.getString("model"), rs.getString("serialNumber"), rs.getString("processor"),
+                        rs.getString("ram"), rs.getString("storage"), rs.getString("gpu"), rs.getString("screen"), rs.getString("notes"),
                         rs.getInt("qty"), rs.getDouble("price"));
                 computer.setComputerId(rs.getInt("computerId"));
-                
+
                 list.add(computer);
             }
         } catch (SQLException ex) {
             Logger.getLogger(ComputerList.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        DefaultTableModel dtm = (DefaultTableModel)table_view_computers.getModel();
+
+        DefaultTableModel dtm = (DefaultTableModel) table_view_computers.getModel();
         dtm.setRowCount(0);
-        
+
         Object[] row = new Object[6];
-        for (int i = 0 ;i < list.size() ; i++)
-        {
-                row[0] = list.get(i).getComputerId();
-                row[1] = list.get(i).getBrand();
-                row[2] = list.get(i).getModel();
-                row[3] = list.get(i).getSerialNumber();
-                row[4] = list.get(i).getQty();
-                row[5] = list.get(i).getPrice();
-                
+        for (int i = 0; i < list.size(); i++) {
+            row[0] = list.get(i).getComputerId();
+            row[1] = list.get(i).getBrand();
+            row[2] = list.get(i).getModel();
+            row[3] = list.get(i).getSerialNumber();
+            row[4] = list.get(i).getQty();
+            row[5] = list.get(i).getPrice();
+
             dtm.addRow(row);
         }
     }
-    
-    public void autoCompleteFromDb(ArrayList list, String text, JTextField field)
-    {
+
+    public void autoCompleteFromDb(ArrayList list, String text, JTextField field) {
         String complete = "";
         int start = text.length();
         int last = text.length();
-        
-        for(int i = 0 ; i < list.size() ; i++)
-        {
-            if(list.get(i).toString().startsWith(text))
-            {
+
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).toString().startsWith(text)) {
                 complete = list.get(i).toString();
                 last = complete.length();
                 break;
             }
         }
-        
-        if(last > start)
-        {
+
+        if (last > start) {
             field.setText(complete);
             field.setCaretPosition(last);
             field.moveCaretPosition(start);
         }
     }
-    
-   
-    
-    public final void accessDbColumn(ArrayList list, String query, String columnName)
-    {
+
+    public final void accessDbColumn(ArrayList list, String query, String columnName) {
         try {
             dbConnection();
-            
+
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
-            
-                while (rs.next())
-                {
-                    list.add(rs.getString(columnName));
-                }
-            
+
+            while (rs.next()) {
+                list.add(rs.getString(columnName));
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(ComputerList.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void getTextFields()
-    {
+
+    public void getTextFields() {
         brand = txt_brand.getText();
         model = txt_model.getText();
         serialNumber = txt_serial_number.getText();
@@ -176,81 +160,63 @@ public class ComputerList extends javax.swing.JInternalFrame {
         notes = editor_pane_notes.getText();
         qty = Integer.parseInt(txt_qty.getText());
         price = Double.parseDouble(txt_price.getText());
-        
+
         computer = new Computer(brand, model, serialNumber, processor, ram, storage, gpu, screen, notes, qty, price);
     }
-    public void cleanFields()
-    {
+
+    public void cleanFields() {
         //Clean all Fields 
-            txt_brand.setText("");
-            txt_model.setText("");
-            txt_serial_number.setText("");
-            txt_processor.setText("");
-            txt_ram.setText("");
-            txt_storage.setText("");
-            txt_gpu.setText("");
-            txt_screen.setText("");
-            editor_pane_notes.setText("");
-            txt_qty.setText("");
-            txt_price.setText("");
-            
-            txt_brand.requestFocus();
+        txt_brand.setText("");
+        txt_model.setText("");
+        txt_serial_number.setText("");
+        txt_processor.setText("");
+        txt_ram.setText("");
+        txt_storage.setText("");
+        txt_gpu.setText("");
+        txt_screen.setText("");
+        editor_pane_notes.setText("");
+        txt_qty.setText("");
+        txt_price.setText("");
+
+        txt_brand.requestFocus();
     }
-    
-    public void saveComputerIntoDb()
-    {
-//            brand = txt_brand.getText();
-//            model = txt_model.getText();
-//            serialNumber = txt_serial_number.getText();
-//            processor = txt_processor.getText();
-//            ram = txt_ram.getText();
-//            storage = txt_storage.getText();
-//            gpu = txt_gpu.getText();
-//            screen = txt_screen.getText();
-//            notes = editor_pane_notes.getText();
-//            qty = Integer.parseInt(txt_qty.getText());
-//            price = Double.parseDouble(txt_price.getText());
-            
-        
-            try {
-                
-                dbConnection();
-                    
-                getTextFields();
-                
-                int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add a Computer " + computer.getBrand() 
-                        + " " + computer.getModel() + " ?", "Add New Computer", JOptionPane.YES_NO_OPTION);
-                if(confirmInsertion == 0)
-                {
-                    String insertQuery = "INSERT INTO computers(brand, model, serialNumber, processor, ram, storage, gpu, screen, "
-                            + " notes, qty, price) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                    
-                    ps = con.prepareStatement(insertQuery);
-                    ps.setString(1, computer.getBrand());
-                    ps.setString(2, computer.getModel());
-                    ps.setString(3, computer.getSerialNumber());
-                    ps.setString(4, computer.getProcessor());
-                    ps.setString(5, computer.getRam());
-                    ps.setString(6, computer.getStorage());
-                    ps.setString(7, computer.getGpu());
-                    ps.setString(8, computer.getScreen());
-                    ps.setString(9, computer.getNotes());
-                    ps.setInt(10, computer.getQty());
-                    ps.setDouble(11, computer.getPrice());
-                    
-                    ps.executeUpdate();
-                    
-                    JOptionPane.showMessageDialog(this, computer.getBrand() + " " + computer.getModel() + " added Successfully");
-                    cleanFields();
-                    loadComputerTable();
-                } 
-            
+
+    public void saveComputerIntoDb() {
+        try {
+
+            dbConnection();
+            getTextFields();
+
+            int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add a Computer " + computer.getBrand()
+                    + " " + computer.getModel() + " ?", "Add New Computer", JOptionPane.YES_NO_OPTION);
+            if (confirmInsertion == 0) {
+                String insertQuery = "INSERT INTO computers(brand, model, serialNumber, processor, ram, storage, gpu, screen, "
+                        + " notes, qty, price) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+                ps = con.prepareStatement(insertQuery);
+                ps.setString(1, computer.getBrand());
+                ps.setString(2, computer.getModel());
+                ps.setString(3, computer.getSerialNumber());
+                ps.setString(4, computer.getProcessor());
+                ps.setString(5, computer.getRam());
+                ps.setString(6, computer.getStorage());
+                ps.setString(7, computer.getGpu());
+                ps.setString(8, computer.getScreen());
+                ps.setString(9, computer.getNotes());
+                ps.setInt(10, computer.getQty());
+                ps.setDouble(11, computer.getPrice());
+                ps.executeUpdate();
+
+                JOptionPane.showMessageDialog(this, computer.getBrand() + " " + computer.getModel() + " added Successfully");
+                cleanFields();
+                loadComputerTable();
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(ComputerList.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -754,7 +720,6 @@ public class ComputerList extends javax.swing.JInternalFrame {
 
     private void txt_processorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_processorActionPerformed
         // TODO add your handling code here:
-        
     }//GEN-LAST:event_txt_processorActionPerformed
 
     private void txt_modelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_modelActionPerformed
@@ -762,52 +727,42 @@ public class ComputerList extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_modelActionPerformed
 
     private void txt_brandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_brandActionPerformed
-       // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_txt_brandActionPerformed
 
     private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
         // TODO add your handling code here:
-       if (txt_brand.getText().trim().isEmpty() || txt_model.getText().trim().isEmpty() || 
-                txt_serial_number.getText().trim().isEmpty() || txt_processor.getText().trim().isEmpty() || 
-               txt_ram.getText().trim().isEmpty() || txt_storage.getText().trim().isEmpty() || txt_gpu.getText().trim().isEmpty() ||  
-               txt_screen.getText().trim().isEmpty() || txt_qty.getText().trim().isEmpty() || txt_price.getText().trim().isEmpty()) 
-
-           JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Computer", JOptionPane.ERROR_MESSAGE);
-
-       else
-        {
+        if (txt_brand.getText().trim().isEmpty() || txt_model.getText().trim().isEmpty()
+                || txt_serial_number.getText().trim().isEmpty() || txt_processor.getText().trim().isEmpty()
+                || txt_ram.getText().trim().isEmpty() || txt_storage.getText().trim().isEmpty() || txt_gpu.getText().trim().isEmpty()
+                || txt_screen.getText().trim().isEmpty() || txt_qty.getText().trim().isEmpty() || txt_price.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Computer", JOptionPane.ERROR_MESSAGE);
             
-            if (isTableEmpty)
-            {
-                
-                    
-            //add a new computer if not exists AND fields are not empty
+        } else {
+
+            if (isTableEmpty) {
+
+                //add a new computer if not exists AND fields are not empty
                 if (computer.getBrand().equals(brand) && computer.getModel().equals(model) && computer.getSerialNumber().equals(serialNumber))
-                       JOptionPane.showMessageDialog(this, "Computer already exist with Serial Number " + computer.getSerialNumber() + " into Database", "New Comoputer", JOptionPane.ERROR_MESSAGE);
-
-               else
-               {
-                   saveComputerIntoDb();
-               } 
-            }
-            
-            else
-                saveComputerIntoDb();
+                    JOptionPane.showMessageDialog(this, "Computer already exist with Serial Number " + computer.getSerialNumber() + " into Database", "New Comoputer", JOptionPane.ERROR_MESSAGE);
+                else
+                    saveComputerIntoDb();
                 
+            } else {
+                saveComputerIntoDb();
+            }
         }
     }//GEN-LAST:event_btn_addActionPerformed
 
     private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
-        
-        if (txt_brand.getText().trim().isEmpty() || txt_model.getText().trim().isEmpty() || 
-                txt_serial_number.getText().trim().isEmpty() || txt_processor.getText().trim().isEmpty() || 
-               txt_ram.getText().trim().isEmpty() || txt_storage.getText().trim().isEmpty() || txt_gpu.getText().trim().isEmpty() ||  
-               txt_screen.getText().trim().isEmpty() || txt_qty.getText().trim().isEmpty() || txt_price.getText().trim().isEmpty()) 
-        {
+
+        if (txt_brand.getText().trim().isEmpty() || txt_model.getText().trim().isEmpty()
+                || txt_serial_number.getText().trim().isEmpty() || txt_processor.getText().trim().isEmpty()
+                || txt_ram.getText().trim().isEmpty() || txt_storage.getText().trim().isEmpty() || txt_gpu.getText().trim().isEmpty()
+                || txt_screen.getText().trim().isEmpty() || txt_qty.getText().trim().isEmpty() || txt_price.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Computer", JOptionPane.ERROR_MESSAGE);
-        }
-        else
-        {
+            
+        } else {
             brand = txt_brand.getText();
             model = txt_model.getText();
             serialNumber = txt_serial_number.getText();
@@ -819,55 +774,49 @@ public class ComputerList extends javax.swing.JInternalFrame {
             notes = editor_pane_notes.getText();
             qty = Integer.parseInt(txt_qty.getText());
             price = Double.parseDouble(txt_price.getText());
-      
+
             try {
-                
-                dbConnection(); 
 
-                       if( computer.getBrand().equals(brand) && computer.getModel().equals(model) && computer.getSerialNumber().equals(serialNumber) 
-                              && computer.getProcessor().equals(processor)  && computer.getRam().equals(ram) && computer.getStorage().equals(storage)
-                              && computer.getGpu().equals(gpu) && computer.getScreen().equals(screen) && computer.getNotes().equals(notes)
-                              && computer.getQty() == qty && computer.getPrice() == price) 
-                       {
-                           JOptionPane.showMessageDialog(null, "No changes to be updated !", "Update Computer", JOptionPane.ERROR_MESSAGE);
-                       }
-                       else 
-                        {
-                            int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Updating '" + brand + " " + model + "' ?", 
-                                    "Update Computer", JOptionPane.YES_NO_OPTION);
-                            
-                            if(confirmEditing == 0)
-                            {
-                                String query = "UPDATE computers SET brand = ?, model = ?, serialNumber = ?, processor = ?, ram = ?, "
-                                        + "storage = ?, gpu = ?, screen = ?, notes = ?, qty = ?, price = ? WHERE computerId = ?";
-                                ps = con.prepareStatement(query);
-                                ps.setString(1, brand);
-                                ps.setString(2, model);
-                                ps.setString(3, serialNumber);
-                                ps.setString(4, processor);
-                                ps.setString(5, ram);
-                                ps.setString(6, storage);
-                                ps.setString(7, gpu);
-                                ps.setString(8, screen);
-                                ps.setString(9, notes);
-                                ps.setInt(10, qty);
-                                ps.setDouble(11, price);
-                                ps.setInt(12, computer.getComputerId());
-                                
-                                ps.executeUpdate();
+                dbConnection();
 
-                                loadComputerTable();
-                                cleanFields();
-                            }
-                            else
-                            {
-                                loadComputerTable();
-                                cleanFields();
-                            }
+                if (computer.getBrand().equals(brand) && computer.getModel().equals(model) && computer.getSerialNumber().equals(serialNumber)
+                        && computer.getProcessor().equals(processor) && computer.getRam().equals(ram) && computer.getStorage().equals(storage)
+                        && computer.getGpu().equals(gpu) && computer.getScreen().equals(screen) && computer.getNotes().equals(notes)
+                        && computer.getQty() == qty && computer.getPrice() == price) {
+                    JOptionPane.showMessageDialog(null, "No changes to be updated !", "Update Computer", JOptionPane.ERROR_MESSAGE);
+                    
+                } else {
+                    int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Updating '" + brand + " " + model + "' ?",
+                            "Update Computer", JOptionPane.YES_NO_OPTION);
+
+                    if (confirmEditing == 0) {
+                        String query = "UPDATE computers SET brand = ?, model = ?, serialNumber = ?, processor = ?, ram = ?, "
+                                + "storage = ?, gpu = ?, screen = ?, notes = ?, qty = ?, price = ? WHERE computerId = ?";
+                        ps = con.prepareStatement(query);
+                        ps.setString(1, brand);
+                        ps.setString(2, model);
+                        ps.setString(3, serialNumber);
+                        ps.setString(4, processor);
+                        ps.setString(5, ram);
+                        ps.setString(6, storage);
+                        ps.setString(7, gpu);
+                        ps.setString(8, screen);
+                        ps.setString(9, notes);
+                        ps.setInt(10, qty);
+                        ps.setDouble(11, price);
+                        ps.setInt(12, computer.getComputerId());
+                        ps.executeUpdate();
+
+                        loadComputerTable();
+                        cleanFields();
+                    } else {
+                        loadComputerTable();
+                        cleanFields();
                     }
+                }
 
             } catch (SQLException ex) {
-                    Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_btn_updateActionPerformed
@@ -875,11 +824,10 @@ public class ComputerList extends javax.swing.JInternalFrame {
     private void txt_brandKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_brandKeyPressed
         // TODO add your handling code here:
         //Sugest autoComplete firstNames from Database
-        switch(evt.getKeyCode())
-        {
+        switch (evt.getKeyCode()) {
             case KeyEvent.VK_BACKSPACE:
                 break;
-            
+
             case KeyEvent.VK_ENTER:
                 txt_brand.setText(txt_brand.getText());
                 break;
@@ -887,7 +835,7 @@ public class ComputerList extends javax.swing.JInternalFrame {
                 EventQueue.invokeLater(() -> {
                     String text = txt_brand.getText();
                     autoCompleteFromDb(brands, text, txt_brand);
-            });
+                });
         }
     }//GEN-LAST:event_txt_brandKeyPressed
 
@@ -906,51 +854,49 @@ public class ComputerList extends javax.swing.JInternalFrame {
     private void txt_modelKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_modelKeyPressed
         // TODO add your handling code here:
         //Sugest autoComplete firstNames from Database
-        switch(evt.getKeyCode())
-        {
+        switch (evt.getKeyCode()) {
             case KeyEvent.VK_BACKSPACE:
-            break;
+                break;
 
             case KeyEvent.VK_ENTER:
-            txt_model.setText(txt_model.getText());
-            break;
+                txt_model.setText(txt_model.getText());
+                break;
             default:
-            EventQueue.invokeLater(() -> {
-                String text = txt_model.getText();
-                autoCompleteFromDb(models, text, txt_model);
-            });
+                EventQueue.invokeLater(() -> {
+                    String text = txt_model.getText();
+                    autoCompleteFromDb(models, text, txt_model);
+                });
         }
     }//GEN-LAST:event_txt_modelKeyPressed
 
     private void table_view_computersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_computersMouseClicked
         // TODO add your handling code here:
-        if (evt.getClickCount() == 2)
-        {
+        if (evt.getClickCount() == 2) {
+            
             try {
                 dbConnection();
-                DefaultTableModel dtm = (DefaultTableModel) table_view_computers.getModel();
                 
-                if (dtm.getRowCount() == 0)
-                {
+                DefaultTableModel dtm = (DefaultTableModel) table_view_computers.getModel();
+
+                if (dtm.getRowCount() == 0) {
                     isTableEmpty = true;
                 }
                 int row = table_view_computers.getSelectedRow();
-                
+
                 int id = (int) dtm.getValueAt(row, 0);
                 String query = "SELECT * FROM computers WHERE computerId = ?";
                 ps = con.prepareStatement(query);
                 ps.setInt(1, id);
                 rs = ps.executeQuery();
-                
-                while (rs.next())
-                {
-                    computer = new Computer(rs.getString("brand"), rs.getString("model"), rs.getString("serialNumber"), 
-                            rs.getString("processor"), rs.getString("ram"), rs.getString("storage"), rs.getString("gpu"), 
+
+                while (rs.next()) {
+                    computer = new Computer(rs.getString("brand"), rs.getString("model"), rs.getString("serialNumber"),
+                            rs.getString("processor"), rs.getString("ram"), rs.getString("storage"), rs.getString("gpu"),
                             rs.getString("screen"), rs.getString("notes"), rs.getInt("qty"), rs.getDouble("price"));
-                    
+
                     computer.setComputerId(id);
                 }
-                
+
                 txt_brand.setText(computer.getBrand());
                 txt_model.setText(computer.getModel());
                 txt_serial_number.setText(computer.getSerialNumber());
@@ -962,54 +908,48 @@ public class ComputerList extends javax.swing.JInternalFrame {
                 editor_pane_notes.setText(computer.getNotes());
                 txt_qty.setText(String.valueOf(computer.getQty()));
                 txt_price.setText(String.valueOf(computer.getPrice()));
-                
-                    } catch (SQLException ex) {
-                        Logger.getLogger(ComputerList.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-            
+
+            } catch (SQLException ex) {
+                Logger.getLogger(ComputerList.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
     }//GEN-LAST:event_table_view_computersMouseClicked
 
     private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
         // TODO add your handling code here:
-         if (txt_brand.getText().trim().isEmpty() || txt_model.getText().trim().isEmpty() || 
-                txt_serial_number.getText().trim().isEmpty() || txt_processor.getText().trim().isEmpty() || 
-               txt_ram.getText().trim().isEmpty() || txt_storage.getText().trim().isEmpty() || txt_gpu.getText().trim().isEmpty() ||  
-               txt_screen.getText().trim().isEmpty() || txt_qty.getText().trim().isEmpty() || txt_price.getText().trim().isEmpty()) 
-        {
+        if (txt_brand.getText().trim().isEmpty() || txt_model.getText().trim().isEmpty()
+                || txt_serial_number.getText().trim().isEmpty() || txt_processor.getText().trim().isEmpty()
+                || txt_ram.getText().trim().isEmpty() || txt_storage.getText().trim().isEmpty() || txt_gpu.getText().trim().isEmpty()
+                || txt_screen.getText().trim().isEmpty() || txt_qty.getText().trim().isEmpty() || txt_price.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Computer", JOptionPane.ERROR_MESSAGE);
-        }
-         
-        else
-        {
+            
+        } else {
+            
             try {
-                
-                dbConnection(); 
+                dbConnection();
 
-                            int confirmEditing = JOptionPane.showConfirmDialog(this, "Confirm Deletion on '" + computer.getBrand() 
-                                    + " " + computer.getModel() + "' ?", "Delete Computer", JOptionPane.YES_NO_OPTION);
-                            
-                            if(confirmEditing == 0)
-                            {
-                                String query = "DELETE FROM computers WHERE computerId = ?";
-                                ps = con.prepareStatement(query);
-                                ps.setInt(1, computer.getComputerId());
-                                ps.executeUpdate();
+                int confirmEditing = JOptionPane.showConfirmDialog(this, "Confirm Deletion on '" + computer.getBrand()
+                        + " " + computer.getModel() + "' ?", "Delete Computer", JOptionPane.YES_NO_OPTION);
 
-                                loadComputerTable();
-                                cleanFields();
-                            }
-                            else
-                            {
-                                loadComputerTable();
-                                cleanFields();
-                            }
+                if (confirmEditing == 0) {
+                    String query = "DELETE FROM computers WHERE computerId = ?";
+                    ps = con.prepareStatement(query);
+                    ps.setInt(1, computer.getComputerId());
+                    ps.executeUpdate();
+
+                    loadComputerTable();
+                    cleanFields();
+                    
+                } else {
+                    loadComputerTable();
+                    cleanFields();
+                }
 
             } catch (SQLException ex) {
-                    Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
     }//GEN-LAST:event_btn_deleteActionPerformed
 
     private void btn_clear_fieldsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clear_fieldsActionPerformed
@@ -1071,16 +1011,10 @@ public class ComputerList extends javax.swing.JInternalFrame {
 
     private void txt_qtyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_qtyKeyPressed
         // TODO add your handling code here:
-        char c = evt.getKeyChar();
-        
-        if (Character.isLetter(c)) {
-            
+        if (Character.isLetter(evt.getKeyChar()))
             txt_price.setEditable(false);
-        }
         else
-        {
             txt_price.setEditable(true);
-        }       
     }//GEN-LAST:event_txt_qtyKeyPressed
 
     private void txt_qtyKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_qtyKeyReleased
@@ -1089,21 +1023,14 @@ public class ComputerList extends javax.swing.JInternalFrame {
 
     private void txt_priceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_priceActionPerformed
         // TODO add your handling code here:
-        
     }//GEN-LAST:event_txt_priceActionPerformed
 
     private void txt_priceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_priceKeyPressed
         // TODO add your handling code here:
-        char c = evt.getKeyChar();
-        
-        if (Character.isLetter(c)) {
-            
+        if (Character.isLetter(evt.getKeyChar()))
             txt_price.setEditable(false);
-        }
         else
-        {
             txt_price.setEditable(true);
-        }       
     }//GEN-LAST:event_txt_priceKeyPressed
 
     private void txt_priceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_priceKeyReleased
@@ -1120,22 +1047,19 @@ public class ComputerList extends javax.swing.JInternalFrame {
 
     private void txt_serial_numberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_serial_numberKeyReleased
         // TODO add your handling code here:
-       txt_serial_number.setText(txt_serial_number.getText().toUpperCase());
+        txt_serial_number.setText(txt_serial_number.getText().toUpperCase());
     }//GEN-LAST:event_txt_serial_numberKeyReleased
 
     private void btn_clear_fields1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clear_fields1ActionPerformed
         // TODO add your handling code here:
-         if (txt_brand.getText().trim().isEmpty() || txt_model.getText().trim().isEmpty() || 
-                txt_serial_number.getText().trim().isEmpty() || txt_processor.getText().trim().isEmpty() || 
-               txt_ram.getText().trim().isEmpty() || txt_storage.getText().trim().isEmpty() || txt_gpu.getText().trim().isEmpty() ||  
-               txt_screen.getText().trim().isEmpty() || txt_qty.getText().trim().isEmpty() || txt_price.getText().trim().isEmpty()) 
-
-           JOptionPane.showMessageDialog(this, "Please, check Empty fields", "Print Label", JOptionPane.ERROR_MESSAGE);
-         
-       else
-        {
+        if (txt_brand.getText().trim().isEmpty() || txt_model.getText().trim().isEmpty()
+                || txt_serial_number.getText().trim().isEmpty() || txt_processor.getText().trim().isEmpty()
+                || txt_ram.getText().trim().isEmpty() || txt_storage.getText().trim().isEmpty() || txt_gpu.getText().trim().isEmpty()
+                || txt_screen.getText().trim().isEmpty() || txt_qty.getText().trim().isEmpty() || txt_price.getText().trim().isEmpty())
+            JOptionPane.showMessageDialog(this, "Please, check Empty fields", "Print Label", JOptionPane.ERROR_MESSAGE);
+            
+        else
             new PrintComputerLabel(computer).setVisible(true);
-        }
     }//GEN-LAST:event_btn_clear_fields1ActionPerformed
 
     private void txt_search_computerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_search_computerActionPerformed
@@ -1151,30 +1075,30 @@ public class ComputerList extends javax.swing.JInternalFrame {
             dbConnection();
 
             String query = "SELECT * FROM computers WHERE brand LIKE '%" + searchComp + "%'"
-            + "OR model LIKE '%" + searchComp + "%' OR serialNumber LIKE '%" + searchComp + "%'"
-            + " OR price LIKE '%" + searchComp + "%'";
+                    + "OR model LIKE '%" + searchComp + "%' OR serialNumber LIKE '%" + searchComp + "%'"
+                    + " OR price LIKE '%" + searchComp + "%'";
+            
             ps = con.prepareStatement(query);
             rs = ps.executeQuery(query);
 
-            while (rs.next())
-            {
-                computer = new Computer(rs.getString("brand"), rs.getString("model"), rs.getString("serialNumber"), 
-                            rs.getString("processor"), rs.getString("ram"), rs.getString("storage"), rs.getString("gpu"), 
-                            rs.getString("screen"), rs.getString("notes"), rs.getInt("qty"), rs.getDouble("price"));
-                
+            while (rs.next()) {
+                computer = new Computer(rs.getString("brand"), rs.getString("model"), rs.getString("serialNumber"),
+                        rs.getString("processor"), rs.getString("ram"), rs.getString("storage"), rs.getString("gpu"),
+                        rs.getString("screen"), rs.getString("notes"), rs.getInt("qty"), rs.getDouble("price"));
+
                 computer.setComputerId(rs.getInt("computerId"));
                 compList.add(computer);
             }
+            
         } catch (SQLException ex) {
             Logger.getLogger(Computer.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        DefaultTableModel dtm = (DefaultTableModel)table_view_computers.getModel();
+        DefaultTableModel dtm = (DefaultTableModel) table_view_computers.getModel();
         dtm.setRowCount(0);
 
         Object[] row = new Object[6];
-        for (int i = 0 ;i < compList.size() ; i++)
-        {
+        for (int i = 0; i < compList.size(); i++) {
             row[0] = compList.get(i).getComputerId();
             row[1] = compList.get(i).getBrand();
             row[2] = compList.get(i).getModel();

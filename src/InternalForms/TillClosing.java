@@ -42,13 +42,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class TillClosing extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form OrdersMenu
-     */
-    
     Color defaultColor, mouseEnteredColor;
     PreparedStatement ps;
-    Statement st;
     Connection con;
     ResultSet rs;
     OrderReport ordersReport;
@@ -56,200 +51,182 @@ public class TillClosing extends javax.swing.JInternalFrame {
     Order order;
     CompletedOrder completedOrder;
     Sale sale;
-    
+
     ArrayList<Double> refundList = new ArrayList<>();
     double refundTotal;
     //Date pickedDate; //= date_picker.getDate();
     //String tillClosingDate; // = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
-    
+
     public TillClosing() {
         initComponents();
-        
-        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
+
+        this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
-        
-        defaultColor = new Color(21,76,121);
-        mouseEnteredColor = new Color(118,181,197);
-        
+
+        defaultColor = new Color(21, 76, 121);
+        mouseEnteredColor = new Color(118, 181, 197);
+
         scroll_pane_table_orders.setOpaque(false);
         scroll_pane_table_orders.getViewport().setOpaque(false);
-        
+
         scroll_pane_table_sales.setOpaque(false);
         scroll_pane_table_sales.getViewport().setOpaque(false);
-        
+
         loadOrdersReportOfTheDay();
-        
     }
-    
-     public void dbConnection() 
-    {
+
+    public void dbConnection() {
         try {
-              Class.forName("com.mysql.cj.jdbc.Driver");
-              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
-              st = con.createStatement();
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-     
-     public ArrayList<SaleReport> loadSalesList()
-     {
+
+    public ArrayList<SaleReport> loadSalesList() {
         ArrayList<SaleReport> salesList = new ArrayList<>();
-         
-         try {
+
+        try {
             // TODO add your handling code here:
             dbConnection();
             Date date = date_picker.getDate();
             String selectedDate = new SimpleDateFormat("dd/MM/yyyy").format(date);
-            
+
             String querySale = "SELECT * FROM sales WHERE saleDate = ?";
             ps = con.prepareStatement(querySale);
             ps.setString(1, selectedDate);
             rs = ps.executeQuery();
-            
-            while (rs.next())
-            {
+
+            while (rs.next()) {
                 // Before adding to the list take the changeTotal deducted from cash
-//                double cash = rs.getDouble("cash") - rs.getDouble("changeTotal");
                 salesReport = new SaleReport(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
                         rs.getString("productService"), rs.getDouble("total"), rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"));
-                
+
                 salesList.add(salesReport);
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(TillClosing.class.getName()).log(Level.SEVERE, null, ex);
         }
-         return salesList;
-     }
-    
-     public ArrayList<CompletedOrder> loadOrdersList()
-     {
+        return salesList;
+    }
+
+    public ArrayList<CompletedOrder> loadOrdersList() {
         ArrayList<CompletedOrder> ordersList = new ArrayList<>();
-         
+
         try {
             dbConnection();
             Date date = date_picker.getDate();
             String selectedDate = new SimpleDateFormat("dd/MM/yyyy").format(date);
-            
+
             String queryOrders = "SELECT * FROM completedOrders WHERE payDate = ?";
             ps = con.prepareStatement(queryOrders);
             ps.setString(1, selectedDate);
             rs = ps.executeQuery();
-            
-                while (rs.next())
-                {
-                    completedOrder = new CompletedOrder(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), 
-                            "","", rs.getString("brand"), rs.getString("model"), 
-                            "", rs.getDouble("total"), rs.getDouble("deposit"),rs.getDouble("due"), 
-                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getDouble("cashDeposit"), 
-                            rs.getDouble("cardDeposit"), rs.getString("payDate"), rs.getString("status"));
 
-                   ordersList.add(completedOrder);
-                   
-                }
-            
+            while (rs.next()) {
+                completedOrder = new CompletedOrder(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"),
+                        "", "", rs.getString("brand"), rs.getString("model"),
+                        "", rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("due"),
+                        rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getDouble("cashDeposit"),
+                        rs.getDouble("cardDeposit"), rs.getString("payDate"), rs.getString("status"));
+
+                ordersList.add(completedOrder);
+
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(TillClosing.class.getName()).log(Level.SEVERE, null, ex);
         }
         return ordersList;
-     }
-     
-     public void loadOrdersReportOfTheDay()
-      {
+    }
+
+    public void loadOrdersReportOfTheDay() {
         panel_orders.setVisible(true);
         panel_sales.setVisible(false);
-        
+
         // Get Current date for checking cash entries
         Date pickedDate = pickedDate = date_picker.getDate();
         String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
-        
+
         //Lists for holding list from the constructor
         ArrayList<CompletedOrder> listOrders = loadOrdersList();
         // This Lists hold all values paid by cash and card
         ArrayList<Double> cashList = new ArrayList<>();
         ArrayList<Double> cardList = new ArrayList<>();
         //ArrayList<Double> refundList = new ArrayList<>();
-        
+
         refundList.clear();
 
         //This Lists hold total due of all orders
         ArrayList<Double> orderDueColumn = new ArrayList<>();
 
         // Table models
-        DefaultTableModel ordersModel= (DefaultTableModel) table_view_orders.getModel();
+        DefaultTableModel ordersModel = (DefaultTableModel) table_view_orders.getModel();
         ordersModel.setRowCount(0);
-            
-            // this object holds each range of elements for setting into the table
-            Object[] rowOrders = new Object[5];
-            for (int i = 0; i < listOrders.size() ; i++)
-            {
-                rowOrders[0] = listOrders.get(i).getOrderNo();
-                rowOrders[1] = listOrders.get(i).getFirstName() + " " + listOrders.get(i).getLastName();
-                rowOrders[2] = listOrders.get(i).getBrand() + " | " + listOrders.get(i).getModel();
-            
 
-             if (listOrders.get(i).getTotal() == 0)
-                 orderDueColumn.add(listOrders.get(i).getDeposit());
+        // this object holds each range of elements for setting into the table
+        Object[] rowOrders = new Object[5];
+        for (int i = 0; i < listOrders.size(); i++) {
+            rowOrders[0] = listOrders.get(i).getOrderNo();
+            rowOrders[1] = listOrders.get(i).getFirstName() + " " + listOrders.get(i).getLastName();
+            rowOrders[2] = listOrders.get(i).getBrand() + " | " + listOrders.get(i).getModel();
+
+            if (listOrders.get(i).getTotal() == 0) {
+                orderDueColumn.add(listOrders.get(i).getDeposit());
+            }
             // check if there's negative values, pass due + deposit if true, else, pass as normal to the list
             // set deposit row = 0, and dont get changeTotal for calculation
-            if (listOrders.get(i).getTotal() < 0)
-            {
+            if (listOrders.get(i).getTotal() < 0) {
                 rowOrders[3] = 0.0;
                 rowOrders[4] = listOrders.get(i).getTotal();
                 orderDueColumn.add(listOrders.get(i).getTotal());
-                
+
                 cashList.add(listOrders.get(i).getCash() + listOrders.get(i).getCashDeposit() + listOrders.get(i).getChangeTotal());
                 cardList.add(listOrders.get(i).getCard() + listOrders.get(i).getCardDeposit());
                 refundList.add(listOrders.get(i).getTotal());
-            }
-            else
-            {
+            } else {
                 rowOrders[3] = listOrders.get(i).getDeposit();
                 rowOrders[4] = listOrders.get(i).getDue();
-                
-                orderDueColumn.add(listOrders.get(i).getDue()); 
+
+                orderDueColumn.add(listOrders.get(i).getDue());
                 cardList.add(listOrders.get(i).getCard());
                 cashList.add(listOrders.get(i).getCash() - listOrders.get(i).getChangeTotal());
             }
-            
-                ordersModel.addRow(rowOrders);
+
+            ordersModel.addRow(rowOrders);
         }
+        
+        //Loop the List and sum Cash payments
+        double cashTotal = 0;
+        for (double d : cashList)
+            cashTotal += d;
 
-            //Loop the List and sum Cash payments
-            double cashTotal = 0;
-            for (double d : cashList)
-                cashTotal += d;
-            
-            double cardTotal = 0;
-            for (double d : cardList)
-                cardTotal += d;
+        double cardTotal = 0;
+        for (double d : cardList)
+            cardTotal += d;
 
-            double ordersTotal = 0;
-            for (double d : orderDueColumn)
-                ordersTotal += d;
-            
-            double refundTotal = 0;
-            for (double d : refundList)
-                refundTotal += d;
+        double ordersTotal = 0;
+        for (double d : orderDueColumn)
+            ordersTotal += d;
 
-            //Gross total (cash&card    
-            double grossTotal = ordersTotal;
+        double refundTotal = 0;
+        for (double d : refundList)
+            refundTotal += d;
 
-            lbl_till_closing_date.setText("Orders Report - " + tillClosingDate);
-            lbl_print_gross_total.setText("Gross Orders Total ............. €" + String.valueOf(grossTotal));
-            lbl_print_total_cash.setText("Cash Total ......................... €" + String.valueOf(cashTotal));
-            lbl_print_total_card.setText("Card Total ......................... €" + String.valueOf(cardTotal));
-            lbl_print_refunds.setText("Refunds ............................ €" + String.valueOf(refundTotal));
-            
+        //Gross total (cash&card    
+        double grossTotal = ordersTotal;
+
+        lbl_till_closing_date.setText("Orders Report - " + tillClosingDate);
+        lbl_print_gross_total.setText("Gross Orders Total ............. €" + String.valueOf(grossTotal));
+        lbl_print_total_cash.setText("Cash Total ......................... €" + String.valueOf(cashTotal));
+        lbl_print_total_card.setText("Card Total ......................... €" + String.valueOf(cardTotal));
+        lbl_print_refunds.setText("Refunds ............................ €" + String.valueOf(refundTotal));
+
     }
-     
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -262,7 +239,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
         btn_sales = new javax.swing.JButton();
         panel_print_view = new javax.swing.JPanel();
         lbl_order_print_view = new javax.swing.JLabel();
-        btn_print = new javax.swing.JButton();
         scroll_pane_orders_sales = new javax.swing.JScrollPane();
         panel_print_order = new javax.swing.JPanel();
         panel_header = new javax.swing.JPanel();
@@ -284,6 +260,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         lbl_till_closing_date = new javax.swing.JLabel();
         lbl_print_refunds = new javax.swing.JLabel();
         date_picker = new com.toedter.calendar.JCalendar();
+        btn_print = new javax.swing.JButton();
 
         setBorder(null);
         setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
@@ -330,34 +307,21 @@ public class TillClosing extends javax.swing.JInternalFrame {
         lbl_order_print_view.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         lbl_order_print_view.setText("Till Closing Print View");
 
-        btn_print.setBackground(new java.awt.Color(21, 76, 121));
-        btn_print.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
-        btn_print.setForeground(new java.awt.Color(255, 255, 255));
-        btn_print.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_print.png"))); // NOI18N
-        btn_print.setText("Print");
-        btn_print.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_printActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout panel_print_viewLayout = new javax.swing.GroupLayout(panel_print_view);
         panel_print_view.setLayout(panel_print_viewLayout);
         panel_print_viewLayout.setHorizontalGroup(
             panel_print_viewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_print_viewLayout.createSequentialGroup()
-                .addContainerGap(89, Short.MAX_VALUE)
+                .addGap(319, 319, 319)
                 .addComponent(lbl_order_print_view)
-                .addGap(115, 115, 115)
-                .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(320, Short.MAX_VALUE))
         );
         panel_print_viewLayout.setVerticalGroup(
             panel_print_viewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_print_viewLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(panel_print_viewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_order_print_view, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap()
+                .addComponent(lbl_order_print_view, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                .addGap(8, 8, 8))
         );
 
         scroll_pane_orders_sales.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -599,51 +563,67 @@ public class TillClosing extends javax.swing.JInternalFrame {
             }
         });
 
+        btn_print.setBackground(new java.awt.Color(21, 76, 121));
+        btn_print.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        btn_print.setForeground(new java.awt.Color(255, 255, 255));
+        btn_print.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_print.png"))); // NOI18N
+        btn_print.setText("Print");
+        btn_print.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_printActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_till_closingLayout = new javax.swing.GroupLayout(panel_till_closing);
         panel_till_closing.setLayout(panel_till_closingLayout);
         panel_till_closingLayout.setHorizontalGroup(
             panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_till_closingLayout.createSequentialGroup()
-                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap()
+                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panel_till_closingLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(date_picker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(panel_calendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(26, 26, 26))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_till_closingLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_till_closingLayout.createSequentialGroup()
                                 .addComponent(btn_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btn_full_report, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)))
-                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panel_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                        .addGap(30, 30, 30)
+                        .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panel_till_closingLayout.createSequentialGroup()
+                        .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(panel_till_closingLayout.createSequentialGroup()
+                                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(date_picker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(panel_calendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(452, 452, 452))
+                            .addGroup(panel_till_closingLayout.createSequentialGroup()
+                                .addComponent(panel_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         panel_till_closingLayout.setVerticalGroup(
             panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_till_closingLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_till_closingLayout.createSequentialGroup()
-                        .addComponent(panel_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panel_till_closingLayout.createSequentialGroup()
                         .addComponent(panel_calendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(70, 70, 70)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(panel_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25)
+                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_till_closingLayout.createSequentialGroup()
                         .addComponent(date_picker, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(31, 31, 31)
                         .addComponent(btn_full_report, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btn_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(6, 6, 6))
         );
 
@@ -690,86 +670,73 @@ public class TillClosing extends javax.swing.JInternalFrame {
         // get date from calendar
         Date pickedDate = pickedDate = date_picker.getDate();
         String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
-        
+
         // Get Current date for checking cash entries
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
-        
-        if (loadOrdersList().isEmpty() || pickedDate.after(currentDate))
-        {
-            JOptionPane.showMessageDialog(this, "No Order Entries on " + tillClosingDate + " !" , "Till Closing", JOptionPane.ERROR_MESSAGE);
+
+        if (loadOrdersList().isEmpty() || pickedDate.after(currentDate)) {
+            JOptionPane.showMessageDialog(this, "No Order Entries on " + tillClosingDate + " !", "Till Closing", JOptionPane.ERROR_MESSAGE);
             loadOrdersReportOfTheDay();
-        }
-        else
-        {
-           loadOrdersReportOfTheDay();
+        } else {
+            loadOrdersReportOfTheDay();
         }
     }//GEN-LAST:event_btn_ordersActionPerformed
 
     private void btn_full_reportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_full_reportActionPerformed
         Date pickedDate = pickedDate = date_picker.getDate();
         String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
-        
+
         ArrayList<SaleReport> listSales = loadSalesList();
         ArrayList<CompletedOrder> listOrders = loadOrdersList();
-        
-        
+
         Date dateFullReport = new Date();
         Timestamp currentDateFull = new Timestamp(dateFullReport.getTime());
-        
-        
-        if (pickedDate.after(currentDateFull) || listSales.isEmpty() && listOrders.isEmpty())
-            JOptionPane.showMessageDialog(this, "No Entries on " + tillClosingDate + " !" , "Till Closing", JOptionPane.ERROR_MESSAGE);
-        else
-        {
+
+        if (pickedDate.after(currentDateFull) || listSales.isEmpty() && listOrders.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No Entries on " + tillClosingDate + " !", "Till Closing", JOptionPane.ERROR_MESSAGE);
+        } else {
             PrintFullReport printFullReport = new PrintFullReport(tillClosingDate, listSales, listOrders);
             printFullReport.setVisible(true);
-        }           
+        }
     }//GEN-LAST:event_btn_full_reportActionPerformed
 
     private void btn_salesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_salesActionPerformed
         // Gett date from calendar
         Date pickedDate = pickedDate = date_picker.getDate();
         String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
-        
+
         // Get Current date for checking cash entries
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
-        
+
         panel_sales.setVisible(true);
         panel_orders.setVisible(false);
-        
+
         //Lists for holding list from the constructor
         ArrayList<SaleReport> listSales = loadSalesList();
-        
-        if (listSales.isEmpty() || pickedDate.after(currentDate))
-            
-        {
-            JOptionPane.showMessageDialog(this, "No Sales Entries on " + tillClosingDate + " !" , "Till Closing", JOptionPane.ERROR_MESSAGE);
+
+        if (listSales.isEmpty() || pickedDate.after(currentDate)) {
+            JOptionPane.showMessageDialog(this, "No Sales Entries on " + tillClosingDate + " !", "Till Closing", JOptionPane.ERROR_MESSAGE);
             lbl_till_closing_date.setText("Sales Report - " + tillClosingDate);
-        }
-            
-        else
-        {
+        } else {
             // This Lists hold all values paid by cash and card
             ArrayList<Double> cashList = new ArrayList<>();
             ArrayList<Double> cardList = new ArrayList<>();
-            
 
             //This Lists hold total due of all orders
             ArrayList<Double> salesTotalColumn = new ArrayList<>();
 
             // Table models
-            DefaultTableModel ordersModel= (DefaultTableModel) table_view_orders.getModel();
+            DefaultTableModel ordersModel = (DefaultTableModel) table_view_orders.getModel();
             ordersModel.setRowCount(0);
-            DefaultTableModel salesModel= (DefaultTableModel) table_view_sales.getModel();
+            DefaultTableModel salesModel = (DefaultTableModel) table_view_sales.getModel();
             salesModel.setRowCount(0);
 
             refundList.clear();
 
             Object[] rowSales = new Object[4];
-            for (int i = 0 ; i < listSales.size(); i++)
-            {
+            for (int i = 0; i < listSales.size(); i++) {
                 rowSales[0] = listSales.get(i).getSaleNo();
                 rowSales[1] = listSales.get(i).getFirstName() + " " + listSales.get(i).getLastName();
                 rowSales[2] = listSales.get(i).getProductsService();
@@ -777,15 +744,13 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 salesModel.addRow(rowSales);
                 salesTotalColumn.add(listSales.get(i).getTotal());
                 cardList.add(listSales.get(i).getCard());
-                
-                if (listSales.get(i).getTotal() < 0)
-                {
+
+                if (listSales.get(i).getTotal() < 0) {
                     cashList.add(listSales.get(i).getCash() + listSales.get(i).getChangeTotal());
                     refundList.add(listSales.get(i).getTotal());
-                }
-                    
-                else
+                } else {
                     cashList.add(listSales.get(i).getCash() - listSales.get(i).getChangeTotal());
+                }
             }
 
             //Loop the List and sum Cash payments
@@ -800,11 +765,11 @@ public class TillClosing extends javax.swing.JInternalFrame {
             double salesTotal = 0;
             for (double d : salesTotalColumn)
                 salesTotal += d;
-            
+
             double refundTotal = 0;
             for (double d : refundList)
                 refundTotal += d;
-            
+
             //Gross total (cash&card    
             double grossTotal = salesTotal;
 
@@ -813,7 +778,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
             lbl_print_total_cash.setText("Cash Total ........................ €" + String.valueOf(cashTotal));
             lbl_print_total_card.setText("Card Total ........................ €" + String.valueOf(cardTotal));
             lbl_print_refunds.setText("Refunds ........................... €" + String.valueOf(refundTotal));
-            
         }
     }//GEN-LAST:event_btn_salesActionPerformed
 
@@ -826,10 +790,9 @@ public class TillClosing extends javax.swing.JInternalFrame {
         // Get date from calendar
         Date pickedDate = pickedDate = date_picker.getDate();
         String tillClosingDate = tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
-        
+
         PrinterJob printerJob = PrinterJob.getPrinterJob();
         printerJob.setJobName("Till Closing" + tillClosingDate);
-
         PageFormat format = printerJob.getPageFormat(null);
 
         printerJob.setPrintable(new Printable() {
@@ -837,11 +800,10 @@ public class TillClosing extends javax.swing.JInternalFrame {
             @Override
             public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
 
-                if(pageIndex > 0)
-                {
+                if (pageIndex > 0) {
                     return Printable.NO_SUCH_PAGE;
                 }
-                Graphics2D graphics2D = (Graphics2D)graphics;
+                Graphics2D graphics2D = (Graphics2D) graphics;
                 panel_print_order.paint(graphics2D);
 
                 return Printable.PAGE_EXISTS;
@@ -850,13 +812,12 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
         boolean returningResult = printerJob.printDialog();
 
-        if(returningResult)
-        {
+        if (returningResult) {
             try {
 
                 printerJob.print();
 
-                JOptionPane.showMessageDialog(this, "Till Closing " + tillClosingDate +" Printed Successfully", "Till Closing", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Till Closing " + tillClosingDate + " Printed Successfully", "Till Closing", JOptionPane.INFORMATION_MESSAGE);
 
             } catch (PrinterException ex) {
                 Logger.getLogger(PrintFullReport.class.getName()).log(Level.SEVERE, null, ex);
@@ -866,65 +827,61 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
     private void table_view_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_ordersMouseClicked
         // TODO add your handling code here:
-         if(evt.getClickCount() == 2)
-        {
-            DefaultTableModel dtm = (DefaultTableModel)table_view_orders.getModel();
+        if (evt.getClickCount() == 2) {
+            DefaultTableModel dtm = (DefaultTableModel) table_view_orders.getModel();
             int orderSelected = table_view_orders.getSelectedRow();
             String selectedOrderNo = dtm.getValueAt(orderSelected, 0).toString();
-        
+
             try {
                 dbConnection();
                 String queryOrder = "SELECT * FROM orderDetails WHERE orderNo = ? ";
                 ps = con.prepareStatement(queryOrder);
                 ps.setString(1, selectedOrderNo);
                 rs = ps.executeQuery();
-                
-                while(rs.next())
-                {
-                   order  = new Order(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"),
-                   rs.getString("email"), rs.getString("deviceBrand"), rs.getString("deviceModel"), rs.getString("serialNumber"), rs.getString("importantNotes"),
-                   rs.getString("fault"), rs.getString("productService"), rs.getString("qty"),rs.getString("unitPrice"), rs.getString("priceTotal"),
-                   rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"),
-                   rs.getString("status"), rs.getString("issueDate"), rs.getString("finishDate"), rs.getString("pickDate"),
-                   rs.getString("refundDate"), Login.fullName);
+
+                while (rs.next()) {
+                    order = new Order(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"),
+                            rs.getString("email"), rs.getString("deviceBrand"), rs.getString("deviceModel"), rs.getString("serialNumber"), rs.getString("importantNotes"),
+                            rs.getString("fault"), rs.getString("productService"), rs.getString("qty"), rs.getString("unitPrice"), rs.getString("priceTotal"),
+                            rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"),
+                            rs.getString("status"), rs.getString("issueDate"), rs.getString("finishDate"), rs.getString("pickDate"),
+                            rs.getString("refundDate"), Login.fullName);
                 }
-                
-                String queryCompletedOrder = "SELECT * FROM completedOrders WHERE orderNo = ?"; 
+
+                String queryCompletedOrder = "SELECT * FROM completedOrders WHERE orderNo = ?";
                 ps = con.prepareStatement(queryCompletedOrder);
                 ps.setString(1, selectedOrderNo);
                 rs = ps.executeQuery();
-                
-                
-                while (rs.next())
-                        completedOrder = new CompletedOrder(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), 
-                            "","", rs.getString("brand"), rs.getString("model"), 
-                            "", rs.getDouble("total"), rs.getDouble("deposit"),rs.getDouble("due"), 
-                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getDouble("cashDeposit"), 
-                            rs.getDouble("cardDeposit"), rs.getString("payDate"), rs.getString("status"));
-                
-                switch (order.getStatus()) 
-                {
-                    
-                    case "Refunded":
-                       OrderRefund refundOrder = new OrderRefund(order, completedOrder);
-                       //desktop_pane_till_closing.removeAll();
-                       desktop_pane_till_closing.add(refundOrder).setVisible(true);
-                       break;
 
-                    case "Not Fixed" :
+                while (rs.next()) {
+                    completedOrder = new CompletedOrder(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"),
+                            "", "", rs.getString("brand"), rs.getString("model"),
+                            "", rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("due"),
+                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getDouble("cashDeposit"),
+                            rs.getDouble("cardDeposit"), rs.getString("payDate"), rs.getString("status"));
+                }
+
+                switch (order.getStatus()) {
+
+                    case "Refunded":
+                        OrderRefund refundOrder = new OrderRefund(order, completedOrder);
+                        //desktop_pane_till_closing.removeAll();
+                        desktop_pane_till_closing.add(refundOrder).setVisible(true);
+                        break;
+
+                    case "Not Fixed":
                         NotFixedOrder notFixed = new NotFixedOrder(order, completedOrder);
-                       //desktop_pane_till_closing.removeAll();
-                       desktop_pane_till_closing.add(notFixed).setVisible(true);
-                       break;
-                        
+                        //desktop_pane_till_closing.removeAll();
+                        desktop_pane_till_closing.add(notFixed).setVisible(true);
+                        break;
+
                     default:
                         FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
                         //desktop_pane_till_closing.removeAll();
                         desktop_pane_till_closing.add(fixedOrder).setVisible(true);
                         break;
                 }
-            
-                
+
             } catch (SQLException ex) {
                 Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -933,44 +890,36 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
     private void table_view_salesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_salesMouseClicked
         // TODO add your handling code here:
-        if (evt.getClickCount() == 2)
-        {
-            DefaultTableModel dtm = (DefaultTableModel)table_view_sales.getModel();
+        if (evt.getClickCount() == 2) {
+            DefaultTableModel dtm = (DefaultTableModel) table_view_sales.getModel();
             int orderSelected = table_view_sales.getSelectedRow();
             String selectedSaleNo = dtm.getValueAt(orderSelected, 0).toString();
-            
+
             try {
                 dbConnection();
-                
-                
+
                 String queryOrder = "SELECT * FROM sales WHERE saleNo = ? ";
                 ps = con.prepareStatement(queryOrder);
                 ps.setString(1, selectedSaleNo);
                 rs = ps.executeQuery();
-                
-                while (rs.next())
-                {
+
+                while (rs.next()) {
                     sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
-                            rs.getString("contactNo"), rs.getString("email"), 
+                            rs.getString("contactNo"), rs.getString("email"),
                             rs.getString("productService"), rs.getString("qty"), rs.getString("unitPrice"),
-                            rs.getString("priceTotal"),rs.getDouble("total"), rs.getString("saleDate"),  
-                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), 
+                            rs.getString("priceTotal"), rs.getDouble("total"), rs.getString("saleDate"),
+                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"),
                             rs.getString("status"), rs.getString("createdBy"));
-                
-                    if (rs.getString("status").equals("Paid"))
-                    {
+
+                    if (rs.getString("status").equals("Paid")) {
                         SaleDetails saleDetails = new SaleDetails(sale);
                         desktop_pane_till_closing.add(saleDetails).setVisible(true);
-                    }
-                    else
-                    {
+                    } else {
                         SaleRefund saleRefund = new SaleRefund(sale);
                         desktop_pane_till_closing.add(saleRefund).setVisible(true);
                     }
-                
-               
                 }
-                
+
             } catch (SQLException ex) {
                 Logger.getLogger(TillClosing.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -979,9 +928,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
     private void scroll_pane_table_salesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scroll_pane_table_salesMouseClicked
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_scroll_pane_table_salesMouseClicked
 
+    }//GEN-LAST:event_scroll_pane_table_salesMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_full_report;

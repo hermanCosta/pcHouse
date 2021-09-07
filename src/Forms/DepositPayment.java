@@ -13,11 +13,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 
 /**
  *
@@ -33,68 +31,65 @@ public class DepositPayment extends javax.swing.JFrame {
     double cashDeposit, cardDeposit;
     double newDeposit;
     boolean isOrderDetails;
-    
+
     public DepositPayment() {
         initComponents();
     }
 
     public DepositPayment(Order _order, double _newDeposit, CompletedOrder _completedOrder, boolean _isOrderDetails) {
         initComponents();
-        
+
         this.order = _order;
         this.newDeposit = _newDeposit;
         this.completedOrder = _completedOrder;
         this.isOrderDetails = _isOrderDetails;
-        
+
         lbl_order_no.setText(this.order.getOrderNo());
         lbl_total.setText(String.valueOf(this.order.getTotal()));
         lbl_deposit.setText(String.valueOf(this.order.getDeposit()));
     }
 
-
-    public void dbConnection() 
-    {
+    public void dbConnection() {
         try {
-              Class.forName("com.mysql.cj.jdbc.Driver");
-              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
+
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void addDepositNote(String payMethod)
-    {
+
+    public void addDepositNote(String payMethod) {
         try {
             dbConnection();
-            
+
             String depositNote = "€" + order.getDeposit() + " Deposit, paid by " + payMethod;
             String user = "System";
-          
-                    String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
-                    ps = con.prepareStatement(queryUpdate);
-                    ps.setString(1, order.getOrderNo());
-                    ps.setString(2, order.getIssueDate());
-                    ps.setString(3, depositNote); // add new Deposit note
-                    ps.setString(4, user);
-                    ps.executeUpdate();
-            
+
+            String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
+            ps = con.prepareStatement(queryUpdate);
+            ps.setString(1, order.getOrderNo());
+            ps.setString(2, order.getIssueDate());
+            ps.setString(3, depositNote); // add new Deposit note
+            ps.setString(4, user);
+            ps.executeUpdate();
+
             ps.close();
             con.close();
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    public void payDeposit(double cash, double card)
-    {
+
+    public void payDeposit(double cash, double card) {
         try {
             dbConnection();
-            
+
             String queryDepositInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, "
                     + "brand, model, total, deposit, due, cash, card, changeTotal, cashDeposit, "
                     + "cardDeposit, payDate, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            
             ps = con.prepareStatement(queryDepositInsert);
             ps.setString(1, order.getOrderNo());
             ps.setString(2, order.getFirstName());
@@ -104,7 +99,7 @@ public class DepositPayment extends javax.swing.JFrame {
             ps.setDouble(6, 0);
             ps.setDouble(7, order.getDeposit());
             ps.setDouble(8, 0);
-            ps.setDouble(9, cash); 
+            ps.setDouble(9, cash);
             ps.setDouble(10, card);
             ps.setDouble(11, 0);
             ps.setDouble(12, 0);
@@ -112,11 +107,12 @@ public class DepositPayment extends javax.swing.JFrame {
             ps.setString(14, order.getIssueDate());
             ps.setString(15, order.getStatus());
             ps.executeUpdate();
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -296,63 +292,60 @@ public class DepositPayment extends javax.swing.JFrame {
     private void btn_pay_by_cashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pay_by_cashActionPerformed
         // TODO add your handling code here:
         int confirmCardDeposit = JOptionPane.showConfirmDialog(this, "Confirm €" + order.getDeposit() + " Deposit Payment by CASH ?", "Confirm Payment", JOptionPane.YES_NO_OPTION);
-        if (confirmCardDeposit == 0)
-        {
-            order.setCashDeposit(order.getDeposit());
+        if (confirmCardDeposit == 0) {
             
-            try 
-            {
+            order.setCashDeposit(order.getDeposit());
+
+            try {
                 dbConnection();
-                    
-                        String queryInsert = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
-                                + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
-                                + "productService, qty, unitPrice, priceTotal, total, deposit, cashDeposit, cardDeposit, "
-                                + "due, status, issueDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                        ps = con.prepareStatement(queryInsert);
-                        ps.setString(1, order.getOrderNo());
-                        ps.setString(2, order.getFirstName());
-                        ps.setString(3, order.getLastName()); 
-                        ps.setString(4, order.getContactNo());
-                        ps.setString(5, order.getEmail());
-                        ps.setString(6, order.getBrand());
-                        ps.setString(7, order.getModel());
-                        ps.setString(8, order.getSerialNumber());
-                        ps.setString(9, order.getImportantNotes());
-                        ps.setString(10, order.getStringFaults());
-                        ps.setString(11, order.getStringProducts());
-                        ps.setString(12, order.getStringQty());
-                        ps.setString(13, order.getUnitPrice());
-                        ps.setString(14, order.getPriceTotal());
-                        ps.setDouble(15, order.getTotal());
-                        ps.setDouble(16, order.getDeposit());
-                        ps.setDouble(17, order.getCashDeposit());
-                        ps.setDouble(18, order.getCardDeposit());
-                        ps.setDouble(19, order.getDue());
-                        ps.setString(20, order.getStatus());
-                        ps.setString(21, order.getIssueDate());
-                        ps.executeUpdate();
+                String queryInsert = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
+                        + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
+                        + "productService, qty, unitPrice, priceTotal, total, deposit, cashDeposit, cardDeposit, "
+                        + "due, status, issueDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                        JOptionPane.showMessageDialog(this, "order " +order.getOrderNo() + " created successfully!");
-                        
-                    String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "
-                                        + "productService = REPLACE(productService, '  ', ' '), "
-                                        + "qty = REPLACE(qty, '  ', ' '), "
-                                        + "unitPrice = REPLACE(unitPrice, '  ', ' '), "
-                                        + "total = REPLACE(total, '  ', ' ')";
-                        ps = con.prepareStatement(removeSpace);
-                        ps.executeUpdate();
-                        
-                    addDepositNote("Cash");
-                    payDeposit(order.getCashDeposit(), 0);
-                    this.dispose();
-                    
-                    
-                    PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
-                    printOrder.setVisible(true);
-            } 
-            catch (SQLException ex) 
-            {
+                ps = con.prepareStatement(queryInsert);
+                ps.setString(1, order.getOrderNo());
+                ps.setString(2, order.getFirstName());
+                ps.setString(3, order.getLastName());
+                ps.setString(4, order.getContactNo());
+                ps.setString(5, order.getEmail());
+                ps.setString(6, order.getBrand());
+                ps.setString(7, order.getModel());
+                ps.setString(8, order.getSerialNumber());
+                ps.setString(9, order.getImportantNotes());
+                ps.setString(10, order.getStringFaults());
+                ps.setString(11, order.getStringProducts());
+                ps.setString(12, order.getStringQty());
+                ps.setString(13, order.getUnitPrice());
+                ps.setString(14, order.getPriceTotal());
+                ps.setDouble(15, order.getTotal());
+                ps.setDouble(16, order.getDeposit());
+                ps.setDouble(17, order.getCashDeposit());
+                ps.setDouble(18, order.getCardDeposit());
+                ps.setDouble(19, order.getDue());
+                ps.setString(20, order.getStatus());
+                ps.setString(21, order.getIssueDate());
+                ps.executeUpdate();
+
+                JOptionPane.showMessageDialog(this, "order " + order.getOrderNo() + " created successfully!");
+
+                String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "
+                        + "productService = REPLACE(productService, '  ', ' '), "
+                        + "qty = REPLACE(qty, '  ', ' '), "
+                        + "unitPrice = REPLACE(unitPrice, '  ', ' '), "
+                        + "total = REPLACE(total, '  ', ' ')";
+                
+                ps = con.prepareStatement(removeSpace);
+                ps.executeUpdate();
+
+                addDepositNote("Cash");
+                payDeposit(order.getCashDeposit(), 0);
+                this.dispose();
+
+                PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
+                printOrder.setVisible(true);
+            } catch (SQLException ex) {
                 Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -365,68 +358,64 @@ public class DepositPayment extends javax.swing.JFrame {
     private void btn_pay_by_cardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pay_by_cardActionPerformed
         // TODO add your handling code here:
         int confirmCardDeposit = JOptionPane.showConfirmDialog(this, "Confirm €" + order.getDeposit() + " Deposit Payment by CARD ?", "Confirm Payment", JOptionPane.YES_NO_OPTION);
-        if (confirmCardDeposit == 0)
-        {
+        if (confirmCardDeposit == 0) {
             order.setCardDeposit(order.getDeposit());
-            
+
             try {
                 dbConnection();
-        
-                        String queryInsert = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
-                                + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
-                                + "productService, qty, unitPrice, priceTotal, total, deposit, cashDeposit, cardDeposit, "
-                                + "due, status, issueDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                        ps = con.prepareStatement(queryInsert);
-                        ps.setString(1, order.getOrderNo());
-                        ps.setString(2, order.getFirstName());
-                        ps.setString(3, order.getLastName()); 
-                        ps.setString(4, order.getContactNo());
-                        ps.setString(5, order.getEmail());
-                        ps.setString(6, order.getBrand());
-                        ps.setString(7, order.getModel());
-                        ps.setString(8, order.getSerialNumber());
-                        ps.setString(9, order.getImportantNotes());
-                        ps.setString(10, order.getStringFaults());
-                        ps.setString(11, order.getStringProducts());
-                        ps.setString(12, order.getStringQty());
-                        ps.setString(13, order.getUnitPrice());
-                        ps.setString(14, order.getPriceTotal());
-                        ps.setDouble(15, order.getTotal());
-                        ps.setDouble(16, order.getDeposit());
-                        ps.setDouble(17, order.getCashDeposit());
-                        ps.setDouble(18, order.getCardDeposit());
-                        ps.setDouble(19, order.getDue());
-                        ps.setString(20, order.getStatus());
-                        ps.setString(21, order.getIssueDate());
-                        ps.executeUpdate();
+                String queryInsert = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
+                        + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
+                        + "productService, qty, unitPrice, priceTotal, total, deposit, cashDeposit, cardDeposit, "
+                        + "due, status, issueDate, createdBy) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                        JOptionPane.showMessageDialog(this, "Order " +order.getOrderNo() + " created successfully!");
+                ps = con.prepareStatement(queryInsert);
+                ps.setString(1, order.getOrderNo());
+                ps.setString(2, order.getFirstName());
+                ps.setString(3, order.getLastName());
+                ps.setString(4, order.getContactNo());
+                ps.setString(5, order.getEmail());
+                ps.setString(6, order.getBrand());
+                ps.setString(7, order.getModel());
+                ps.setString(8, order.getSerialNumber());
+                ps.setString(9, order.getImportantNotes());
+                ps.setString(10, order.getStringFaults());
+                ps.setString(11, order.getStringProducts());
+                ps.setString(12, order.getStringQty());
+                ps.setString(13, order.getUnitPrice());
+                ps.setString(14, order.getPriceTotal());
+                ps.setDouble(15, order.getTotal());
+                ps.setDouble(16, order.getDeposit());
+                ps.setDouble(17, order.getCashDeposit());
+                ps.setDouble(18, order.getCardDeposit());
+                ps.setDouble(19, order.getDue());
+                ps.setString(20, order.getStatus());
+                ps.setString(21, order.getIssueDate());
+                ps.setString(22, order.getUsername());
+                ps.executeUpdate();
+
+                JOptionPane.showMessageDialog(this, "Order " + order.getOrderNo() + " created successfully!");
+
+                String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "
+                        + "productService = REPLACE(productService, '  ', ' '), "
+                        + "qty = REPLACE(qty, '  ', ' '), "
+                        + "unitPrice = REPLACE(unitPrice, '  ', ' '), "
+                        + "total = REPLACE(total, '  ', ' ')";
                 
-                    String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "
-                                        + "productService = REPLACE(productService, '  ', ' '), "
-                                        + "qty = REPLACE(qty, '  ', ' '), "
-                                        + "unitPrice = REPLACE(unitPrice, '  ', ' '), "
-                                        + "total = REPLACE(total, '  ', ' ')";
-                       ps = con.prepareStatement(removeSpace);
-                       ps.executeUpdate();
+                ps = con.prepareStatement(removeSpace);
+                ps.executeUpdate();
 
-                   
-                  addDepositNote("Card");
-                  payDeposit(0, order.getCardDeposit());
-                  this.dispose();
-                  
-                   PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
-                   printOrder.setVisible(true);
-           } 
-           catch (SQLException ex) 
-           {
-               Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
-           }
+                addDepositNote("Card");
+                payDeposit(0, order.getCardDeposit());
+                this.dispose();
+
+                PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
+                printOrder.setVisible(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_btn_pay_by_cardActionPerformed
-   
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_pay_by_card;
     private javax.swing.JButton btn_pay_by_cash;

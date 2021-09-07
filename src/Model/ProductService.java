@@ -10,13 +10,13 @@ package Model;
  * @author user
  */
 public class ProductService {
-    
-   String productService;
-   double price;
-   int qty;
-   String notes;
-   String category;
-   
+
+    String productService;
+    double price;
+    int qty;
+    String notes;
+    String category;
+
     public ProductService(String _serviceProduct, double _price, int _qty, String _notes, String _category) {
         this.productService = _serviceProduct;
         this.price = _price;
@@ -48,10 +48,6 @@ public class ProductService {
     public void setCategory(String category) {
         this.category = category;
     }
-    
-    
-
-    
 
     public String getProductService() {
         return productService;

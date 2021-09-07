@@ -10,13 +10,13 @@ package Model;
  * @author user
  */
 public class SaleReport {
-    String saleNo, firstName, lastName, productsService; 
+
+    String saleNo, firstName, lastName, productsService;
     double total, cash, card, changeTotal;
-    
-    
-    public SaleReport(String _saleNo, String _firstName, String _lastName, 
-            String _productsService,  double _total, double _cash, double _card, double _changeTotal) {
-        
+
+    public SaleReport(String _saleNo, String _firstName, String _lastName,
+            String _productsService, double _total, double _cash, double _card, double _changeTotal) {
+
         this.saleNo = _saleNo;
         this.firstName = _firstName;
         this.lastName = _lastName;
@@ -25,7 +25,7 @@ public class SaleReport {
         this.cash = _cash;
         this.card = _card;
         this.changeTotal = _changeTotal;
-        
+
     }
 
     public String getSaleNo() {
@@ -68,7 +68,6 @@ public class SaleReport {
         this.total = total;
     }
 
-    
     public double getCash() {
         return cash;
     }
