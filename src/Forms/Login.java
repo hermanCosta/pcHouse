@@ -5,7 +5,6 @@
  */
 package Forms;
 
-import InternalForms.HomePage;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -43,7 +42,7 @@ public class Login extends javax.swing.JFrame {
               Class.forName("com.mysql.cj.jdbc.Driver");
               con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -222,7 +221,6 @@ public class Login extends javax.swing.JFrame {
                 
                 String username = txt_username.getText();
                 String password = new String(txt_password.getPassword());
-                System.out.println("Password: " + password);
                 
                 String query = "SELECT * FROM users WHERE username = ? AND password = ?";
                 ps = con.prepareStatement(query);
@@ -233,8 +231,8 @@ public class Login extends javax.swing.JFrame {
                 if (rs.next())
                 {
                     fullName = rs.getString("fullName");
-                    System.out.println("Full Name: " + fullName);
                     new MainMenu().setVisible(true);
+                    this.dispose();
                 }
                 else
                     JOptionPane.showMessageDialog(this, "Login Failed ! please check username or password", "Login", JOptionPane.ERROR_MESSAGE );

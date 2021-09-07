@@ -6,8 +6,6 @@
 package Forms;
 
 import InternalForms.FixedOrder;
-import InternalForms.NewOrder;
-import InternalForms.OrderDetails;
 import Model.CompletedOrder;
 import Model.Order;
 import java.awt.Graphics;
@@ -20,7 +18,6 @@ import java.awt.print.PrinterJob;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 
 /**
  *
@@ -89,9 +86,9 @@ public class OrderReceipt extends javax.swing.JFrame {
     
     public void backToPreviousFrame()
     {        
-            FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
-            MainMenu.mainMenuDesktopPane.removeAll();
-            MainMenu.mainMenuDesktopPane.add(fixedOrder).setVisible(true);
+        FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
+        MainMenu.mainMenuDesktopPane.removeAll();
+        MainMenu.mainMenuDesktopPane.add(fixedOrder).setVisible(true);
     }
     
     @Override
@@ -138,7 +135,7 @@ public class OrderReceipt extends javax.swing.JFrame {
         jScrollPane10 = new javax.swing.JScrollPane();
         txt_pane_total = new javax.swing.JTextPane();
         lbl_change = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btn_print = new javax.swing.JButton();
         lbl_payment_print_view = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -400,14 +397,14 @@ public class OrderReceipt extends javax.swing.JFrame {
                 .addContainerGap(43, Short.MAX_VALUE))
         );
 
-        jButton1.setBackground(new java.awt.Color(21, 76, 121));
-        jButton1.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_print.png"))); // NOI18N
-        jButton1.setText("Print");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btn_print.setBackground(new java.awt.Color(21, 76, 121));
+        btn_print.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        btn_print.setForeground(new java.awt.Color(255, 255, 255));
+        btn_print.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_print.png"))); // NOI18N
+        btn_print.setText("Print");
+        btn_print.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btn_printActionPerformed(evt);
             }
         });
 
@@ -424,7 +421,7 @@ public class OrderReceipt extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lbl_payment_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(35, 35, 35)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(panel_print_order, javax.swing.GroupLayout.PREFERRED_SIZE, 589, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18))
         );
@@ -433,7 +430,7 @@ public class OrderReceipt extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_payment_print_view))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panel_print_order, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -444,7 +441,7 @@ public class OrderReceipt extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         PrinterJob printerJob = PrinterJob.getPrinterJob();
         printerJob.setJobName("ReceiptOrder" + this.order.getOrderNo());
@@ -481,14 +478,16 @@ public class OrderReceipt extends javax.swing.JFrame {
                 Logger.getLogger(OrderReceipt.class.getName()).log(Level.SEVERE, null, ex);
                 this.dispose();
                 backToPreviousFrame();
+                
+                
             }
             
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btn_printActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btn_print;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane12;

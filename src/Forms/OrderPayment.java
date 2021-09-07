@@ -5,6 +5,7 @@
  */
 package Forms;
 
+import InternalForms.FixedOrder;
 import InternalForms.NewOrder;
 import Model.CompletedOrder;
 import Model.Order;
@@ -32,7 +33,7 @@ public class OrderPayment extends javax.swing.JFrame {
     ResultSet rs;
     JTable tableViewProducts;
     Order order;
-    CompletedOrder completedOrders;
+    CompletedOrder completedOrder;
     String payDate; 
     
     
@@ -43,10 +44,11 @@ public class OrderPayment extends javax.swing.JFrame {
     }
 
 
-    public OrderPayment(Order _order, CompletedOrder _completedOrders) {
+    public OrderPayment(Order _order, CompletedOrder _completedOrder, JTable _tableViewProducts) {
         initComponents();
         this.order = _order;
-        this.completedOrders = _completedOrders;
+        this.completedOrder = _completedOrder;
+        this.tableViewProducts = _tableViewProducts;
         
         lbl_order_no.setText(this.order.getOrderNo());
         lbl_total.setText(String.valueOf(this.order.getTotal()));
@@ -74,6 +76,7 @@ public class OrderPayment extends javax.swing.JFrame {
 
             try {
                 dbConnection();
+                
                 String queryCheck = "SELECT * FROM products WHERE productService = ?";
                 ps = con.prepareStatement(queryCheck);
                 ps.setString(1, cellProduct);
@@ -100,8 +103,34 @@ public class OrderPayment extends javax.swing.JFrame {
         }
     }
     
-     
-     
+    public void addNoteEvent(String updateNote)
+    {
+        Date date = new Date();
+        Timestamp currentDate = new Timestamp(date.getTime());
+        String dateFormat = new SimpleDateFormat("yyyy/MM/dd").format(currentDate);
+        
+        try {
+            dbConnection();
+            
+            String note = "Order tagged as '" + updateNote + "' by " + order.getCreatedBy();
+            String user = "System";
+          
+                    String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
+                    ps = con.prepareStatement(queryUpdate);
+                    ps.setString(1, order.getOrderNo());
+                    ps.setString(2, dateFormat);
+                    ps.setString(3, note);
+                    ps.setString(4, user);
+                    ps.executeUpdate();
+            
+            ps.close();
+            con.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -405,9 +434,8 @@ public class OrderPayment extends javax.swing.JFrame {
         Timestamp currentDate = new Timestamp(date.getTime());
         payDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
         boolean isPaid = false;
-        //order.setPickDate(payDate);
-        completedOrders.setPayDate(payDate);
-        completedOrders.setStatus("Paid");
+        completedOrder.setPayDate(payDate);
+        completedOrder.setStatus("Paid");
         
         if (txt_cash.getText().isEmpty() && txt_card.getText().isEmpty())
         {
@@ -417,51 +445,51 @@ public class OrderPayment extends javax.swing.JFrame {
         
         else if (txt_cash.getText().trim().isEmpty() && !txt_card.getText().trim().isEmpty())
         {
-            completedOrders.setCard(Double.parseDouble(txt_card.getText()));
+            completedOrder.setCard(Double.parseDouble(txt_card.getText()));
             
             
-            if ( completedOrders.getCard() > order.getDue())
+            if ( completedOrder.getCard() > order.getDue())
             {
                 JOptionPane.showMessageDialog(null, "Payment by Card can't be greater than Total Due !", "Payment",  JOptionPane.ERROR_MESSAGE); 
                 return;
             }
-            else if ((order.getDue() - completedOrders.getCard()) == 0) 
+            else if ((order.getDue() - completedOrder.getCard()) == 0) 
             {
                 isPaid = true; 
-                completedOrders.setCash(0);
+                completedOrder.setCash(0);
             }
-            else if ((order.getDue() - completedOrders.getCard()) > 0)
+            else if ((order.getDue() - completedOrder.getCard()) > 0)
             {
-                completedOrders.setCard(Double.parseDouble(txt_card.getText()));
+                completedOrder.setCard(Double.parseDouble(txt_card.getText()));
             }
             
         } 
         else if (!txt_cash.getText().isEmpty() && txt_card.getText().isEmpty())
         {
-            completedOrders.setCash(Double.parseDouble(txt_cash.getText()));
-            if ((order.getDue() - completedOrders.getCash()) <= 0)
+            completedOrder.setCash(Double.parseDouble(txt_cash.getText()));
+            if ((order.getDue() - completedOrder.getCash()) <= 0)
             {
                 isPaid = true;
-                completedOrders.setCard(0);
-                completedOrders.setChangeTotal(completedOrders.getCash() - order.getDue());
+                completedOrder.setCard(0);
+                completedOrder.setChangeTotal(completedOrder.getCash() - order.getDue());
             }
         }
         else if (!txt_cash.getText().isEmpty() && !txt_card.getText().isEmpty())
         {
-            completedOrders.setCash(Double.parseDouble(txt_cash.getText()));
-            completedOrders.setCard(Double.parseDouble(txt_card.getText()));
+            completedOrder.setCash(Double.parseDouble(txt_cash.getText()));
+            completedOrder.setCard(Double.parseDouble(txt_card.getText()));
             
-            totalPaid = completedOrders.getCash() + completedOrders.getCard();
-            if (completedOrders.getCard() > order.getDue())
+            totalPaid = completedOrder.getCash() + completedOrder.getCard();
+            if (completedOrder.getCard() > order.getDue())
             {
                 JOptionPane.showMessageDialog(null, "Payment by Card can't be greater than Total Due !", "Payment",  JOptionPane.ERROR_MESSAGE); 
                 return;
             } 
             else if ((order.getDue() - totalPaid) <= 0)
             {
-               changeTotal = (completedOrders.getCash() + completedOrders.getCard()) - order.getDue();
+               changeTotal = (completedOrder.getCash() + completedOrder.getCard()) - order.getDue();
                isPaid = true;
-               completedOrders.setChangeTotal(changeTotal);
+               completedOrder.setChangeTotal(changeTotal);
             }
         }
         
@@ -473,10 +501,10 @@ public class OrderPayment extends javax.swing.JFrame {
             int confirmPayment = JOptionPane.showConfirmDialog(this, "Confirm Payment on Order " + order.getOrderNo() + " ?", "Payment", JOptionPane.YES_NO_OPTION);
             if (confirmPayment == 0)
             {
-                completedOrders = new CompletedOrder(order.getOrderNo(), order.getFirstName(), order.getLastName(), order.getContactNo(),
+                completedOrder = new CompletedOrder(order.getOrderNo(), order.getFirstName(), order.getLastName(), order.getContactNo(),
                         order.getEmail(), order.getBrand(), order.getModel(), order.getSerialNumber(), 
-                        order.getTotal(), order.getDeposit(), order.getDue(),completedOrders.getCash(), completedOrders.getCard(), completedOrders.getChangeTotal(), order.getCashDeposit(),
-                        order.getCardDeposit(), completedOrders.getPayDate(), completedOrders.getStatus());
+                        order.getTotal(), order.getDeposit(), order.getDue(),completedOrder.getCash(), completedOrder.getCard(), completedOrder.getChangeTotal(), order.getCashDeposit(),
+                        order.getCardDeposit(), completedOrder.getPayDate(), completedOrder.getStatus());
 
               try {
                   
@@ -485,38 +513,42 @@ public class OrderPayment extends javax.swing.JFrame {
                 String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, brand, model, total, "
                         + "deposit, due, cash, card, changeTotal, cashDeposit, cardDeposit, payDate, status) "
                         + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                
                 ps = con.prepareStatement(queryInsert);
-                ps.setString(1, completedOrders.getOrderNo());
-                ps.setString(2, completedOrders.getFirstName());
-                ps.setString(3, completedOrders.getLastName());
-                ps.setString(4, completedOrders.getBrand());
-                ps.setString(5, completedOrders.getModel());
-                ps.setDouble(6, completedOrders.getTotal());
-                ps.setDouble(7, completedOrders.getDeposit());
-                ps.setDouble(8, completedOrders.getDue());
-                ps.setDouble(9, completedOrders.getCash());
-                ps.setDouble(10, completedOrders.getCard());
-                ps.setDouble(11, completedOrders.getChangeTotal());
-                ps.setDouble(12, completedOrders.getCashDeposit());
-                ps.setDouble(13, completedOrders.getCardDeposit());
-                ps.setString(14, completedOrders.getPayDate());
-                ps.setString(15, completedOrders.getStatus());
+                ps.setString(1, completedOrder.getOrderNo());
+                ps.setString(2, completedOrder.getFirstName());
+                ps.setString(3, completedOrder.getLastName());
+                ps.setString(4, completedOrder.getBrand());
+                ps.setString(5, completedOrder.getModel());
+                ps.setDouble(6, completedOrder.getTotal());
+                ps.setDouble(7, completedOrder.getDeposit());
+                ps.setDouble(8, completedOrder.getDue());
+                ps.setDouble(9, completedOrder.getCash());
+                ps.setDouble(10, completedOrder.getCard());
+                ps.setDouble(11, completedOrder.getChangeTotal());
+                ps.setDouble(12, completedOrder.getCashDeposit());
+                ps.setDouble(13, completedOrder.getCardDeposit());
+                ps.setString(14, completedOrder.getPayDate());
+                ps.setString(15, completedOrder.getStatus());
                 ps.executeUpdate();
-
                
                 String queryUpdate = "UPDATE orderDetails SET pickDate = ?, status = ? WHERE orderNo = ?";
                 ps = con.prepareStatement(queryUpdate);
-                ps.setString(1, completedOrders.getPayDate());
-                ps.setString(2, completedOrders.getStatus());
-                ps.setString(3, completedOrders.getOrderNo());
+                ps.setString(1, completedOrder.getPayDate());
+                ps.setString(2, completedOrder.getStatus());
+                ps.setString(3, completedOrder.getOrderNo());
                 ps.executeUpdate();
 
-                JOptionPane.showMessageDialog(this, order.getOrderNo() + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, order.getOrderNo() + " Paid Successfully");
 
+                FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
+                MainMenu.mainMenuDesktopPane.removeAll();
+                MainMenu.mainMenuDesktopPane.add(fixedOrder).setVisible(true);
                 
-                OrderReceipt receipt =  new OrderReceipt(order, completedOrders);
+                OrderReceipt receipt =  new OrderReceipt(order, completedOrder);
                 receipt.setVisible(true);
 
+                addNoteEvent("Paid");
                 updateProductQty();
                 
                 this.dispose();

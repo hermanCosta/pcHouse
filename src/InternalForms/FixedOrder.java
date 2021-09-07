@@ -829,35 +829,35 @@ public class FixedOrder extends javax.swing.JInternalFrame {
 
     private void btn_payActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_payActionPerformed
         // TODO add your handling code here:
-        OrderPayment orderPayment = new OrderPayment(order, completedOrders);
+        OrderPayment orderPayment = new OrderPayment(order, completedOrders, table_view_products);
         orderPayment.setVisible(true);
     }//GEN-LAST:event_btn_payActionPerformed
 
     private void btn_undoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_undoActionPerformed
         // TODO add your handling code here:
-        
-        int confirmUndoing = JOptionPane.showConfirmDialog(null, "Do you really want to 'UNDO' Order: " 
+        int confirmUndoing = JOptionPane.showConfirmDialog(this, "Do you really want to 'UNDO' Order: " 
                             + order.getOrderNo() + " ?", "Undo Order", JOptionPane.YES_NO_OPTION);
+        
         if (confirmUndoing == 0)
         {
-            order.setStatus("In Progress");
-            order.setFinishDate("");
+            String status = "In Progress";
+            order.setStatus(status);
             
             try {
                 dbConnection();
                 String query = "UPDATE orderDetails SET status = ?, finishDate = ? WHERE orderNo = ?";
+                
                 ps = con.prepareStatement(query);
                 ps.setString(1, order.getStatus());
-                ps.setString(2, order.getOrderNo());
-                ps.setString(3, order.getFinishDate());
+                ps.setString(2, null);
+                ps.setString(3, order.getOrderNo());
                 ps.executeUpdate();
                 
-                addEventNote("In Progress");
+                addEventNote(status);
                 
                 OrderDetails orderDetails = new OrderDetails(order, completedOrders);
                 desktop_pane_fixed_order.removeAll();
                 desktop_pane_fixed_order.add(orderDetails).setVisible(true);
-                
                 
             } catch (SQLException ex) {
                 Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
@@ -873,8 +873,8 @@ public class FixedOrder extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btn_notesActionPerformed
 
     private void btn_receiptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_receiptActionPerformed
+        // TODO add your handling code here:
         try {
-            // TODO add your handling code here:
             dbConnection();
             
             String query = "SELECT cash, card, changeTotal FROM completedOrders WHERE orderNo = ?";

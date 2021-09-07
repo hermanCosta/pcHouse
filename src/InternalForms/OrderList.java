@@ -227,23 +227,7 @@ public class OrderList extends javax.swing.JInternalFrame {
         table_view_orders.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         table_view_orders.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+
             },
             new String [] {
                 "Order", "First Name", "Last Name", "Contact", "Brand", "Model", "S/N", "Status"
@@ -377,7 +361,6 @@ public class OrderList extends javax.swing.JInternalFrame {
             int orderSelected = table_view_orders.getSelectedRow();
             String selectedOrderNo = dtm.getValueAt(orderSelected, 0).toString();
         
-            ////select exists(select * from table where condition=value limit 1)
             try {
                 String query = "SELECT * FROM orderDetails WHERE orderNo = ? ";
                 ps = con.prepareStatement(query);
@@ -395,7 +378,6 @@ public class OrderList extends javax.swing.JInternalFrame {
                 }
                 
                 String queryPayDate = "SELECT * FROM completedOrders WHERE orderNo = ?"; 
-                //"SELECT EXISTS (SELECT * FROM completedOrders WHERE orderNo = ? LIMIT 1)";
                 ps = con.prepareStatement(queryPayDate);
                 ps.setString(1, selectedOrderNo);
                 rs = ps.executeQuery();

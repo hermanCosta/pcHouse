@@ -70,7 +70,6 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         
     }
 
-
     NotFixedOrder(Order _order, CompletedOrder _completedOrders) {
         initComponents();
         this.order = _order;
@@ -85,7 +84,6 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         loadSelectedOrder();
         tableSettings();
     }
-
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -118,6 +116,10 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         {
             lbl_order_picked_on.setVisible(true);
             lbl_order_picked_on.setText("Picked on: " + order.getPickDate());
+            
+            if (order.getCashDeposit() == 0) lbl_refunded_by.setText("Deposit Refund by Card: €" + order.getCardDeposit());
+            else lbl_refunded_by.setText("Deposit Refund by Cash: €" + order.getCashDeposit());
+                    
             btn_undo.setVisible(false);
             btn_pick_up.setVisible(false);
             btn_notes.setVisible(false);
@@ -194,7 +196,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         }
     }
     
-    public void addEventNote(String updateNote)
+    public void addNoteEvent(String updateNote)
     {
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
@@ -213,9 +215,6 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                     ps.setString(3, note);
                     ps.setString(4, user);
                     ps.executeUpdate();
-            
-            ps.close();
-            con.close();
             
         } catch (SQLException ex) {
             Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
@@ -263,6 +262,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         lbl_order_status = new javax.swing.JLabel();
         lbl_date = new javax.swing.JLabel();
         lbl_order_picked_on = new javax.swing.JLabel();
+        lbl_refunded_by = new javax.swing.JLabel();
         jScrollPane_notes = new javax.swing.JScrollPane();
         editor_pane_notes = new javax.swing.JEditorPane();
 
@@ -273,6 +273,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         desktop_pane_not_fixed_order.setPreferredSize(new java.awt.Dimension(1049, 700));
 
         panel_order_details.setPreferredSize(new java.awt.Dimension(1049, 700));
+        panel_order_details.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btn_pick_up.setBackground(new java.awt.Color(255, 51, 51));
         btn_pick_up.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
@@ -286,6 +287,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 btn_pick_upActionPerformed(evt);
             }
         });
+        panel_order_details.add(btn_pick_up, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 70, 180, 50));
 
         btn_notes1.setBackground(new java.awt.Color(21, 76, 121));
         btn_notes1.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
@@ -297,54 +299,67 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 btn_notes1ActionPerformed(evt);
             }
         });
+        panel_order_details.add(btn_notes1, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 70, 180, 50));
 
         lbl_order_no.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         lbl_order_no.setText("Order Number");
         lbl_order_no.setEnabled(false);
+        panel_order_details.add(lbl_order_no, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 93, -1, -1));
 
         lbl_first_name.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         lbl_first_name.setText("First Name");
         lbl_first_name.setEnabled(false);
+        panel_order_details.add(lbl_first_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 130, -1, -1));
 
         lbl_last_name.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         lbl_last_name.setText("Last Name");
         lbl_last_name.setEnabled(false);
+        panel_order_details.add(lbl_last_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 172, -1, -1));
 
         lbl_contact.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         lbl_contact.setText("Contact No.");
         lbl_contact.setEnabled(false);
+        panel_order_details.add(lbl_contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 214, -1, -1));
 
         lbl_email.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         lbl_email.setText("Email");
         lbl_email.setEnabled(false);
+        panel_order_details.add(lbl_email, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 256, -1, -1));
 
         lbl_brand.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         lbl_brand.setText("Device Brand");
         lbl_brand.setEnabled(false);
+        panel_order_details.add(lbl_brand, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 298, -1, -1));
 
         lbl_model.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         lbl_model.setText("Device Model");
         lbl_model.setEnabled(false);
+        panel_order_details.add(lbl_model, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 340, -1, -1));
 
         lbl_sn.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         lbl_sn.setText("Serial Number");
         lbl_sn.setEnabled(false);
+        panel_order_details.add(lbl_sn, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 382, -1, -1));
 
         lbl_auto_order_no.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
         lbl_auto_order_no.setText("autoGen");
         lbl_auto_order_no.setEnabled(false);
+        panel_order_details.add(lbl_auto_order_no, new org.netbeans.lib.awtextra.AbsoluteConstraints(157, 89, -1, 24));
 
         lbl_price.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         lbl_price.setText("Total €");
         lbl_price.setEnabled(false);
+        panel_order_details.add(lbl_price, new org.netbeans.lib.awtextra.AbsoluteConstraints(856, 570, -1, -1));
 
         lbl_deposit.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         lbl_deposit.setText("Deposit €");
         lbl_deposit.setEnabled(false);
+        panel_order_details.add(lbl_deposit, new org.netbeans.lib.awtextra.AbsoluteConstraints(639, 570, -1, -1));
 
         lbl_due.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         lbl_due.setText("Due €");
         lbl_due.setEnabled(false);
+        panel_order_details.add(lbl_due, new org.netbeans.lib.awtextra.AbsoluteConstraints(456, 570, -1, -1));
 
         txt_first_name.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_first_name.setActionCommand("null");
@@ -363,6 +378,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 txt_first_nameKeyReleased(evt);
             }
         });
+        panel_order_details.add(txt_first_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 125, 300, 30));
 
         txt_last_name.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_last_name.setEnabled(false);
@@ -380,6 +396,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 txt_last_nameKeyReleased(evt);
             }
         });
+        panel_order_details.add(txt_last_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 167, 300, 30));
 
         txt_email.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_email.setEnabled(false);
@@ -395,6 +412,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 txt_emailKeyPressed(evt);
             }
         });
+        panel_order_details.add(txt_email, new org.netbeans.lib.awtextra.AbsoluteConstraints(72, 251, 348, 30));
 
         try {
             txt_contact.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(0##) ###-####")));
@@ -414,6 +432,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 txt_contactKeyReleased(evt);
             }
         });
+        panel_order_details.add(txt_contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 209, 300, 30));
 
         txt_brand.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_brand.setEnabled(false);
@@ -425,11 +444,13 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 txt_brandActionPerformed(evt);
             }
         });
+        panel_order_details.add(txt_brand, new org.netbeans.lib.awtextra.AbsoluteConstraints(134, 293, 286, 30));
 
         txt_model.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_model.setEnabled(false);
         txt_model.setFocusable(false);
         txt_model.setPreferredSize(new java.awt.Dimension(63, 20));
+        panel_order_details.add(txt_model, new org.netbeans.lib.awtextra.AbsoluteConstraints(136, 335, 284, 30));
 
         txt_sn.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_sn.setEnabled(false);
@@ -448,6 +469,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 txt_snKeyReleased(evt);
             }
         });
+        panel_order_details.add(txt_sn, new org.netbeans.lib.awtextra.AbsoluteConstraints(142, 377, 278, 30));
 
         txt_deposit.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         txt_deposit.setForeground(new java.awt.Color(51, 51, 255));
@@ -468,6 +490,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 txt_depositKeyReleased(evt);
             }
         });
+        panel_order_details.add(txt_deposit, new org.netbeans.lib.awtextra.AbsoluteConstraints(728, 567, 110, 30));
 
         txt_total.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         txt_total.setEnabled(false);
@@ -483,6 +506,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 txt_totalKeyPressed(evt);
             }
         });
+        panel_order_details.add(txt_total, new org.netbeans.lib.awtextra.AbsoluteConstraints(921, 567, 110, 30));
 
         table_view_products.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         table_view_products.setModel(new javax.swing.table.DefaultTableModel(
@@ -501,6 +525,8 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
             }
         });
         jScrollPane2.setViewportView(table_view_products);
+
+        panel_order_details.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(456, 335, 575, 224));
 
         table_view_faults.setFont(new java.awt.Font("Lucida Grande", 0, 17)); // NOI18N
         table_view_faults.setModel(new javax.swing.table.DefaultTableModel(
@@ -535,6 +561,8 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         });
         jScrollPane3.setViewportView(table_view_faults);
 
+        panel_order_details.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(456, 135, 575, 188));
+
         txt_due.setEditable(false);
         txt_due.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         txt_due.setForeground(new java.awt.Color(255, 0, 51));
@@ -545,6 +573,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 txt_dueActionPerformed(evt);
             }
         });
+        panel_order_details.add(txt_due, new org.netbeans.lib.awtextra.AbsoluteConstraints(511, 567, 110, 30));
 
         btn_undo.setBackground(new java.awt.Color(21, 76, 121));
         btn_undo.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
@@ -557,6 +586,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 btn_undoActionPerformed(evt);
             }
         });
+        panel_order_details.add(btn_undo, new org.netbeans.lib.awtextra.AbsoluteConstraints(456, 68, 180, 50));
 
         btn_notes.setBackground(new java.awt.Color(21, 76, 121));
         btn_notes.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
@@ -569,11 +599,13 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 btn_notesActionPerformed(evt);
             }
         });
+        panel_order_details.add(btn_notes, new org.netbeans.lib.awtextra.AbsoluteConstraints(654, 68, 180, 50));
 
         lbl_order_created_on.setBackground(new java.awt.Color(204, 204, 204));
         lbl_order_created_on.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         lbl_order_created_on.setText("orderCreatedOn");
         lbl_order_created_on.setEnabled(false);
+        panel_order_details.add(lbl_order_created_on, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 66, 399, -1));
 
         panel_order_status.setBackground(new java.awt.Color(255, 102, 102));
         panel_order_status.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -588,11 +620,17 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         lbl_date.setText("date");
         panel_order_status.add(lbl_date, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 29, -1, -1));
 
-        lbl_order_picked_on.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
+        lbl_order_picked_on.setFont(new java.awt.Font("Lucida Grande", 1, 19)); // NOI18N
         lbl_order_picked_on.setForeground(new java.awt.Color(255, 255, 255));
         lbl_order_picked_on.setText("orderPickedOn");
         lbl_order_picked_on.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        panel_order_status.add(lbl_order_picked_on, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 10, 329, -1));
+        panel_order_status.add(lbl_order_picked_on, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 0, 329, -1));
+
+        lbl_refunded_by.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_refunded_by.setText("refundedBy");
+        panel_order_status.add(lbl_refunded_by, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 30, -1, -1));
+
+        panel_order_details.add(panel_order_status, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 6, 1010, -1));
 
         jScrollPane_notes.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane_notes.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -604,173 +642,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         editor_pane_notes.setEnabled(false);
         jScrollPane_notes.setViewportView(editor_pane_notes);
 
-        javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
-        panel_order_details.setLayout(panel_order_detailsLayout);
-        panel_order_detailsLayout.setHorizontalGroup(
-            panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panel_order_status, javax.swing.GroupLayout.PREFERRED_SIZE, 1010, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addComponent(lbl_first_name)
-                                .addGap(12, 12, 12)
-                                .addComponent(txt_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addComponent(lbl_last_name)
-                                .addGap(15, 15, 15)
-                                .addComponent(txt_last_name, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addComponent(lbl_contact)
-                                .addGap(6, 6, 6)
-                                .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addComponent(lbl_email)
-                                .addGap(6, 6, 6)
-                                .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addComponent(lbl_brand)
-                                .addGap(6, 6, 6)
-                                .addComponent(txt_brand, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(36, 36, 36)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 575, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addComponent(lbl_model)
-                                .addGap(6, 6, 6)
-                                .addComponent(txt_model, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addComponent(lbl_sn)
-                                .addGap(6, 6, 6)
-                                .addComponent(txt_sn, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(36, 36, 36)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 575, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addComponent(lbl_due)
-                                .addGap(0, 0, 0)
-                                .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lbl_deposit)
-                                .addGap(0, 0, 0)
-                                .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lbl_price)
-                                .addGap(0, 0, 0)
-                                .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_order_no)
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                        .addGap(136, 136, 136)
-                                        .addComponent(lbl_auto_order_no))
-                                    .addComponent(lbl_order_created_on, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(36, 36, 36)
-                                .addComponent(btn_undo, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_notes1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_pick_up, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(35, 35, 35))
-        );
-        panel_order_detailsLayout.setVerticalGroup(
-            panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(panel_order_status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16)
-                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(lbl_auto_order_no, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(btn_undo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn_pick_up, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_notes1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(lbl_order_no))
-                    .addComponent(lbl_order_created_on))
-                .addGap(7, 7, 7)
-                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addComponent(lbl_first_name))
-                            .addComponent(txt_first_name, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addComponent(lbl_last_name))
-                            .addComponent(txt_last_name, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addComponent(lbl_contact))
-                            .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addComponent(lbl_email))
-                            .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addComponent(lbl_brand))
-                            .addComponent(txt_brand, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(12, 12, 12)
-                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addComponent(lbl_model))
-                            .addComponent(txt_model, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addComponent(lbl_sn))
-                            .addComponent(txt_sn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addComponent(jScrollPane_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(8, 8, 8)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lbl_due)
-                                    .addComponent(lbl_deposit)
-                                    .addComponent(lbl_price)))))))
-        );
+        panel_order_details.add(jScrollPane_notes, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 419, 399, 178));
 
         desktop_pane_not_fixed_order.setLayer(panel_order_details, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -778,7 +650,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         desktop_pane_not_fixed_order.setLayout(desktop_pane_not_fixed_orderLayout);
         desktop_pane_not_fixed_orderLayout.setHorizontalGroup(
             desktop_pane_not_fixed_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel_order_details, javax.swing.GroupLayout.PREFERRED_SIZE, 1037, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         desktop_pane_not_fixed_orderLayout.setVerticalGroup(
             desktop_pane_not_fixed_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -938,6 +810,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         {
             try {
                 dbConnection();
+                
                 java.util.Date date = new java.util.Date();
                 java.sql.Timestamp currentDateTime = new java.sql.Timestamp(date.getTime());
                 String pickDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDateTime);
@@ -956,6 +829,41 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 btn_notes.setVisible(false);
                 btn_notes1.setVisible(true);
                 
+                addNoteEvent("Picked");
+                
+            if (order.getDeposit() > 0)
+            {
+                double negativeDeposit = order.getDeposit();
+                double negativeCash = order.getCashDeposit();
+                double negativeCard = order.getCardDeposit();
+                
+                order.setDeposit(negativeDeposit *= -1);
+                order.setCashDeposit(negativeCash *= -1);
+                order.setCardDeposit(negativeCard *= -1);
+                
+                String queryDepositRefund = "INSERT INTO completedOrders(orderNo, firstName, lastName, "
+                    + "brand, model, total, deposit, due, cash, card, changeTotal, cashDeposit, "
+                    + "cardDeposit, payDate, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                
+                ps = con.prepareStatement(queryDepositRefund);
+                ps.setString(1, order.getOrderNo());
+                ps.setString(2, order.getFirstName());
+                ps.setString(3, order.getLastName());
+                ps.setString(4, order.getBrand());
+                ps.setString(5, order.getModel());
+                ps.setDouble(6, 0);
+                ps.setDouble(7, order.getDeposit());
+                ps.setDouble(8, 0);
+                ps.setDouble(9, order.getCashDeposit()); 
+                ps.setDouble(10, order.getCardDeposit());
+                ps.setDouble(11, 0);
+                ps.setDouble(12, 0);
+                ps.setDouble(13, 0);
+                ps.setString(14, order.getPickDate());
+                ps.setString(15, order.getStatus());
+                ps.executeUpdate();
+                }
+                
             } catch (SQLException ex) {
                 Logger.getLogger(NotFixedOrder.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -965,23 +873,24 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
 
     private void btn_undoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_undoActionPerformed
         // TODO add your handling code here:
-        int confirmUndoing = JOptionPane.showConfirmDialog(null, "Do you really want to 'UNDO' Order: " 
+        int confirmUndoing = JOptionPane.showConfirmDialog(this, "Do you really want to 'UNDO' Order: " 
                             + order.getOrderNo() + " ?", "Undo Order", JOptionPane.YES_NO_OPTION);
         if (confirmUndoing == 0)
         {
-            order.setStatus("In Progress");
-            order.setFinishDate("");
+            String status = "In Progress";
+            order.setStatus(status);
             
             try {
                 dbConnection();
+                
                 String query = "UPDATE orderDetails SET status = ?, finishDate = ? WHERE orderNo = ? ";
                 ps = con.prepareStatement(query);
                 ps.setString(1, order.getStatus());
-                ps.setString(2, order.getOrderNo());
-                ps.setString(3, order.getFinishDate());
+                ps.setString(2, null);
+                ps.setString(3, order.getOrderNo());
                 ps.executeUpdate();
                
-                addEventNote("In Progress");
+                addNoteEvent(status);
                 
                 OrderDetails orderDetails = new OrderDetails(order, completedOrders);
                 desktop_pane_not_fixed_order.removeAll();
@@ -1030,6 +939,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lbl_order_picked_on;
     private javax.swing.JLabel lbl_order_status;
     private javax.swing.JLabel lbl_price;
+    private javax.swing.JLabel lbl_refunded_by;
     private javax.swing.JLabel lbl_sn;
     private javax.swing.JPanel panel_order_details;
     private javax.swing.JPanel panel_order_status;

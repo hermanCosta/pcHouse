@@ -5,12 +5,8 @@
  */
 package Forms;
 
-import InternalForms.NewOrder;
-import InternalForms.OrderDetails;
 import InternalForms.SaleDetails;
-import InternalForms.Customers;
 import InternalForms.NewSale;
-import InternalForms.Sales;
 import Model.Sale;
 import java.awt.Graphics;
 import java.awt.Graphics2D;

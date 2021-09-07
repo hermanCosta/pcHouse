@@ -11,9 +11,13 @@ import InternalForms.TillClosing;
 import InternalForms.ProductsList;
 import InternalForms.Customers;
 import InternalForms.Faults;
-import InternalForms.HomePage;
+import InternalForms.FixedOrder;
 import InternalForms.NewSale;
+import InternalForms.NotFixedOrder;
+import InternalForms.OrderDetails;
+import InternalForms.OrderRefund;
 import InternalForms.Sales;
+import Model.CompletedOrder;
 import Model.Order;
 import Model.ProductService;
 import java.awt.Color;
@@ -47,6 +51,7 @@ public class MainMenu extends javax.swing.JFrame {
     Statement stmt;
     ProductService productService;
     Order order;
+    CompletedOrder completedOrder;
     public static JDesktopPane mainMenuDesktopPane;
     Color defaultColor, clickedColor;
     
@@ -55,7 +60,7 @@ public class MainMenu extends javax.swing.JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         
         tableSettings(table_view_products_stock);
-        tableSettings(table_view_orders_fixed);
+        tableSettings(table_view_orders);
         
         defaultColor = new Color(21,76,121);
         clickedColor = new Color(118,181,197);
@@ -195,7 +200,7 @@ public class MainMenu extends javax.swing.JFrame {
               Class.forName("com.mysql.cj.jdbc.Driver");
               con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -218,7 +223,7 @@ public class MainMenu extends javax.swing.JFrame {
             }
             
         } catch (SQLException ex) {
-            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         DefaultTableModel dtm = (DefaultTableModel)table_view_products_stock.getModel();
@@ -259,7 +264,7 @@ public class MainMenu extends javax.swing.JFrame {
                 orderList.add(order);
             }
             
-            DefaultTableModel dtm = (DefaultTableModel)table_view_orders_fixed.getModel();
+            DefaultTableModel dtm = (DefaultTableModel)table_view_orders.getModel();
             dtm.setRowCount(0);
 
             Object[] row = new Object[4];
@@ -274,7 +279,7 @@ public class MainMenu extends javax.swing.JFrame {
             }
             
         } catch (SQLException ex) {
-            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         
@@ -328,7 +333,7 @@ public class MainMenu extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         table_view_products_stock = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
-        table_view_orders_fixed = new javax.swing.JTable();
+        table_view_orders = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(21, 76, 121));
@@ -894,23 +899,21 @@ public class MainMenu extends javax.swing.JFrame {
             .addComponent(panel_products, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panel_reports, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panel_orders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_menu_barLayout.createSequentialGroup()
-                .addGap(0, 77, Short.MAX_VALUE)
-                .addGroup(panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panel_sales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(panel_products_list, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(panel_new_order, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(panel_check_existing, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(panel_new_sale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addComponent(panel_home, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_menu_barLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(panel_sales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(panel_products_list, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(panel_new_order, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(panel_check_existing, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(panel_new_sale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(panel_close_till, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel_customers, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel_faults, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addComponent(panel_home, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         panel_menu_barLayout.setVerticalGroup(
             panel_menu_barLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -952,7 +955,7 @@ public class MainMenu extends javax.swing.JFrame {
         panel_buttons.setBackground(new java.awt.Color(240, 248, 255));
 
         btn_new_order.setBackground(new java.awt.Color(21, 76, 121));
-        btn_new_order.setFont(new java.awt.Font("Lucida Grande", 1, 17)); // NOI18N
+        btn_new_order.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         btn_new_order.setForeground(new java.awt.Color(255, 255, 255));
         btn_new_order.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_new_order.png"))); // NOI18N
         btn_new_order.setText("New Order");
@@ -969,7 +972,7 @@ public class MainMenu extends javax.swing.JFrame {
         });
 
         btn_new_sale.setBackground(new java.awt.Color(21, 76, 121));
-        btn_new_sale.setFont(new java.awt.Font("Lucida Grande", 1, 17)); // NOI18N
+        btn_new_sale.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         btn_new_sale.setForeground(new java.awt.Color(255, 255, 255));
         btn_new_sale.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_new_sale.png"))); // NOI18N
         btn_new_sale.setText("New Sale");
@@ -981,7 +984,7 @@ public class MainMenu extends javax.swing.JFrame {
         });
 
         btn_products_list.setBackground(new java.awt.Color(21, 76, 121));
-        btn_products_list.setFont(new java.awt.Font("Lucida Grande", 1, 17)); // NOI18N
+        btn_products_list.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         btn_products_list.setForeground(new java.awt.Color(255, 255, 255));
         btn_products_list.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_product_list.png"))); // NOI18N
         btn_products_list.setText("Products List");
@@ -993,7 +996,7 @@ public class MainMenu extends javax.swing.JFrame {
         });
 
         btn_orders.setBackground(new java.awt.Color(21, 76, 121));
-        btn_orders.setFont(new java.awt.Font("Lucida Grande", 1, 17)); // NOI18N
+        btn_orders.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         btn_orders.setForeground(new java.awt.Color(255, 255, 255));
         btn_orders.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_check_existing.png"))); // NOI18N
         btn_orders.setText("Orders");
@@ -1005,7 +1008,7 @@ public class MainMenu extends javax.swing.JFrame {
         });
 
         btn_sales.setBackground(new java.awt.Color(21, 76, 121));
-        btn_sales.setFont(new java.awt.Font("Lucida Grande", 1, 17)); // NOI18N
+        btn_sales.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         btn_sales.setForeground(new java.awt.Color(255, 255, 255));
         btn_sales.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_sellings.png"))); // NOI18N
         btn_sales.setText("Sales");
@@ -1078,8 +1081,8 @@ public class MainMenu extends javax.swing.JFrame {
 
         jScrollPane3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Orders fixed Over Three Months", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("sansserif", 0, 14))); // NOI18N
 
-        table_view_orders_fixed.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
-        table_view_orders_fixed.setModel(new javax.swing.table.DefaultTableModel(
+        table_view_orders.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
+        table_view_orders.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -1095,17 +1098,19 @@ public class MainMenu extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        table_view_orders_fixed.addMouseListener(new java.awt.event.MouseAdapter() {
+        table_view_orders.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                table_view_orders_fixedMouseClicked(evt);
+                table_view_ordersMouseClicked(evt);
             }
         });
-        jScrollPane3.setViewportView(table_view_orders_fixed);
-        if (table_view_orders_fixed.getColumnModel().getColumnCount() > 0) {
-            table_view_orders_fixed.getColumnModel().getColumn(0).setPreferredWidth(100);
-            table_view_orders_fixed.getColumnModel().getColumn(0).setMaxWidth(150);
-            table_view_orders_fixed.getColumnModel().getColumn(3).setPreferredWidth(100);
-            table_view_orders_fixed.getColumnModel().getColumn(3).setMaxWidth(150);
+        jScrollPane3.setViewportView(table_view_orders);
+        if (table_view_orders.getColumnModel().getColumnCount() > 0) {
+            table_view_orders.getColumnModel().getColumn(0).setPreferredWidth(80);
+            table_view_orders.getColumnModel().getColumn(0).setMaxWidth(120);
+            table_view_orders.getColumnModel().getColumn(2).setPreferredWidth(140);
+            table_view_orders.getColumnModel().getColumn(2).setMaxWidth(150);
+            table_view_orders.getColumnModel().getColumn(3).setPreferredWidth(120);
+            table_view_orders.getColumnModel().getColumn(3).setMaxWidth(150);
         }
 
         javax.swing.GroupLayout panel_customers1Layout = new javax.swing.GroupLayout(panel_customers1);
@@ -1611,46 +1616,54 @@ public class MainMenu extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_table_view_products_stockMouseClicked
 
-    private void table_view_orders_fixedMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_orders_fixedMouseClicked
+    private void table_view_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_ordersMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_table_view_orders_fixedMouseClicked
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
+         if(evt.getClickCount() == 2)
+        {
+            dbConnection();
+            DefaultTableModel dtm = (DefaultTableModel)table_view_orders.getModel();
+            int orderSelected = table_view_orders.getSelectedRow();
+            String selectedOrderNo = dtm.getValueAt(orderSelected, 0).toString();
+        
+            try {
+                String query = "SELECT * FROM orderDetails WHERE orderNo = ? ";
+                ps = con.prepareStatement(query);
+                ps.setString(1, selectedOrderNo);
+                rs = ps.executeQuery();
                 
-                new MainMenu().setVisible(true);
+                while(rs.next())
+                {
+                   order  = new Order(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"),
+                   rs.getString("email"), rs.getString("deviceBrand"), rs.getString("deviceModel"), rs.getString("serialNumber"), rs.getString("importantNotes"),
+                   rs.getString("fault"), rs.getString("productService"), rs.getString("qty"),rs.getString("unitPrice"), rs.getString("priceTotal"),
+                   rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"),
+                   rs.getString("status"), rs.getString("issueDate"), rs.getString("finishDate"), rs.getString("pickDate"),
+                   rs.getString("refundDate"), Login.fullName);
+                }
+                
+                String queryPayDate = "SELECT * FROM completedOrders WHERE orderNo = ?"; 
+                ps = con.prepareStatement(queryPayDate);
+                ps.setString(1, selectedOrderNo);
+                rs = ps.executeQuery();
+                
+                while (rs.next())
+                {
+                    completedOrder = new CompletedOrder(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), 
+                        "", "", rs.getString("brand"), rs.getString("model"), 
+                        "", rs.getDouble("total"), rs.getDouble("deposit"),rs.getDouble("due"), 
+                    rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getDouble("cashDeposit"), 
+                    rs.getDouble("cardDeposit"), rs.getString("payDate"), rs.getString("status"));
+                }
+                    FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
+                    desktop_pane_main_menu.removeAll();
+                    desktop_pane_main_menu.add(fixedOrder).setVisible(true);
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
             }
-        });
-    }
-
+        }
+    }//GEN-LAST:event_table_view_ordersMouseClicked
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_new_order;
     private javax.swing.JButton btn_new_sale;
@@ -1689,7 +1702,7 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JPanel panel_reports;
     private javax.swing.JPanel panel_sales;
     private javax.swing.JPanel panel_window;
-    private javax.swing.JTable table_view_orders_fixed;
+    private javax.swing.JTable table_view_orders;
     private javax.swing.JTable table_view_products_stock;
     // End of variables declaration//GEN-END:variables
 }

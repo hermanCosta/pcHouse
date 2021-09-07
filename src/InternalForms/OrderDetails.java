@@ -118,7 +118,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         accessDbColumn(faults, "SELECT * FROM faults","faultName");
         listProductService();
         loadSelectedOrder();
-        
     }
     
     
@@ -150,7 +149,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         Vector vecQty = new Vector();
         Vector vecUnitPrice = new Vector();
         Vector vecPriceTotal = new Vector();
-        
         
         vecFaults.addAll(Arrays.asList(order.getStringFaults().split(",")));
         vecProducts.addAll(Arrays.asList(order.getStringProducts().replaceAll("   " , " ").split(",")));
@@ -1327,7 +1325,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
     private void btn_fixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_fixActionPerformed
         // TODO add your handling code here:
-        
        int confirmFixing = JOptionPane.showConfirmDialog(this, "Do you really want to Tag Order: " 
                + order.getOrderNo() + " as Fixed Order", "Update Order", JOptionPane.YES_NO_OPTION);
        

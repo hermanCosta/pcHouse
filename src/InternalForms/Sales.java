@@ -89,7 +89,6 @@ public class Sales extends javax.swing.JInternalFrame {
         }
     }
     
-    
     public void searchSale()
     {
         ArrayList<Sale> saleList = new ArrayList<>();   
@@ -127,7 +126,7 @@ public class Sales extends javax.swing.JInternalFrame {
                 row[2] = saleList.get(i).getContactNo();
                 row[3] = saleList.get(i).getStringProducts();
                 row[4] = saleList.get(i).getStringQty();
-                row[5] = saleList.get(i).getStringPriceTotal();
+                row[5] = saleList.get(i).getTotal();
                 row[6] = saleList.get(i).getStatus();
                 
             dtm.addRow(row);
@@ -161,9 +160,6 @@ public class Sales extends javax.swing.JInternalFrame {
                 list.add(sale);
             }
             
-            
-            
-            
         DefaultTableModel dtm = (DefaultTableModel)table_view_sales.getModel();
         dtm.setRowCount(0);
         
@@ -175,7 +171,7 @@ public class Sales extends javax.swing.JInternalFrame {
                 row[2] = list.get(i).getContactNo();
                 row[3] = list.get(i).getStringProducts();
                 row[4] = list.get(i).getStringQty();
-                row[5] = list.get(i).getStringPriceTotal();
+                row[5] = list.get(i).getTotal();
                 row[6] = list.get(i).getStatus();
                 
             dtm.addRow(row);

@@ -5,41 +5,25 @@
  */
 package InternalForms;
 
-import Forms.MainMenu;
-import Forms.SalePayment;
+import Forms.PrintComputerLabel;
 import Model.Computer;
-import Model.Customer;
-import Model.ProductService;
-import Model.Sale;
 import com.sun.glass.events.KeyEvent;
-import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.InputVerifier;
-import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 /**
  *
@@ -133,9 +117,7 @@ public class ComputerList extends javax.swing.JInternalFrame {
                 
             dtm.addRow(row);
         }
-        
     }
-    
     
     public void autoCompleteFromDb(ArrayList list, String text, JTextField field)
     {
@@ -181,6 +163,22 @@ public class ComputerList extends javax.swing.JInternalFrame {
         }
     }
     
+    public void getTextFields()
+    {
+        brand = txt_brand.getText();
+        model = txt_model.getText();
+        serialNumber = txt_serial_number.getText();
+        processor = txt_processor.getText();
+        ram = txt_ram.getText();
+        storage = txt_storage.getText();
+        gpu = txt_gpu.getText();
+        screen = txt_screen.getText();
+        notes = editor_pane_notes.getText();
+        qty = Integer.parseInt(txt_qty.getText());
+        price = Double.parseDouble(txt_price.getText());
+        
+        computer = new Computer(brand, model, serialNumber, processor, ram, storage, gpu, screen, notes, qty, price);
+    }
     public void cleanFields()
     {
         //Clean all Fields 
@@ -201,23 +199,24 @@ public class ComputerList extends javax.swing.JInternalFrame {
     
     public void saveComputerIntoDb()
     {
-            brand = txt_brand.getText();
-            model = txt_model.getText();
-            serialNumber = txt_serial_number.getText();
-            processor = txt_processor.getText();
-            ram = txt_ram.getText();
-            storage = txt_storage.getText();
-            gpu = txt_gpu.getText();
-            screen = txt_screen.getText();
-            notes = editor_pane_notes.getText();
-            qty = Integer.parseInt(txt_qty.getText());
-            price = Double.parseDouble(txt_price.getText());
+//            brand = txt_brand.getText();
+//            model = txt_model.getText();
+//            serialNumber = txt_serial_number.getText();
+//            processor = txt_processor.getText();
+//            ram = txt_ram.getText();
+//            storage = txt_storage.getText();
+//            gpu = txt_gpu.getText();
+//            screen = txt_screen.getText();
+//            notes = editor_pane_notes.getText();
+//            qty = Integer.parseInt(txt_qty.getText());
+//            price = Double.parseDouble(txt_price.getText());
             
+        
             try {
                 
-            dbConnection();
+                dbConnection();
                     
-                computer = new Computer(brand, model, serialNumber, processor, ram, storage, gpu, screen, notes, qty, price);
+                getTextFields();
                 
                 int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add a Computer " + computer.getBrand() 
                         + " " + computer.getModel() + " ?", "Add New Computer", JOptionPane.YES_NO_OPTION);
@@ -286,6 +285,7 @@ public class ComputerList extends javax.swing.JInternalFrame {
         txt_serial_number = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         editor_pane_notes = new javax.swing.JEditorPane();
+        btn_clear_fields1 = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -556,6 +556,17 @@ public class ComputerList extends javax.swing.JInternalFrame {
         editor_pane_notes.setFont(new java.awt.Font("sansserif", 0, 13)); // NOI18N
         jScrollPane1.setViewportView(editor_pane_notes);
 
+        btn_clear_fields1.setBackground(new java.awt.Color(21, 76, 121));
+        btn_clear_fields1.setFont(new java.awt.Font("Lucida Grande", 1, 20)); // NOI18N
+        btn_clear_fields1.setForeground(new java.awt.Color(255, 255, 255));
+        btn_clear_fields1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_print.png"))); // NOI18N
+        btn_clear_fields1.setText("Print Label");
+        btn_clear_fields1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_clear_fields1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_computersLayout = new javax.swing.GroupLayout(panel_computers);
         panel_computers.setLayout(panel_computersLayout);
         panel_computersLayout.setHorizontalGroup(
@@ -564,66 +575,70 @@ public class ComputerList extends javax.swing.JInternalFrame {
                 .addGap(20, 20, 20)
                 .addGroup(panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panel_computersLayout.createSequentialGroup()
-                        .addComponent(lbl_qty)
+                        .addComponent(btn_add, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txt_qty, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_computersLayout.createSequentialGroup()
-                        .addComponent(lbl_storage)
-                        .addGap(18, 18, 18)
-                        .addComponent(txt_storage, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_computersLayout.createSequentialGroup()
-                        .addComponent(btn_add, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_update, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_computersLayout.createSequentialGroup()
-                        .addComponent(btn_delete, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_clear_fields, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_computersLayout.createSequentialGroup()
-                            .addComponent(lbl_brand)
-                            .addGap(18, 18, 18)
-                            .addComponent(txt_brand))
-                        .addGroup(panel_computersLayout.createSequentialGroup()
-                            .addComponent(lbl_model)
-                            .addGap(18, 18, 18)
-                            .addComponent(txt_model))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_computersLayout.createSequentialGroup()
-                            .addComponent(lbl_serial_number)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txt_serial_number, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(panel_computersLayout.createSequentialGroup()
-                                .addComponent(lbl_ram)
-                                .addGap(35, 35, 35)
-                                .addComponent(txt_ram, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panel_computersLayout.createSequentialGroup()
-                                .addComponent(lbl_peocessor)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txt_processor, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(btn_update, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btn_delete, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btn_clear_fields, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btn_clear_fields1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(panel_computersLayout.createSequentialGroup()
                         .addGroup(panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_screen)
-                            .addComponent(lbl_gpu))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txt_gpu, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_screen, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panel_computersLayout.createSequentialGroup()
-                                .addComponent(lbl_price)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txt_price, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jScrollPane1))
-                .addGap(0, 30, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
+                                .addComponent(lbl_storage)
+                                .addGap(18, 18, 18)
+                                .addComponent(txt_storage, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_computersLayout.createSequentialGroup()
+                                    .addGroup(panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(lbl_screen)
+                                        .addComponent(lbl_gpu))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(txt_gpu, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txt_screen, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(panel_computersLayout.createSequentialGroup()
+                                            .addComponent(lbl_price)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(txt_price, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addGroup(panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_computersLayout.createSequentialGroup()
+                                    .addComponent(lbl_brand)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(txt_brand))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_computersLayout.createSequentialGroup()
+                                    .addComponent(lbl_model)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(txt_model))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_computersLayout.createSequentialGroup()
+                                    .addComponent(lbl_serial_number)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txt_serial_number, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(panel_computersLayout.createSequentialGroup()
+                                        .addComponent(lbl_ram)
+                                        .addGap(35, 35, 35)
+                                        .addComponent(txt_ram, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(panel_computersLayout.createSequentialGroup()
+                                        .addComponent(lbl_peocessor)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(txt_processor, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(panel_computersLayout.createSequentialGroup()
+                                .addComponent(lbl_qty)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txt_qty, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(30, 30, 30)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         panel_computersLayout.setVerticalGroup(
             panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_computersLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(20, 20, 20)
+                .addGroup(panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panel_computersLayout.createSequentialGroup()
                         .addGroup(panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txt_brand, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -663,16 +678,16 @@ public class ComputerList extends javax.swing.JInternalFrame {
                             .addComponent(txt_price, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_price))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn_add)
-                            .addComponent(btn_update))
-                        .addGap(15, 15, 15)
-                        .addGroup(panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn_delete)
-                            .addComponent(btn_clear_fields))))
-                .addContainerGap(51, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2))
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addGroup(panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_add, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_update, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_delete, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_clear_fields, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_clear_fields1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(84, Short.MAX_VALUE))
         );
 
         desktop_pane_computers.setLayer(panel_computers, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -762,7 +777,7 @@ public class ComputerList extends javax.swing.JInternalFrame {
         }
         else
         {
-             brand = txt_brand.getText();
+            brand = txt_brand.getText();
             model = txt_model.getText();
             serialNumber = txt_serial_number.getText();
             processor = txt_processor.getText();
@@ -905,7 +920,7 @@ public class ComputerList extends javax.swing.JInternalFrame {
                     computer.setComputerId(id);
                 }
                 
-                  txt_brand.setText(computer.getBrand());
+                txt_brand.setText(computer.getBrand());
                 txt_model.setText(computer.getModel());
                 txt_serial_number.setText(computer.getSerialNumber());
                 txt_processor.setText(computer.getProcessor());
@@ -1077,9 +1092,25 @@ public class ComputerList extends javax.swing.JInternalFrame {
        txt_serial_number.setText(txt_serial_number.getText().toUpperCase());
     }//GEN-LAST:event_txt_serial_numberKeyReleased
 
+    private void btn_clear_fields1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clear_fields1ActionPerformed
+        // TODO add your handling code here:
+         if (txt_brand.getText().trim().isEmpty() || txt_model.getText().trim().isEmpty() || 
+                txt_serial_number.getText().trim().isEmpty() || txt_processor.getText().trim().isEmpty() || 
+               txt_ram.getText().trim().isEmpty() || txt_storage.getText().trim().isEmpty() || txt_gpu.getText().trim().isEmpty() ||  
+               txt_screen.getText().trim().isEmpty() || txt_qty.getText().trim().isEmpty() || txt_price.getText().trim().isEmpty()) 
+
+           JOptionPane.showMessageDialog(this, "Please, check Empty fields", "Print Label", JOptionPane.ERROR_MESSAGE);
+         
+       else
+        {
+            new PrintComputerLabel(computer).setVisible(true);
+        }
+    }//GEN-LAST:event_btn_clear_fields1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_add;
     private javax.swing.JButton btn_clear_fields;
+    private javax.swing.JButton btn_clear_fields1;
     private javax.swing.JButton btn_delete;
     private javax.swing.JButton btn_update;
     private javax.swing.JDesktopPane desktop_pane_computers;
