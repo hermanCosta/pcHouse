@@ -141,7 +141,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         txt_total.setText(String.valueOf(order.getTotal()));
         txt_deposit.setText(String.valueOf(order.getDeposit()));
         txt_due.setText(String.valueOf(order.getDue()));
-        lbl_issue_date.setText("Created on: " + order.getIssueDate() + " - by " + order.getCreatedBy());
+        lbl_issue_date.setText("Created on: " + order.getIssueDate() + " - by " + order.getUsername());
         
         // Pass arrayPrices to a vector and add as a new column
         Vector vecFaults = new Vector();
@@ -312,7 +312,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         try {
             dbConnection();
             
-            String note = "Order tagged as '" + updateNote + "' by " + order.getCreatedBy();
+            String note = "Order tagged as '" + updateNote + "' by " + order.getUsername();
             String user = "System";
           
                     String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
@@ -1532,7 +1532,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
     private void btn_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notesActionPerformed
         // TODO add your handling code here:
-        OrderNotes orderNotes = new OrderNotes(order.getOrderNo(), order.getCreatedBy());
+        OrderNotes orderNotes = new OrderNotes(order.getOrderNo(), order.getUsername());
         orderNotes.setVisible(true);
         
     }//GEN-LAST:event_btn_notesActionPerformed

@@ -286,6 +286,8 @@ public class ComputerList extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         editor_pane_notes = new javax.swing.JEditorPane();
         btn_clear_fields1 = new javax.swing.JButton();
+        txt_search_computer = new javax.swing.JTextField();
+        lbl_search_icon = new javax.swing.JLabel();
 
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -567,6 +569,25 @@ public class ComputerList extends javax.swing.JInternalFrame {
             }
         });
 
+        txt_search_computer.setFont(new java.awt.Font("sansserif", 1, 16)); // NOI18N
+        txt_search_computer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_search_computerActionPerformed(evt);
+            }
+        });
+        txt_search_computer.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_search_computerKeyReleased(evt);
+            }
+        });
+
+        lbl_search_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_search_black.png"))); // NOI18N
+        lbl_search_icon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbl_search_iconMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_computersLayout = new javax.swing.GroupLayout(panel_computers);
         panel_computers.setLayout(panel_computersLayout);
         panel_computersLayout.setHorizontalGroup(
@@ -633,11 +654,21 @@ public class ComputerList extends javax.swing.JInternalFrame {
                         .addGap(30, 30, 30)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(22, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_computersLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbl_search_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txt_search_computer, javax.swing.GroupLayout.PREFERRED_SIZE, 651, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(176, 176, 176))
         );
         panel_computersLayout.setVerticalGroup(
             panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_computersLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
+                .addGroup(panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_search_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_search_computer, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panel_computersLayout.createSequentialGroup()
                         .addGroup(panel_computersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -687,7 +718,7 @@ public class ComputerList extends javax.swing.JInternalFrame {
                     .addComponent(btn_delete, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_clear_fields, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_clear_fields1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(84, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         desktop_pane_computers.setLayer(panel_computers, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -1107,6 +1138,58 @@ public class ComputerList extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btn_clear_fields1ActionPerformed
 
+    private void txt_search_computerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_search_computerActionPerformed
+
+    }//GEN-LAST:event_txt_search_computerActionPerformed
+
+    private void txt_search_computerKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_search_computerKeyReleased
+        // TODO add your handling code here:
+        ArrayList<Computer> compList = new ArrayList<>();
+        String searchComp = txt_search_computer.getText();
+
+        try {
+            dbConnection();
+
+            String query = "SELECT * FROM computers WHERE brand LIKE '%" + searchComp + "%'"
+            + "OR model LIKE '%" + searchComp + "%' OR serialNumber LIKE '%" + searchComp + "%'"
+            + " OR price LIKE '%" + searchComp + "%'";
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery(query);
+
+            while (rs.next())
+            {
+                computer = new Computer(rs.getString("brand"), rs.getString("model"), rs.getString("serialNumber"), 
+                            rs.getString("processor"), rs.getString("ram"), rs.getString("storage"), rs.getString("gpu"), 
+                            rs.getString("screen"), rs.getString("notes"), rs.getInt("qty"), rs.getDouble("price"));
+                
+                computer.setComputerId(rs.getInt("computerId"));
+                compList.add(computer);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Computer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        DefaultTableModel dtm = (DefaultTableModel)table_view_computers.getModel();
+        dtm.setRowCount(0);
+
+        Object[] row = new Object[6];
+        for (int i = 0 ;i < compList.size() ; i++)
+        {
+            row[0] = compList.get(i).getComputerId();
+            row[1] = compList.get(i).getBrand();
+            row[2] = compList.get(i).getModel();
+            row[3] = compList.get(i).getSerialNumber();
+            row[4] = compList.get(i).getQty();
+            row[5] = compList.get(i).getPrice();
+
+            dtm.addRow(row);
+        }
+    }//GEN-LAST:event_txt_search_computerKeyReleased
+
+    private void lbl_search_iconMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_search_iconMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbl_search_iconMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_add;
     private javax.swing.JButton btn_clear_fields;
@@ -1125,6 +1208,7 @@ public class ComputerList extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lbl_qty;
     private javax.swing.JLabel lbl_ram;
     private javax.swing.JLabel lbl_screen;
+    private javax.swing.JLabel lbl_search_icon;
     private javax.swing.JLabel lbl_serial_number;
     private javax.swing.JLabel lbl_storage;
     private javax.swing.JPanel panel_computers;
@@ -1137,6 +1221,7 @@ public class ComputerList extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txt_qty;
     private javax.swing.JTextField txt_ram;
     private javax.swing.JTextField txt_screen;
+    private javax.swing.JTextField txt_search_computer;
     private javax.swing.JTextField txt_serial_number;
     private javax.swing.JTextField txt_storage;
     // End of variables declaration//GEN-END:variables

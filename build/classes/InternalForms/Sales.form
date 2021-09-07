@@ -102,7 +102,7 @@
                           <Component id="txt_search_sale" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jScrollPane2" min="-2" pref="498" max="-2" attributes="0"/>
+                      <Component id="jScrollPane2" min="-2" pref="506" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>

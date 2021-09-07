@@ -112,7 +112,7 @@ public class OrderPayment extends javax.swing.JFrame {
         try {
             dbConnection();
             
-            String note = "Order tagged as '" + updateNote + "' by " + order.getCreatedBy();
+            String note = "Order tagged as '" + updateNote + "' by " + order.getUsername();
             String user = "System";
           
                     String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";

@@ -33,6 +33,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -82,23 +83,19 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
         
-        tableSettings();
+        tableSettings(table_view_faults);
+        tableSettings(table_view_products);
         loadSelectedOrder();
         
     }
     
-    public void tableSettings()
+    public void tableSettings (JTable table)
     {
-        table_view_faults.setRowHeight(25);
-        table_view_faults.getTableHeader().setForeground(Color.gray);
-        table_view_faults.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
-        ((DefaultTableCellRenderer)table_view_faults.getDefaultRenderer(Object.class)).setForeground(Color.gray);
-        
-        table_view_products.setRowHeight(25);
-        table_view_products.getTableHeader().setForeground(Color.gray);
-        table_view_products.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
-        ((DefaultTableCellRenderer)table_view_products.getDefaultRenderer(Object.class)).setForeground(Color.gray);
-        
+        table.getTableHeader().setEnabled(false);
+        table.setRowHeight(25);
+        table.getTableHeader().setForeground(Color.gray);
+        table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
+        ((DefaultTableCellRenderer)table.getDefaultRenderer(Object.class)).setForeground(Color.gray);
     }
 
    public void loadSelectedOrder()
@@ -146,7 +143,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         
         lbl_order_status.setText("Order Fixed Successfully");
         lbl_date.setText("date: " + order.getFinishDate());
-        lbl_order_created_on.setText("Created on: " + order.getIssueDate() + " - By " + order.getCreatedBy());
+        lbl_order_created_on.setText("Created on: " + order.getIssueDate() + " - By " + order.getUsername());
         lbl_auto_order_no.setText(order.getOrderNo());
         txt_first_name.setText(order.getFirstName());
         txt_last_name.setText(order.getLastName());
@@ -254,7 +251,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         try {
             dbConnection();
             
-            String note = "Order tagged as '" + updateNote + "' by " + order.getCreatedBy();
+            String note = "Order tagged as '" + updateNote + "' by " + order.getUsername();
             String user = "System";
           
                     String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
@@ -699,7 +696,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         lbl_order_picked_on.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         panel_order_status.add(lbl_order_picked_on, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 0, 329, -1));
 
-        panel_order_details.add(panel_order_status, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 6, 1010, -1));
+        panel_order_details.add(panel_order_status, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 6, 1010, 50));
 
         jScrollPane_notes.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane_notes.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
@@ -867,7 +864,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
 
     private void btn_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notesActionPerformed
         // TODO add your handling code here:
-        OrderNotes orderNotes = new OrderNotes(order.getOrderNo(), order.getCreatedBy());
+        OrderNotes orderNotes = new OrderNotes(order.getOrderNo(), order.getUsername());
         orderNotes.setVisible(true);
         
     }//GEN-LAST:event_btn_notesActionPerformed

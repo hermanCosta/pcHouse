@@ -75,7 +75,7 @@ public class OrderList extends javax.swing.JInternalFrame {
         
         try {
             dbConnection();
-            ps = con.prepareStatement("SELECT * FROM orderDetails ORDER BY orderNo DESC LIMIT 18");
+            ps = con.prepareStatement("SELECT * FROM orderDetails ORDER BY orderNo DESC LIMIT 19");
             rs = ps.executeQuery();
             
             while (rs.next())
@@ -329,8 +329,8 @@ public class OrderList extends javax.swing.JInternalFrame {
                 .addGap(13, 13, 13)
                 .addComponent(label_latest_orders_created)
                 .addGap(27, 27, 27)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 506, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         desktop_pane_order_list.setLayer(jPanel1, javax.swing.JLayeredPane.DEFAULT_LAYER);

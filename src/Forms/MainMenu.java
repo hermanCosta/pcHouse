@@ -13,28 +13,33 @@ import InternalForms.Customers;
 import InternalForms.Faults;
 import InternalForms.FixedOrder;
 import InternalForms.NewSale;
-import InternalForms.NotFixedOrder;
-import InternalForms.OrderDetails;
-import InternalForms.OrderRefund;
 import InternalForms.Sales;
 import Model.CompletedOrder;
 import Model.Order;
 import Model.ProductService;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JTable;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -54,6 +59,9 @@ public class MainMenu extends javax.swing.JFrame {
     CompletedOrder completedOrder;
     public static JDesktopPane mainMenuDesktopPane;
     Color defaultColor, clickedColor;
+    int hour, minute, second;
+    Timer updateTimer;
+    int DELAY = 100;
     
     public MainMenu() {
         initComponents();
@@ -69,12 +77,32 @@ public class MainMenu extends javax.swing.JFrame {
         mainMenuDesktopPane = desktop_pane_main_menu; 
         loadProductsStockTable();
         loadOrdersFixed();
+        loadHeaderDetails();
     }
     
     public void tableSettings (JTable table)
     {
         table.setRowHeight(25);
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
+    }
+    
+    public void loadHeaderDetails()
+    {
+        
+        updateTimer = new Timer(DELAY, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+                Date currentDate = new Date();
+                SimpleDateFormat dtf = new SimpleDateFormat("dd, MMMM-yyyy  - HH:mm:ss aa");  
+                String dateTime = dtf.format(currentDate);
+                lbl_time_stamp.setText("Today is: " + dateTime);
+            }
+        });
+        
+        updateTimer.start();
+        lbl_username.setText("Hello, " + order.getUsername());
+        
     }
     
     public void defaultColorToAll()
@@ -108,9 +136,6 @@ public class MainMenu extends javax.swing.JFrame {
         panel_products.setBackground(defaultColor);
         panel_reports.setBackground(defaultColor);
         
-//        HomePage homePage = new HomePage();
-//        desktop_pane_main_menu.removeAll();
-//        desktop_pane_main_menu.add(homePage).setVisible(true);
     }
     
 
@@ -297,6 +322,10 @@ public class MainMenu extends javax.swing.JFrame {
 
         panel_window = new javax.swing.JPanel();
         panel_header = new javax.swing.JPanel();
+        lbl_time_stamp = new javax.swing.JLabel();
+        lbl_username = new javax.swing.JLabel();
+        btn_minimize = new javax.swing.JLabel();
+        btn_close = new javax.swing.JLabel();
         panel_menu_bar = new javax.swing.JPanel();
         panel_home = new javax.swing.JPanel();
         label_home = new javax.swing.JLabel();
@@ -337,18 +366,57 @@ public class MainMenu extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(21, 76, 121));
+        setUndecorated(true);
 
         panel_header.setBackground(new java.awt.Color(6, 57, 112));
+
+        lbl_time_stamp.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_time_stamp.setText("timeStamp");
+
+        lbl_username.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_username.setText("username");
+
+        btn_minimize.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_minimize.png"))); // NOI18N
+        btn_minimize.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_minimizeMouseClicked(evt);
+            }
+        });
+
+        btn_close.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_close_window.png"))); // NOI18N
+        btn_close.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_closeMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout panel_headerLayout = new javax.swing.GroupLayout(panel_header);
         panel_header.setLayout(panel_headerLayout);
         panel_headerLayout.setHorizontalGroup(
             panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1280, Short.MAX_VALUE)
+            .addGroup(panel_headerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_username, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_time_stamp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_minimize)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_close)
+                .addContainerGap())
         );
         panel_headerLayout.setVerticalGroup(
             panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
+            .addGroup(panel_headerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btn_close, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_minimize, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panel_headerLayout.createSequentialGroup()
+                        .addComponent(lbl_username)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbl_time_stamp)))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         panel_menu_bar.setBackground(new java.awt.Color(21, 76, 121));
@@ -382,7 +450,7 @@ public class MainMenu extends javax.swing.JFrame {
         panel_homeLayout.setHorizontalGroup(
             panel_homeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_homeLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 15, Short.MAX_VALUE)
                 .addComponent(label_home, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panel_homeLayout.setVerticalGroup(
@@ -461,7 +529,7 @@ public class MainMenu extends javax.swing.JFrame {
         panel_reportsLayout.setHorizontalGroup(
             panel_reportsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_reportsLayout.createSequentialGroup()
-                .addGap(0, 20, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(label_reports, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panel_reportsLayout.setVerticalGroup(
@@ -1034,7 +1102,7 @@ public class MainMenu extends javax.swing.JFrame {
                 .addComponent(btn_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
         panel_buttonsLayout.setVerticalGroup(
             panel_buttonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1138,20 +1206,17 @@ public class MainMenu extends javax.swing.JFrame {
         );
 
         desktop_pane_main_menu.add(panel_customers1);
-        panel_customers1.setBounds(0, 0, 1049, 810);
+        panel_customers1.setBounds(0, 0, 1050, 810);
 
         javax.swing.GroupLayout panel_windowLayout = new javax.swing.GroupLayout(panel_window);
         panel_window.setLayout(panel_windowLayout);
         panel_windowLayout.setHorizontalGroup(
             panel_windowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_windowLayout.createSequentialGroup()
-                .addGroup(panel_windowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(panel_windowLayout.createSequentialGroup()
-                        .addComponent(panel_menu_bar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)
-                        .addComponent(desktop_pane_main_menu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(panel_menu_bar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(desktop_pane_main_menu, javax.swing.GroupLayout.DEFAULT_SIZE, 1045, Short.MAX_VALUE))
+            .addComponent(panel_header, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         panel_windowLayout.setVerticalGroup(
             panel_windowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1171,7 +1236,7 @@ public class MainMenu extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panel_window, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1663,8 +1728,21 @@ public class MainMenu extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_table_view_ordersMouseClicked
+
+    private void btn_minimizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_minimizeMouseClicked
+        // TODO add your handling code here:
+        this.setState(JFrame.ICONIFIED);
+    }//GEN-LAST:event_btn_minimizeMouseClicked
+
+    private void btn_closeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_closeMouseClicked
+        // TODO add your handling code here:
+        //        this.dispose();
+        System.exit(0);
+    }//GEN-LAST:event_btn_closeMouseClicked
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel btn_close;
+    private javax.swing.JLabel btn_minimize;
     private javax.swing.JButton btn_new_order;
     private javax.swing.JButton btn_new_sale;
     private javax.swing.JButton btn_orders;
@@ -1685,6 +1763,8 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JLabel label_products_list;
     private javax.swing.JLabel label_reports;
     private javax.swing.JLabel label_sales;
+    private javax.swing.JLabel lbl_time_stamp;
+    private javax.swing.JLabel lbl_username;
     private javax.swing.JPanel panel_buttons;
     private javax.swing.JPanel panel_check_existing;
     private javax.swing.JPanel panel_close_till;

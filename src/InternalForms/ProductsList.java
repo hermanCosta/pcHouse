@@ -428,7 +428,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         panel_product_listLayout.setHorizontalGroup(
             panel_product_listLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_product_listLayout.createSequentialGroup()
-                .addGap(0, 18, Short.MAX_VALUE)
+                .addGap(0, 25, Short.MAX_VALUE)
                 .addGroup(panel_product_listLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panel_new_product, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panel_buttons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -444,7 +444,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
                 .addComponent(panel_buttons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(75, Short.MAX_VALUE))
         );
 
         desktop_pane_product_list.setLayer(panel_product_list, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -460,10 +460,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         );
         desktop_pane_product_listLayout.setVerticalGroup(
             desktop_pane_product_listLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(desktop_pane_product_listLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(panel_product_list, javax.swing.GroupLayout.PREFERRED_SIZE, 625, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(panel_product_list, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

@@ -75,6 +75,7 @@ public class SaleRefund extends javax.swing.JInternalFrame {
 
     public void tableSettings (JTable table)
     {
+        table.getTableHeader().setEnabled(false);
         table.setRowHeight(25);
         table.getTableHeader().setForeground(Color.gray);
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
@@ -377,7 +378,8 @@ public class SaleRefund extends javax.swing.JInternalFrame {
             .addGroup(panel_sale_statusLayout.createSequentialGroup()
                 .addComponent(lbl_sale_refunded_on)
                 .addGap(5, 5, 5)
-                .addComponent(lbl_refunded_by))
+                .addComponent(lbl_refunded_by)
+                .addContainerGap(7, Short.MAX_VALUE))
         );
 
         lbl_sale_created_on.setBackground(new java.awt.Color(204, 204, 204));
@@ -439,7 +441,7 @@ public class SaleRefund extends javax.swing.JInternalFrame {
             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panel_sale_status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addComponent(lbl_sale_created_on)
@@ -486,7 +488,7 @@ public class SaleRefund extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE)
+            .addComponent(panel_order_details, javax.swing.GroupLayout.DEFAULT_SIZE, 741, Short.MAX_VALUE)
         );
 
         pack();

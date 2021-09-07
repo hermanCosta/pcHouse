@@ -949,7 +949,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     ps.setDouble(19, order.getDue());
                     ps.setString(20, order.getStatus());
                     ps.setString(21, order.getIssueDate());
-                    ps.setString(22, order.getCreatedBy());
+                    ps.setString(22, order.getUsername());
                     
                     ps.executeUpdate();
 

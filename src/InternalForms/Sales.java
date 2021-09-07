@@ -145,7 +145,7 @@ public class Sales extends javax.swing.JInternalFrame {
             
             dbConnection();
             
-            String query = "SELECT * FROM sales ORDER BY saleNo DESC LIMIT 20";
+            String query = "SELECT * FROM sales ORDER BY saleNo DESC LIMIT 19";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
             
@@ -282,7 +282,7 @@ public class Sales extends javax.swing.JInternalFrame {
                     .addComponent(lbl_search_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txt_search_sale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 498, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 506, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -301,7 +301,7 @@ public class Sales extends javax.swing.JInternalFrame {
             desktop_pane_salesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(desktop_pane_salesLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(panel_sale_details, javax.swing.GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE)
+                .addComponent(panel_sale_details, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
