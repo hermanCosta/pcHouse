@@ -124,10 +124,10 @@ public class NewSale extends javax.swing.JInternalFrame {
                 while (rs.next()) {
                     long id = Long.parseLong(rs.getString("Max(saleNo)").substring(3, rs.getString("Max(saleNo)").length()));
                     id++;
-                    lbl_auto_sale_no.setText("SNO" + String.format("%03d", id));
+                    lbl_auto_sale_no.setText("SNO" + String.format("%04d", id));
                 }
             } else {
-                lbl_auto_sale_no.setText("SNO001");
+                lbl_auto_sale_no.setText("SNO0001");
             }
 
         } catch (SQLException ex) {

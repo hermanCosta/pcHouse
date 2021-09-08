@@ -105,7 +105,7 @@ public class DepositPayment extends javax.swing.JFrame {
             ps.setDouble(12, 0);
             ps.setDouble(13, 0);
             ps.setString(14, order.getIssueDate());
-            ps.setString(15, order.getStatus());
+            ps.setString(15, "Deposit");
             ps.executeUpdate();
 
         } catch (SQLException ex) {

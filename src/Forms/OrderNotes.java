@@ -75,8 +75,8 @@ public class OrderNotes extends javax.swing.JFrame {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                String dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate("date"));
-                orderNote = new OrderNote(dateFormat, rs.getString("note"), rs.getString("user"));
+                //String dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(rs.getString("date"));
+                orderNote = new OrderNote(rs.getString("date"), rs.getString("note"), rs.getString("user"));
                 noteList.add(orderNote);
 
             }

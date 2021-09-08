@@ -49,9 +49,10 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
  */
 public class NewOrder extends javax.swing.JInternalFrame {
 
-    ArrayList firstNames = new ArrayList();
     ArrayList faults = new ArrayList();
-    ArrayList lastNames = new ArrayList();
+    ArrayList brands = new ArrayList();
+    ArrayList models = new ArrayList();
+    ArrayList serialNumbers = new ArrayList();
 
     Vector vecFaults = new Vector();
     Vector vecProducts = new Vector();
@@ -91,9 +92,10 @@ public class NewOrder extends javax.swing.JInternalFrame {
         tableSettings(table_view_products);
         autoID();
         checkEmailFormat();
-        accessDbColumn(firstNames, "SELECT * FROM customers", "firstName");
-        accessDbColumn(lastNames, "SELECT * FROM customers", "lastName");
-        accessDbColumn(faults, "SELECT * FROM faults", "faultName");
+        accessDbColumn(brands, "SELECT deviceBrand FROM orderDetails", "deviceBrand");
+        accessDbColumn(models, "SELECT deviceModel FROM orderDetails", "deviceModel");
+        accessDbColumn(serialNumbers, "SELECT serialNumber FROM orderDetails", "serialNumber");
+        accessDbColumn(faults, "SELECT faultName FROM faults", "faultName");
         listProductService();
     }
 
@@ -127,12 +129,12 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
-                    long id = Long.parseLong(rs.getString("Max(orderNo)").substring(2, rs.getString("Max(orderNo)").length()));
+                    long id = Long.parseLong(rs.getString("Max(orderNo)").substring(3, rs.getString("Max(orderNo)").length()));
                     id++;
-                    lbl_auto_order_no.setText("RO" + String.format("%03d", id));
+                    lbl_auto_order_no.setText("RNO" + String.format("%04d", id));
                 }
             } else {
-                lbl_auto_order_no.setText("RO001");
+                lbl_auto_order_no.setText("RNO0001");
             }
 
         } catch (SQLException ex) {
@@ -489,9 +491,19 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 txt_brandActionPerformed(evt);
             }
         });
+        txt_brand.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_brandKeyPressed(evt);
+            }
+        });
 
         txt_model.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_model.setPreferredSize(new java.awt.Dimension(63, 20));
+        txt_model.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_modelKeyPressed(evt);
+            }
+        });
 
         txt_serial_number.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_serial_number.setPreferredSize(new java.awt.Dimension(63, 20));
@@ -968,20 +980,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void txt_first_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_first_nameKeyPressed
         // TODO add your handling code here:
-        //Sugest autoComplete firstNames from Database
-        switch (evt.getKeyCode()) {
-            case KeyEvent.VK_BACKSPACE:
-                break;
-
-            case KeyEvent.VK_ENTER:
-                txt_first_name.setText(txt_first_name.getText());
-                break;
-            default:
-                EventQueue.invokeLater(() -> {
-                    String text = txt_first_name.getText();
-                    autoCompleteFromDb(firstNames, text, txt_first_name);
-                });
-        }
     }//GEN-LAST:event_txt_first_nameKeyPressed
 
     private void txt_emailKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_emailKeyPressed
@@ -990,6 +988,20 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void txt_serial_numberKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_serial_numberKeyPressed
         // TODO add your handling code here:
+        //Sugest autoComplete firstNames from Database
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_BACKSPACE:
+                break;
+
+            case KeyEvent.VK_ENTER:
+                txt_serial_number.setText(txt_serial_number.getText());
+                break;
+            default:
+                EventQueue.invokeLater(() -> {
+                    String text = txt_serial_number.getText();
+                    autoCompleteFromDb(serialNumbers, text, txt_serial_number);
+                });
+        }
     }//GEN-LAST:event_txt_serial_numberKeyPressed
 
     private void txt_serial_numberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_serial_numberKeyReleased
@@ -1008,21 +1020,19 @@ public class NewOrder extends javax.swing.JInternalFrame {
     private void txt_totalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_totalKeyPressed
         // TODO add your handling code here:
         //Accepts number characters only
-        if (Character.isLetter(evt.getKeyChar())) {
+        if (Character.isLetter(evt.getKeyChar()))
             txt_total.setEditable(false);
-        } else {
+        else
             txt_total.setEditable(true);
-        }
     }//GEN-LAST:event_txt_totalKeyPressed
 
     private void txt_depositKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_depositKeyPressed
         // TODO add your handling code here:
         //Accepts number characters only
-        if (Character.isLetter(evt.getKeyChar())) {
+        if (Character.isLetter(evt.getKeyChar()))
             txt_deposit.setEditable(false);
-        } else {
+        else
             txt_deposit.setEditable(true);
-        }
     }//GEN-LAST:event_txt_depositKeyPressed
 
     private void txt_faultKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_faultKeyReleased
@@ -1233,20 +1243,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void txt_last_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_last_nameKeyPressed
         // TODO add your handling code here:
-        //Sugest autoComplete firstNames from Database
-        switch (evt.getKeyCode()) {
-            case KeyEvent.VK_BACKSPACE:
-                break;
-
-            case KeyEvent.VK_ENTER:
-                txt_last_name.setText(txt_last_name.getText());
-                break;
-            default:
-                EventQueue.invokeLater(() -> {
-                    String text = txt_last_name.getText();
-                    autoCompleteFromDb(lastNames, text, txt_last_name);
-                });
-        }
     }//GEN-LAST:event_txt_last_nameKeyPressed
 
     private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
@@ -1302,6 +1298,42 @@ public class NewOrder extends javax.swing.JInternalFrame {
     private void txt_contactKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_contactKeyReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_contactKeyReleased
+
+    private void txt_brandKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_brandKeyPressed
+        // TODO add your handling code here:
+        //Suggest autoComplete brand from Database
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_BACKSPACE:
+                break;
+
+            case KeyEvent.VK_ENTER:
+                txt_brand.setText(txt_brand.getText());
+                break;
+            default:
+                EventQueue.invokeLater(() -> {
+                    String text = txt_brand.getText();
+                    autoCompleteFromDb(brands, text, txt_brand);
+                });
+        }
+    }//GEN-LAST:event_txt_brandKeyPressed
+
+    private void txt_modelKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_modelKeyPressed
+        // TODO add your handling code here:
+         //Suggest autoComplete model from Database
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_BACKSPACE:
+                break;
+
+            case KeyEvent.VK_ENTER:
+                txt_model.setText(txt_model.getText());
+                break;
+            default:
+                EventQueue.invokeLater(() -> {
+                    String text = txt_model.getText();
+                    autoCompleteFromDb(models, text, txt_model);
+                });
+        }
+    }//GEN-LAST:event_txt_modelKeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btn_add_table_view;

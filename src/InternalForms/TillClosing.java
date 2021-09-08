@@ -6,6 +6,7 @@
 package InternalForms;
 
 import Forms.Login;
+import Forms.MainMenu;
 import Forms.PrintFullReport;
 import Model.CompletedOrder;
 import Model.Order;
@@ -52,8 +53,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
     ArrayList<Double> refundList = new ArrayList<>();
     double refundTotal;
-    //Date pickedDate; //= date_picker.getDate();
-    //String tillClosingDate; // = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
 
     public TillClosing() {
         initComponents();
@@ -859,24 +858,32 @@ public class TillClosing extends javax.swing.JInternalFrame {
                             rs.getDouble("cardDeposit"), rs.getString("payDate"), rs.getString("status"));
                 }
 
+                MainMenu main  = new MainMenu();
+                 
                 switch (order.getStatus()) {
 
-                    case "Refunded":
+                    case "Refunded" :
                         OrderRefund refundOrder = new OrderRefund(order, completedOrder);
-                        //desktop_pane_till_closing.removeAll();
                         desktop_pane_till_closing.add(refundOrder).setVisible(true);
+                        main.expandOrders();
                         break;
 
-                    case "Not Fixed":
+                    case "Not Fixed" :
                         NotFixedOrder notFixed = new NotFixedOrder(order, completedOrder);
-                        //desktop_pane_till_closing.removeAll();
                         desktop_pane_till_closing.add(notFixed).setVisible(true);
+                        main.expandOrders();
                         break;
 
+                    case "In Progress" :
+                        OrderDetails orderDetails = new OrderDetails(order, completedOrder);
+                        desktop_pane_till_closing.add(orderDetails).setVisible(true);
+                        main.expandOrders();
+                        break;
+                        
                     default:
                         FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
-                        //desktop_pane_till_closing.removeAll();
                         desktop_pane_till_closing.add(fixedOrder).setVisible(true);
+                        main.expandOrders();
                         break;
                 }
 
@@ -926,7 +933,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
     private void scroll_pane_table_salesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scroll_pane_table_salesMouseClicked
         // TODO add your handling code here:
-
     }//GEN-LAST:event_scroll_pane_table_salesMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
