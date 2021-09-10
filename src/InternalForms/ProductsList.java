@@ -84,9 +84,6 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
                 dtm.addRow(vector);
             }
-            
-            ps.close();
-            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -120,8 +117,6 @@ public class ProductsList extends javax.swing.JInternalFrame {
                 dtm.addRow(vector);
             }
             
-            ps.close();
-            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
         }

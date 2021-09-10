@@ -316,7 +316,7 @@ public class NewSale extends javax.swing.JInternalFrame {
         try {
             dbConnection();
 
-            String query = "SELECT * FROM computer WHERE brand LIKE '%" + searchComputer + "%'"
+            String query = "SELECT * FROM computers WHERE brand LIKE '%" + searchComputer + "%'"
                     + "OR model LIKE '%" + searchComputer + "%' OR serialNumber LIKE '%" + searchComputer + "%'"
                     + " OR processor LIKE '%" + searchComputer + "%'";
 

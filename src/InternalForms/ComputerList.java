@@ -93,8 +93,6 @@ public class ComputerList extends javax.swing.JInternalFrame {
                 list.add(computer);
             }
             
-            ps.close();
-            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(ComputerList.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1100,9 +1098,6 @@ public class ComputerList extends javax.swing.JInternalFrame {
                 computer.setComputerId(rs.getInt("computerId"));
                 compList.add(computer);
             }
-            ps.close();
-            con.close();
-            
         } catch (SQLException ex) {
             Logger.getLogger(Computer.class.getName()).log(Level.SEVERE, null, ex);
         }

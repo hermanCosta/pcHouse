@@ -515,9 +515,6 @@ public class OrderPayment extends javax.swing.JFrame {
                     ps.executeUpdate();
 
                     JOptionPane.showMessageDialog(this, order.getOrderNo() + " Paid Successfully");
-                    FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
-                    MainMenu.mainMenuDesktopPane.removeAll();
-                    MainMenu.mainMenuDesktopPane.add(fixedOrder).setVisible(true);
                     
                     OrderReceipt receipt = new OrderReceipt(order, completedOrder);
                     receipt.setVisible(true);

@@ -165,9 +165,6 @@ public class Sales extends javax.swing.JInternalFrame {
                 dtm.addRow(row);
             }
             
-            ps.close();
-            con.close();
-
         } catch (SQLException ex) {
             Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
         }

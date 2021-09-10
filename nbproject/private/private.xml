@@ -3,7 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/SalePayment.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/FixedOrder.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/TillClosing.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/PrintOrder.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/DepositPayment.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/OrderReceipt.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/OrderRefund.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/OrderRefundReceipt.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/OrderPayment.java</file>
         </group>
     </open-files>
 </project-private>

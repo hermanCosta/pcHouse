@@ -1094,7 +1094,7 @@ public class MainMenu extends javax.swing.JFrame {
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Products Stock Below or Stockout", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("sansserif", 0, 14))); // NOI18N
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Products Stock Below or Stockout", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("sansserif", 0, 14))); // NOI18N
 
         table_view_products_stock.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         table_view_products_stock.setModel(new javax.swing.table.DefaultTableModel(
@@ -1124,7 +1124,7 @@ public class MainMenu extends javax.swing.JFrame {
             table_view_products_stock.getColumnModel().getColumn(0).setMaxWidth(100);
         }
 
-        jScrollPane3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Orders fixed Over Three Months", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("sansserif", 0, 14))); // NOI18N
+        jScrollPane3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Orders fixed Over Three Months", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("sansserif", 0, 14))); // NOI18N
 
         table_view_orders.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         table_view_orders.setModel(new javax.swing.table.DefaultTableModel(

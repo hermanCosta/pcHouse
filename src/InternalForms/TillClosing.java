@@ -868,25 +868,21 @@ public class TillClosing extends javax.swing.JInternalFrame {
                     case "Refunded" :
                         OrderRefund refundOrder = new OrderRefund(order, completedOrder);
                         desktop_pane_till_closing.add(refundOrder).setVisible(true);
-                        //new MainMenu().expandOrders();
                         break;
 
                     case "Not Fixed" :
                         NotFixedOrder notFixed = new NotFixedOrder(order, completedOrder);
                         desktop_pane_till_closing.add(notFixed).setVisible(true);
-                       // new MainMenu().expandOrders();
                         break;
 
                     case "In Progress" :
                         OrderDetails orderDetails = new OrderDetails(order, completedOrder);
                         desktop_pane_till_closing.add(orderDetails).setVisible(true);
-                        //new MainMenu().expandOrders();
                         break;
                         
                     default:
                         FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
                         desktop_pane_till_closing.add(fixedOrder).setVisible(true);
-                        new MainMenu().expandProducts();
                         break;
                 }
 

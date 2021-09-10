@@ -87,8 +87,6 @@ public class OrderList extends javax.swing.JInternalFrame {
                orderList.add(order);
             }
             
-            ps.close();
-            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -167,9 +165,6 @@ public class OrderList extends javax.swing.JInternalFrame {
                 
                 defaultTableModel.addRow(vector);
             }
-            
-            ps.close();
-            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
         }

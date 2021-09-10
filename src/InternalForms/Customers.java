@@ -92,9 +92,6 @@ public class Customers extends javax.swing.JInternalFrame {
                 customer.setCustomerId(rs.getInt("customerId"));
                 list.add(customer);
             }
-            ps.close();
-            con.close();
-
         } catch (SQLException ex) {
             Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
         }

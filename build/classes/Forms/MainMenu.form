@@ -1122,7 +1122,7 @@
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder title="Products Stock Below or Stockout">
+                        <TitledBorder position="5" title="Products Stock Below or Stockout">
                           <Font PropertyName="font" name="sansserif" size="14" style="0"/>
                         </TitledBorder>
                       </Border>
@@ -1173,7 +1173,7 @@
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder title="Orders fixed Over Three Months">
+                        <TitledBorder position="5" title="Orders fixed Over Three Months">
                           <Font PropertyName="font" name="sansserif" size="14" style="0"/>
                         </TitledBorder>
                       </Border>
