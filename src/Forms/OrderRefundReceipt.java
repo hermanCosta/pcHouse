@@ -44,9 +44,9 @@ public class OrderRefundReceipt extends javax.swing.JFrame {
         completedOrders.setCashDeposit(Math.abs(completedOrders.getCashDeposit()));
         completedOrders.setCardDeposit(Math.abs(completedOrders.getCardDeposit()));
 
-        if (completedOrders.getCash() == 0)
+        if (completedOrders.getCash() == 0 && completedOrders.getCashDeposit() == 0)
             lbl_refunded_by.setText("Refunded by Card: €" + (completedOrders.getCard() + completedOrders.getCardDeposit()));
-        else if (completedOrders.getCard() == 0)
+        else if (completedOrders.getCard() == 0 && completedOrders.getCardDeposit() == 0)
             lbl_refunded_by.setText("Refunded by Cash: €" + ((completedOrders.getCash() + completedOrders.getCashDeposit()) - completedOrders.getChangeTotal()));
         else
             lbl_refunded_by.setText("Refunded by Cash: €" + ((completedOrders.getCash() + completedOrders.getCashDeposit()) - completedOrders.getChangeTotal())

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
@@ -79,6 +80,7 @@ public class Sales extends javax.swing.JInternalFrame {
             con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -162,6 +164,9 @@ public class Sales extends javax.swing.JInternalFrame {
 
                 dtm.addRow(row);
             }
+            
+            ps.close();
+            con.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
@@ -358,6 +363,8 @@ public class Sales extends javax.swing.JInternalFrame {
                     }
                 }
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
             }

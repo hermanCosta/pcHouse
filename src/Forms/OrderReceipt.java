@@ -89,7 +89,7 @@ public class OrderReceipt extends javax.swing.JFrame {
     protected void processWindowEvent(WindowEvent e) {
         super.processWindowEvent(e);
         if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-            backToPreviousFrame();
+            //backToPreviousFrame();
         }
     }
 
@@ -467,8 +467,6 @@ public class OrderReceipt extends javax.swing.JFrame {
 
             } catch (PrinterException ex) {
                 Logger.getLogger(OrderReceipt.class.getName()).log(Level.SEVERE, null, ex);
-                this.dispose();
-                backToPreviousFrame();
             }
         }
     }//GEN-LAST:event_btn_printActionPerformed

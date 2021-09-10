@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 
@@ -58,9 +59,10 @@ public class OrderList extends javax.swing.JInternalFrame {
     {
         try {
               Class.forName("com.mysql.cj.jdbc.Driver");
-              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","hermanhgc","He11m@ns");
+              con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -85,6 +87,8 @@ public class OrderList extends javax.swing.JInternalFrame {
                orderList.add(order);
             }
             
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -163,6 +167,9 @@ public class OrderList extends javax.swing.JInternalFrame {
                 
                 defaultTableModel.addRow(vector);
             }
+            
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -413,6 +420,8 @@ public class OrderList extends javax.swing.JInternalFrame {
                         break;
                 }
                 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
             }

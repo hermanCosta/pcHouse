@@ -78,6 +78,7 @@ public class DepositUpdatePayment extends javax.swing.JFrame {
 
         } catch (SQLException ex) {
             Logger.getLogger(DepositUpdatePayment.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -112,6 +113,9 @@ public class DepositUpdatePayment extends javax.swing.JFrame {
             OrderDetails orderDetails = new OrderDetails(order, completedOrder);
             MainMenu.mainMenuDesktopPane.removeAll();
             MainMenu.mainMenuDesktopPane.add(orderDetails).setVisible(true);
+            
+            ps.close();
+            con.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
@@ -344,6 +348,9 @@ public class DepositUpdatePayment extends javax.swing.JFrame {
 
                 addDepositNote("Cash");
                 payDeposit(newDeposit, 0);
+                
+                ps.close();
+                con.close();
                 this.dispose();
             } catch (SQLException ex) {
                 Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
@@ -408,6 +415,9 @@ public class DepositUpdatePayment extends javax.swing.JFrame {
 
                 addDepositNote("Card");
                 payDeposit(0, newDeposit);
+                
+                ps.close();
+                con.close();
                 this.dispose();
                 
             } catch (SQLException ex) {

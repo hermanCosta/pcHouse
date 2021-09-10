@@ -57,6 +57,7 @@ public class Faults extends javax.swing.JInternalFrame {
             con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Faults.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -75,6 +76,9 @@ public class Faults extends javax.swing.JInternalFrame {
                 fault.setFaultId(rs.getInt("faultId"));
                 list.add(fault);
             }
+            
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(Faults.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -309,6 +313,8 @@ public class Faults extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(this, "Fault '" + fault.getFault() + "' already exist into Database !", "New Fault", JOptionPane.ERROR_MESSAGE);
                 }
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(Faults.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -328,7 +334,7 @@ public class Faults extends javax.swing.JInternalFrame {
                 dbConnection();
 
                 if (fault.getFault().equals(faultName)) {
-                    JOptionPane.showMessageDialog(null, "No changes to be updated !", "Update Fault", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "No changes to be updated !", "Update Fault", JOptionPane.ERROR_MESSAGE);
                 } else {
                     int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Updating '" + faultName + "' ?",
                             "Update Fault", JOptionPane.YES_NO_OPTION);
@@ -348,6 +354,8 @@ public class Faults extends javax.swing.JInternalFrame {
                     }
                 }
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -377,6 +385,8 @@ public class Faults extends javax.swing.JInternalFrame {
                 faultList.add(fault);
             }
 
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(Faults.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -439,6 +449,8 @@ public class Faults extends javax.swing.JInternalFrame {
                     txt_fault.setText("");
                 }
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
             }

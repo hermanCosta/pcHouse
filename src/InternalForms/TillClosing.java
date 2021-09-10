@@ -79,6 +79,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
             con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(TillClosing.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -134,6 +135,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
             }
 
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(TillClosing.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -153,7 +156,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
         // This Lists hold all values paid by cash and card
         ArrayList<Double> cashList = new ArrayList<>();
         ArrayList<Double> cardList = new ArrayList<>();
-        //ArrayList<Double> refundList = new ArrayList<>();
 
         refundList.clear();
 
@@ -173,6 +175,9 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
             if (listOrders.get(i).getTotal() == 0) {
                 orderDueColumn.add(listOrders.get(i).getDeposit());
+                
+                if (listOrders.get(i).getTotal() == 0 && listOrders.get(i).getDeposit() < 0)
+                    refundList.add(listOrders.get(i).getDeposit());
             }
             // check if there's negative values, pass due + deposit if true, else, pass as normal to the list
             // set deposit row = 0, and dont get changeTotal for calculation
@@ -183,8 +188,11 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
                 cashList.add(listOrders.get(i).getCash() + listOrders.get(i).getCashDeposit() + listOrders.get(i).getChangeTotal());
                 cardList.add(listOrders.get(i).getCard() + listOrders.get(i).getCardDeposit());
+                
                 refundList.add(listOrders.get(i).getTotal());
-            } else {
+            } 
+               
+            else {
                 rowOrders[3] = listOrders.get(i).getDeposit();
                 rowOrders[4] = listOrders.get(i).getDue();
 
@@ -213,11 +221,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
         for (double d : refundList)
             refundTotal += d;
 
-        //Gross total (cash&card    
-        double grossTotal = ordersTotal;
-
         lbl_till_closing_date.setText("Orders Report - " + tillClosingDate);
-        lbl_print_gross_total.setText("Gross Orders Total ............. €" + String.valueOf(grossTotal));
+        lbl_print_gross_total.setText("Gross Orders Total ............. €" + String.valueOf(ordersTotal));
         lbl_print_total_cash.setText("Cash Total ......................... €" + String.valueOf(cashTotal));
         lbl_print_total_card.setText("Card Total ......................... €" + String.valueOf(cardTotal));
         lbl_print_refunds.setText("Refunds ............................ €" + String.valueOf(refundTotal));
@@ -598,7 +603,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
                                 .addComponent(panel_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_till_closingLayout.setVerticalGroup(
             panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -858,35 +863,35 @@ public class TillClosing extends javax.swing.JInternalFrame {
                             rs.getDouble("cardDeposit"), rs.getString("payDate"), rs.getString("status"));
                 }
 
-                MainMenu main  = new MainMenu();
-                 
                 switch (order.getStatus()) {
 
                     case "Refunded" :
                         OrderRefund refundOrder = new OrderRefund(order, completedOrder);
                         desktop_pane_till_closing.add(refundOrder).setVisible(true);
-                        main.expandOrders();
+                        //new MainMenu().expandOrders();
                         break;
 
                     case "Not Fixed" :
                         NotFixedOrder notFixed = new NotFixedOrder(order, completedOrder);
                         desktop_pane_till_closing.add(notFixed).setVisible(true);
-                        main.expandOrders();
+                       // new MainMenu().expandOrders();
                         break;
 
                     case "In Progress" :
                         OrderDetails orderDetails = new OrderDetails(order, completedOrder);
                         desktop_pane_till_closing.add(orderDetails).setVisible(true);
-                        main.expandOrders();
+                        //new MainMenu().expandOrders();
                         break;
                         
                     default:
                         FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
                         desktop_pane_till_closing.add(fixedOrder).setVisible(true);
-                        main.expandOrders();
+                        new MainMenu().expandProducts();
                         break;
                 }
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -924,6 +929,9 @@ public class TillClosing extends javax.swing.JInternalFrame {
                         desktop_pane_till_closing.add(saleRefund).setVisible(true);
                     }
                 }
+                
+                ps.close();
+                con.close();
 
             } catch (SQLException ex) {
                 Logger.getLogger(TillClosing.class.getName()).log(Level.SEVERE, null, ex);

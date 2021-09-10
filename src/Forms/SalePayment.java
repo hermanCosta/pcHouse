@@ -54,9 +54,9 @@ public class SalePayment extends javax.swing.JFrame {
         try {
               Class.forName("com.mysql.cj.jdbc.Driver");
               con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse","root","hellmans");
-              
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -115,6 +115,9 @@ public class SalePayment extends javax.swing.JFrame {
                         
                         System.out.println("New Comp Qty: " + updateCompQty);
                     }
+                    
+                    ps.close();
+                    con.close(); 
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
@@ -374,7 +377,7 @@ public class SalePayment extends javax.swing.JFrame {
         
         if (txt_cash.getText().isEmpty() && txt_card.getText().isEmpty())
         {
-            JOptionPane.showMessageDialog(null, "Values can not be Empty !", "Payment",  JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Values can not be Empty !", "Payment",  JOptionPane.ERROR_MESSAGE);
             return;
         }
         
@@ -384,7 +387,7 @@ public class SalePayment extends javax.swing.JFrame {
             
             if (sale.getCard() > sale.getTotal())
             {
-                JOptionPane.showMessageDialog(null, "Payment by Card can't be greater than Total Due !", "Payment",  JOptionPane.ERROR_MESSAGE); 
+                JOptionPane.showMessageDialog(this, "Payment by Card can't be greater than Total Due !", "Payment",  JOptionPane.ERROR_MESSAGE); 
                 return;
             }
             else if ((sale.getTotal() - sale.getCard()) == 0) 
@@ -416,7 +419,7 @@ public class SalePayment extends javax.swing.JFrame {
             totalPaid = sale.getCash() + sale.getCard();
             if (sale.getCard() > sale.getTotal())
             {
-                JOptionPane.showMessageDialog(null, "Payment by Card can't be greater than Total Due !", "Payment",  JOptionPane.ERROR_MESSAGE); 
+                JOptionPane.showMessageDialog(this, "Payment by Card can't be greater than Total Due !", "Payment",  JOptionPane.ERROR_MESSAGE); 
                 return;
             } 
             else if ((sale.getTotal() - totalPaid) <= 0)
@@ -469,6 +472,8 @@ public class SalePayment extends javax.swing.JFrame {
                 SaleReceipt saleReceipt =  new SaleReceipt(sale, isSaleDetails);
                 saleReceipt.setVisible(true);
 
+                ps.close();
+                con.close();
                 this.dispose();
 
               } catch (SQLException ex) {
@@ -479,7 +484,7 @@ public class SalePayment extends javax.swing.JFrame {
         }
         else
         {
-           JOptionPane.showMessageDialog(null, "Values don't match! please, check !", "Order Payment",  JOptionPane.ERROR_MESSAGE);
+           JOptionPane.showMessageDialog(this, "Values don't match! please, check !", "Order Payment",  JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btn_payActionPerformed
 

@@ -173,6 +173,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -210,6 +211,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 combo_box_product_service.addItem(rs.getString("productService"));
             }
 
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1023,7 +1026,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         DefaultTableModel dtm = (DefaultTableModel) table_view_faults.getModel();
 
         if (faultText.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please add a Fault!", "Faults", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please add a Fault!", "Faults", JOptionPane.ERROR_MESSAGE);
         } else {
             try {
                 dbConnection();
@@ -1053,6 +1056,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                     txt_fault.setText("");
                 }
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1083,7 +1088,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
 
         if (selectedItem.isEmpty() || selectedItem.matches("Select or Type")) {
-            JOptionPane.showMessageDialog(null, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
         } else {
             try {
                 dbConnection();
@@ -1137,6 +1142,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                     // Sum price column and set into total textField
                     getPriceSum();
                 }
+                
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1199,7 +1207,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
             //show a message if a costumer is not found in the db
             if (!rs.isBeforeFirst() && firstName.trim().isEmpty() && lastName.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Customer not found in the Database", "New Order", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Customer not found in the Database", "New Order", JOptionPane.ERROR_MESSAGE);
             } //add a new costumer if not exist AND fields are not empty
             else if (!rs.isBeforeFirst() && !firstName.trim().isEmpty() && !lastName.trim().isEmpty()) {
                 int confirmInsertion = JOptionPane.showConfirmDialog(null, "Do you want to add a new Customer ?", "Add New Customer", JOptionPane.YES_NO_OPTION);
@@ -1229,6 +1237,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 }
             }
 
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1261,6 +1271,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 desktop_pane_order_details.removeAll();
                 desktop_pane_order_details.add(fixedOrder).setVisible(true);
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1296,6 +1308,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 desktop_pane_order_details.removeAll();
                 desktop_pane_order_details.add(orderNotFixed).setVisible(true);
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1350,7 +1364,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 && order.getPriceTotal().equals(stringPriceTotal) && order.getTotal() == Double.parseDouble(txt_total.getText())
                 //&& order.getDeposit() == Double.parseDouble(txt_deposit.getText()) 
                 && order.getDue() == Double.parseDouble(txt_due.getText())) {
-            JOptionPane.showMessageDialog(null, "No changes to be Updated", "Update Order Details", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No changes to be Updated", "Update Order Details", JOptionPane.ERROR_MESSAGE);
 
         } else if (Double.parseDouble(txt_deposit.getText()) < order.getDeposit()) {
             JOptionPane.showMessageDialog(this, "Deposit can not be equal or less than " + order.getDeposit() + " !", "Update Order Details", JOptionPane.ERROR_MESSAGE);
@@ -1418,6 +1432,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                         ps.executeUpdate();
 
                         JOptionPane.showMessageDialog(this, "Order " + order.getOrderNo() + " Updated successfully!");
+                        
+                        ps.close();
+                        con.close();
                     } catch (SQLException ex) {
                         Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
                     }

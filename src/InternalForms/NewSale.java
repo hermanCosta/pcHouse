@@ -104,6 +104,7 @@ public class NewSale extends javax.swing.JInternalFrame {
             con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -129,6 +130,9 @@ public class NewSale extends javax.swing.JInternalFrame {
             } else {
                 lbl_auto_sale_no.setText("SNO0001");
             }
+            
+            ps.close();
+            con.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
@@ -186,6 +190,9 @@ public class NewSale extends javax.swing.JInternalFrame {
             while (rs.next()) {
                 list.add(rs.getString(columnName));
             }
+            
+            ps.close();
+            con.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
@@ -247,7 +254,7 @@ public class NewSale extends javax.swing.JInternalFrame {
     public boolean checkEmptyFields() {
         if (txt_first_name.getText().trim().isEmpty() | txt_last_name.getText().trim().isEmpty()
                 | txt_contact.getText().trim().isEmpty() | table_view_products.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(null, "Please, check Empty fields", "New Sale", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Sale", JOptionPane.ERROR_MESSAGE);
         }
         return true;
     }
@@ -340,6 +347,9 @@ public class NewSale extends javax.swing.JInternalFrame {
 
                 dtm.addRow(row);
             }
+            
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -363,6 +373,9 @@ public class NewSale extends javax.swing.JInternalFrame {
 
                 computerList.add(computer);
             }
+            
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(ComputerList.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -901,7 +914,7 @@ public class NewSale extends javax.swing.JInternalFrame {
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
 
         if (selectedItem.isEmpty() || selectedItem.matches("Select or Type")) {
-            JOptionPane.showMessageDialog(null, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
         } else {
             try {
                 dbConnection();
@@ -912,7 +925,7 @@ public class NewSale extends javax.swing.JInternalFrame {
                 rs = ps.executeQuery();
 
                 if (!rs.isBeforeFirst()) {
-                    JOptionPane.showMessageDialog(null, "Item not Found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Item not Found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
                 } else {
                     while (rs.next()) {
                         newProdAdd = rs.getString("productService");
@@ -967,6 +980,9 @@ public class NewSale extends javax.swing.JInternalFrame {
                     // Sum price column and set into total textField
                     getPriceSum();
                 }
+                
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1091,6 +1107,9 @@ public class NewSale extends javax.swing.JInternalFrame {
                     txt_email.setText(rs.getString("email"));
                 }
             }
+            
+            ps.close();
+            con.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);

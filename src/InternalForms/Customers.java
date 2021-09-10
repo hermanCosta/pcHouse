@@ -71,9 +71,9 @@ public class Customers extends javax.swing.JInternalFrame {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
-
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -92,6 +92,8 @@ public class Customers extends javax.swing.JInternalFrame {
                 customer.setCustomerId(rs.getInt("customerId"));
                 list.add(customer);
             }
+            ps.close();
+            con.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
@@ -517,6 +519,7 @@ public class Customers extends javax.swing.JInternalFrame {
 
     private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
         // TODO add your handling code here:
+
         if (txt_first_name.getText().trim().isEmpty() || txt_last_name.getText().trim().isEmpty()
                 || txt_contact.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Costumer", JOptionPane.ERROR_MESSAGE);
@@ -527,15 +530,14 @@ public class Customers extends javax.swing.JInternalFrame {
             email = txt_email.getText();
 
             try {
-
                 dbConnection();
 
-//            String query = "SELECT contactNo FROM customers WHERE contactNo = ?";
-//            ps = con.prepareStatement(query);
-//            ps.setString(1, customer.getContactNo());
-//            rs = ps.executeQuery();
-                //add a new customer if not exists AND fields are not empty
-                if (!customer.getContactNo().equals(contactNo)) {
+                String queryCheck = "SELECT contactNo FROM customers WHERE contactNo = ?";
+                ps = con.prepareStatement(queryCheck);
+                ps.setString(1, contactNo);
+                rs = ps.executeQuery();
+                if (!rs.next()) {
+                    //add a new customer if not exists AND fields are not empty
                     customer = new Customer(firstName, lastName, contactNo, email);
 
                     int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add a Customer " + customer.getFirstName() + " ?", "Add New Customer", JOptionPane.YES_NO_OPTION);
@@ -553,9 +555,11 @@ public class Customers extends javax.swing.JInternalFrame {
                         loadCustomerTable();
                     }
                 } else {
-                    JOptionPane.showMessageDialog(this, "Customer already exist with Contact " + customer.getContactNo() + " into Database", "New Customer", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, customer.getContactNo() + " already exist in the Database", "New Customer", JOptionPane.ERROR_MESSAGE);
                 }
 
+                ps.close();
+                con.close();
                 //show a message if a costumer is not found into db
             } catch (SQLException ex) {
                 Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
@@ -565,7 +569,7 @@ public class Customers extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btn_addActionPerformed
 
     private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
-
+        // TODO add your handling code here:
         if (txt_first_name.getText().trim().isEmpty() || txt_last_name.getText().trim().isEmpty()
                 || txt_contact.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Costumer", JOptionPane.ERROR_MESSAGE);
@@ -576,11 +580,20 @@ public class Customers extends javax.swing.JInternalFrame {
             email = txt_email.getText();
 
             try {
-
                 dbConnection();
+                
+                String queryCheck = "SELECT contactNo FROM customers WHERE contactNo = ?";
+                ps = con.prepareStatement(queryCheck);
+                ps.setString(1, contactNo);
+                rs = ps.executeQuery();
 
-                if (customer.getFirstName().equals(firstName) && customer.getLastName().equals(lastName) && customer.getContactNo().equals(contactNo) && customer.getEmail().equals(email)) {
-                    JOptionPane.showMessageDialog(null, "No changes to be updated !", "Update Customer", JOptionPane.ERROR_MESSAGE);
+                if (customer.getFirstName().equals(firstName) && customer.getLastName().equals(lastName) && customer.getContactNo().equals(contactNo) && customer.getEmail().equals(email))
+                    JOptionPane.showMessageDialog(this, "No changes to be updated !", "Update Customer", JOptionPane.ERROR_MESSAGE);
+                    
+                else if (rs.next()) {
+                    //add a new customer if not exists AND fields are not empty
+                    JOptionPane.showMessageDialog(this, customer.getContactNo() + " already exist in the Database", "Update Customer", JOptionPane.ERROR_MESSAGE);
+                    
                 } else {
                     int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Updating " + firstName + " ?",
                             "Update Customer", JOptionPane.YES_NO_OPTION);
@@ -602,6 +615,8 @@ public class Customers extends javax.swing.JInternalFrame {
                         cleanFields();
                     }
                 }
+                ps.close();
+                con.close();
 
             } catch (SQLException ex) {
                 Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
@@ -658,13 +673,11 @@ public class Customers extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameKeyPressed
 
     private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
-
+        // TODO add your handling code here:
         firstName = txt_first_name.getText();
         lastName = txt_last_name.getText();
         contactNo = txt_contact.getText();
         email = txt_email.getText();
-
-
     }//GEN-LAST:event_txt_contactActionPerformed
 
     private void txt_contactKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_contactKeyReleased
@@ -694,6 +707,9 @@ public class Customers extends javax.swing.JInternalFrame {
                 customer.setCustomerId(rs.getInt("customerId"));
                 customerList.add(customer);
             }
+            
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -719,7 +735,7 @@ public class Customers extends javax.swing.JInternalFrame {
             DefaultTableModel dtm = (DefaultTableModel) table_view_customers.getModel();
             int row = table_view_customers.getSelectedRow();
             int id = (int) dtm.getValueAt(row, 0);
-            
+
             String fname = dtm.getValueAt(row, 1).toString();
             String lname = dtm.getValueAt(row, 2).toString();
             String contact = dtm.getValueAt(row, 3).toString();
@@ -744,7 +760,7 @@ public class Customers extends javax.swing.JInternalFrame {
         if (txt_first_name.getText().trim().isEmpty() || txt_last_name.getText().trim().isEmpty()
                 || txt_contact.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Costumer", JOptionPane.ERROR_MESSAGE);
-            
+
         } else {
             try {
 
@@ -765,7 +781,9 @@ public class Customers extends javax.swing.JInternalFrame {
                     loadCustomerTable();
                     cleanFields();
                 }
-
+                
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
             }

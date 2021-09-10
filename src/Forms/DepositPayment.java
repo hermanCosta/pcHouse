@@ -56,6 +56,7 @@ public class DepositPayment extends javax.swing.JFrame {
 
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -107,7 +108,9 @@ public class DepositPayment extends javax.swing.JFrame {
             ps.setString(14, order.getIssueDate());
             ps.setString(15, "Deposit");
             ps.executeUpdate();
-
+            
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -302,7 +305,7 @@ public class DepositPayment extends javax.swing.JFrame {
                 String queryInsert = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
                         + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
                         + "productService, qty, unitPrice, priceTotal, total, deposit, cashDeposit, cardDeposit, "
-                        + "due, status, issueDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        + "due, status, issueDate, createdBy) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                 ps = con.prepareStatement(queryInsert);
                 ps.setString(1, order.getOrderNo());
@@ -326,6 +329,7 @@ public class DepositPayment extends javax.swing.JFrame {
                 ps.setDouble(19, order.getDue());
                 ps.setString(20, order.getStatus());
                 ps.setString(21, order.getIssueDate());
+                ps.setString(22, order.getUsername());
                 ps.executeUpdate();
 
                 JOptionPane.showMessageDialog(this, "order " + order.getOrderNo() + " created successfully!");
@@ -345,6 +349,9 @@ public class DepositPayment extends javax.swing.JFrame {
 
                 PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
                 printOrder.setVisible(true);
+                
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -411,6 +418,9 @@ public class DepositPayment extends javax.swing.JFrame {
 
                 PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
                 printOrder.setVisible(true);
+                
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -87,6 +87,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         ui.setNorthPane(null);
 
         txt_contact.setFocusLostBehavior(JFormattedTextField.PERSIST);//avoid auto old value by focus loosing
+        txt_first_name.requestFocus(true);
 
         tableSettings(table_view_faults);
         tableSettings(table_view_products);
@@ -110,6 +111,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -137,6 +139,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 lbl_auto_order_no.setText("RNO0001");
             }
 
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(Customers.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -175,6 +179,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             while (rs.next()) {
                 combo_box_product_service.addItem(rs.getString("productService"));
             }
+            rs.close();
             con.close();
             ps.close();
 
@@ -203,6 +208,10 @@ public class NewOrder extends javax.swing.JInternalFrame {
             while (rs.next()) {
                 list.add(rs.getString(columnName));
             }
+            
+            rs.close();
+            ps.close();
+            con.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
@@ -273,7 +282,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 | txt_contact.getText().trim().isEmpty() | txt_brand.getText().trim().isEmpty()
                 | txt_model.getText().trim().isEmpty() | txt_serial_number.getText().trim().isEmpty()
                 | table_view_products.getRowCount() == 0 | table_view_faults.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(null, "Please, check Empty fields", "New Order", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Order", JOptionPane.ERROR_MESSAGE);
 
         } else {
             orderNo = lbl_auto_order_no.getText();
@@ -928,6 +937,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
                     printOrder.setVisible(true);
 
+                    ps.close();
+                    con.close();
                 } catch (SQLException ex) {
                     Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1065,7 +1076,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         DefaultTableModel dtm = (DefaultTableModel) table_view_faults.getModel();
 
         if (faultText.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please add a Fault!", "Faults", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please add a Fault!", "Faults", JOptionPane.ERROR_MESSAGE);
         } else {
             try {
                 dbConnection();
@@ -1103,6 +1114,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     }
                 }
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1133,7 +1146,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
 
         if (selectedItem.isEmpty() || selectedItem.matches("Select or Type")) {
-            JOptionPane.showMessageDialog(null, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
         } else {
             try {
                 dbConnection();
@@ -1143,7 +1156,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 rs = ps.executeQuery();
 
                 if (!rs.isBeforeFirst()) {
-                    JOptionPane.showMessageDialog(null, "Item not Found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Item not Found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
                 } else {
                     while (rs.next()) {
                         newProdAdd = rs.getString("productService");
@@ -1255,15 +1268,16 @@ public class NewOrder extends javax.swing.JInternalFrame {
         try {
             dbConnection();
 
-            String query = "SELECT * FROM customers WHERE contactNo = '" + contactNo + "'";
+            String query = "SELECT contactNo FROM customers WHERE contactNo = ?";
             ps = con.prepareStatement(query);
+            ps.setString(1, contactNo);
             rs = ps.executeQuery();
 
             //show a message if a costumer is not found in the db
-            if (!rs.isBeforeFirst() && firstName.trim().isEmpty() && lastName.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Customer not found in the Database", "New Order", JOptionPane.ERROR_MESSAGE);
-            } //add a new customer if not exists AND fields are not empty
-            else if (!rs.isBeforeFirst() && !firstName.trim().isEmpty() && !lastName.trim().isEmpty()) {
+            if (!rs.next() && firstName.trim().isEmpty() && lastName.trim().isEmpty())
+                JOptionPane.showMessageDialog(this, "Customer not found in the Database", "New Costumer", JOptionPane.ERROR_MESSAGE);
+            //add a new customer if not exists AND fields are not empty
+            else if (!rs.next() && !firstName.trim().isEmpty() && !lastName.trim().isEmpty()) {
                 int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add a new Customer ?", "Add New Customer", JOptionPane.YES_NO_OPTION);
                 if (confirmInsertion == 0) {
                     customer = new Customer(firstName, lastName, contactNo, email);
@@ -1278,8 +1292,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     txt_brand.requestFocus();
                 }
             } else {
-                String fillQuery = "SELECT * FROM customers WHERE contactNo = '" + contactNo + "'";
+                String fillQuery = "SELECT * FROM customers WHERE contactNo = ?";
                 ps = con.prepareStatement(fillQuery);
+                ps.setString(1, contactNo);
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
@@ -1289,6 +1304,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     txt_email.setText(rs.getString("email"));
                 }
             }
+            
+            ps.close();
+            con.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);

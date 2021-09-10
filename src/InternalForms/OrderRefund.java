@@ -26,6 +26,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -97,9 +98,9 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         completedOrders.setCashDeposit(Math.abs(completedOrders.getCashDeposit()));
         completedOrders.setCardDeposit(Math.abs(completedOrders.getCardDeposit()));
 
-        if (completedOrders.getCash() == 0)
+        if (completedOrders.getCash() == 0 && completedOrders.getCashDeposit() == 0)
             lbl_refunded_by.setText("Refunded by Card: €" + (completedOrders.getCard() + completedOrders.getCardDeposit()));
-        else if (completedOrders.getCard() == 0)
+        else if (completedOrders.getCard() == 0 && completedOrders.getCardDeposit() == 0)
             lbl_refunded_by.setText("Refunded by Cash: €" + ((completedOrders.getCash() + completedOrders.getCashDeposit()) - completedOrders.getChangeTotal()));
         else
             lbl_refunded_by.setText("Refunded by Cash: €" + ((completedOrders.getCash() + completedOrders.getCashDeposit()) - completedOrders.getChangeTotal())
@@ -167,6 +168,7 @@ public class OrderRefund extends javax.swing.JInternalFrame {
             con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(OrderRefund.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
 

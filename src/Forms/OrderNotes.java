@@ -53,9 +53,9 @@ public class OrderNotes extends javax.swing.JFrame {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
-
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(OrderNotes.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -182,7 +182,7 @@ public class OrderNotes extends javax.swing.JFrame {
 
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
-        noteDate = new SimpleDateFormat("yyyy/MM/dd").format(currentDate);
+        noteDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
         note = txt_note.getText();
 
         int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add note: " + note + " to the Database ?", "Order Notes", JOptionPane.YES_OPTION);
@@ -198,6 +198,9 @@ public class OrderNotes extends javax.swing.JFrame {
                 ps.setString(3, note);
                 ps.setString(4, user);
                 ps.executeUpdate();
+                
+                ps.close();
+                con.close();
 
             } catch (SQLException ex) {
                 Logger.getLogger(OrderNotes.class.getName()).log(Level.SEVERE, null, ex);
@@ -231,6 +234,9 @@ public class OrderNotes extends javax.swing.JFrame {
                         ps.executeUpdate();
 
                         loadTableNotes();
+                        
+                        ps.close();
+                        con.close();
 
                     } catch (SQLException ex) {
                         Logger.getLogger(OrderNotes.class.getName()).log(Level.SEVERE, null, ex);

@@ -84,6 +84,9 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
                 dtm.addRow(vector);
             }
+            
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -116,6 +119,9 @@ public class ProductsList extends javax.swing.JInternalFrame {
                 }
                 dtm.addRow(vector);
             }
+            
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -136,6 +142,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
             con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -480,7 +487,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
             String category = combo_box_category.getSelectedItem().toString();
 
             if (category.equals("Select")) {
-                JOptionPane.showMessageDialog(null, "Please, select a Category", "Product List", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please, select a Category", "Product List", JOptionPane.ERROR_MESSAGE);
             } else {
                 try {
                     dbConnection();
@@ -493,7 +500,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
                     while (rs.next()) {
                         if (productName.equals(rs.getString("productService")) && price == rs.getDouble("price") && qty == rs.getInt("qty")
                                 && notes.equals(rs.getString("notes")) && category.equals(rs.getString("category"))) {
-                            JOptionPane.showMessageDialog(null, "No changes to be updated !", "Product List", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(this, "No changes to be updated !", "Product List", JOptionPane.ERROR_MESSAGE);
                         } else {
                             int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Editing " + productName + " ?",
                                     "Edit Product|Service", JOptionPane.YES_NO_OPTION);
@@ -516,6 +523,8 @@ public class ProductsList extends javax.swing.JInternalFrame {
                         }
                     }
 
+                    ps.close();
+                    con.close();
                 } catch (SQLException ex) {
                     Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -546,7 +555,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
                 rs = ps.executeQuery();
 
                 if (rs.isBeforeFirst()) {
-                    JOptionPane.showMessageDialog(null, addProductService + " already exist in the Database !", "Products List", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, addProductService + " already exist in the Database !", "Products List", JOptionPane.ERROR_MESSAGE);
                 } else {
                     String queryInsert = "INSERT INTO products(productService, price, qty, notes, category) VALUES(?, ?, ?, ?, ?)";
                     ps = con.prepareStatement(queryInsert);
@@ -564,6 +573,8 @@ public class ProductsList extends javax.swing.JInternalFrame {
                     clearFields();
                 }
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -598,7 +609,9 @@ public class ProductsList extends javax.swing.JInternalFrame {
                     ps.executeUpdate();
                     dtm.removeRow(table_view_products_list.getSelectedRow());
                     displayProductList();
-
+                    
+                    ps.close();
+                    con.close();
                 } catch (SQLException ex) {
                     Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
                 }

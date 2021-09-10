@@ -21,7 +21,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -88,6 +87,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
             con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(SaleDetails.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -185,6 +185,8 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                     }
                 }
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -669,6 +671,8 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                 SaleRefundReceipt saleRefundReceipt = new SaleRefundReceipt(sale);
                 saleRefundReceipt.setVisible(true);
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(SaleDetails.class.getName()).log(Level.SEVERE, null, ex);
             }

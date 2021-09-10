@@ -177,6 +177,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
             con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(NotFixedOrder.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -199,6 +200,8 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
             ps.setString(4, user);
             ps.executeUpdate();
 
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -830,6 +833,9 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                     ps.setString(15, order.getStatus());
                     ps.executeUpdate();
                 }
+                
+                ps.close();
+                con.close();
 
             } catch (SQLException ex) {
                 Logger.getLogger(NotFixedOrder.class.getName()).log(Level.SEVERE, null, ex);
@@ -861,6 +867,8 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 desktop_pane_not_fixed_order.removeAll();
                 desktop_pane_not_fixed_order.add(orderDetails).setVisible(true);
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(NotFixedOrder.class.getName()).log(Level.SEVERE, null, ex);
             }

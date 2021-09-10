@@ -185,6 +185,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
             
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -212,6 +213,9 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                         ps.executeUpdate();
                     }
                 }
+                
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -830,6 +834,8 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 desktop_pane_fixed_order.removeAll();
                 desktop_pane_fixed_order.add(orderDetails).setVisible(true);
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -855,6 +861,8 @@ public class FixedOrder extends javax.swing.JInternalFrame {
             OrderReceipt orderReceipt = new OrderReceipt(order, completedOrders);
             orderReceipt.setVisible(true);
 
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -935,6 +943,8 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 OrderRefundReceipt refundReceipt = new OrderRefundReceipt(order, completedOrders);
                 refundReceipt.setVisible(true);
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
             }

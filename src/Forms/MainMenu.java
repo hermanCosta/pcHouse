@@ -34,6 +34,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
@@ -63,7 +64,7 @@ public class MainMenu extends javax.swing.JFrame {
     public MainMenu() {
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-
+        
         tableSettings(table_view_products_stock);
         tableSettings(table_view_orders);
         mainMenuDesktopPane = desktop_pane_main_menu;
@@ -105,6 +106,7 @@ public class MainMenu extends javax.swing.JFrame {
             
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -176,6 +178,9 @@ public class MainMenu extends javax.swing.JFrame {
                 dtm.addRow(row);
             }
 
+            ps.close();
+            con.close();
+            
         } catch (SQLException ex) {
             Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1679,6 +1684,9 @@ public class MainMenu extends javax.swing.JFrame {
                 FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
                 desktop_pane_main_menu.removeAll();
                 desktop_pane_main_menu.add(fixedOrder).setVisible(true);
+                
+                ps.close();
+                con.close();
 
             } catch (SQLException ex) {
                 Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);

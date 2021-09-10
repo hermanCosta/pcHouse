@@ -68,9 +68,9 @@ public class ComputerList extends javax.swing.JInternalFrame {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
-            
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ComputerList.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -92,6 +92,9 @@ public class ComputerList extends javax.swing.JInternalFrame {
 
                 list.add(computer);
             }
+            
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(ComputerList.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -212,6 +215,8 @@ public class ComputerList extends javax.swing.JInternalFrame {
                 loadComputerTable();
             }
 
+            ps.close();
+            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(ComputerList.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -783,7 +788,7 @@ public class ComputerList extends javax.swing.JInternalFrame {
                         && computer.getProcessor().equals(processor) && computer.getRam().equals(ram) && computer.getStorage().equals(storage)
                         && computer.getGpu().equals(gpu) && computer.getScreen().equals(screen) && computer.getNotes().equals(notes)
                         && computer.getQty() == qty && computer.getPrice() == price) {
-                    JOptionPane.showMessageDialog(null, "No changes to be updated !", "Update Computer", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "No changes to be updated !", "Update Computer", JOptionPane.ERROR_MESSAGE);
                     
                 } else {
                     int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Updating '" + brand + " " + model + "' ?",
@@ -815,6 +820,8 @@ public class ComputerList extends javax.swing.JInternalFrame {
                     }
                 }
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -909,6 +916,8 @@ public class ComputerList extends javax.swing.JInternalFrame {
                 txt_qty.setText(String.valueOf(computer.getQty()));
                 txt_price.setText(String.valueOf(computer.getPrice()));
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(ComputerList.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -946,6 +955,8 @@ public class ComputerList extends javax.swing.JInternalFrame {
                     cleanFields();
                 }
 
+                ps.close();
+                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1089,6 +1100,8 @@ public class ComputerList extends javax.swing.JInternalFrame {
                 computer.setComputerId(rs.getInt("computerId"));
                 compList.add(computer);
             }
+            ps.close();
+            con.close();
             
         } catch (SQLException ex) {
             Logger.getLogger(Computer.class.getName()).log(Level.SEVERE, null, ex);
