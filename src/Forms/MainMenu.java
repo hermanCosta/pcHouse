@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
@@ -61,7 +62,7 @@ public class MainMenu extends javax.swing.JFrame {
     Timer updateTimer;
     int DELAY = 100;
 
-    public MainMenu() {
+    public MainMenu() { 
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         
@@ -216,7 +217,7 @@ public class MainMenu extends javax.swing.JFrame {
         panel_reports.setBackground(defaultColor);
     }
 
-    public void expandOrders() {
+    public  void expandOrders() {
         panel_check_existing.setVisible(true);
         panel_new_order.setVisible(true);
 
@@ -319,7 +320,7 @@ public class MainMenu extends javax.swing.JFrame {
         panel_sales = new javax.swing.JPanel();
         label_sales = new javax.swing.JLabel();
         panel_close_till = new javax.swing.JPanel();
-        label_close_till = new javax.swing.JLabel();
+        label_till_closing = new javax.swing.JLabel();
         panel_customers = new javax.swing.JPanel();
         label_customers = new javax.swing.JLabel();
         panel_orders = new javax.swing.JPanel();
@@ -714,23 +715,23 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
 
-        label_close_till.setBackground(new java.awt.Color(255, 255, 255));
-        label_close_till.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
-        label_close_till.setForeground(new java.awt.Color(255, 255, 255));
-        label_close_till.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_close_till.png"))); // NOI18N
-        label_close_till.setText(" Close Till");
-        label_close_till.addMouseListener(new java.awt.event.MouseAdapter() {
+        label_till_closing.setBackground(new java.awt.Color(255, 255, 255));
+        label_till_closing.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        label_till_closing.setForeground(new java.awt.Color(255, 255, 255));
+        label_till_closing.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_close_till.png"))); // NOI18N
+        label_till_closing.setText("Till Closing");
+        label_till_closing.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                label_close_tillMousePressed(evt);
+                label_till_closingMousePressed(evt);
             }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                label_close_tillMouseClicked(evt);
+                label_till_closingMouseClicked(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                label_close_tillMouseExited(evt);
+                label_till_closingMouseExited(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                label_close_tillMouseEntered(evt);
+                label_till_closingMouseEntered(evt);
             }
         });
 
@@ -739,12 +740,12 @@ public class MainMenu extends javax.swing.JFrame {
         panel_close_tillLayout.setHorizontalGroup(
             panel_close_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_close_tillLayout.createSequentialGroup()
-                .addGap(0, 30, Short.MAX_VALUE)
-                .addComponent(label_close_till, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 18, Short.MAX_VALUE)
+                .addComponent(label_till_closing, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panel_close_tillLayout.setVerticalGroup(
             panel_close_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(label_close_till, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(label_till_closing, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         panel_customers.setBackground(new java.awt.Color(21, 76, 121));
@@ -1132,7 +1133,7 @@ public class MainMenu extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Order", "Full Name", "Contact No", "Date of Fixing"
+                "Order", "Full Name", "Contact No", "Fixing Date"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -1407,11 +1408,11 @@ public class MainMenu extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_panel_salesMouseExited
 
-    private void label_close_tillMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_close_tillMousePressed
+    private void label_till_closingMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_till_closingMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_label_close_tillMousePressed
+    }//GEN-LAST:event_label_till_closingMousePressed
 
-    private void label_close_tillMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_close_tillMouseClicked
+    private void label_till_closingMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_till_closingMouseClicked
         // TODO add your handling code here:
         TillClosing closeTill = new TillClosing();
         desktop_pane_main_menu.removeAll();
@@ -1420,15 +1421,15 @@ public class MainMenu extends javax.swing.JFrame {
         panel_customers.setBackground(defaultColor);
         panel_close_till.setBackground(clickedColor);
         panel_faults.setBackground(defaultColor);
-    }//GEN-LAST:event_label_close_tillMouseClicked
+    }//GEN-LAST:event_label_till_closingMouseClicked
 
-    private void label_close_tillMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_close_tillMouseExited
+    private void label_till_closingMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_till_closingMouseExited
         // TODO add your handling code here:
-    }//GEN-LAST:event_label_close_tillMouseExited
+    }//GEN-LAST:event_label_till_closingMouseExited
 
-    private void label_close_tillMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_close_tillMouseEntered
+    private void label_till_closingMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_till_closingMouseEntered
         // TODO add your handling code here:
-    }//GEN-LAST:event_label_close_tillMouseEntered
+    }//GEN-LAST:event_label_till_closingMouseEntered
 
     private void panel_close_tillMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_close_tillMousePressed
         // TODO add your handling code here:
@@ -1716,7 +1717,6 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel label_check_existing;
-    private javax.swing.JLabel label_close_till;
     private javax.swing.JLabel label_customers;
     private javax.swing.JLabel label_faults;
     private javax.swing.JLabel label_home;
@@ -1727,6 +1727,7 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JLabel label_products_list;
     private javax.swing.JLabel label_reports;
     private javax.swing.JLabel label_sales;
+    private javax.swing.JLabel label_till_closing;
     private javax.swing.JLabel lbl_time_stamp;
     private javax.swing.JLabel lbl_username;
     private javax.swing.JPanel panel_buttons;

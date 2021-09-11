@@ -73,6 +73,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         loadOrdersReportOfTheDay();
     }
 
+
     public void dbConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -868,6 +869,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
                     case "Refunded" :
                         OrderRefund refundOrder = new OrderRefund(order, completedOrder);
                         desktop_pane_till_closing.add(refundOrder).setVisible(true);
+                        MainMenu mainMenu = new MainMenu();
+                        mainMenu.expandOrders();
                         break;
 
                     case "Not Fixed" :
@@ -889,7 +892,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 ps.close();
                 con.close();
             } catch (SQLException ex) {
-                Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(TillClosing.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_table_view_ordersMouseClicked

@@ -241,7 +241,8 @@ public class PrintFullReport extends javax.swing.JFrame {
         });
         scroll_pane_orders.setViewportView(table_view_orders);
         if (table_view_orders.getColumnModel().getColumnCount() > 0) {
-            table_view_orders.getColumnModel().getColumn(0).setMaxWidth(50);
+            table_view_orders.getColumnModel().getColumn(0).setPreferredWidth(70);
+            table_view_orders.getColumnModel().getColumn(0).setMaxWidth(80);
             table_view_orders.getColumnModel().getColumn(1).setPreferredWidth(30);
             table_view_orders.getColumnModel().getColumn(3).setMaxWidth(70);
             table_view_orders.getColumnModel().getColumn(4).setMaxWidth(70);
@@ -302,7 +303,8 @@ public class PrintFullReport extends javax.swing.JFrame {
         });
         scroll_pane_sales.setViewportView(table_view_sales);
         if (table_view_sales.getColumnModel().getColumnCount() > 0) {
-            table_view_sales.getColumnModel().getColumn(0).setMaxWidth(60);
+            table_view_sales.getColumnModel().getColumn(0).setPreferredWidth(70);
+            table_view_sales.getColumnModel().getColumn(0).setMaxWidth(80);
             table_view_sales.getColumnModel().getColumn(1).setPreferredWidth(30);
             table_view_sales.getColumnModel().getColumn(3).setMaxWidth(80);
         }
