@@ -17,6 +17,8 @@ import com.sun.glass.events.KeyEvent;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -356,6 +358,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         editor_pane_important_notes = new javax.swing.JEditorPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         table_view_products = new javax.swing.JTable();
+        btn_international_number = new javax.swing.JButton();
+        btn_copy = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -408,6 +412,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         lbl_due.setText("Due €");
 
         txt_first_name.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        txt_first_name.setNextFocusableComponent(txt_last_name);
         txt_first_name.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_first_nameActionPerformed(evt);
@@ -423,6 +428,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         });
 
         txt_last_name.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        txt_last_name.setNextFocusableComponent(txt_contact);
         txt_last_name.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_last_nameActionPerformed(evt);
@@ -438,6 +444,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         });
 
         txt_email.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        txt_email.setNextFocusableComponent(txt_brand);
         txt_email.setPreferredSize(new java.awt.Dimension(63, 20));
         txt_email.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -456,6 +463,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             ex.printStackTrace();
         }
         txt_contact.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        txt_contact.setNextFocusableComponent(txt_email);
         txt_contact.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_contactActionPerformed(evt);
@@ -469,6 +477,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
         txt_brand.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_brand.setMinimumSize(new java.awt.Dimension(63, 20));
+        txt_brand.setNextFocusableComponent(txt_model);
         txt_brand.setPreferredSize(new java.awt.Dimension(63, 20));
         txt_brand.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -485,6 +494,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         });
 
         txt_model.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        txt_model.setNextFocusableComponent(txt_serial_number);
         txt_model.setPreferredSize(new java.awt.Dimension(63, 20));
         txt_model.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -496,6 +506,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         });
 
         txt_serial_number.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        txt_serial_number.setNextFocusableComponent(editor_pane_important_notes);
         txt_serial_number.setPreferredSize(new java.awt.Dimension(63, 20));
         txt_serial_number.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -511,7 +522,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             }
         });
 
-        txt_fault.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        txt_fault.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        txt_fault.setNextFocusableComponent(combo_box_product_service);
         txt_fault.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_faultActionPerformed(evt);
@@ -529,6 +541,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         combo_box_product_service.setEditable(true);
         combo_box_product_service.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         combo_box_product_service.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select or Type" }));
+        combo_box_product_service.setNextFocusableComponent(txt_deposit);
         combo_box_product_service.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 combo_box_product_serviceActionPerformed(evt);
@@ -545,6 +558,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
         txt_deposit.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         txt_deposit.setForeground(new java.awt.Color(51, 51, 255));
+        txt_deposit.setNextFocusableComponent(btn_save_changes);
         txt_deposit.setPreferredSize(new java.awt.Dimension(63, 20));
         txt_deposit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -701,6 +715,12 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
         editor_pane_important_notes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Important Notes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 16))); // NOI18N
         editor_pane_important_notes.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        editor_pane_important_notes.setNextFocusableComponent(txt_fault);
+        editor_pane_important_notes.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                editor_pane_important_notesKeyPressed(evt);
+            }
+        });
         jScrollPane_notes.setViewportView(editor_pane_important_notes);
 
         table_view_products.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
@@ -720,6 +740,22 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         });
         jScrollPane2.setViewportView(table_view_products);
 
+        btn_international_number.setBackground(new java.awt.Color(21, 76, 121));
+        btn_international_number.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_international_number.png"))); // NOI18N
+        btn_international_number.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_international_numberActionPerformed(evt);
+            }
+        });
+
+        btn_copy.setBackground(new java.awt.Color(21, 76, 121));
+        btn_copy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_copy.png"))); // NOI18N
+        btn_copy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_copyActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);
         panel_order_detailsLayout.setHorizontalGroup(
@@ -727,20 +763,16 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             .addComponent(panel_buttons, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                 .addGap(21, 21, 21)
-                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_order_no)
                                 .addGap(12, 12, 12)
-                                .addComponent(lbl_auto_order_no)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lbl_fault)
-                                .addGap(6, 6, 6))
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addComponent(lbl_issue_date)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addComponent(txt_fault, javax.swing.GroupLayout.PREFERRED_SIZE, 489, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(lbl_auto_order_no))
+                            .addComponent(lbl_issue_date))
+                        .addGap(289, 289, 289)
+                        .addComponent(txt_fault))
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
@@ -766,7 +798,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                             .addComponent(jScrollPane_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addGap(1, 1, 1)
-                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                         .addComponent(lbl_last_name)
                                         .addGap(20, 20, 20)
@@ -774,33 +806,39 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                         .addComponent(lbl_contact)
                                         .addGap(11, 11, 11)
-                                        .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(3, 3, 3)
+                                        .addComponent(btn_international_number, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btn_copy, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addGap(30, 30, 30)
-                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jScrollPane3)
-                                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                        .addComponent(lbl_service_product)
-                                        .addGap(6, 6, 6)
-                                        .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(10, 10, 10)
-                                        .addComponent(lbl_add_product))
-                                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                        .addComponent(lbl_due)
-                                        .addGap(0, 0, 0)
-                                        .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(lbl_deposit)
-                                        .addGap(0, 0, 0)
-                                        .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(lbl_price)
-                                        .addGap(0, 0, 0)
-                                        .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 571, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 571, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                .addGap(30, 30, 30)
+                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lbl_fault)
+                                    .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jScrollPane3)
+                                        .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                            .addComponent(lbl_service_product)
+                                            .addGap(6, 6, 6)
+                                            .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(10, 10, 10)
+                                            .addComponent(lbl_add_product))
+                                        .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                            .addComponent(lbl_due)
+                                            .addGap(0, 0, 0)
+                                            .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(lbl_deposit)
+                                            .addGap(0, 0, 0)
+                                            .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(lbl_price)
+                                            .addGap(0, 0, 0)
+                                            .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_order_detailsLayout.setVerticalGroup(
@@ -809,16 +847,17 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGap(16, 16, 16)
-                        .addComponent(txt_fault, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txt_fault)
+                            .addComponent(lbl_fault)))
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(lbl_issue_date, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_order_no)
-                            .addComponent(lbl_auto_order_no)
-                            .addComponent(lbl_fault))))
-                .addGap(6, 6, 6)
+                            .addComponent(lbl_auto_order_no))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGap(8, 8, 8)
@@ -838,7 +877,10 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addGap(5, 5, 5)
                                 .addComponent(lbl_contact))
-                            .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btn_copy, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btn_international_number, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(12, 12, 12)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
@@ -1550,8 +1592,33 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_modelKeyReleased
 
+    private void btn_international_numberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_international_numberActionPerformed
+        // TODO add your handling code here:
+        txt_contact.setFormatterFactory(null);
+        txt_contact.setText("");
+        txt_contact.requestFocus();
+
+    }//GEN-LAST:event_btn_international_numberActionPerformed
+
+    private void btn_copyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_copyActionPerformed
+        // TODO add your handling code here:
+        StringSelection stringSelection = new StringSelection(txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", ""));
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection , null);
+        JOptionPane.showMessageDialog(this, txt_contact.getText() + " Copied to Clipboard");
+    }//GEN-LAST:event_btn_copyActionPerformed
+
+    private void editor_pane_important_notesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_editor_pane_important_notesKeyPressed
+        // TODO add your handling code here:
+        if (evt.isShiftDown() && evt.getKeyCode() == KeyEvent.VK_TAB)
+            txt_serial_number.requestFocus();
+        else if (evt.getKeyCode() == KeyEvent.VK_TAB)
+            txt_fault.requestFocus();
+    }//GEN-LAST:event_editor_pane_important_notesKeyPressed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_copy;
     private javax.swing.JButton btn_fix;
+    private javax.swing.JButton btn_international_number;
     private javax.swing.JButton btn_not_fix;
     private javax.swing.JButton btn_notes;
     private javax.swing.JButton btn_print;

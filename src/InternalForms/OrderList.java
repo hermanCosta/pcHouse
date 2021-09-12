@@ -21,6 +21,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 
@@ -48,6 +49,10 @@ public class OrderList extends javax.swing.JInternalFrame {
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0,0,0,0));
         BasicInternalFrameUI UserUi = (BasicInternalFrameUI) this.getUI();
         UserUi.setNorthPane(null);
+        
+        SwingUtilities.invokeLater(() -> {
+            txt_search_order.requestFocus();
+        });
         
         defaultColor = new Color(21,76,121);
         mouseEnteredColor = new Color(118,181,197);

@@ -247,7 +247,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="txt_product_service_list" min="-2" pref="330" max="-2" attributes="0"/>
+                          <Component id="txt_product_service" min="-2" pref="330" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="txt_add_price" min="-2" pref="100" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -268,7 +268,7 @@
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txt_product_service_list" alignment="1" max="32767" attributes="0"/>
+                      <Component id="txt_product_service" alignment="1" max="32767" attributes="0"/>
                       <Component id="txt_add_price" alignment="1" max="32767" attributes="0"/>
                       <Component id="txt_add_qty" alignment="1" max="32767" attributes="0"/>
                       <Component id="txt_add_notes" alignment="1" max="32767" attributes="0"/>
@@ -282,7 +282,7 @@
                 </DimensionLayout>
               </Layout>
               <SubComponents>
-                <Component class="javax.swing.JTextField" name="txt_product_service_list">
+                <Component class="javax.swing.JTextField" name="txt_product_service">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Lucida Grande" size="15" style="0"/>
@@ -294,8 +294,8 @@
                     </Property>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_product_service_listActionPerformed"/>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_product_service_listKeyReleased"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_product_serviceActionPerformed"/>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_product_serviceKeyReleased"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txt_add_price">

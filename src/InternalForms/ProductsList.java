@@ -19,6 +19,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 
@@ -49,6 +50,10 @@ public class ProductsList extends javax.swing.JInternalFrame {
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
 
+        SwingUtilities.invokeLater(() -> {
+            txt_product_service.requestFocus();
+        });
+        
         table_view_products_list.setRowHeight(25);
         table_view_products_list.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
         defaultColor = new Color(21, 76, 121);
@@ -91,7 +96,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
     public void searchProductService() {
 
-        String searchProduct = txt_product_service_list.getText();
+        String searchProduct = txt_product_service.getText();
 
         try {
             String query = "SELECT * FROM products WHERE productService LIKE '%" + searchProduct + "%' ORDER BY productService ASC";
@@ -123,7 +128,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
     }
 
     public void clearFields() {
-        txt_product_service_list.setText("");
+        txt_product_service.setText("");
         txt_add_price.setText("");
         txt_add_qty.setText("");
         txt_add_notes.setText("");
@@ -153,7 +158,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         btn_clear_fields = new javax.swing.JButton();
         btn_device_list = new javax.swing.JButton();
         panel_new_product = new javax.swing.JPanel();
-        txt_product_service_list = new javax.swing.JTextField();
+        txt_product_service = new javax.swing.JTextField();
         txt_add_price = new javax.swing.JTextField();
         txt_add_qty = new javax.swing.JTextField();
         txt_add_notes = new javax.swing.JTextField();
@@ -252,16 +257,16 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
         panel_new_product.setBackground(new java.awt.Color(255, 255, 255));
 
-        txt_product_service_list.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
-        txt_product_service_list.setBorder(javax.swing.BorderFactory.createTitledBorder("Product | Service"));
-        txt_product_service_list.addActionListener(new java.awt.event.ActionListener() {
+        txt_product_service.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        txt_product_service.setBorder(javax.swing.BorderFactory.createTitledBorder("Product | Service"));
+        txt_product_service.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_product_service_listActionPerformed(evt);
+                txt_product_serviceActionPerformed(evt);
             }
         });
-        txt_product_service_list.addKeyListener(new java.awt.event.KeyAdapter() {
+        txt_product_service.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txt_product_service_listKeyReleased(evt);
+                txt_product_serviceKeyReleased(evt);
             }
         });
 
@@ -318,7 +323,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         panel_new_productLayout.setHorizontalGroup(
             panel_new_productLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_new_productLayout.createSequentialGroup()
-                .addComponent(txt_product_service_list, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txt_add_price, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -335,7 +340,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         );
         panel_new_productLayout.setVerticalGroup(
             panel_new_productLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(txt_product_service_list, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(txt_product_service, javax.swing.GroupLayout.Alignment.TRAILING)
             .addComponent(txt_add_price, javax.swing.GroupLayout.Alignment.TRAILING)
             .addComponent(txt_add_qty, javax.swing.GroupLayout.Alignment.TRAILING)
             .addComponent(txt_add_notes, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -460,9 +465,9 @@ public class ProductsList extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txt_product_service_listActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_product_service_listActionPerformed
+    private void txt_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_product_serviceActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txt_product_service_listActionPerformed
+    }//GEN-LAST:event_txt_product_serviceActionPerformed
 
     private void txt_add_qtyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_add_qtyActionPerformed
         // TODO add your handling code here:
@@ -470,12 +475,12 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
     private void btn_edit_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_edit_product_serviceActionPerformed
         // TODO add your handling code here:
-        if (txt_product_service_list.getText().trim().isEmpty() || txt_add_price.getText().trim().isEmpty()
+        if (txt_product_service.getText().trim().isEmpty() || txt_add_price.getText().trim().isEmpty()
                 || txt_add_qty.getText().trim().isEmpty() || combo_box_category.getSelectedItem().equals("Select")) {
             JOptionPane.showMessageDialog(this, "Please check empty fields !", "Product List", JOptionPane.ERROR_MESSAGE);
         } else {
 
-            String productName = txt_product_service_list.getText();
+            String productName = txt_product_service.getText();
             double price = Double.parseDouble(txt_add_price.getText());
             int qty = Integer.parseInt(txt_add_qty.getText());
             String notes = txt_add_notes.getText();
@@ -529,12 +534,12 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
     private void btn_add_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add_product_serviceActionPerformed
         // TODO add your handling code here:
-        if (txt_product_service_list.getText().trim().isEmpty() || txt_add_price.getText().trim().isEmpty()
+        if (txt_product_service.getText().trim().isEmpty() || txt_add_price.getText().trim().isEmpty()
                 || txt_add_qty.getText().trim().isEmpty() || combo_box_category.getSelectedItem().equals("Select")) {
             JOptionPane.showMessageDialog(this, "Please check empty fields !", "Product List", JOptionPane.ERROR_MESSAGE);
         } else {
 
-            String addProductService = txt_product_service_list.getText();
+            String addProductService = txt_product_service.getText();
             double addPrice = Double.parseDouble(txt_add_price.getText());
             int addQty = Integer.parseInt(txt_add_qty.getText());
             String addNotes = txt_add_notes.getText();
@@ -614,10 +619,10 @@ public class ProductsList extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_txt_delete_product_serviceActionPerformed
 
-    private void txt_product_service_listKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_product_service_listKeyReleased
+    private void txt_product_serviceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_product_serviceKeyReleased
         // TODO add your handling code here:
         searchProductService();
-    }//GEN-LAST:event_txt_product_service_listKeyReleased
+    }//GEN-LAST:event_txt_product_serviceKeyReleased
 
     private void btn_clear_fieldsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clear_fieldsActionPerformed
         // TODO add your handling code here:
@@ -632,7 +637,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
             table_view_products_list.getModel().addTableModelListener(table_view_products_list);
             id = (Integer) dtm.getValueAt(selectedRow, 0);
 
-            txt_product_service_list.setText(dtm.getValueAt(selectedRow, 1).toString());
+            txt_product_service.setText(dtm.getValueAt(selectedRow, 1).toString());
             txt_add_price.setText(dtm.getValueAt(selectedRow, 2).toString());
             txt_add_qty.setText(dtm.getValueAt(selectedRow, 3).toString());
             txt_add_notes.setText(dtm.getValueAt(selectedRow, 4).toString());
@@ -699,6 +704,6 @@ public class ProductsList extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txt_add_price;
     private javax.swing.JTextField txt_add_qty;
     private javax.swing.JButton txt_delete_product_service;
-    private javax.swing.JTextField txt_product_service_list;
+    private javax.swing.JTextField txt_product_service;
     // End of variables declaration//GEN-END:variables
 }

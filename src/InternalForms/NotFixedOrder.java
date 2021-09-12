@@ -13,6 +13,8 @@ import Model.Order;
 import Model.ProductService;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -251,6 +253,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         lbl_refunded_by = new javax.swing.JLabel();
         jScrollPane_notes = new javax.swing.JScrollPane();
         editor_pane_notes = new javax.swing.JEditorPane();
+        btn_copy = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(1049, 827));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -418,7 +421,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 txt_contactKeyReleased(evt);
             }
         });
-        panel_order_details.add(txt_contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 209, 300, 30));
+        panel_order_details.add(txt_contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 209, 250, 30));
 
         txt_brand.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_brand.setEnabled(false);
@@ -630,6 +633,15 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         jScrollPane_notes.setViewportView(editor_pane_notes);
 
         panel_order_details.add(jScrollPane_notes, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 419, 399, 178));
+
+        btn_copy.setBackground(new java.awt.Color(21, 76, 121));
+        btn_copy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_copy.png"))); // NOI18N
+        btn_copy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_copyActionPerformed(evt);
+            }
+        });
+        panel_order_details.add(btn_copy, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 210, -1, -1));
 
         desktop_pane_not_fixed_order.setLayer(panel_order_details, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -887,7 +899,15 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         orderNotes.setVisible(true);
     }//GEN-LAST:event_btn_notes1ActionPerformed
 
+    private void btn_copyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_copyActionPerformed
+        // TODO add your handling code here:
+        StringSelection stringSelection = new StringSelection(txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", ""));
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection , null);
+        JOptionPane.showMessageDialog(this, txt_contact.getText() + " Copied to Clipboard");
+    }//GEN-LAST:event_btn_copyActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_copy;
     private javax.swing.JButton btn_notes;
     private javax.swing.JButton btn_notes1;
     private javax.swing.JButton btn_pick_up;

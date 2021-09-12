@@ -17,6 +17,8 @@ import com.sun.glass.events.KeyEvent;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -37,6 +39,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
@@ -76,10 +79,14 @@ public class NewSale extends javax.swing.JInternalFrame {
     public NewSale() {
         initComponents();
 
-        //Remove bsas
+        //Remove borders
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
+        
+        SwingUtilities.invokeLater(() -> {
+            txt_first_name.requestFocus();
+        });
 
         txt_contact.setFocusLostBehavior(JFormattedTextField.PERSIST);//avoid auto old value by focus loosing
 
@@ -428,6 +435,8 @@ public class NewSale extends javax.swing.JInternalFrame {
         txt_search_computer = new javax.swing.JTextField();
         lbl_search_icon = new javax.swing.JLabel();
         btn_computers = new javax.swing.JButton();
+        btn_international_number = new javax.swing.JButton();
+        btn_copy = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -460,6 +469,7 @@ public class NewSale extends javax.swing.JInternalFrame {
         lbl_price.setText("Total €");
 
         txt_first_name.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        txt_first_name.setNextFocusableComponent(txt_last_name);
         txt_first_name.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_first_nameActionPerformed(evt);
@@ -475,6 +485,7 @@ public class NewSale extends javax.swing.JInternalFrame {
         });
 
         txt_last_name.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        txt_last_name.setNextFocusableComponent(txt_contact);
         txt_last_name.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_last_nameActionPerformed(evt);
@@ -490,6 +501,7 @@ public class NewSale extends javax.swing.JInternalFrame {
         });
 
         txt_email.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        txt_email.setNextFocusableComponent(combo_box_product_service);
         txt_email.setPreferredSize(new java.awt.Dimension(63, 20));
         txt_email.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -508,6 +520,7 @@ public class NewSale extends javax.swing.JInternalFrame {
             ex.printStackTrace();
         }
         txt_contact.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        txt_contact.setNextFocusableComponent(txt_email);
         txt_contact.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_contactActionPerformed(evt);
@@ -522,6 +535,7 @@ public class NewSale extends javax.swing.JInternalFrame {
         combo_box_product_service.setEditable(true);
         combo_box_product_service.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         combo_box_product_service.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select or Type" }));
+        combo_box_product_service.setNextFocusableComponent(btn_add_products);
         combo_box_product_service.setSize(new java.awt.Dimension(96, 30));
         combo_box_product_service.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -672,6 +686,22 @@ public class NewSale extends javax.swing.JInternalFrame {
             }
         });
 
+        btn_international_number.setBackground(new java.awt.Color(21, 76, 121));
+        btn_international_number.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_international_number.png"))); // NOI18N
+        btn_international_number.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_international_numberActionPerformed(evt);
+            }
+        });
+
+        btn_copy.setBackground(new java.awt.Color(21, 76, 121));
+        btn_copy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_copy.png"))); // NOI18N
+        btn_copy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_copyActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_sale_detailsLayout = new javax.swing.GroupLayout(panel_sale_details);
         panel_sale_details.setLayout(panel_sale_detailsLayout);
         panel_sale_detailsLayout.setHorizontalGroup(
@@ -704,8 +734,13 @@ public class NewSale extends javax.swing.JInternalFrame {
                                             .addComponent(lbl_contact)
                                             .addGap(11, 11, 11)))
                                     .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txt_contact, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                                        .addComponent(txt_last_name))))
+                                        .addComponent(txt_last_name, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(panel_sale_detailsLayout.createSequentialGroup()
+                                            .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(3, 3, 3)
+                                            .addComponent(btn_international_number, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(btn_copy, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addGroup(panel_sale_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_price)
                                 .addGap(47, 47, 47)
@@ -755,17 +790,22 @@ public class NewSale extends javax.swing.JInternalFrame {
                             .addComponent(lbl_last_name)
                             .addComponent(txt_last_name, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(15, 15, 15)
-                        .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbl_contact)
-                            .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(15, 15, 15)
-                        .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbl_email)
-                            .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(15, 15, 15)
-                        .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbl_price)
-                            .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel_sale_detailsLayout.createSequentialGroup()
+                                .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lbl_contact)
+                                    .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(15, 15, 15)
+                                .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lbl_email)
+                                    .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(15, 15, 15)
+                                .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lbl_price)
+                                    .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btn_copy, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btn_international_number, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(panel_sale_detailsLayout.createSequentialGroup()
                         .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btn_add_products)
@@ -1157,10 +1197,27 @@ public class NewSale extends javax.swing.JInternalFrame {
         desktop_pane_new_sale.add(computerList).setVisible(true);
     }//GEN-LAST:event_btn_computersActionPerformed
 
+    private void btn_international_numberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_international_numberActionPerformed
+        // TODO add your handling code here:
+        txt_contact.setFormatterFactory(null);
+        txt_contact.setText("");
+        txt_contact.requestFocus();
+
+    }//GEN-LAST:event_btn_international_numberActionPerformed
+
+    private void btn_copyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_copyActionPerformed
+        // TODO add your handling code here:
+        StringSelection stringSelection = new StringSelection(txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", ""));
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection , null);
+        JOptionPane.showMessageDialog(this, txt_contact.getText() + " Copied to Clipboard");
+    }//GEN-LAST:event_btn_copyActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btn_add_products;
     private javax.swing.JButton btn_cancel;
     private javax.swing.JButton btn_computers;
+    private javax.swing.JButton btn_copy;
+    private javax.swing.JButton btn_international_number;
     private javax.swing.JButton btn_save_sale;
     private javax.swing.JComboBox<String> combo_box_product_service;
     private javax.swing.JDesktopPane desktop_pane_new_sale;
