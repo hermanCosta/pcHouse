@@ -128,7 +128,7 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="combo_box_product_service" min="-2" pref="390" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                                      <Component id="btn_add_table_view" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btn_add_products" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -197,7 +197,7 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="btn_add_table_view" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btn_add_products" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                                       <Component id="combo_box_product_service" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                                       <Component id="lbl_service_product" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -504,14 +504,14 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JLabel" name="btn_add_table_view">
+            <Component class="javax.swing.JLabel" name="btn_add_products">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/Img/icon_add_to_product_table.png"/>
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btn_add_table_viewMousePressed"/>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btn_add_productsMousePressed"/>
               </Events>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane4">

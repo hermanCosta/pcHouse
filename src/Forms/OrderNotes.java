@@ -135,8 +135,8 @@ public class OrderNotes extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(table_view_notes);
         if (table_view_notes.getColumnModel().getColumnCount() > 0) {
-            table_view_notes.getColumnModel().getColumn(0).setPreferredWidth(100);
-            table_view_notes.getColumnModel().getColumn(0).setMaxWidth(120);
+            table_view_notes.getColumnModel().getColumn(0).setPreferredWidth(150);
+            table_view_notes.getColumnModel().getColumn(0).setMaxWidth(200);
             table_view_notes.getColumnModel().getColumn(2).setPreferredWidth(120);
             table_view_notes.getColumnModel().getColumn(2).setMaxWidth(150);
         }
@@ -156,7 +156,7 @@ public class OrderNotes extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(txt_note)
                 .addContainerGap())
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 650, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(170, 170, 170)
                 .addComponent(lbl_notes_from_order)
@@ -167,7 +167,7 @@ public class OrderNotes extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lbl_notes_from_order)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addComponent(txt_note, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -182,7 +182,7 @@ public class OrderNotes extends javax.swing.JFrame {
 
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
-        noteDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
+        noteDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDate);
         note = txt_note.getText();
 
         int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add note: " + note + " to the Database ?", "Order Notes", JOptionPane.YES_OPTION);

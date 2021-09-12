@@ -184,7 +184,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
     public void addNoteEvent(String updateNote) {
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
-        String dateFormat = new SimpleDateFormat("yyyy/MM/dd").format(currentDate);
+        String dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDate);
 
         try {
             dbConnection();

@@ -147,7 +147,7 @@ public class Customers extends javax.swing.JInternalFrame {
         }
     }
 
-    public void cleanFields() {
+    public void clearFields() {
         //Clean all Fields 
         txt_first_name.setText("");
         txt_last_name.setText("");
@@ -516,7 +516,6 @@ public class Customers extends javax.swing.JInternalFrame {
 
     private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
         // TODO add your handling code here:
-
         if (txt_first_name.getText().trim().isEmpty() || txt_last_name.getText().trim().isEmpty()
                 || txt_contact.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Costumer", JOptionPane.ERROR_MESSAGE);
@@ -550,6 +549,7 @@ public class Customers extends javax.swing.JInternalFrame {
 
                         JOptionPane.showMessageDialog(this, "Customer " + customer.getFirstName() + " " + customer.getLastName() + " added Successfully");
                         loadCustomerTable();
+                        clearFields();
                     }
                 } else {
                     JOptionPane.showMessageDialog(this, customer.getContactNo() + " already exist in the Database", "New Customer", JOptionPane.ERROR_MESSAGE);
@@ -586,12 +586,7 @@ public class Customers extends javax.swing.JInternalFrame {
 
                 if (customer.getFirstName().equals(firstName) && customer.getLastName().equals(lastName) && customer.getContactNo().equals(contactNo) && customer.getEmail().equals(email))
                     JOptionPane.showMessageDialog(this, "No changes to be updated !", "Update Customer", JOptionPane.ERROR_MESSAGE);
-                    
-                else if (rs.next()) {
-                    //add a new customer if not exists AND fields are not empty
-                    JOptionPane.showMessageDialog(this, customer.getContactNo() + " already exist in the Database", "Update Customer", JOptionPane.ERROR_MESSAGE);
-                    
-                } else {
+                else {
                     int confirmEditing = JOptionPane.showConfirmDialog(null, "Confirm Updating " + firstName + " ?",
                             "Update Customer", JOptionPane.YES_NO_OPTION);
 
@@ -606,10 +601,10 @@ public class Customers extends javax.swing.JInternalFrame {
                         ps.executeUpdate();
 
                         loadCustomerTable();
-                        cleanFields();
+                        clearFields();
                     } else {
                         loadCustomerTable();
-                        cleanFields();
+                        clearFields();
                     }
                 }
                 ps.close();
@@ -645,10 +640,12 @@ public class Customers extends javax.swing.JInternalFrame {
 
     private void txt_first_nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_first_nameKeyReleased
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_txt_first_nameKeyReleased
 
     private void txt_last_nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_last_nameKeyReleased
         // TODO add your handling code here:
+        txt_last_name.setText(txt_last_name.getText().toUpperCase());
     }//GEN-LAST:event_txt_last_nameKeyReleased
 
     private void txt_last_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_last_nameKeyPressed
@@ -773,10 +770,10 @@ public class Customers extends javax.swing.JInternalFrame {
                     ps.executeUpdate();
 
                     loadCustomerTable();
-                    cleanFields();
+                    clearFields();
                 } else {
                     loadCustomerTable();
-                    cleanFields();
+                    clearFields();
                 }
                 
                 ps.close();
@@ -789,7 +786,7 @@ public class Customers extends javax.swing.JInternalFrame {
 
     private void btn_clear_fieldsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clear_fieldsActionPerformed
         // TODO add your handling code here:
-        cleanFields();
+        clearFields();
     }//GEN-LAST:event_btn_clear_fieldsActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

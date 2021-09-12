@@ -55,6 +55,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     ArrayList firstNames = new ArrayList();
     ArrayList faults = new ArrayList();
     ArrayList lastNames = new ArrayList();
+    ArrayList brands = new ArrayList();
+    ArrayList models = new ArrayList();
+    ArrayList serialNumbers = new ArrayList();
 
     Vector faultsTable;
     Vector vecUpdateFaults = new Vector();
@@ -106,9 +109,14 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         tableSettings(table_view_faults);
         tableSettings(table_view_products);
         checkEmailFormat();
+        
         accessDbColumn(firstNames, "SELECT * FROM customers", "firstName");
         accessDbColumn(lastNames, "SELECT * FROM customers", "lastName");
+        accessDbColumn(brands, "SELECT deviceBrand FROM orderDetails", "deviceBrand");
+        accessDbColumn(models, "SELECT deviceModel FROM orderDetails", "deviceModel");
+        accessDbColumn(serialNumbers, "SELECT serialNumber FROM orderDetails", "serialNumber");
         accessDbColumn(faults, "SELECT * FROM faults", "faultName");
+        
         listProductService();
         loadSelectedOrder();
     }
@@ -212,7 +220,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             }
 
             ps.close();
-            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -279,7 +286,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     public void addEventNote(String updateNote) {
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
-        String dateFormat = new SimpleDateFormat("yyyy/MM/dd").format(currentDate);
+        String dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDate);
 
         try {
             dbConnection();
@@ -336,7 +343,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         txt_total = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         table_view_faults = new javax.swing.JTable();
-        icon_add_table_view = new javax.swing.JLabel();
+        lbl_add_product = new javax.swing.JLabel();
         txt_due = new javax.swing.JTextField();
         lbl_issue_date = new javax.swing.JLabel();
         panel_buttons = new javax.swing.JPanel();
@@ -468,9 +475,25 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 txt_brandActionPerformed(evt);
             }
         });
+        txt_brand.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_brandKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_brandKeyReleased(evt);
+            }
+        });
 
         txt_model.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_model.setPreferredSize(new java.awt.Dimension(63, 20));
+        txt_model.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_modelKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_modelKeyReleased(evt);
+            }
+        });
 
         txt_serial_number.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_serial_number.setPreferredSize(new java.awt.Dimension(63, 20));
@@ -566,10 +589,10 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         });
         jScrollPane3.setViewportView(table_view_faults);
 
-        icon_add_table_view.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_add_to_product_table.png"))); // NOI18N
-        icon_add_table_view.addMouseListener(new java.awt.event.MouseAdapter() {
+        lbl_add_product.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_add_to_product_table.png"))); // NOI18N
+        lbl_add_product.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                icon_add_table_viewMousePressed(evt);
+                lbl_add_productMousePressed(evt);
             }
         });
 
@@ -762,7 +785,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                                         .addGap(6, 6, 6)
                                         .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(10, 10, 10)
-                                        .addComponent(icon_add_table_view))
+                                        .addComponent(lbl_add_product))
                                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                         .addComponent(lbl_due)
                                         .addGap(0, 0, 0)
@@ -850,7 +873,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                                 .addGap(4, 4, 4)
                                 .addComponent(lbl_service_product))
                             .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(icon_add_table_view))
+                            .addComponent(lbl_add_product))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(3, 3, 3)
@@ -964,11 +987,24 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
     private void txt_serial_numberKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_serial_numberKeyPressed
         // TODO add your handling code here:
+         //Sugest autoComplete firstNames from Database
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_BACKSPACE:
+                break;
+
+            case KeyEvent.VK_ENTER:
+                txt_serial_number.setText(txt_serial_number.getText());
+                break;
+            default:
+                EventQueue.invokeLater(() -> {
+                    String text = txt_serial_number.getText();
+                    autoCompleteFromDb(serialNumbers, text, txt_serial_number);
+                });
+        }
     }//GEN-LAST:event_txt_serial_numberKeyPressed
 
     private void txt_serial_numberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_serial_numberKeyReleased
         // TODO add your handling code here:
-        txt_serial_number.setText(txt_serial_number.getText().toUpperCase());
     }//GEN-LAST:event_txt_serial_numberKeyReleased
 
     private void txt_first_nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_first_nameKeyReleased
@@ -1021,23 +1057,32 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
     private void txt_faultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_faultActionPerformed
         // TODO add your handling code here:
-        String faultText = txt_fault.getText();
-        Vector faultsVector = new Vector();
         DefaultTableModel dtm = (DefaultTableModel) table_view_faults.getModel();
-
-        if (faultText.isEmpty()) {
+        ArrayList<String> tableFaultsList = new ArrayList<>();
+        String faultText = txt_fault.getText().replace(" ", "");
+        String tableFault = "";
+        Vector faultsVector = new Vector();
+        
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            tableFault = dtm.getValueAt(i, 0).toString().replace(" ", "");
+            tableFaultsList.add(tableFault);
+        }
+        if (faultText.isEmpty())
             JOptionPane.showMessageDialog(this, "Please add a Fault!", "Faults", JOptionPane.ERROR_MESSAGE);
+        else if (tableFaultsList.contains(faultText)) {
+            JOptionPane.showMessageDialog(this, "Item '" + faultText + "' already added !", "Faults", JOptionPane.ERROR_MESSAGE);
+            txt_fault.setText("");
         } else {
             try {
                 dbConnection();
+                faultText = txt_fault.getText();
                 
-                String queryCheck = "SELECT * FROM faults WHERE faultName = ? ";
+                String queryCheck = "SELECT * FROM faults WHERE faultName = '" + faultText + "'";
                 ps = con.prepareStatement(queryCheck);
-                ps.setString(1, faultText);
                 rs = ps.executeQuery();
 
                 if (!rs.isBeforeFirst()) {
-                    int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add a new fault ?", "Add New Fault", JOptionPane.YES_NO_OPTION);
+                    int confirmInsertion = JOptionPane.showConfirmDialog(null, "Do you want to add a new fault ?", "Add New Fault", JOptionPane.YES_NO_OPTION);
                     if (confirmInsertion == 0) {
                         String query = "INSERT INTO faults (faultName) VALUES(?)";
                         ps = con.prepareStatement(query);
@@ -1051,15 +1096,15 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                         txt_fault.setText("");
                     }
                 } else {
-                    faultsVector.add(faultText);
-                    dtm.addRow(faultsVector);
-                    txt_fault.setText("");
+                        faultsVector.add(faultText);
+                        dtm.addRow(faultsVector);
+                        txt_fault.setText("");
                 }
 
                 ps.close();
                 con.close();
             } catch (SQLException ex) {
-                Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_txt_faultActionPerformed
@@ -1075,34 +1120,42 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     private void combo_box_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combo_box_product_serviceActionPerformed
     }//GEN-LAST:event_combo_box_product_serviceActionPerformed
 
-    private void icon_add_table_viewMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_icon_add_table_viewMousePressed
+    private void lbl_add_productMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_add_productMousePressed
         // TODO add your handling code here:
-        Vector vector = new Vector();
-        String selectedItem = combo_box_product_service.getSelectedItem().toString();
-        String productName = "";
+        // Add selected items to the products table
+        DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
+        ArrayList<String> tableProductsList = new ArrayList<>();
+        String selectedItem = combo_box_product_service.getSelectedItem().toString().replace(" ", "");
+        
+        String productName = "", newProdAdd = "", category = "";
         int qty = 0;
         double unitPrice = 0;
-        String category = "";
         double totalPrice = 0;
+        Vector vector = new Vector();
 
-        DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            productName = dtm.getValueAt(i, 0).toString().replace(" ", "");
+            tableProductsList.add(productName);
+        }
 
-        if (selectedItem.isEmpty() || selectedItem.matches("Select or Type")) {
+        if (selectedItem.isEmpty() || selectedItem.matches("Select or Type"))
             JOptionPane.showMessageDialog(this, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
-        } else {
+        else if (tableProductsList.contains(selectedItem))
+            JOptionPane.showMessageDialog(this, "Item '" + selectedItem + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
+        else {
             try {
                 dbConnection();
 
-                String query = "SELECT * FROM products WHERE productService = ? ";
+                selectedItem = combo_box_product_service.getSelectedItem().toString();
+                String query = "SELECT * FROM products WHERE productService = '" + selectedItem + "'";
                 ps = con.prepareStatement(query);
-                ps.setString(1, selectedItem);
                 rs = ps.executeQuery();
 
                 if (!rs.isBeforeFirst()) {
                     JOptionPane.showMessageDialog(this, "Item not Found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
                 } else {
                     while (rs.next()) {
-                        productName = rs.getString("productService");
+                        newProdAdd = rs.getString("productService");
                         unitPrice = rs.getDouble("price");
                         category = rs.getString("category");
                     }
@@ -1116,40 +1169,39 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                                     valid = true;
                                 }
                             } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(this, "Qty must be an Integer!", "New Order", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(this, "Qty must be an Integer!", "Product | Service", JOptionPane.ERROR_MESSAGE);
                             }
+
+                            totalPrice = unitPrice * qty;
+                            vector.add(newProdAdd);
+                            vector.add(qty);
+                            vector.add(unitPrice);
+                            vector.add(totalPrice);
+                            dtm.addRow(vector);
                         }
 
-                        totalPrice = unitPrice * qty;
-                        vector.add(productName);
-                        vector.add(qty);
-                        vector.add(unitPrice);
-                        vector.add(totalPrice);
-                        dtm.addRow(vector);
-
                     } else {
-                        qty = 1;
-                        totalPrice = unitPrice * qty;
+                            qty = 1;
+                            totalPrice = unitPrice * qty;
 
-                        vector.add(productName);
-                        vector.add(qty);
-                        vector.add(unitPrice);
-                        vector.add(totalPrice);
-                        dtm.addRow(vector);
+                            vector.add(newProdAdd);
+                            vector.add(qty);
+                            vector.add(unitPrice);
+                            vector.add(totalPrice);
+                            dtm.addRow(vector);
                     }
 
                     combo_box_product_service.setSelectedIndex(-1);
                     // Sum price column and set into total textField
                     getPriceSum();
+                    ps.close();
+                    con.close();
                 }
-                
-                ps.close();
-                con.close();
             } catch (SQLException ex) {
                 Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }//GEN-LAST:event_icon_add_table_viewMousePressed
+    }//GEN-LAST:event_lbl_add_productMousePressed
 
     private void table_view_faultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_faultsMouseClicked
         // TODO add your handling code here:
@@ -1226,6 +1278,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             } else {
                 String fillQuery = "Select * from customers WHERE contactNo = ? ";
                 ps = con.prepareStatement(fillQuery);
+                ps.setString(1, txt_contact.getText());
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
@@ -1328,7 +1381,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
-        String updateDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
+        String updateDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDate);
 
         //Empty vector before looping to avoid duplicate values on tableView
         vecUpdateFaults.removeAllElements();
@@ -1369,13 +1422,13 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         } else if (Double.parseDouble(txt_deposit.getText()) < order.getDeposit()) {
             JOptionPane.showMessageDialog(this, "Deposit can not be equal or less than " + order.getDeposit() + " !", "Update Order Details", JOptionPane.ERROR_MESSAGE);
         } else {
-            order.setFirstName(txt_first_name.getText());
-            order.setLastName(txt_last_name.getText());
+            order.setFirstName(txt_first_name.getText().toUpperCase());
+            order.setLastName(txt_last_name.getText().toUpperCase());
             order.setContactNo(txt_contact.getText());
             order.setEmail(txt_email.getText());
-            order.setBrand(txt_brand.getText());
-            order.setModel(txt_model.getText());
-            order.setSerialNumber(txt_serial_number.getText());
+            order.setBrand(txt_brand.getText().toUpperCase());
+            order.setModel(txt_model.getText().toUpperCase());
+            order.setSerialNumber(txt_serial_number.getText().toUpperCase());
             order.setStringFaults(stringFaults);
             order.setImportantNotes(editor_pane_important_notes.getText());
             order.setStringProducts(stringProducts);
@@ -1453,6 +1506,50 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_table_view_productsMouseClicked
 
+    private void txt_brandKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_brandKeyPressed
+        // TODO add your handling code here:
+         //Suggest autoComplete brand from Database
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_BACKSPACE:
+                break;
+
+            case KeyEvent.VK_ENTER:
+                txt_brand.setText(txt_brand.getText());
+                break;
+            default:
+                EventQueue.invokeLater(() -> {
+                    String text = txt_brand.getText();
+                    autoCompleteFromDb(brands, text, txt_brand);
+                });
+        }
+    }//GEN-LAST:event_txt_brandKeyPressed
+
+    private void txt_modelKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_modelKeyPressed
+        // TODO add your handling code here:
+         //Suggest autoComplete model from Database
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_BACKSPACE:
+                break;
+
+            case KeyEvent.VK_ENTER:
+                txt_model.setText(txt_model.getText());
+                break;
+            default:
+                EventQueue.invokeLater(() -> {
+                    String text = txt_model.getText();
+                    autoCompleteFromDb(models, text, txt_model);
+                });
+        }
+    }//GEN-LAST:event_txt_modelKeyPressed
+
+    private void txt_brandKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_brandKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_brandKeyReleased
+
+    private void txt_modelKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_modelKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_modelKeyReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_fix;
     private javax.swing.JButton btn_not_fix;
@@ -1462,10 +1559,10 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox<String> combo_box_product_service;
     private javax.swing.JDesktopPane desktop_pane_order_details;
     private javax.swing.JEditorPane editor_pane_important_notes;
-    private javax.swing.JLabel icon_add_table_view;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane_notes;
+    private javax.swing.JLabel lbl_add_product;
     private javax.swing.JLabel lbl_auto_order_no;
     private javax.swing.JLabel lbl_brand;
     private javax.swing.JLabel lbl_contact;

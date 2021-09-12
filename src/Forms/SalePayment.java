@@ -368,10 +368,10 @@ public class SalePayment extends javax.swing.JFrame {
 
     private void btn_payActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_payActionPerformed
         // TODO add your handling code here:
-        Date date = new Date();
-        Timestamp currentDateTime = new Timestamp(date.getTime());
-        saleDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDateTime);
-        sale.setSaleDate(saleDate);
+//        Date date = new Date();
+//        Timestamp currentDateTime = new Timestamp(date.getTime());
+//        saleDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDateTime);
+//        sale.setSaleDate(saleDate);
         sale.setStatus("Paid");
         boolean isPaid = false;
         

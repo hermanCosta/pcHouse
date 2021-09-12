@@ -145,7 +145,7 @@
                                               <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                                               <Component id="combo_box_product_service" min="-2" pref="390" max="-2" attributes="0"/>
                                               <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                                              <Component id="icon_add_table_view" min="-2" max="-2" attributes="0"/>
+                                              <Component id="lbl_add_product" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="102" attributes="0">
                                               <Component id="lbl_due" min="-2" max="-2" attributes="0"/>
@@ -263,7 +263,7 @@
                                       <Component id="lbl_service_product" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="combo_box_product_service" min="-2" pref="30" max="-2" attributes="0"/>
-                                  <Component id="icon_add_table_view" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbl_add_product" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="jScrollPane2" min="-2" pref="218" max="-2" attributes="0"/>
@@ -472,6 +472,8 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_brandActionPerformed"/>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_brandKeyPressed"/>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_brandKeyReleased"/>
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="txt_model">
@@ -483,6 +485,10 @@
                   <Dimension value="[63, 20]"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_modelKeyPressed"/>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_modelKeyReleased"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="txt_serial_number">
               <Properties>
@@ -592,14 +598,14 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JLabel" name="icon_add_table_view">
+            <Component class="javax.swing.JLabel" name="lbl_add_product">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/Img/icon_add_to_product_table.png"/>
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="icon_add_table_viewMousePressed"/>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="lbl_add_productMousePressed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="txt_due">

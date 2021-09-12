@@ -112,15 +112,16 @@ public class Sales extends javax.swing.JInternalFrame {
             DefaultTableModel dtm = (DefaultTableModel) table_view_sales.getModel();
             dtm.setRowCount(0);
 
-            Object[] row = new Object[7];
+            Object[] row = new Object[8];
             for (int i = 0; i < saleList.size(); i++) {
                 row[0] = saleList.get(i).getSaleNo();
-                row[1] = saleList.get(i).getFirstName() + " " + saleList.get(i).getLastName();
-                row[2] = saleList.get(i).getContactNo();
-                row[3] = saleList.get(i).getStringProducts();
-                row[4] = saleList.get(i).getStringQty();
-                row[5] = saleList.get(i).getTotal();
-                row[6] = saleList.get(i).getStatus();
+                row[1] = saleList.get(i).getFirstName(); 
+                row[2] = saleList.get(i).getLastName();
+                row[3] = saleList.get(i).getContactNo();
+                row[4] = saleList.get(i).getStringProducts();
+                row[5] = saleList.get(i).getStringQty();
+                row[6] = saleList.get(i).getTotal();
+                row[7] = saleList.get(i).getStatus();
 
                 dtm.addRow(row);
             }
@@ -152,15 +153,16 @@ public class Sales extends javax.swing.JInternalFrame {
             DefaultTableModel dtm = (DefaultTableModel) table_view_sales.getModel();
             dtm.setRowCount(0);
 
-            Object[] row = new Object[7];
+            Object[] row = new Object[8];
             for (int i = 0; i < list.size(); i++) {
                 row[0] = list.get(i).getSaleNo();
-                row[1] = list.get(i).getFirstName() + " " + list.get(i).getLastName();
-                row[2] = list.get(i).getContactNo();
-                row[3] = list.get(i).getStringProducts();
-                row[4] = list.get(i).getStringQty();
-                row[5] = list.get(i).getTotal();
-                row[6] = list.get(i).getStatus();
+                row[1] = list.get(i).getFirstName();
+                row[2] = list.get(i).getLastName();
+                row[3] = list.get(i).getContactNo();
+                row[4] = list.get(i).getStringProducts();
+                row[5] = list.get(i).getStringQty();
+                row[6] = list.get(i).getTotal();
+                row[7] = list.get(i).getStatus();
 
                 dtm.addRow(row);
             }
@@ -193,11 +195,11 @@ public class Sales extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "SNO", "Full Name", "Contact No", "Product | Service", "Qty", "Total €", "Status"
+                "SNO", "First Name", "Last Name", "Contact No", "Product | Service", "Qty", "Total €", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -213,15 +215,17 @@ public class Sales extends javax.swing.JInternalFrame {
         if (table_view_sales.getColumnModel().getColumnCount() > 0) {
             table_view_sales.getColumnModel().getColumn(0).setPreferredWidth(80);
             table_view_sales.getColumnModel().getColumn(0).setMaxWidth(150);
-            table_view_sales.getColumnModel().getColumn(1).setPreferredWidth(200);
-            table_view_sales.getColumnModel().getColumn(1).setMaxWidth(300);
-            table_view_sales.getColumnModel().getColumn(2).setPreferredWidth(150);
+            table_view_sales.getColumnModel().getColumn(1).setPreferredWidth(100);
+            table_view_sales.getColumnModel().getColumn(1).setMaxWidth(200);
+            table_view_sales.getColumnModel().getColumn(2).setPreferredWidth(100);
             table_view_sales.getColumnModel().getColumn(2).setMaxWidth(200);
-            table_view_sales.getColumnModel().getColumn(4).setPreferredWidth(100);
-            table_view_sales.getColumnModel().getColumn(4).setMaxWidth(200);
-            table_view_sales.getColumnModel().getColumn(5).setMaxWidth(80);
-            table_view_sales.getColumnModel().getColumn(6).setPreferredWidth(90);
-            table_view_sales.getColumnModel().getColumn(6).setMaxWidth(150);
+            table_view_sales.getColumnModel().getColumn(3).setPreferredWidth(150);
+            table_view_sales.getColumnModel().getColumn(3).setMaxWidth(200);
+            table_view_sales.getColumnModel().getColumn(5).setPreferredWidth(100);
+            table_view_sales.getColumnModel().getColumn(5).setMaxWidth(200);
+            table_view_sales.getColumnModel().getColumn(6).setMaxWidth(80);
+            table_view_sales.getColumnModel().getColumn(7).setPreferredWidth(90);
+            table_view_sales.getColumnModel().getColumn(7).setMaxWidth(150);
         }
 
         txt_search_sale.setFont(new java.awt.Font("Lucida Grande", 0, 20)); // NOI18N

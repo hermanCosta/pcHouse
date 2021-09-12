@@ -49,6 +49,8 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
  */
 public class NewOrder extends javax.swing.JInternalFrame {
 
+    ArrayList firstNames = new ArrayList();
+    ArrayList lastNames = new ArrayList();
     ArrayList faults = new ArrayList();
     ArrayList brands = new ArrayList();
     ArrayList models = new ArrayList();
@@ -93,6 +95,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
         tableSettings(table_view_products);
         autoID();
         checkEmailFormat();
+        accessDbColumn(firstNames, "SELECT * FROM customers", "firstName");
+        accessDbColumn(lastNames, "SELECT * FROM customers", "lastName");
         accessDbColumn(brands, "SELECT deviceBrand FROM orderDetails", "deviceBrand");
         accessDbColumn(models, "SELECT deviceModel FROM orderDetails", "deviceModel");
         accessDbColumn(serialNumbers, "SELECT serialNumber FROM orderDetails", "serialNumber");
@@ -286,13 +290,13 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
         } else {
             orderNo = lbl_auto_order_no.getText();
-            firstName = txt_first_name.getText();
-            lastName = txt_last_name.getText();
+            firstName = txt_first_name.getText().toUpperCase();
+            lastName = txt_last_name.getText().toUpperCase();
             contactNo = txt_contact.getText();
             email = txt_email.getText();
-            deviceBrand = txt_brand.getText();
-            deviceModel = txt_model.getText();
-            serialNumber = txt_serial_number.getText();
+            deviceBrand = txt_brand.getText().toUpperCase();
+            deviceModel = txt_model.getText().toUpperCase();
+            serialNumber = txt_serial_number.getText().toUpperCase();
             importantNotes = editor_pane_notes.getText();
 
             if (txt_deposit.getText() == null || txt_deposit.getText().trim().isEmpty()) {
@@ -308,7 +312,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
             Date date = new java.util.Date();
             Timestamp currentDate = new Timestamp(date.getTime());
-            issueDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
+            issueDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDate);
 
             //Empty vector before looping to avoid duplicate values on tableView
             vecFaults.removeAllElements();
@@ -379,7 +383,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         table_view_products = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
         table_view_faults = new javax.swing.JTable();
-        btn_add_table_view = new javax.swing.JLabel();
+        btn_add_product = new javax.swing.JLabel();
         txt_due = new javax.swing.JTextField();
         jScrollPane_notes = new javax.swing.JScrollPane();
         editor_pane_notes = new javax.swing.JEditorPane();
@@ -504,6 +508,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_brandKeyPressed(evt);
             }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_brandKeyReleased(evt);
+            }
         });
 
         txt_model.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
@@ -511,6 +518,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
         txt_model.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_modelKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_modelKeyReleased(evt);
             }
         });
 
@@ -675,10 +685,10 @@ public class NewOrder extends javax.swing.JInternalFrame {
         });
         jScrollPane3.setViewportView(table_view_faults);
 
-        btn_add_table_view.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_add_to_product_table.png"))); // NOI18N
-        btn_add_table_view.addMouseListener(new java.awt.event.MouseAdapter() {
+        btn_add_product.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_add_to_product_table.png"))); // NOI18N
+        btn_add_product.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                btn_add_table_viewMousePressed(evt);
+                btn_add_productMousePressed(evt);
             }
         });
 
@@ -753,7 +763,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btn_add_table_view))
+                                .addComponent(btn_add_product))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_due)
@@ -824,7 +834,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_add_table_view)
+                            .addComponent(btn_add_product)
                             .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(lbl_service_product)))
@@ -865,7 +875,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void txt_emailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_emailActionPerformed
         // TODO add your handling code here:
-
     }//GEN-LAST:event_txt_emailActionPerformed
 
     private void txt_last_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_last_nameActionPerformed
@@ -991,6 +1000,20 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void txt_first_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_first_nameKeyPressed
         // TODO add your handling code here:
+        //Sugest autoComplete firstNames from Database
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_BACKSPACE:
+                break;
+
+            case KeyEvent.VK_ENTER:
+                txt_first_name.setText(txt_first_name.getText());
+                break;
+            default:
+                EventQueue.invokeLater(() -> {
+                    String text = txt_first_name.getText();
+                    autoCompleteFromDb(firstNames, text, txt_first_name);
+                });
+        }
     }//GEN-LAST:event_txt_first_nameKeyPressed
 
     private void txt_emailKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_emailKeyPressed
@@ -999,7 +1022,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void txt_serial_numberKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_serial_numberKeyPressed
         // TODO add your handling code here:
-        //Sugest autoComplete firstNames from Database
+        //Sugest autoComplete serialNumber from Database
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_BACKSPACE:
                 break;
@@ -1017,7 +1040,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void txt_serial_numberKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_serial_numberKeyReleased
         // TODO add your handling code here:
-        txt_serial_number.setText(txt_serial_number.getText().toUpperCase());
     }//GEN-LAST:event_txt_serial_numberKeyReleased
 
     private void txt_first_nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_first_nameKeyReleased
@@ -1074,9 +1096,16 @@ public class NewOrder extends javax.swing.JInternalFrame {
         String tableFault = "";
         Vector faultsList = new Vector();
         DefaultTableModel dtm = (DefaultTableModel) table_view_faults.getModel();
+        
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            tableFault = dtm.getValueAt(i, 0).toString();
+        }
 
-        if (faultText.isEmpty()) {
+        if (faultText.isEmpty())
             JOptionPane.showMessageDialog(this, "Please add a Fault!", "Faults", JOptionPane.ERROR_MESSAGE);
+        else if (faultText.equals(tableFault)) {
+            JOptionPane.showMessageDialog(this, "Item '" + faultText + "' already added !", "Faults", JOptionPane.ERROR_MESSAGE);
+            txt_fault.setText("");
         } else {
             try {
                 dbConnection();
@@ -1100,18 +1129,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
                         txt_fault.setText("");
                     }
                 } else {
-                    for (int i = 0; i < dtm.getRowCount(); i++) {
-                        tableFault = dtm.getValueAt(i, 0).toString();
-                    }
-
-                    if (tableFault.equals(faultText)) {
-                        JOptionPane.showMessageDialog(this, "Item '" + faultText + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
-                        txt_fault.setText("");
-                    } else {
                         faultsList.add(faultText);
                         dtm.addRow(faultsList);
                         txt_fault.setText("");
-                    }
                 }
 
                 ps.close();
@@ -1133,21 +1153,26 @@ public class NewOrder extends javax.swing.JInternalFrame {
     private void combo_box_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combo_box_product_serviceActionPerformed
     }//GEN-LAST:event_combo_box_product_serviceActionPerformed
 
-    private void btn_add_table_viewMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_add_table_viewMousePressed
+    private void btn_add_productMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_add_productMousePressed
         // TODO add your handling code here:
         // Add selected items to the products table
-        Vector vector = new Vector();
+        DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
         String selectedItem = combo_box_product_service.getSelectedItem().toString();
         String productName = "", newProdAdd = "", category = "";
         int qty = 0;
         double unitPrice = 0;
         double totalPrice = 0;
+        Vector vector = new Vector();
 
-        DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            productName = dtm.getValueAt(i, 0).toString();
+        }
 
-        if (selectedItem.isEmpty() || selectedItem.matches("Select or Type")) {
+        if (selectedItem.isEmpty() || selectedItem.matches("Select or Type"))
             JOptionPane.showMessageDialog(this, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
-        } else {
+        else if (selectedItem.equals(productName))
+            JOptionPane.showMessageDialog(this, "Item '" + selectedItem + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
+        else {
             try {
                 dbConnection();
 
@@ -1173,17 +1198,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
                                     valid = true;
                                 }
                             } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(this, "Qty must be an Integer!", "New Order", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(this, "Qty must be an Integer!", "Product | Service", JOptionPane.ERROR_MESSAGE);
                             }
-                        }
-
-                        for (int i = 0; i < dtm.getRowCount(); i++) {
-                            productName = dtm.getValueAt(i, 0).toString();
-                        }
-
-                        if (newProdAdd.equals(productName)) {
-                            JOptionPane.showMessageDialog(this, "Item '" + newProdAdd + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
-                        } else {
 
                             totalPrice = unitPrice * qty;
                             vector.add(newProdAdd);
@@ -1194,9 +1210,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
                         }
 
                     } else {
-                        if (newProdAdd.equals(productName)) {
-                            JOptionPane.showMessageDialog(this, "Item '" + newProdAdd + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
-                        } else {
                             qty = 1;
                             totalPrice = unitPrice * qty;
 
@@ -1205,18 +1218,19 @@ public class NewOrder extends javax.swing.JInternalFrame {
                             vector.add(unitPrice);
                             vector.add(totalPrice);
                             dtm.addRow(vector);
-                        }
                     }
 
                     combo_box_product_service.setSelectedIndex(-1);
                     // Sum price column and set into total textField
                     getPriceSum();
+                    ps.close();
+                    con.close();
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }//GEN-LAST:event_btn_add_table_viewMousePressed
+    }//GEN-LAST:event_btn_add_productMousePressed
 
     private void table_view_productsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_productsMouseClicked
         // TODO add your handling code here:
@@ -1256,47 +1270,54 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void txt_last_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_last_nameKeyPressed
         // TODO add your handling code here:
+         //Sugest autoComplete firstNames from Database
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_BACKSPACE:
+                break;
+
+            case KeyEvent.VK_ENTER:
+                txt_last_name.setText(txt_last_name.getText());
+                break;
+            default:
+                EventQueue.invokeLater(() -> {
+                    String text = txt_last_name.getText();
+                    autoCompleteFromDb(lastNames, text, txt_last_name);
+                });
+        }
     }//GEN-LAST:event_txt_last_nameKeyPressed
 
     private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
-        orderNo = lbl_auto_order_no.getText();
-        firstName = txt_first_name.getText();
-        lastName = txt_last_name.getText();
-        contactNo = txt_contact.getText();
-        email = txt_email.getText();
-
-        try {
+       try {
             dbConnection();
 
-            String query = "SELECT contactNo FROM customers WHERE contactNo = ?";
+            String query = "SELECT contactNo FROM customers WHERE contactNo = ? ";
             ps = con.prepareStatement(query);
-            ps.setString(1, contactNo);
+            ps.setString(1, txt_contact.getText());
             rs = ps.executeQuery();
-
+            
             //show a message if a costumer is not found in the db
-            if (!rs.next() && firstName.trim().isEmpty() && lastName.trim().isEmpty())
-                JOptionPane.showMessageDialog(this, "Customer not found in the Database", "New Costumer", JOptionPane.ERROR_MESSAGE);
-            //add a new customer if not exists AND fields are not empty
-            else if (!rs.next() && !firstName.trim().isEmpty() && !lastName.trim().isEmpty()) {
+            if (!rs.isBeforeFirst()&& txt_first_name.getText().trim().isEmpty() && txt_last_name.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Customer not found in the Database", "New Customer", JOptionPane.ERROR_MESSAGE);
+            } //add a new customer if not exists AND fields are not empty
+            else if (!rs.isBeforeFirst()&& !txt_first_name.getText().trim().isEmpty() && !txt_last_name.getText().trim().isEmpty()) {
                 int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add a new Customer ?", "Add New Customer", JOptionPane.YES_NO_OPTION);
                 if (confirmInsertion == 0) {
-                    customer = new Customer(firstName, lastName, contactNo, email);
-                    String insertQuery = "INSERT INTO customers (firstName, lastName, contactNo, email) VALUES(?, ?, ?, ?)";
-
-                    ps = con.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
+                    customer = new Customer(txt_first_name.getText(), txt_last_name.getText(), txt_contact.getText(), txt_email.getText());
+                    
+                    String queryInsert = "INSERT INTO customers (firstName, lastName, contactNo, email) VALUES(?, ?, ?, ?)";
+                    ps = con.prepareStatement(queryInsert);
                     ps.setString(1, customer.getFirstName());
                     ps.setString(2, customer.getLastName());
                     ps.setString(3, customer.getContactNo());
                     ps.setString(4, customer.getEmail());
                     ps.executeUpdate();
-                    txt_brand.requestFocus();
                 }
+                 
             } else {
-                String fillQuery = "SELECT * FROM customers WHERE contactNo = ?";
-                ps = con.prepareStatement(fillQuery);
-                ps.setString(1, contactNo);
+                String queryFill = "SELECT * FROM customers WHERE contactNo = ? ";
+                ps = con.prepareStatement(queryFill);
+                ps.setString(1, txt_contact.getText());
                 rs = ps.executeQuery();
-
                 while (rs.next()) {
                     txt_first_name.setText(rs.getString("firstName"));
                     txt_last_name.setText(rs.getString("lastName"));
@@ -1309,7 +1330,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             con.close();
 
         } catch (SQLException ex) {
-            Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_txt_contactActionPerformed
 
@@ -1353,8 +1374,16 @@ public class NewOrder extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_txt_modelKeyPressed
 
+    private void txt_brandKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_brandKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_brandKeyReleased
+
+    private void txt_modelKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_modelKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_modelKeyReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel btn_add_table_view;
+    private javax.swing.JLabel btn_add_product;
     private javax.swing.JButton btn_cancel;
     private javax.swing.JButton btn_save_order;
     private javax.swing.JComboBox<String> combo_box_product_service;
