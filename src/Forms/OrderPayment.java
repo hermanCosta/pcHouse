@@ -92,7 +92,6 @@ public class OrderPayment extends javax.swing.JFrame {
                     }
                     
                     ps.close();
-                    con.close();
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);

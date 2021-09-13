@@ -125,6 +125,33 @@ public class SalePayment extends javax.swing.JFrame {
         }
     }
     
+    public void addNoteEvent() {
+        Date date = new Date();
+        Timestamp currentDate = new Timestamp(date.getTime());
+        String dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDate);
+
+        try {
+            dbConnection();
+
+            String note = "Sale done by " + sale.getUsername();
+            String user = "System";
+
+            String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
+            ps = con.prepareStatement(queryUpdate);
+            ps.setString(1, sale.getSaleNo());
+            ps.setString(2, dateFormat);
+            ps.setString(3, note);
+            ps.setString(4, user);
+            ps.executeUpdate();
+
+            ps.close();
+            con.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -461,13 +488,14 @@ public class SalePayment extends javax.swing.JFrame {
                   ps.setDouble(13, sale.getCard());
                   ps.setDouble(14, sale.getChangeTotal());
                   ps.setString(15, sale.getStatus());
-                  ps.setString(16, sale.getCreatedBy());
+                  ps.setString(16, sale.getUsername());
                   ps.executeUpdate();
                  
                 JOptionPane.showMessageDialog(this,sale.getSaleNo() + " Paid Successfully", "Payment",  JOptionPane.INFORMATION_MESSAGE);
               
                 updateProductQty();
-                
+                addNoteEvent();
+                        
                 boolean isSaleDetails = false;
                 SaleReceipt saleReceipt =  new SaleReceipt(sale, isSaleDetails);
                 saleReceipt.setVisible(true);

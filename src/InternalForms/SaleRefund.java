@@ -125,8 +125,8 @@ public class SaleRefund extends javax.swing.JInternalFrame {
         txt_contact.setText(sale.getContactNo());
         txt_email.setText(sale.getEmail());
         txt_total.setText(String.valueOf(sale.getTotal()));
-        lbl_sale_refunded_on.setText("Refund Date: " + sale.getSaleDate() + " - by " + sale.getCreatedBy());
-        lbl_sale_created_on.setText("Created On: " + sale.getSaleDate() + " - by " + sale.getCreatedBy());
+        lbl_sale_refunded_on.setText("Refund Date: " + sale.getSaleDate() + " - by " + sale.getUsername());
+        lbl_sale_created_on.setText("Created On: " + sale.getSaleDate() + " - by " + sale.getUsername());
 
         if (sale.getCash() == 0)
             lbl_refunded_by.setText("Refunded by Card: €" + sale.getCard());
@@ -545,7 +545,7 @@ public class SaleRefund extends javax.swing.JInternalFrame {
 
     private void btn_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notesActionPerformed
         // TODO add your handling code here:
-        OrderNotes orderNotes = new OrderNotes(sale.getSaleNo(), sale.getCreatedBy());
+        OrderNotes orderNotes = new OrderNotes(sale.getSaleNo(), sale.getUsername());
         orderNotes.setVisible(true);
     }//GEN-LAST:event_btn_notesActionPerformed
 

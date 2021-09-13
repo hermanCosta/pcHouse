@@ -102,7 +102,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         txt_contact.setText(sale.getContactNo());
         txt_email.setText(sale.getEmail());
         txt_total.setText(String.valueOf(sale.getTotal()));
-        lbl_sale_paid_on.setText("Sale Date: " + sale.getSaleDate() + " - by " + sale.getCreatedBy());
+        lbl_sale_paid_on.setText("Sale Date: " + sale.getSaleDate());
 
         if (sale.getCash() == 0)
             lbl_paid_by.setText("Paid by Card: €" + sale.getCard());
@@ -196,12 +196,12 @@ public class SaleDetails extends javax.swing.JInternalFrame {
     public void addEventNote(String updateNote) {
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
-        String dateFormat = new SimpleDateFormat("yyyy/MM/dd").format(currentDate);
+        String dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDate);
 
         try {
             dbConnection();
 
-            String note = "Sale tagged as '" + updateNote + "' by " + sale.getCreatedBy();
+            String note = "Sale tagged as '" + updateNote + "' by " + sale.getUsername();
             String user = "System";
 
             String queryUpdate = "INSERT INTO orderNotes(orderNo, date, note, user) VALUES(?, ?, ?, ?)";
@@ -610,7 +610,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
 
     private void btn_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notesActionPerformed
         // TODO add your handling code here:
-        OrderNotes orderNotes = new OrderNotes(sale.getSaleNo(), sale.getCreatedBy());
+        OrderNotes orderNotes = new OrderNotes(sale.getSaleNo(), sale.getUsername());
         orderNotes.setVisible(true);
     }//GEN-LAST:event_btn_notesActionPerformed
 
@@ -624,7 +624,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                 dbConnection();
                 Date date = new Date();
                 Timestamp currentDate = new Timestamp(date.getTime());
-                String refundDate = new SimpleDateFormat("dd/MM/yyy").format(currentDate);
+                String refundDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
 
                 sale.setStatus("Refunded");
                 sale.setSaleDate(refundDate);
@@ -639,7 +639,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
 
                 sale = new Sale(sale.getSaleNo(), sale.getFirstName(), sale.getLastName(), sale.getContactNo(), sale.getEmail(),
                         sale.getStringProducts(), sale.getStringQty(), sale.getStringUnitPrice(), sale.getStringPriceTotal(), sale.getTotal(),
-                        sale.getSaleDate(), sale.getCash(), sale.getCard(), sale.getChangeTotal(), sale.getStatus(), sale.getCreatedBy());
+                        sale.getSaleDate(), sale.getCash(), sale.getCard(), sale.getChangeTotal(), sale.getStatus(), sale.getUsername());
 
                 String queryInsert = "INSERT INTO sales(saleNo, firstName, lastName, contactNo, email, productService, qty, unitPrice, priceTotal, total, "
                         + "saleDate, cash, card, changeTotal, status, createdBy) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -660,7 +660,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                 ps.setDouble(13, sale.getCard());
                 ps.setDouble(14, sale.getChangeTotal());
                 ps.setString(15, sale.getStatus());
-                ps.setString(16, sale.getCreatedBy());
+                ps.setString(16, sale.getUsername());
                 ps.executeUpdate();
                 updateProductQty();
 

@@ -121,7 +121,7 @@ public class Sale extends Customer {
         this.status = status;
     }
 
-    public String getCreatedBy() {
+    public String getUsername() {
         return createdBy;
     }
 

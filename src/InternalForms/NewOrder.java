@@ -701,7 +701,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         });
         jScrollPane_notes.setViewportView(editor_pane_notes);
 
-        btn_copy.setBackground(new java.awt.Color(21, 76, 121));
+        btn_copy.setBackground(new java.awt.Color(0, 0, 0));
         btn_copy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_copy.png"))); // NOI18N
         btn_copy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -709,7 +709,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             }
         });
 
-        btn_international_number.setBackground(new java.awt.Color(21, 76, 121));
+        btn_international_number.setBackground(new java.awt.Color(0, 0, 0));
         btn_international_number.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_international_number.png"))); // NOI18N
         btn_international_number.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -985,7 +985,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void txt_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_totalActionPerformed
         // TODO add your handling code here:
-
         double sum = 0;
         for (int i = 0; i < table_view_products.getRowCount(); i++) {
             sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 3).toString());
@@ -999,13 +998,11 @@ public class NewOrder extends javax.swing.JInternalFrame {
         //Calculate deposit paid and display due value
         if (txt_deposit.getText() == null || txt_deposit.getText().trim().isEmpty()) {
             txt_due.setText(txt_total.getText());
-            //txt_deposit.setText(Double.toString(0));
             deposit = 0;
         } else {
             double priceTotal = Double.parseDouble(txt_total.getText());
             deposit = Double.parseDouble(txt_deposit.getText());
             total = priceTotal - deposit;
-
             txt_due.setText(String.valueOf(total));
         }
     }//GEN-LAST:event_txt_depositKeyReleased

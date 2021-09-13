@@ -5,6 +5,7 @@
  */
 package InternalForms;
 
+import Forms.CloseDailyTill;
 import Forms.Login;
 import Forms.MainMenu;
 import Forms.PrintFullReport;
@@ -53,6 +54,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
     ArrayList<Double> refundList = new ArrayList<>();
     double refundTotal;
+    
+    double ordersCashTotal, ordersCardTotal, salesCardTotal, salesCashTotal;
 
     public TillClosing() {
         initComponents();
@@ -206,27 +209,28 @@ public class TillClosing extends javax.swing.JInternalFrame {
         }
         
         //Loop the List and sum Cash payments
-        double cashTotal = 0;
+        ordersCashTotal = 0;
+        ordersCardTotal = 0;
         for (double d : cashList)
-            cashTotal += d;
+            ordersCashTotal += d;
 
-        double cardTotal = 0;
+        
         for (double d : cardList)
-            cardTotal += d;
+            ordersCardTotal += d;
 
         double ordersTotal = 0;
         for (double d : orderDueColumn)
             ordersTotal += d;
 
-        double refundTotal = 0;
+        double ordersRefundTotal = 0;
         for (double d : refundList)
-            refundTotal += d;
+            ordersRefundTotal += d;
 
         lbl_till_closing_date.setText("Orders Report - " + tillClosingDate);
         lbl_print_gross_total.setText("Gross Orders Total ............. €" + String.valueOf(ordersTotal));
-        lbl_print_total_cash.setText("Cash Total ......................... €" + String.valueOf(cashTotal));
-        lbl_print_total_card.setText("Card Total ......................... €" + String.valueOf(cardTotal));
-        lbl_print_refunds.setText("Refunds ............................ €" + String.valueOf(refundTotal));
+        lbl_print_total_cash.setText("Cash Total ......................... €" + String.valueOf(ordersCashTotal));
+        lbl_print_total_card.setText("Card Total ......................... €" + String.valueOf(ordersCardTotal));
+        lbl_print_refunds.setText("Refunds ............................ €" + String.valueOf(ordersRefundTotal));
 
     }
 
@@ -264,6 +268,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         lbl_print_refunds = new javax.swing.JLabel();
         date_picker = new com.toedter.calendar.JCalendar();
         btn_print = new javax.swing.JButton();
+        btn_close_dayling_till = new javax.swing.JButton();
 
         setBorder(null);
         setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
@@ -577,32 +582,42 @@ public class TillClosing extends javax.swing.JInternalFrame {
             }
         });
 
+        btn_close_dayling_till.setBackground(new java.awt.Color(21, 76, 121));
+        btn_close_dayling_till.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        btn_close_dayling_till.setForeground(new java.awt.Color(255, 255, 255));
+        btn_close_dayling_till.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_close_day_till.png"))); // NOI18N
+        btn_close_dayling_till.setText("Close Dayling Till");
+        btn_close_dayling_till.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_close_dayling_tillActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_till_closingLayout = new javax.swing.GroupLayout(panel_till_closing);
         panel_till_closing.setLayout(panel_till_closingLayout);
         panel_till_closingLayout.setHorizontalGroup(
             panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_till_closingLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(9, 9, 9)
                 .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panel_till_closingLayout.createSequentialGroup()
-                        .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_till_closingLayout.createSequentialGroup()
-                                .addComponent(btn_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btn_full_report, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(30, 30, 30)
-                        .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panel_till_closingLayout.createSequentialGroup()
                         .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(panel_till_closingLayout.createSequentialGroup()
-                                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(date_picker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(panel_calendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(452, 452, 452))
-                            .addGroup(panel_till_closingLayout.createSequentialGroup()
                                 .addComponent(panel_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(panel_till_closingLayout.createSequentialGroup()
+                                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panel_till_closingLayout.createSequentialGroup()
+                                        .addComponent(btn_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(btn_full_report, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(date_picker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(panel_calendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(btn_close_dayling_till, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(446, 446, 446)))
                         .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -620,7 +635,9 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_till_closingLayout.createSequentialGroup()
                         .addComponent(date_picker, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31)
+                        .addGap(30, 30, 30)
+                        .addComponent(btn_close_dayling_till, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(btn_full_report, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -757,30 +774,30 @@ public class TillClosing extends javax.swing.JInternalFrame {
             }
 
             //Loop the List and sum Cash payments
-            double cashTotal = 0;
+            salesCashTotal = 0;
+            salesCardTotal = 0;
             for (double d : cashList)
-                cashTotal += d;
+                salesCashTotal += d;
 
-            double cardTotal = 0;
             for (double d : cardList)
-                cardTotal += d;
+                salesCardTotal += d;
 
             double salesTotal = 0;
             for (double d : salesTotalColumn)
                 salesTotal += d;
 
-            double refundTotal = 0;
+            double salesRefundTotal = 0;
             for (double d : refundList)
-                refundTotal += d;
+                salesRefundTotal += d;
 
             //Gross total (cash&card    
-            double grossTotal = salesTotal;
+            double salesGrossTotal = salesTotal;
 
             lbl_till_closing_date.setText("Sales Report - " + tillClosingDate);
-            lbl_print_gross_total.setText("Gross Sales Total .............. €" + String.valueOf(grossTotal));
-            lbl_print_total_cash.setText("Cash Total ........................ €" + String.valueOf(cashTotal));
-            lbl_print_total_card.setText("Card Total ........................ €" + String.valueOf(cardTotal));
-            lbl_print_refunds.setText("Refunds ........................... €" + String.valueOf(refundTotal));
+            lbl_print_gross_total.setText("Gross Sales Total .............. €" + String.valueOf(salesGrossTotal));
+            lbl_print_total_cash.setText("Cash Total ........................ €" + String.valueOf(salesCashTotal));
+            lbl_print_total_card.setText("Card Total ........................ €" + String.valueOf(salesCardTotal));
+            lbl_print_refunds.setText("Refunds ........................... €" + String.valueOf(salesRefundTotal));
         }
     }//GEN-LAST:event_btn_salesActionPerformed
 
@@ -942,7 +959,20 @@ public class TillClosing extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_scroll_pane_table_salesMouseClicked
 
+    private void btn_close_dayling_tillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_close_dayling_tillActionPerformed
+        // TODO add your handling code here:
+        Date pickedDate = pickedDate = date_picker.getDate();
+        String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(pickedDate);
+        
+        double cashTotal = ordersCashTotal + salesCashTotal;
+        double cardTotal = ordersCardTotal + salesCardTotal;
+        CloseDailyTill closeDaylingTill = new CloseDailyTill(tillClosingDate, cashTotal, cardTotal);
+        closeDaylingTill.setVisible(true);
+        
+    }//GEN-LAST:event_btn_close_dayling_tillActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_close_dayling_till;
     private javax.swing.JButton btn_full_report;
     private javax.swing.JButton btn_orders;
     private javax.swing.JButton btn_print;

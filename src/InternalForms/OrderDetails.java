@@ -740,7 +740,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         });
         jScrollPane2.setViewportView(table_view_products);
 
-        btn_international_number.setBackground(new java.awt.Color(21, 76, 121));
+        btn_international_number.setBackground(new java.awt.Color(0, 0, 0));
         btn_international_number.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_international_number.png"))); // NOI18N
         btn_international_number.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -748,7 +748,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             }
         });
 
-        btn_copy.setBackground(new java.awt.Color(21, 76, 121));
+        btn_copy.setBackground(new java.awt.Color(0, 0, 0));
         btn_copy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_copy.png"))); // NOI18N
         btn_copy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

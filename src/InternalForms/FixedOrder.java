@@ -692,14 +692,14 @@ public class FixedOrder extends javax.swing.JInternalFrame {
 
         panel_order_details.add(jScrollPane_notes, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 422, 399, 178));
 
-        btn_copy.setBackground(new java.awt.Color(21, 76, 121));
+        btn_copy.setBackground(new java.awt.Color(0, 0, 0));
         btn_copy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_copy.png"))); // NOI18N
         btn_copy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_copyActionPerformed(evt);
             }
         });
-        panel_order_details.add(btn_copy, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 210, -1, -1));
+        panel_order_details.add(btn_copy, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 212, -1, 30));
 
         desktop_pane_fixed_order.setLayer(panel_order_details, javax.swing.JLayeredPane.DEFAULT_LAYER);
 

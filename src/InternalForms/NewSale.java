@@ -280,7 +280,7 @@ public class NewSale extends javax.swing.JInternalFrame {
 
             Date date = new java.util.Date();
             Timestamp currentDate = new Timestamp(date.getTime());
-            saleDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDate);
+            saleDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
 
             //Empty vector before looping to avoid duplicate values on tableView
             vecProducts.removeAllElements();
@@ -686,7 +686,7 @@ public class NewSale extends javax.swing.JInternalFrame {
             }
         });
 
-        btn_international_number.setBackground(new java.awt.Color(21, 76, 121));
+        btn_international_number.setBackground(new java.awt.Color(0, 0, 0));
         btn_international_number.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_international_number.png"))); // NOI18N
         btn_international_number.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -694,7 +694,7 @@ public class NewSale extends javax.swing.JInternalFrame {
             }
         });
 
-        btn_copy.setBackground(new java.awt.Color(21, 76, 121));
+        btn_copy.setBackground(new java.awt.Color(0, 0, 0));
         btn_copy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_copy.png"))); // NOI18N
         btn_copy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
