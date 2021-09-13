@@ -16,9 +16,12 @@ import javax.swing.JOptionPane;
 public class MoneyCounter extends javax.swing.JFrame {
 
     String tillClosingDate;
-    double fiveHundred = 500, twoHundred = 200, oneHundred = 100, fifty = 50, twenty = 20, ten = 10, five = 5;
-    double twoEuro = 2, oneEuro = 1, fiftyCents = 0.5 , twentyCents = 0.2, tenCents = 0.1, 
-            fiveCents = 0.05, twoCents = 0.02, oneCent = 0.01, totalMoney; 
+//    double fiveHundred = 500, twoHundred = 200, oneHundred = 100, fifty = 50, twenty = 20, ten = 10, five = 5;
+//    double twoEuro = 2, oneEuro = 1, fiftyCents = 0.5 , twentyCents = 0.2, tenCents = 0.1, 
+//            fiveCents = 0.05, twoCents = 0.02, oneCent = 0.01, totalMoney = 0; 
+    double totalMoney = 0; 
+    int input500Qty, input200Qty, input100Qty, input50Qty, input20Qty, input10Qty, input5Qty; 
+    int input2Qty, input1Qty, input50cQty, input20cQty, input10cQty, input5cQty, input2cQty, input1cQty; 
     
     public MoneyCounter() {
         initComponents();
@@ -26,27 +29,28 @@ public class MoneyCounter extends javax.swing.JFrame {
 
     public void calcMoneyCounter()
     {
-        double total500 = fiveHundred * Integer.parseInt(txt_500.getText());
-        double total200 = twoHundred * Integer.parseInt(txt_200.getText());
-        double total100 = oneHundred * Integer.parseInt(txt_100.getText());
-        double total50 = fifty * Integer.parseInt(txt_50.getText());
-        double total20 = twenty * Integer.parseInt(txt_20.getText());
-        double total10 = ten * Integer.parseInt(txt_10.getText());
-        double total5 = five * Integer.parseInt(txt_5.getText());
+        double total500 = 500 * input500Qty;
+        double total200 = 200 * input200Qty;
+        double total100 = 100 * input100Qty;
+        double total50 = 50 * input50Qty;
+        double total20 = 20 * input20Qty;
+        double total10 = 10 * input10Qty;
+        double total5 = 5 * input5Qty;
          
-        double total2 = twoEuro * Integer.parseInt(txt_2.getText());
-        double total1 = oneEuro * Integer.parseInt(txt_1.getText());
-        double total50c = fiftyCents * Integer.parseInt(txt_50c.getText());
-        double total20c = twentyCents * Integer.parseInt(txt_20c.getText());
-        double total10c = tenCents * Integer.parseInt(txt_10c.getText());
-        double total5c = fiveCents * Integer.parseInt(txt_5c.getText());
-        double total2c = twoCents * Integer.parseInt(txt_2c.getText());
-        double total1c = oneCent * Integer.parseInt(txt_1c.getText());
+        double total2 = 2 * input2Qty;
+        double total1 = 1 * input1Qty;
+        double total50c = 0.5 * input50cQty;
+        double total20c = 0.2 * input20cQty;
+        double total10c = 0.1 * input10cQty; 
+        double total5c = 0.05 * input5cQty;
+        double total2c = 0.02 * input2cQty;
+        double total1c = 0.01 * input1cQty;
         
         totalMoney = total500 + total200 + total100 + total50 + total20 + total10 + total5
                 + total2 + total1 + total50c + + total20c + total10c + total5c
                 + total2c + total1c;
         
+        totalMoney = Math.round(totalMoney * 100d) / 100d;
         txt_total_money.setText(String.valueOf(totalMoney));
     }
 
@@ -109,7 +113,6 @@ public class MoneyCounter extends javax.swing.JFrame {
         lbl_€500.setText("€500");
 
         txt_500.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_500.setText("0");
         txt_500.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_500KeyReleased(evt);
@@ -120,7 +123,6 @@ public class MoneyCounter extends javax.swing.JFrame {
         lbl_€200.setText("€200");
 
         txt_200.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_200.setText("0");
         txt_200.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_200ActionPerformed(evt);
@@ -136,7 +138,6 @@ public class MoneyCounter extends javax.swing.JFrame {
         lbl_€100.setText("€100");
 
         txt_100.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_100.setText("0");
         txt_100.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_100KeyReleased(evt);
@@ -147,7 +148,6 @@ public class MoneyCounter extends javax.swing.JFrame {
         lbl_€50.setText("€50");
 
         txt_50.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_50.setText("0");
         txt_50.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_50KeyReleased(evt);
@@ -158,7 +158,6 @@ public class MoneyCounter extends javax.swing.JFrame {
         lbl_€20.setText("€20");
 
         txt_20.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_20.setText("0");
         txt_20.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_20KeyReleased(evt);
@@ -169,7 +168,6 @@ public class MoneyCounter extends javax.swing.JFrame {
         lbl_€10.setText("€10");
 
         txt_10.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_10.setText("0");
         txt_10.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_10KeyReleased(evt);
@@ -180,7 +178,6 @@ public class MoneyCounter extends javax.swing.JFrame {
         lbl_€5.setText("€5");
 
         txt_5.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_5.setText("0");
         txt_5.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_5KeyReleased(evt);
@@ -281,7 +278,6 @@ public class MoneyCounter extends javax.swing.JFrame {
         lbl_2.setText("€2");
 
         txt_2.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_2.setText("0");
         txt_2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_2KeyReleased(evt);
@@ -292,7 +288,6 @@ public class MoneyCounter extends javax.swing.JFrame {
         lbl_1.setText("€1");
 
         txt_1.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_1.setText("0");
         txt_1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_1KeyReleased(evt);
@@ -303,7 +298,6 @@ public class MoneyCounter extends javax.swing.JFrame {
         lbl_50c.setText("50c");
 
         txt_50c.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_50c.setText("0");
         txt_50c.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_50cKeyReleased(evt);
@@ -314,7 +308,11 @@ public class MoneyCounter extends javax.swing.JFrame {
         lbl_20c.setText("20c");
 
         txt_20c.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_20c.setText("0");
+        txt_20c.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_20cActionPerformed(evt);
+            }
+        });
         txt_20c.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_20cKeyReleased(evt);
@@ -325,7 +323,6 @@ public class MoneyCounter extends javax.swing.JFrame {
         lbl_10c.setText("10c");
 
         txt_10c.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_10c.setText("0");
         txt_10c.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_10cKeyReleased(evt);
@@ -336,7 +333,6 @@ public class MoneyCounter extends javax.swing.JFrame {
         lbl_5c.setText("5c");
 
         txt_5c.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_5c.setText("0");
         txt_5c.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_5cKeyReleased(evt);
@@ -347,7 +343,6 @@ public class MoneyCounter extends javax.swing.JFrame {
         lbl_2c.setText("2c");
 
         txt_2c.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_2c.setText("0");
         txt_2c.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_2cKeyReleased(evt);
@@ -358,7 +353,6 @@ public class MoneyCounter extends javax.swing.JFrame {
         lbl_1c.setText("1c");
 
         txt_1c.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_1c.setText("0");
         txt_1c.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_1cKeyReleased(evt);
@@ -460,12 +454,10 @@ public class MoneyCounter extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        txt_total_money.setEditable(false);
         txt_total_money.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_total_money.setFocusable(false);
 
         lbl_total_money.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
-        lbl_total_money.setText("Total Money");
+        lbl_total_money.setText("Total Money €");
 
         lbl_bank_notes.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
         lbl_bank_notes.setText("Bank notes");
@@ -535,16 +527,16 @@ public class MoneyCounter extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txt_coins, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(2, 2, 2)))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(panel_bank_notes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(50, 50, 50))
+                        .addGap(52, 52, 52))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(lbl_euro_money_counter)
-                        .addGap(227, 227, 227))))
+                        .addGap(238, 238, 238))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -598,78 +590,202 @@ public class MoneyCounter extends javax.swing.JFrame {
 
     private void txt_500KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_500KeyReleased
         // TODO add your handling code here:
-        calcMoneyCounter();
+        if (txt_500.getText().trim().isEmpty()) {
+            input500Qty = 0;
+            calcMoneyCounter();
+        }
+        else
+        {
+            input500Qty = Integer.parseInt(txt_500.getText());
+            calcMoneyCounter();
+        }
     }//GEN-LAST:event_txt_500KeyReleased
 
     private void txt_200KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_200KeyReleased
         // TODO add your handling code here:
-        calcMoneyCounter();
+        if (txt_200.getText().trim().isEmpty()) {
+            input200Qty = 0;
+            calcMoneyCounter();
+        }
+        else
+        {
+            input200Qty = Integer.parseInt(txt_200.getText());
+            calcMoneyCounter();
+        }
     }//GEN-LAST:event_txt_200KeyReleased
 
     private void txt_100KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_100KeyReleased
         // TODO add your handling code here:
-        calcMoneyCounter();
+        if (txt_100.getText().trim().isEmpty()) {
+            input100Qty = 0;
+            calcMoneyCounter();
+        }
+        else
+        {
+            input100Qty = Integer.parseInt(txt_100.getText());
+            calcMoneyCounter();
+        }
     }//GEN-LAST:event_txt_100KeyReleased
 
     private void txt_50KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_50KeyReleased
         // TODO add your handling code here:
-        calcMoneyCounter();
+        if (txt_50.getText().trim().isEmpty()) {
+            input50Qty = 0;
+            calcMoneyCounter();
+        }
+        else
+        {
+            input50Qty = Integer.parseInt(txt_50.getText());
+            calcMoneyCounter();
+        }
     }//GEN-LAST:event_txt_50KeyReleased
 
     private void txt_20KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_20KeyReleased
         // TODO add your handling code here:
-        calcMoneyCounter();
+        if (txt_20.getText().trim().isEmpty()) {
+            input20Qty = 0;
+            calcMoneyCounter();
+        }
+        else
+        {
+            input20Qty = Integer.parseInt(txt_20.getText());
+            calcMoneyCounter();
+        }
     }//GEN-LAST:event_txt_20KeyReleased
 
     private void txt_10KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_10KeyReleased
         // TODO add your handling code here:
-        calcMoneyCounter();
+        if (txt_10.getText().trim().isEmpty()) {
+            input10Qty = 0;
+            calcMoneyCounter();
+        }
+        else
+        {
+            input10Qty = Integer.parseInt(txt_10.getText());
+            calcMoneyCounter();
+        }
     }//GEN-LAST:event_txt_10KeyReleased
 
     private void txt_5KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_5KeyReleased
         // TODO add your handling code here:
-        calcMoneyCounter();
+        if (txt_5.getText().trim().isEmpty()) {
+            input5Qty = 0;
+            calcMoneyCounter();
+        }
+        else
+        {
+            input5Qty = Integer.parseInt(txt_5.getText());
+            calcMoneyCounter();
+        }
     }//GEN-LAST:event_txt_5KeyReleased
 
     private void txt_2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_2KeyReleased
         // TODO add your handling code here:
-        calcMoneyCounter();
+        if (txt_2.getText().trim().isEmpty()) {
+            input2Qty = 0;
+            calcMoneyCounter();
+        }
+        else
+        {
+            input2Qty = Integer.parseInt(txt_2.getText());
+            calcMoneyCounter();
+        }
     }//GEN-LAST:event_txt_2KeyReleased
 
     private void txt_1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_1KeyReleased
         // TODO add your handling code here:
-        calcMoneyCounter();
+        if (txt_1.getText().trim().isEmpty()) {
+            input1Qty = 0;
+            calcMoneyCounter();
+        }
+        else
+        {
+            input1Qty = Integer.parseInt(txt_1.getText());
+            calcMoneyCounter();
+        }
     }//GEN-LAST:event_txt_1KeyReleased
 
     private void txt_50cKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_50cKeyReleased
         // TODO add your handling code here:
-        calcMoneyCounter();
+        if (txt_50c.getText().trim().isEmpty()) {
+            input50cQty = 0;
+            calcMoneyCounter();
+        }
+        else
+        {
+            input50cQty = Integer.parseInt(txt_50c.getText());
+            calcMoneyCounter();
+        }
     }//GEN-LAST:event_txt_50cKeyReleased
 
     private void txt_20cKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_20cKeyReleased
         // TODO add your handling code here:
-        calcMoneyCounter();
+         if (txt_20c.getText().trim().isEmpty()) {
+            input20cQty = 0;
+            calcMoneyCounter();
+        }
+        else
+        {
+            input20cQty = Integer.parseInt(txt_20c.getText());
+            calcMoneyCounter();
+        }
     }//GEN-LAST:event_txt_20cKeyReleased
 
     private void txt_10cKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_10cKeyReleased
         // TODO add your handling code here:
-        calcMoneyCounter();
+         if (txt_10c.getText().trim().isEmpty()) {
+            input10cQty = 0;
+            calcMoneyCounter();
+        }
+        else
+        {
+            input10cQty = Integer.parseInt(txt_10c.getText());
+            calcMoneyCounter();
+        }
     }//GEN-LAST:event_txt_10cKeyReleased
 
     private void txt_5cKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_5cKeyReleased
         // TODO add your handling code here:
-        calcMoneyCounter();
+         if (txt_5c.getText().trim().isEmpty()) {
+            input5cQty = 0;
+            calcMoneyCounter();
+        }
+        else
+        {
+            input5cQty = Integer.parseInt(txt_5c.getText());
+            calcMoneyCounter();
+        }
     }//GEN-LAST:event_txt_5cKeyReleased
 
     private void txt_2cKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_2cKeyReleased
         // TODO add your handling code here:
-        calcMoneyCounter();
+         if (txt_2c.getText().trim().isEmpty()) {
+            input2cQty = 0;
+            calcMoneyCounter();
+        }
+        else
+        {
+            input2cQty = Integer.parseInt(txt_2c.getText());
+            calcMoneyCounter();
+        }
     }//GEN-LAST:event_txt_2cKeyReleased
 
     private void txt_1cKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_1cKeyReleased
         // TODO add your handling code here:
-        calcMoneyCounter();
+         if (txt_1c.getText().trim().isEmpty()) {
+            input1cQty = 0;
+            calcMoneyCounter();
+        }
+        else
+        {
+            input1cQty = Integer.parseInt(txt_1c.getText());
+            calcMoneyCounter();
+        }
     }//GEN-LAST:event_txt_1cKeyReleased
+
+    private void txt_20cActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_20cActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_20cActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
