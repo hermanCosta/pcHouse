@@ -16,12 +16,10 @@ import javax.swing.JOptionPane;
 public class MoneyCounter extends javax.swing.JFrame {
 
     String tillClosingDate;
-//    double fiveHundred = 500, twoHundred = 200, oneHundred = 100, fifty = 50, twenty = 20, ten = 10, five = 5;
-//    double twoEuro = 2, oneEuro = 1, fiftyCents = 0.5 , twentyCents = 0.2, tenCents = 0.1, 
-//            fiveCents = 0.05, twoCents = 0.02, oneCent = 0.01, totalMoney = 0; 
     double totalMoney = 0; 
     int input500Qty, input200Qty, input100Qty, input50Qty, input20Qty, input10Qty, input5Qty; 
-    int input2Qty, input1Qty, input50cQty, input20cQty, input10cQty, input5cQty, input2cQty, input1cQty; 
+    int input2Qty, input1Qty, input50cQty, input20cQty, input10cQty, input5cQty, input2cQty, input1cQty;
+    int countBankNotes, countTotalCoins;
     
     public MoneyCounter() {
         initComponents();
@@ -52,6 +50,14 @@ public class MoneyCounter extends javax.swing.JFrame {
         
         totalMoney = Math.round(totalMoney * 100d) / 100d;
         txt_total_money.setText(String.valueOf(totalMoney));
+        
+        //count bank notes qty
+        countBankNotes = input500Qty + input200Qty + input100Qty + input50Qty + input20Qty + input10Qty + input5Qty;
+        txt_total_bank_notes.setText(String.valueOf(countBankNotes));
+        
+        //count coins qty
+        countTotalCoins = input2Qty + input1Qty + input50cQty + input20cQty + input10cQty + input5cQty + input2cQty + input1cQty;
+        txt_total_coins.setText(String.valueOf(countTotalCoins));
     }
 
     /**
@@ -63,22 +69,8 @@ public class MoneyCounter extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panel_bank_notes = new javax.swing.JPanel();
-        lbl_€500 = new javax.swing.JLabel();
-        txt_500 = new javax.swing.JTextField();
-        lbl_€200 = new javax.swing.JLabel();
-        txt_200 = new javax.swing.JTextField();
-        lbl_€100 = new javax.swing.JLabel();
-        txt_100 = new javax.swing.JTextField();
-        lbl_€50 = new javax.swing.JLabel();
-        txt_50 = new javax.swing.JTextField();
-        lbl_€20 = new javax.swing.JLabel();
-        txt_20 = new javax.swing.JTextField();
-        lbl_€10 = new javax.swing.JLabel();
-        txt_10 = new javax.swing.JTextField();
-        lbl_€5 = new javax.swing.JLabel();
-        txt_5 = new javax.swing.JTextField();
-        lbl_euro_money_counter = new javax.swing.JLabel();
+        panel_euro_money_counter = new javax.swing.JPanel();
+        txt_total_coins = new javax.swing.JTextField();
         panel_coins = new javax.swing.JPanel();
         lbl_2 = new javax.swing.JLabel();
         txt_2 = new javax.swing.JTextField();
@@ -96,215 +88,91 @@ public class MoneyCounter extends javax.swing.JFrame {
         txt_2c = new javax.swing.JTextField();
         lbl_1c = new javax.swing.JLabel();
         txt_1c = new javax.swing.JTextField();
-        txt_total_money = new javax.swing.JTextField();
-        lbl_total_money = new javax.swing.JLabel();
         lbl_bank_notes = new javax.swing.JLabel();
-        txt_bank_notes = new javax.swing.JTextField();
-        lbl_coins = new javax.swing.JLabel();
-        txt_coins = new javax.swing.JTextField();
-        btn_copy = new javax.swing.JButton();
+        txt_total_bank_notes = new javax.swing.JTextField();
+        txt_total_money = new javax.swing.JTextField();
         btn_clear = new javax.swing.JButton();
+        lbl_total_money = new javax.swing.JLabel();
+        btn_copy = new javax.swing.JButton();
+        panel_bank_notes = new javax.swing.JPanel();
+        lbl_€500 = new javax.swing.JLabel();
+        txt_500 = new javax.swing.JTextField();
+        lbl_€200 = new javax.swing.JLabel();
+        txt_200 = new javax.swing.JTextField();
+        lbl_€100 = new javax.swing.JLabel();
+        txt_100 = new javax.swing.JTextField();
+        lbl_€50 = new javax.swing.JLabel();
+        txt_50 = new javax.swing.JTextField();
+        lbl_€20 = new javax.swing.JLabel();
+        txt_20 = new javax.swing.JTextField();
+        lbl_€10 = new javax.swing.JLabel();
+        txt_10 = new javax.swing.JTextField();
+        lbl_€5 = new javax.swing.JLabel();
+        txt_5 = new javax.swing.JTextField();
+        lbl_coins = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        panel_bank_notes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Bank Notes", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("sansserif", 1, 14))); // NOI18N
+        panel_euro_money_counter.setBackground(new java.awt.Color(204, 204, 204));
+        panel_euro_money_counter.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "EURO Money Counter", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("sansserif", 1, 16))); // NOI18N
 
-        lbl_€500.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
-        lbl_€500.setText("€500");
-
-        txt_500.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_500.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txt_500KeyReleased(evt);
-            }
-        });
-
-        lbl_€200.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
-        lbl_€200.setText("€200");
-
-        txt_200.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_200.addActionListener(new java.awt.event.ActionListener() {
+        txt_total_coins.setEditable(false);
+        txt_total_coins.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        txt_total_coins.setFocusable(false);
+        txt_total_coins.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_200ActionPerformed(evt);
-            }
-        });
-        txt_200.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txt_200KeyReleased(evt);
+                txt_total_coinsActionPerformed(evt);
             }
         });
 
-        lbl_€100.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
-        lbl_€100.setText("€100");
+        panel_coins.setBackground(new java.awt.Color(204, 204, 204));
+        panel_coins.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Bank Notes", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("sansserif", 0, 14))); // NOI18N
 
-        txt_100.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_100.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txt_100KeyReleased(evt);
-            }
-        });
-
-        lbl_€50.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
-        lbl_€50.setText("€50");
-
-        txt_50.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_50.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txt_50KeyReleased(evt);
-            }
-        });
-
-        lbl_€20.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
-        lbl_€20.setText("€20");
-
-        txt_20.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_20.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txt_20KeyReleased(evt);
-            }
-        });
-
-        lbl_€10.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
-        lbl_€10.setText("€10");
-
-        txt_10.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_10.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txt_10KeyReleased(evt);
-            }
-        });
-
-        lbl_€5.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
-        lbl_€5.setText("€5");
-
-        txt_5.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_5.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txt_5KeyReleased(evt);
-            }
-        });
-
-        javax.swing.GroupLayout panel_bank_notesLayout = new javax.swing.GroupLayout(panel_bank_notes);
-        panel_bank_notes.setLayout(panel_bank_notesLayout);
-        panel_bank_notesLayout.setHorizontalGroup(
-            panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_bank_notesLayout.createSequentialGroup()
-                .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(txt_500, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(lbl_€500)))
-                .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(txt_200, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(lbl_€200)))
-                .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(txt_100, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(lbl_€100)))
-                .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(txt_50, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(lbl_€50)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(lbl_€20))
-                    .addComponent(txt_20, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(lbl_€10))
-                    .addComponent(txt_10, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(txt_5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(12, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_bank_notesLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbl_€5)
-                        .addGap(32, 32, 32))))
-        );
-        panel_bank_notesLayout.setVerticalGroup(
-            panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_bank_notesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txt_5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
-                        .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbl_€10)
-                            .addComponent(lbl_€5))
-                        .addGap(0, 0, 0)
-                        .addComponent(txt_10, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
-                        .addComponent(lbl_€20)
-                        .addGap(0, 0, 0)
-                        .addComponent(txt_20, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txt_50, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txt_100, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txt_200, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
-                        .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbl_€500)
-                            .addComponent(lbl_€200)
-                            .addComponent(lbl_€100)
-                            .addComponent(lbl_€50))
-                        .addGap(0, 0, 0)
-                        .addComponent(txt_500, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        lbl_euro_money_counter.setFont(new java.awt.Font("sansserif", 1, 17)); // NOI18N
-        lbl_euro_money_counter.setText("EURO Money Counter");
-
-        panel_coins.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Coins", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("sansserif", 1, 14))); // NOI18N
-
-        lbl_2.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
+        lbl_2.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_2.setText("€2");
 
         txt_2.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        txt_2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_2ActionPerformed(evt);
+            }
+        });
         txt_2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_2KeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_2KeyReleased(evt);
             }
         });
 
-        lbl_1.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
+        lbl_1.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_1.setText("€1");
 
         txt_1.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         txt_1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_1KeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_1KeyReleased(evt);
             }
         });
 
-        lbl_50c.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
+        lbl_50c.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_50c.setText("50c");
 
         txt_50c.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         txt_50c.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_50cKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_50cKeyReleased(evt);
             }
         });
 
-        lbl_20c.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
+        lbl_20c.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_20c.setText("20c");
 
         txt_20c.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
@@ -314,46 +182,61 @@ public class MoneyCounter extends javax.swing.JFrame {
             }
         });
         txt_20c.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_20cKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_20cKeyReleased(evt);
             }
         });
 
-        lbl_10c.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
+        lbl_10c.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_10c.setText("10c");
 
         txt_10c.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         txt_10c.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_10cKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_10cKeyReleased(evt);
             }
         });
 
-        lbl_5c.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
+        lbl_5c.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_5c.setText("5c");
 
         txt_5c.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         txt_5c.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_5cKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_5cKeyReleased(evt);
             }
         });
 
-        lbl_2c.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
+        lbl_2c.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_2c.setText("2c");
 
         txt_2c.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         txt_2c.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_2cKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_2cKeyReleased(evt);
             }
         });
 
-        lbl_1c.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
+        lbl_1c.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_1c.setText("1c");
 
         txt_1c.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         txt_1c.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_1cKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txt_1cKeyReleased(evt);
             }
@@ -388,7 +271,7 @@ public class MoneyCounter extends javax.swing.JFrame {
                 .addGroup(panel_coinsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_coinsLayout.createSequentialGroup()
                         .addComponent(txt_20c, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                        .addGap(18, 18, 18))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_coinsLayout.createSequentialGroup()
                         .addComponent(lbl_20c)
                         .addGap(29, 29, 29)))
@@ -399,7 +282,7 @@ public class MoneyCounter extends javax.swing.JFrame {
                     .addComponent(txt_10c, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(panel_coinsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_coinsLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(txt_5c, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panel_coinsLayout.createSequentialGroup()
                         .addGap(33, 33, 33)
@@ -410,7 +293,7 @@ public class MoneyCounter extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_coinsLayout.createSequentialGroup()
                         .addComponent(lbl_2c)
                         .addGap(22, 22, 22)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(panel_coinsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_coinsLayout.createSequentialGroup()
                         .addComponent(txt_1c, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -422,7 +305,7 @@ public class MoneyCounter extends javax.swing.JFrame {
         panel_coinsLayout.setVerticalGroup(
             panel_coinsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_coinsLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panel_coinsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txt_1c, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panel_coinsLayout.createSequentialGroup()
@@ -454,43 +337,21 @@ public class MoneyCounter extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        txt_total_money.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-
-        lbl_total_money.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
-        lbl_total_money.setText("Total Money €");
-
         lbl_bank_notes.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
         lbl_bank_notes.setText("Bank notes");
 
-        txt_bank_notes.setEditable(false);
-        txt_bank_notes.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_bank_notes.setFocusable(false);
-        txt_bank_notes.addActionListener(new java.awt.event.ActionListener() {
+        txt_total_bank_notes.setEditable(false);
+        txt_total_bank_notes.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        txt_total_bank_notes.setFocusable(false);
+        txt_total_bank_notes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_bank_notesActionPerformed(evt);
+                txt_total_bank_notesActionPerformed(evt);
             }
         });
 
-        lbl_coins.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
-        lbl_coins.setText("Coins");
-
-        txt_coins.setEditable(false);
-        txt_coins.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_coins.setFocusable(false);
-        txt_coins.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_coinsActionPerformed(evt);
-            }
-        });
-
-        btn_copy.setBackground(new java.awt.Color(0, 0, 0));
-        btn_copy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_copy.png"))); // NOI18N
-        btn_copy.setToolTipText("Copy to total money to clipboard");
-        btn_copy.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_copyActionPerformed(evt);
-            }
-        });
+        txt_total_money.setEditable(false);
+        txt_total_money.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        txt_total_money.setFocusable(false);
 
         btn_clear.setBackground(new java.awt.Color(0, 0, 0));
         btn_clear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_erase.png"))); // NOI18N
@@ -501,64 +362,271 @@ public class MoneyCounter extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(panel_coins, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
+        lbl_total_money.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
+        lbl_total_money.setText("Total Money €");
+
+        btn_copy.setBackground(new java.awt.Color(0, 0, 0));
+        btn_copy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_copy.png"))); // NOI18N
+        btn_copy.setToolTipText("Copy to total money to clipboard");
+        btn_copy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_copyActionPerformed(evt);
+            }
+        });
+
+        panel_bank_notes.setBackground(new java.awt.Color(204, 204, 204));
+        panel_bank_notes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Bank Notes", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("sansserif", 0, 14))); // NOI18N
+
+        lbl_€500.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        lbl_€500.setText("€500");
+
+        txt_500.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        txt_500.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_500KeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_500KeyReleased(evt);
+            }
+        });
+
+        lbl_€200.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        lbl_€200.setText("€200");
+
+        txt_200.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        txt_200.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_200ActionPerformed(evt);
+            }
+        });
+        txt_200.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_200KeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_200KeyReleased(evt);
+            }
+        });
+
+        lbl_€100.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        lbl_€100.setText("€100");
+
+        txt_100.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        txt_100.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_100KeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_100KeyReleased(evt);
+            }
+        });
+
+        lbl_€50.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        lbl_€50.setText("€50");
+
+        txt_50.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        txt_50.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_50KeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_50KeyReleased(evt);
+            }
+        });
+
+        lbl_€20.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        lbl_€20.setText("€20");
+
+        txt_20.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        txt_20.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_20KeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_20KeyReleased(evt);
+            }
+        });
+
+        lbl_€10.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        lbl_€10.setText("€10");
+
+        txt_10.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        txt_10.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_10KeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_10KeyReleased(evt);
+            }
+        });
+
+        lbl_€5.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        lbl_€5.setText("€5");
+
+        txt_5.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        txt_5.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_5KeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_5KeyReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panel_bank_notesLayout = new javax.swing.GroupLayout(panel_bank_notes);
+        panel_bank_notes.setLayout(panel_bank_notesLayout);
+        panel_bank_notesLayout.setHorizontalGroup(
+            panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_bank_notesLayout.createSequentialGroup()
+                .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txt_500, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(lbl_€500)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txt_200, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_bank_notesLayout.createSequentialGroup()
+                        .addComponent(lbl_€200)
+                        .addGap(16, 16, 16)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txt_100, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(lbl_€100)))
+                .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txt_50, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(lbl_€50)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
+                        .addComponent(txt_20, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_bank_notesLayout.createSequentialGroup()
+                        .addComponent(lbl_€20)
+                        .addGap(34, 34, 34)))
+                .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txt_10, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(lbl_€10)))
+                .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txt_5, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_bank_notesLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lbl_€5)
+                        .addGap(47, 47, 47))))
+        );
+        panel_bank_notesLayout.setVerticalGroup(
+            panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_bank_notesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txt_100, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
+                        .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbl_€100)
+                            .addComponent(lbl_€50))
+                        .addGap(30, 30, 30))
+                    .addComponent(txt_5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_10, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
+                        .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbl_€20)
+                            .addComponent(lbl_€10)
+                            .addComponent(lbl_€5))
+                        .addGap(0, 0, 0)
+                        .addComponent(txt_20, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_50, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_200, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panel_bank_notesLayout.createSequentialGroup()
+                        .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbl_€500)
+                            .addComponent(lbl_€200))
+                        .addGap(0, 0, 0)
+                        .addComponent(txt_500, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        lbl_coins.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
+        lbl_coins.setText("Coins");
+
+        javax.swing.GroupLayout panel_euro_money_counterLayout = new javax.swing.GroupLayout(panel_euro_money_counter);
+        panel_euro_money_counter.setLayout(panel_euro_money_counterLayout);
+        panel_euro_money_counterLayout.setHorizontalGroup(
+            panel_euro_money_counterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_euro_money_counterLayout.createSequentialGroup()
+                .addGroup(panel_euro_money_counterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_euro_money_counterLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
                         .addComponent(lbl_total_money)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txt_total_money, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_copy, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_clear, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lbl_bank_notes)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_bank_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_total_bank_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(lbl_coins)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_coins, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(2, 2, 2)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(panel_bank_notes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(52, 52, 52))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(lbl_euro_money_counter)
-                        .addGap(238, 238, 238))))
+                        .addComponent(txt_total_coins, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_euro_money_counterLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(panel_bank_notes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panel_coins, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
-                .addComponent(lbl_euro_money_counter)
-                .addGap(18, 18, 18)
+        panel_euro_money_counterLayout.setVerticalGroup(
+            panel_euro_money_counterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_euro_money_counterLayout.createSequentialGroup()
+                .addContainerGap(20, Short.MAX_VALUE)
                 .addComponent(panel_bank_notes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(panel_coins, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panel_euro_money_counterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_euro_money_counterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(txt_total_money, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lbl_total_money)
-                        .addComponent(txt_bank_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_total_bank_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lbl_bank_notes)
-                        .addComponent(txt_coins, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txt_total_coins, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lbl_coins))
                     .addComponent(btn_copy, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_clear, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(panel_euro_money_counter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(panel_euro_money_counter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
 
         pack();
@@ -569,9 +637,9 @@ public class MoneyCounter extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_200ActionPerformed
 
-    private void txt_coinsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_coinsActionPerformed
+    private void txt_total_coinsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_total_coinsActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txt_coinsActionPerformed
+    }//GEN-LAST:event_txt_total_coinsActionPerformed
 
     private void btn_copyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_copyActionPerformed
         // TODO add your handling code here:
@@ -582,11 +650,52 @@ public class MoneyCounter extends javax.swing.JFrame {
 
     private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
         // TODO add your handling code here:
+        txt_500.setText("");
+        txt_200.setText("");
+        txt_100.setText("");
+        txt_50.setText("");
+        txt_20.setText("");
+        txt_10.setText("");
+        txt_5.setText("");
+        txt_2.setText("");
+        txt_1.setText("");
+        txt_50c.setText("");
+        txt_20c.setText("");
+        txt_10c.setText("");
+        txt_5c.setText("");
+        txt_2c.setText("");
+        txt_1c.setText("");
+        txt_total_money.setText("");
+        txt_total_bank_notes.setText("");
+        txt_total_coins.setText("");
+        
+        input500Qty = 0;
+        input200Qty = 0;
+        input100Qty = 0;
+        input50Qty = 0;
+        input20Qty = 0;
+        input10Qty = 0;
+        input5Qty = 0;
+        input2Qty = 0;
+        input1Qty = 0;
+        input50cQty = 0;
+        input20cQty = 0;
+        input10cQty = 0;
+        input5cQty = 0;
+        input2cQty = 0;
+        input1cQty = 0;
+        totalMoney = 0;
+        countBankNotes = 0;
+        countTotalCoins = 0;
+        
+        txt_500.requestFocus();
+        
     }//GEN-LAST:event_btn_clearActionPerformed
 
-    private void txt_bank_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_bank_notesActionPerformed
+    private void txt_total_bank_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_total_bank_notesActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txt_bank_notesActionPerformed
+        
+    }//GEN-LAST:event_txt_total_bank_notesActionPerformed
 
     private void txt_500KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_500KeyReleased
         // TODO add your handling code here:
@@ -787,6 +896,140 @@ public class MoneyCounter extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_20cActionPerformed
 
+    private void txt_500KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_500KeyPressed
+        // TODO add your handling code here:
+        //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar()))
+            txt_500.setEditable(false);
+        else
+            txt_500.setEditable(true);
+    }//GEN-LAST:event_txt_500KeyPressed
+
+    private void txt_200KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_200KeyPressed
+        // TODO add your handling code here:
+         //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar()))
+            txt_200.setEditable(false);
+        else
+            txt_200.setEditable(true);
+    }//GEN-LAST:event_txt_200KeyPressed
+
+    private void txt_100KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_100KeyPressed
+        // TODO add your handling code here:
+         //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar()))
+            txt_100.setEditable(false);
+        else
+            txt_100.setEditable(true);
+    }//GEN-LAST:event_txt_100KeyPressed
+
+    private void txt_50KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_50KeyPressed
+        // TODO add your handling code here:
+         //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar()))
+            txt_50.setEditable(false);
+        else
+            txt_50.setEditable(true);
+    }//GEN-LAST:event_txt_50KeyPressed
+
+    private void txt_20KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_20KeyPressed
+        // TODO add your handling code here:
+         //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar()))
+            txt_20.setEditable(false);
+        else
+            txt_20.setEditable(true);
+    }//GEN-LAST:event_txt_20KeyPressed
+
+    private void txt_10KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_10KeyPressed
+        // TODO add your handling code here:
+         //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar()))
+            txt_10.setEditable(false);
+        else
+            txt_10.setEditable(true);
+    }//GEN-LAST:event_txt_10KeyPressed
+
+    private void txt_5KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_5KeyPressed
+        // TODO add your handling code here:
+         //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar()))
+            txt_5.setEditable(false);
+        else
+            txt_5.setEditable(true);
+    }//GEN-LAST:event_txt_5KeyPressed
+
+    private void txt_2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_2KeyPressed
+        // TODO add your handling code here:
+         //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar()))
+            txt_2.setEditable(false);
+        else
+            txt_2.setEditable(true);
+    }//GEN-LAST:event_txt_2KeyPressed
+
+    private void txt_1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_1KeyPressed
+        // TODO add your handling code here:
+         //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar()))
+            txt_1.setEditable(false);
+        else
+            txt_1.setEditable(true);
+    }//GEN-LAST:event_txt_1KeyPressed
+
+    private void txt_20cKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_20cKeyPressed
+        // TODO add your handling code here:
+         //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar()))
+            txt_20c.setEditable(false);
+        else
+            txt_20c.setEditable(true);
+    }//GEN-LAST:event_txt_20cKeyPressed
+
+    private void txt_50cKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_50cKeyPressed
+        // TODO add your handling code here:
+         if (Character.isLetter(evt.getKeyChar()))
+            txt_50c.setEditable(false);
+        else
+            txt_50c.setEditable(true);
+    }//GEN-LAST:event_txt_50cKeyPressed
+
+    private void txt_10cKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_10cKeyPressed
+        // TODO add your handling code here:
+         if (Character.isLetter(evt.getKeyChar()))
+            txt_10c.setEditable(false);
+        else
+            txt_10c.setEditable(true);
+    }//GEN-LAST:event_txt_10cKeyPressed
+
+    private void txt_5cKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_5cKeyPressed
+        // TODO add your handling code here:
+         if (Character.isLetter(evt.getKeyChar()))
+            txt_5c.setEditable(false);
+        else
+            txt_5c.setEditable(true);
+    }//GEN-LAST:event_txt_5cKeyPressed
+
+    private void txt_2cKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_2cKeyPressed
+        // TODO add your handling code here:
+         if (Character.isLetter(evt.getKeyChar()))
+            txt_2c.setEditable(false);
+        else
+            txt_2c.setEditable(true);
+    }//GEN-LAST:event_txt_2cKeyPressed
+
+    private void txt_1cKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_1cKeyPressed
+        // TODO add your handling code here:
+         if (Character.isLetter(evt.getKeyChar()))
+            txt_1c.setEditable(false);
+        else
+            txt_1c.setEditable(true);
+    }//GEN-LAST:event_txt_1cKeyPressed
+
+    private void txt_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_2ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_clear;
@@ -801,7 +1044,6 @@ public class MoneyCounter extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_5c;
     private javax.swing.JLabel lbl_bank_notes;
     private javax.swing.JLabel lbl_coins;
-    private javax.swing.JLabel lbl_euro_money_counter;
     private javax.swing.JLabel lbl_total_money;
     private javax.swing.JLabel lbl_€10;
     private javax.swing.JLabel lbl_€100;
@@ -812,6 +1054,7 @@ public class MoneyCounter extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_€500;
     private javax.swing.JPanel panel_bank_notes;
     private javax.swing.JPanel panel_coins;
+    private javax.swing.JPanel panel_euro_money_counter;
     private javax.swing.JTextField txt_1;
     private javax.swing.JTextField txt_10;
     private javax.swing.JTextField txt_100;
@@ -827,8 +1070,8 @@ public class MoneyCounter extends javax.swing.JFrame {
     private javax.swing.JTextField txt_500;
     private javax.swing.JTextField txt_50c;
     private javax.swing.JTextField txt_5c;
-    private javax.swing.JTextField txt_bank_notes;
-    private javax.swing.JTextField txt_coins;
+    private javax.swing.JTextField txt_total_bank_notes;
+    private javax.swing.JTextField txt_total_coins;
     private javax.swing.JTextField txt_total_money;
     // End of variables declaration//GEN-END:variables
 }

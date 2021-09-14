@@ -8,6 +8,7 @@ package InternalForms;
 import Forms.CloseDailyTill;
 import Forms.Login;
 import Forms.MainMenu;
+import Forms.MoneyCounter;
 import Forms.PrintFullReport;
 import Model.CompletedOrder;
 import Model.Order;
@@ -269,6 +270,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
         date_picker = new com.toedter.calendar.JCalendar();
         btn_print = new javax.swing.JButton();
         btn_close_dayling_till = new javax.swing.JButton();
+        btn_money_counter = new javax.swing.JButton();
+        btn_money_counter1 = new javax.swing.JButton();
 
         setBorder(null);
         setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
@@ -593,32 +596,61 @@ public class TillClosing extends javax.swing.JInternalFrame {
             }
         });
 
+        btn_money_counter.setBackground(new java.awt.Color(21, 76, 121));
+        btn_money_counter.setFont(new java.awt.Font("Lucida Grande", 1, 17)); // NOI18N
+        btn_money_counter.setForeground(new java.awt.Color(255, 255, 255));
+        btn_money_counter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_money_calc.png"))); // NOI18N
+        btn_money_counter.setText("Money Counter");
+        btn_money_counter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_money_counterActionPerformed(evt);
+            }
+        });
+
+        btn_money_counter1.setBackground(new java.awt.Color(21, 76, 121));
+        btn_money_counter1.setFont(new java.awt.Font("Lucida Grande", 1, 17)); // NOI18N
+        btn_money_counter1.setForeground(new java.awt.Color(255, 255, 255));
+        btn_money_counter1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_till_records.png"))); // NOI18N
+        btn_money_counter1.setText("Till Records");
+        btn_money_counter1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_money_counter1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_till_closingLayout = new javax.swing.GroupLayout(panel_till_closing);
         panel_till_closing.setLayout(panel_till_closingLayout);
         panel_till_closingLayout.setHorizontalGroup(
             panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_till_closingLayout.createSequentialGroup()
-                .addGap(9, 9, 9)
-                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(panel_till_closingLayout.createSequentialGroup()
+                        .addGap(9, 9, 9)
                         .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(panel_till_closingLayout.createSequentialGroup()
                                 .addComponent(panel_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                             .addGroup(panel_till_closingLayout.createSequentialGroup()
-                                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panel_till_closingLayout.createSequentialGroup()
-                                        .addComponent(btn_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(btn_full_report, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(date_picker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(panel_calendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(btn_close_dayling_till, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(446, 446, 446)))
-                        .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(date_picker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(panel_calendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(452, 452, 452)))
+                        .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panel_till_closingLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel_till_closingLayout.createSequentialGroup()
+                                .addComponent(btn_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btn_full_report, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_close_dayling_till, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panel_till_closingLayout.createSequentialGroup()
+                                .addComponent(btn_money_counter, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btn_money_counter1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_till_closingLayout.setVerticalGroup(
@@ -631,18 +663,22 @@ public class TillClosing extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(panel_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_till_closingLayout.createSequentialGroup()
                         .addComponent(date_picker, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
+                        .addGap(18, 18, 18)
                         .addComponent(btn_close_dayling_till, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btn_full_report, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btn_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_money_counter, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_money_counter1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(6, 6, 6))
         );
@@ -971,9 +1007,20 @@ public class TillClosing extends javax.swing.JInternalFrame {
         
     }//GEN-LAST:event_btn_close_dayling_tillActionPerformed
 
+    private void btn_money_counterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_money_counterActionPerformed
+        // TODO add your handling code here:
+        new MoneyCounter().setVisible(true);
+    }//GEN-LAST:event_btn_money_counterActionPerformed
+
+    private void btn_money_counter1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_money_counter1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_money_counter1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_close_dayling_till;
     private javax.swing.JButton btn_full_report;
+    private javax.swing.JButton btn_money_counter;
+    private javax.swing.JButton btn_money_counter1;
     private javax.swing.JButton btn_orders;
     private javax.swing.JButton btn_print;
     private javax.swing.JButton btn_sales;

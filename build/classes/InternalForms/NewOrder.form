@@ -173,11 +173,13 @@
                               <Component id="txt_last_name" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="btn_copy" alignment="0" min="-2" pref="28" max="-2" attributes="0"/>
-                              <Component id="lbl_contact" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txt_contact" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                               <Component id="btn_international_number" alignment="1" min="-2" pref="28" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="lbl_contact" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txt_contact" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                           <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
