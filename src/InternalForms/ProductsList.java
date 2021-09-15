@@ -36,8 +36,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
     DefaultTableModel dtm;
     ResultSet rs;
     ResultSetMetaData rsmd;
-    Vector vector;
-    Statement statement;
+    Vector vectorProducts;
     int productId;
     int id;
     String addCategory = "";
@@ -64,6 +63,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
 
     public final void displayProductList() {
         try {
+            vectorProducts = new Vector();
             dbConnection();
 
             String query = "SELECT * FROM products ORDER BY productService ASC LIMIT 17";
@@ -71,23 +71,20 @@ public class ProductsList extends javax.swing.JInternalFrame {
             rs = ps.executeQuery();
             rsmd = rs.getMetaData();
 
-            int count;
-            count = rsmd.getColumnCount();
             dtm = (DefaultTableModel) table_view_products_list.getModel();
             dtm.setRowCount(0);
 
             while (rs.next()) {
-                vector = new Vector();
-                for (int i = 1; i <= count; i++) {
-                    vector.add(rs.getInt("productId"));
-                    vector.add(rs.getString("productService"));
-                    vector.add(rs.getDouble("price"));
-                    vector.add(rs.getInt("qty"));
-                    vector.add(rs.getString("notes"));
-                    vector.add(rs.getString("category"));
+                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                    vectorProducts.add(rs.getInt("productId"));
+                    vectorProducts.add(rs.getString("productService"));
+                    vectorProducts.add(rs.getDouble("price"));
+                    vectorProducts.add(rs.getInt("qty"));
+                    vectorProducts.add(rs.getString("notes"));
+                    vectorProducts.add(rs.getString("category"));
                 }
 
-                dtm.addRow(vector);
+                dtm.addRow(vectorProducts);
             }
         } catch (SQLException ex) {
             Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
@@ -110,16 +107,16 @@ public class ProductsList extends javax.swing.JInternalFrame {
             dtm.setRowCount(0);
 
             while (rs.next()) {
-                vector = new Vector();
+                vectorProducts = new Vector();
                 for (int i = 1; i <= count; i++) {
-                    vector.add(rs.getInt("productId"));
-                    vector.add(rs.getString("productService"));
-                    vector.add(rs.getDouble("price"));
-                    vector.add(rs.getInt("qty"));
-                    vector.add(rs.getString("notes"));
-                    vector.add(rs.getString("category"));
+                    vectorProducts.add(rs.getInt("productId"));
+                    vectorProducts.add(rs.getString("productService"));
+                    vectorProducts.add(rs.getDouble("price"));
+                    vectorProducts.add(rs.getInt("qty"));
+                    vectorProducts.add(rs.getString("notes"));
+                    vectorProducts.add(rs.getString("category"));
                 }
-                dtm.addRow(vector);
+                dtm.addRow(vectorProducts);
             }
             
         } catch (SQLException ex) {

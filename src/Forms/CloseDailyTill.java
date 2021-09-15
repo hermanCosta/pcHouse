@@ -28,7 +28,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
     ResultSet rs;
     String tillClosingDate;
     double cashTotal, cardTotal, totalCashIn, enterCardTotal, enterCashTotal, adjustments, balance;
-    double payments, takes, other, cashOutTotal, tillTotal;
+    double payments, takes, other, cashOutTotal, tillTotal, initialBalance;
     
     public CloseDailyTill() {
         initComponents();
@@ -40,59 +40,61 @@ public class CloseDailyTill extends javax.swing.JFrame {
         this.cashTotal = _cashTotal;
         this.cardTotal = _cardTotal;
         this.totalCashIn = cashTotal + cardTotal;
-        this.balance = totalCashIn;
+        this.initialBalance = totalCashIn;
         
         SwingUtilities.invokeLater(() -> {
             txt_enter_cash_total.requestFocus();
         });
         
-        lbl_end_of_day.setText("Till Closing on: " + tillClosingDate);
+        lbl_till_closing_on.setText("Till Closing on: " + tillClosingDate);
         lbl_date_cashier.setText("Cashier: " + Login.fullName);
         txt_cash_total.setText(String.valueOf(cashTotal));
         txt_card_total.setText(String.valueOf(cardTotal));
         txt_cash_in_total.setText(String.valueOf(totalCashIn));
         txt_till_total.setText(String.valueOf(totalCashIn));
-        txt_balance.setText(String.valueOf(balance *= -1));
+        txt_balance.setText(String.valueOf(initialBalance *= -1));
     }
     
     public void calcTotalEntered()
     {
+        tillTotal = Double.parseDouble(txt_till_total.getText());
+        
         if (txt_enter_cash_total.getText().trim().isEmpty() && txt_adjustments.getText().trim().isEmpty() && !txt_enter_card_total.getText().trim().isEmpty()) {
             enterCardTotal = Double.parseDouble(txt_enter_card_total.getText());
-            balance = tillTotal + enterCardTotal;
+            balance = tillTotal - enterCardTotal;
             txt_balance.setText(String.valueOf(balance));
         }
         
         else if (txt_enter_cash_total.getText().trim().isEmpty() && !txt_adjustments.getText().trim().isEmpty() && txt_enter_card_total.getText().trim().isEmpty()) {
             adjustments = Double.parseDouble(txt_adjustments.getText());
-            balance = tillTotal + adjustments;
+            balance = tillTotal - adjustments;
             txt_balance.setText(String.valueOf(balance));
         }
         
         else if (!txt_enter_cash_total.getText().trim().isEmpty() && txt_adjustments.getText().trim().isEmpty() && txt_enter_card_total.getText().trim().isEmpty()) {
             enterCashTotal = Double.parseDouble(txt_enter_cash_total.getText());
-            balance = tillTotal + enterCashTotal;
+            balance = tillTotal - enterCashTotal;
             txt_balance.setText(String.valueOf(balance));
         }
         
         else if (txt_enter_cash_total.getText().trim().isEmpty() && !txt_adjustments.getText().trim().isEmpty() && !txt_enter_card_total.getText().trim().isEmpty()) {
             enterCardTotal = Double.parseDouble(txt_enter_card_total.getText());
             adjustments = Double.parseDouble(txt_adjustments.getText());
-            balance = tillTotal + (enterCardTotal + adjustments);
+            balance = tillTotal - (enterCardTotal + adjustments);
             txt_balance.setText(String.valueOf(balance));
         }
         
         else if (!txt_enter_cash_total.getText().trim().isEmpty() && txt_adjustments.getText().trim().isEmpty() && !txt_enter_card_total.getText().trim().isEmpty()) {
             enterCashTotal = Double.parseDouble(txt_enter_cash_total.getText());
             enterCardTotal = Double.parseDouble(txt_enter_card_total.getText());
-            balance = tillTotal + (enterCashTotal + enterCardTotal);
+            balance = tillTotal - (enterCashTotal + enterCardTotal);
             txt_balance.setText(String.valueOf(balance));
         }
         
         else if (!txt_enter_cash_total.getText().trim().isEmpty() && !txt_adjustments.getText().trim().isEmpty() && txt_enter_card_total.getText().trim().isEmpty()) {
             enterCashTotal = Double.parseDouble(txt_enter_cash_total.getText());
             adjustments = Double.parseDouble(txt_adjustments.getText());
-            balance = tillTotal + (enterCashTotal + adjustments);
+            balance = tillTotal - (enterCashTotal + adjustments);
             txt_balance.setText(String.valueOf(balance));
         }
         
@@ -100,12 +102,11 @@ public class CloseDailyTill extends javax.swing.JFrame {
             enterCashTotal = Double.parseDouble(txt_enter_cash_total.getText());
             enterCardTotal = Double.parseDouble(txt_enter_card_total.getText());
             adjustments = Double.parseDouble(txt_adjustments.getText());
-            balance = tillTotal + (enterCashTotal + enterCardTotal + adjustments);
+            balance = tillTotal - (enterCashTotal + enterCardTotal + adjustments);
             txt_balance.setText(String.valueOf(balance));
         }
         else
-            
-//            balance = Double.parseDouble(txt_till_total.getText());
+            balance = Double.parseDouble(txt_till_total.getText());
             txt_balance.setText(String.valueOf(balance *= -1));
         
         
@@ -125,24 +126,26 @@ public class CloseDailyTill extends javax.swing.JFrame {
             cashOutTotal = other;
             txt_cash_out_total.setText(String.valueOf(cashOutTotal));
             txt_till_total.setText(String.valueOf(totalCashIn - cashOutTotal));
-            balance = Double.parseDouble(txt_till_total.getText());
-            txt_balance.setText(String.valueOf(balance *= -1));
+            //txt_balance.setText(String.valueOf(balance *= -1));
+            calcTotalEntered();
         }
         else if (txt_payments.getText().trim().isEmpty() && !txt_takes.getText().trim().isEmpty() && txt_other.getText().trim().isEmpty()) {
             takes = Double.parseDouble(txt_takes.getText());
             cashOutTotal = takes;
             txt_cash_out_total.setText(String.valueOf(cashOutTotal));
             txt_till_total.setText(String.valueOf(totalCashIn - cashOutTotal));
-            balance = Double.parseDouble(txt_till_total.getText());
-            txt_balance.setText(String.valueOf(balance *= -1));
+            //balance = Double.parseDouble(txt_till_total.getText());
+            //txt_balance.setText(String.valueOf(balance *= -1));
+            calcTotalEntered();
         }
         else if (!txt_payments.getText().trim().isEmpty() && txt_takes.getText().trim().isEmpty() && txt_other.getText().trim().isEmpty()) {
             payments = Double.parseDouble(txt_payments.getText());
             cashOutTotal = payments;
             txt_cash_out_total.setText(String.valueOf(cashOutTotal));
             txt_till_total.setText(String.valueOf(totalCashIn - cashOutTotal));
-            balance = Double.parseDouble(txt_till_total.getText());
-            txt_balance.setText(String.valueOf(balance *= -1));
+            //balance = Double.parseDouble(txt_till_total.getText());
+            //txt_balance.setText(String.valueOf(balance *= -1));
+            calcTotalEntered();
         }
         else if (txt_payments.getText().trim().isEmpty() && !txt_takes.getText().trim().isEmpty() && !txt_other.getText().trim().isEmpty()) {
             takes = Double.parseDouble(txt_takes.getText());
@@ -150,8 +153,9 @@ public class CloseDailyTill extends javax.swing.JFrame {
             cashOutTotal = takes + other;
             txt_cash_out_total.setText(String.valueOf(cashOutTotal));
             txt_till_total.setText(String.valueOf(totalCashIn - cashOutTotal));
-            balance = Double.parseDouble(txt_till_total.getText());
-            txt_balance.setText(String.valueOf(balance *= -1));
+//            balance = Double.parseDouble(txt_till_total.getText());
+//            txt_balance.setText(String.valueOf(balance *= -1));
+            calcTotalEntered();
         }
         else if (!txt_payments.getText().trim().isEmpty() && txt_takes.getText().trim().isEmpty() && !txt_other.getText().trim().isEmpty()) {
             other = Double.parseDouble(txt_other.getText());
@@ -159,8 +163,9 @@ public class CloseDailyTill extends javax.swing.JFrame {
             cashOutTotal = other + payments;
             txt_cash_out_total.setText(String.valueOf(cashOutTotal));
             txt_till_total.setText(String.valueOf(totalCashIn - cashOutTotal));
-            balance = Double.parseDouble(txt_till_total.getText());
-            txt_balance.setText(String.valueOf(balance *= -1));
+//            balance = Double.parseDouble(txt_till_total.getText());
+//            txt_balance.setText(String.valueOf(balance *= -1));
+            calcTotalEntered();
         }
         else if (!txt_payments.getText().trim().isEmpty() && !txt_takes.getText().trim().isEmpty() && txt_other.getText().trim().isEmpty()) {
             payments = Double.parseDouble(txt_payments.getText());
@@ -168,8 +173,9 @@ public class CloseDailyTill extends javax.swing.JFrame {
             cashOutTotal = payments + takes;
             txt_cash_out_total.setText(String.valueOf(cashOutTotal));
             txt_till_total.setText(String.valueOf(totalCashIn - cashOutTotal));
-            balance = Double.parseDouble(txt_till_total.getText());
-            txt_balance.setText(String.valueOf(balance *= -1));
+//            balance = Double.parseDouble(txt_till_total.getText());
+//            txt_balance.setText(String.valueOf(balance *= -1));
+            calcTotalEntered();
         }
         else if (!txt_payments.getText().trim().isEmpty() && !txt_takes.getText().trim().isEmpty() && !txt_other.getText().trim().isEmpty()) {
             payments = Double.parseDouble(txt_payments.getText());
@@ -178,15 +184,17 @@ public class CloseDailyTill extends javax.swing.JFrame {
             cashOutTotal = payments + takes + other;
             txt_cash_out_total.setText(String.valueOf(cashOutTotal));
             txt_till_total.setText(String.valueOf(totalCashIn - cashOutTotal));
-            balance = Double.parseDouble(txt_till_total.getText());
-            txt_balance.setText(String.valueOf(balance *= -1));
+//            balance = Double.parseDouble(txt_till_total.getText());
+//            txt_balance.setText(String.valueOf(balance *= -1));
+            calcTotalEntered();
         }
         else
         {
             txt_cash_out_total.setText(String.valueOf(""));
             txt_till_total.setText(String.valueOf(Math.abs(totalCashIn)));
-            balance = Double.parseDouble(txt_till_total.getText());
-            txt_balance.setText(String.valueOf(balance *= -1));
+//            balance = Double.parseDouble(txt_till_total.getText());
+//            txt_balance.setText(String.valueOf(balance *= -1));
+            calcTotalEntered();
             
         }
     }
@@ -221,7 +229,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
         lbl_other = new javax.swing.JLabel();
         txt_other = new javax.swing.JTextField();
         btn_money_counter = new javax.swing.JButton();
-        lbl_end_of_day = new javax.swing.JLabel();
+        lbl_till_closing_on = new javax.swing.JLabel();
         btn_cancel = new javax.swing.JButton();
         btn_sales = new javax.swing.JButton();
         panel_totals = new javax.swing.JPanel();
@@ -245,6 +253,8 @@ public class CloseDailyTill extends javax.swing.JFrame {
         txt_cash_total = new javax.swing.JTextField();
         txt_card_total = new javax.swing.JTextField();
         txt_cash_in_total = new javax.swing.JTextField();
+        lbl_card_total1 = new javax.swing.JLabel();
+        txt_card_total1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -326,7 +336,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
         panel_cash_outLayout.setVerticalGroup(
             panel_cash_outLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_cash_outLayout.createSequentialGroup()
-                .addGap(10, 10, 10)
+                .addContainerGap()
                 .addGroup(panel_cash_outLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txt_payments, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_payments, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
@@ -356,8 +366,8 @@ public class CloseDailyTill extends javax.swing.JFrame {
             }
         });
 
-        lbl_end_of_day.setFont(new java.awt.Font("sansserif", 1, 17)); // NOI18N
-        lbl_end_of_day.setText("dailyClosingTillOn");
+        lbl_till_closing_on.setFont(new java.awt.Font("sansserif", 1, 17)); // NOI18N
+        lbl_till_closing_on.setText("tillClosingOn");
 
         btn_cancel.setBackground(new java.awt.Color(21, 76, 121));
         btn_cancel.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
@@ -527,10 +537,10 @@ public class CloseDailyTill extends javax.swing.JFrame {
                         .addGroup(panel_totalsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_balance)
                             .addComponent(txt_balance, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(10, 10, 10))
+                .addContainerGap())
         );
 
-        lbl_date_cashier.setFont(new java.awt.Font("sansserif", 0, 13)); // NOI18N
+        lbl_date_cashier.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
         lbl_date_cashier.setText("dateCashier");
 
         panel_cash_in.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cash in", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("sansserif", 1, 14))); // NOI18N
@@ -559,46 +569,65 @@ public class CloseDailyTill extends javax.swing.JFrame {
         txt_cash_in_total.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         txt_cash_in_total.setFocusable(false);
 
+        lbl_card_total1.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        lbl_card_total1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_cash_entries_black.png"))); // NOI18N
+        lbl_card_total1.setText("Entries Total €");
+
+        txt_card_total1.setEditable(false);
+        txt_card_total1.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        txt_card_total1.setFocusable(false);
+
         javax.swing.GroupLayout panel_cash_inLayout = new javax.swing.GroupLayout(panel_cash_in);
         panel_cash_in.setLayout(panel_cash_inLayout);
         panel_cash_inLayout.setHorizontalGroup(
             panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_cash_inLayout.createSequentialGroup()
+            .addGroup(panel_cash_inLayout.createSequentialGroup()
                 .addGroup(panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_cash_inLayout.createSequentialGroup()
-                        .addComponent(lbl_cash_in_total)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_cash_inLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(lbl_card_total, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel_cash_inLayout.createSequentialGroup()
+                                .addGroup(panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panel_cash_inLayout.createSequentialGroup()
+                                        .addComponent(lbl_cash_in_total)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(panel_cash_inLayout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(lbl_cash_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(panel_cash_inLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(lbl_card_total, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txt_card_total, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                            .addComponent(txt_cash_total, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txt_cash_in_total)))
                     .addGroup(panel_cash_inLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(lbl_cash_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(txt_card_total, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                    .addComponent(txt_cash_total, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_cash_in_total))
+                        .addComponent(lbl_card_total1)
+                        .addGap(4, 4, 4)
+                        .addComponent(txt_card_total1, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panel_cash_inLayout.setVerticalGroup(
             panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_cash_inLayout.createSequentialGroup()
-                .addContainerGap(10, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txt_cash_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_cash_total, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_card_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_card_total)
                     .addComponent(txt_card_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_card_total1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txt_card_total1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
                 .addGroup(panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_cash_inLayout.createSequentialGroup()
-                        .addGap(60, 60, 60)
-                        .addComponent(txt_cash_in_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panel_cash_inLayout.createSequentialGroup()
-                        .addGap(60, 60, 60)
-                        .addComponent(lbl_cash_in_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(txt_cash_in_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_cash_in_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -606,46 +635,45 @@ public class CloseDailyTill extends javax.swing.JFrame {
         panel_daily_closing_till.setLayout(panel_daily_closing_tillLayout);
         panel_daily_closing_tillLayout.setHorizontalGroup(
             panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_daily_closing_tillLayout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(lbl_date_cashier)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_daily_closing_tillLayout.createSequentialGroup()
-                .addContainerGap(14, Short.MAX_VALUE)
-                .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_daily_closing_tillLayout.createSequentialGroup()
-                        .addComponent(btn_money_counter, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(19, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_daily_closing_tillLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(lbl_end_of_day)
-                        .addGap(154, 154, 154))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbl_till_closing_on)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(panel_daily_closing_tillLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panel_totals, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panel_daily_closing_tillLayout.createSequentialGroup()
-                        .addComponent(panel_cash_in, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(panel_cash_out, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(10, 10, 10)
+                        .addComponent(lbl_date_cashier))
+                    .addGroup(panel_daily_closing_tillLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel_daily_closing_tillLayout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btn_money_counter, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btn_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(panel_totals, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(panel_daily_closing_tillLayout.createSequentialGroup()
+                                    .addComponent(panel_cash_in, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(panel_cash_out, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap())
         );
         panel_daily_closing_tillLayout.setVerticalGroup(
             panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_daily_closing_tillLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lbl_end_of_day)
+                .addComponent(lbl_till_closing_on)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_date_cashier)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panel_cash_out, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panel_cash_in, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panel_totals, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -659,17 +687,17 @@ public class CloseDailyTill extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(8, Short.MAX_VALUE)
-                .addComponent(panel_daily_closing_till, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap(8, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(panel_daily_closing_till, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(panel_daily_closing_till, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -840,16 +868,17 @@ public class CloseDailyTill extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_adjustments;
     private javax.swing.JLabel lbl_balance;
     private javax.swing.JLabel lbl_card_total;
+    private javax.swing.JLabel lbl_card_total1;
     private javax.swing.JLabel lbl_cash_in_total;
     private javax.swing.JLabel lbl_cash_out_total;
     private javax.swing.JLabel lbl_cash_total;
     private javax.swing.JLabel lbl_date_cashier;
-    private javax.swing.JLabel lbl_end_of_day;
     private javax.swing.JLabel lbl_enter_card_total;
     private javax.swing.JLabel lbl_enter_cash_total;
     private javax.swing.JLabel lbl_other;
     private javax.swing.JLabel lbl_payments;
     private javax.swing.JLabel lbl_takes;
+    private javax.swing.JLabel lbl_till_closing_on;
     private javax.swing.JLabel lbl_till_total;
     private javax.swing.JPanel panel_cash_in;
     private javax.swing.JPanel panel_cash_out;
@@ -858,6 +887,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
     private javax.swing.JTextField txt_adjustments;
     private javax.swing.JTextField txt_balance;
     private javax.swing.JTextField txt_card_total;
+    private javax.swing.JTextField txt_card_total1;
     private javax.swing.JTextField txt_cash_in_total;
     private javax.swing.JTextField txt_cash_out_total;
     private javax.swing.JTextField txt_cash_total;
