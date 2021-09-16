@@ -5,15 +5,16 @@
         <group>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/FixedOrder.java</file>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/TillClosing.java</file>
-            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/OrderDetails.java</file>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/Sales.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/ComputerList.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/MainMenu.java</file>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/CloseDailyTill.java</file>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/NewSale.java</file>
-            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/SalePayment.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/CashOuts.java</file>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/Faults.java</file>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/ProductsList.java</file>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/Customers.java</file>
-            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/MoneyCounter.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/CashEntries.java</file>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/NotFixedOrder.java</file>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/OrderList.java</file>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/SaleDetails.java</file>

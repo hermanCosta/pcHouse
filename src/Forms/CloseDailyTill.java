@@ -725,12 +725,13 @@ public class CloseDailyTill extends javax.swing.JFrame {
                 enterCashTotal = Double.parseDouble(txt_enter_cash_total.getText());
                 enterCardTotal = Double.parseDouble(txt_enter_card_total.getText());
                 adjustments = Double.parseDouble(txt_adjustments.getText());
+                String notes = editor_pane_notes.getText();
                 
                 try {
                     dbConnection();
                     String query = "INSERT INTO tillClosing (date, cashier, cashTotal, cardTotal, cashInTotal, payments, takes, "
-                            + "other, cashOutTotal, tillTotal, enterCashTotal, enterCardTotal, adjustments, balance) "
-                            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                            + "other, cashOutTotal, tillTotal, enterCashTotal, enterCardTotal, adjustments, balance, notes) "
+                            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                     ps = con.prepareStatement(query);
                     ps.setTimestamp(1, currentDateTime);
                     ps.setString(2, Login.fullName);
@@ -746,6 +747,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
                     ps.setDouble(12, enterCardTotal);
                     ps.setDouble(13, adjustments);
                     ps.setDouble(14, balance);
+                    ps.setString(15, notes);
                     ps.executeUpdate();
                     
                     JOptionPane.showMessageDialog(this, "Till Closed Successfully");
