@@ -143,7 +143,7 @@ public class CashEntries extends javax.swing.JInternalFrame {
         line_header = new javax.swing.JSeparator();
         lbl_address1 = new javax.swing.JLabel();
         lbl_cash_entries_total = new javax.swing.JLabel();
-        lbl_entry_records_date = new javax.swing.JLabel();
+        lbl_entry_records = new javax.swing.JLabel();
         panel_table_view = new javax.swing.JPanel();
         scroll_pane_table_cash_entry = new javax.swing.JScrollPane();
         table_view_cash_entry_records = new javax.swing.JTable();
@@ -233,8 +233,8 @@ public class CashEntries extends javax.swing.JInternalFrame {
         lbl_cash_entries_total.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_cash_entries_black.png"))); // NOI18N
         lbl_cash_entries_total.setText("cashEntriesTotal");
 
-        lbl_entry_records_date.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
-        lbl_entry_records_date.setText("Cash Entry Records");
+        lbl_entry_records.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
+        lbl_entry_records.setText("Cash Entry Records");
 
         panel_table_view.setBackground(new java.awt.Color(255, 255, 255));
         panel_table_view.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
@@ -293,7 +293,7 @@ public class CashEntries extends javax.swing.JInternalFrame {
             panel_cash_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_cash_recordsLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(lbl_entry_records_date)
+                .addComponent(lbl_entry_records)
                 .addGap(218, 218, 218))
             .addGroup(panel_cash_recordsLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
@@ -309,7 +309,7 @@ public class CashEntries extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_entry_records_date)
+                .addComponent(lbl_entry_records)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(panel_table_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -395,11 +395,14 @@ public class CashEntries extends javax.swing.JInternalFrame {
                 .addGroup(panel_cash_recordLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_enter_value)
                     .addComponent(txt_enter_value, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_cash_recordLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 677, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_notes))
-                .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(panel_cash_recordLayout.createSequentialGroup()
+                        .addComponent(lbl_notes)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(panel_cash_recordLayout.createSequentialGroup()
+                        .addComponent(txt_notes)
+                        .addContainerGap())))
         );
         panel_cash_recordLayout.setVerticalGroup(
             panel_cash_recordLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -455,7 +458,7 @@ public class CashEntries extends javax.swing.JInternalFrame {
                             .addComponent(date_picker, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
                             .addComponent(btn_print_records, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(scroll_pane_orders_sales)))
+                        .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panel_till_closingLayout.setVerticalGroup(
@@ -465,11 +468,11 @@ public class CashEntries extends javax.swing.JInternalFrame {
                 .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btn_register_entry, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panel_cash_record, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(30, 30, 30)
+                .addGap(18, 18, 18)
                 .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panel_till_closingLayout.createSequentialGroup()
-                        .addComponent(date_picker, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(date_picker, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
                         .addComponent(btn_daily_records, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btn_weekly_records, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -478,7 +481,7 @@ public class CashEntries extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btn_print_records, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(62, Short.MAX_VALUE))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
 
         desktop_pane_entries.setLayer(panel_till_closing, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -487,31 +490,22 @@ public class CashEntries extends javax.swing.JInternalFrame {
         desktop_pane_entries.setLayout(desktop_pane_entriesLayout);
         desktop_pane_entriesLayout.setHorizontalGroup(
             desktop_pane_entriesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(desktop_pane_entriesLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(panel_till_closing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(panel_till_closing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         desktop_pane_entriesLayout.setVerticalGroup(
             desktop_pane_entriesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panel_till_closing, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panel_till_closing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(desktop_pane_entries, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(desktop_pane_entries)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(desktop_pane_entries, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(desktop_pane_entries)
         );
 
         pack();
@@ -734,7 +728,7 @@ public class CashEntries extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lbl_address1;
     private javax.swing.JLabel lbl_cash_entries_total;
     private javax.swing.JLabel lbl_enter_value;
-    private javax.swing.JLabel lbl_entry_records_date;
+    private javax.swing.JLabel lbl_entry_records;
     private javax.swing.JLabel lbl_land_line_number;
     private javax.swing.JLabel lbl_logo_icon;
     private javax.swing.JLabel lbl_mobile_number;
