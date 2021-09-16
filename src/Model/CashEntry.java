@@ -10,14 +10,14 @@ package Model;
  * @author user
  */
 public class CashEntry {
-    String entryDate, notes;
+    String entryDate, notes, user;
     double value;
-    int cashEntryId;
 
-    public CashEntry(double _value, String _entryDate, String _notes) {
+    public CashEntry(double _value, String _entryDate, String _notes, String _user) {
         this.value = _value;
         this.entryDate = _entryDate;
         this.notes = _notes;
+        this.user = _user;
     }
 
     public String getEntryDate() {
@@ -44,11 +44,11 @@ public class CashEntry {
         this.value = value;
     }
 
-    public int getCashEntryId() {
-        return cashEntryId;
+    public String getUser() {
+        return user;
     }
 
-    public void setCashEntryId(int cashEntryId) {
-        this.cashEntryId = cashEntryId;
+    public void setUser(String user) {
+        this.user = user;
     }
 }

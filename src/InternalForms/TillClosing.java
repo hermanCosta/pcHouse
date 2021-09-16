@@ -10,6 +10,7 @@ import Forms.Login;
 import Forms.MainMenu;
 import Forms.MoneyCounter;
 import Forms.PrintFullReport;
+import Model.CashOut;
 import Model.CompletedOrder;
 import Model.Order;
 import Model.OrderReport;
@@ -241,7 +242,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
         desktop_pane_till_closing = new javax.swing.JDesktopPane();
         panel_till_closing = new javax.swing.JPanel();
-        panel_calendar = new javax.swing.JPanel();
         btn_orders = new javax.swing.JButton();
         btn_full_report = new javax.swing.JButton();
         btn_sales = new javax.swing.JButton();
@@ -278,9 +278,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
         setBorder(null);
         setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         setPreferredSize(new java.awt.Dimension(1049, 700));
-
-        panel_calendar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panel_calendar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btn_orders.setBackground(new java.awt.Color(21, 76, 121));
         btn_orders.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
@@ -647,16 +644,11 @@ public class TillClosing extends javax.swing.JInternalFrame {
         panel_till_closingLayout.setHorizontalGroup(
             panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_till_closingLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addContainerGap(12, Short.MAX_VALUE)
                 .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(panel_till_closingLayout.createSequentialGroup()
-                        .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(panel_till_closingLayout.createSequentialGroup()
-                                .addComponent(panel_calendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(452, 452, 452))
-                            .addGroup(panel_till_closingLayout.createSequentialGroup()
-                                .addComponent(panel_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addComponent(panel_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panel_till_closingLayout.createSequentialGroup()
                         .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -684,13 +676,10 @@ public class TillClosing extends javax.swing.JInternalFrame {
             panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_till_closingLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(panel_till_closingLayout.createSequentialGroup()
-                        .addComponent(panel_calendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(panel_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panel_print_view, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 28, Short.MAX_VALUE)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panel_till_closingLayout.createSequentialGroup()
                         .addComponent(date_picker, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1045,6 +1034,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
     private void btn_cash_outActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cash_outActionPerformed
         // TODO add your handling code here:
+        CashOuts cashOut = new CashOuts();
+        desktop_pane_till_closing.add(cashOut).setVisible(true);
     }//GEN-LAST:event_btn_cash_outActionPerformed
 
     private void btn_till_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_till_recordsActionPerformed
@@ -1080,7 +1071,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lbl_print_total_cash;
     private javax.swing.JLabel lbl_till_closing_date;
     private javax.swing.JSeparator line_header;
-    private javax.swing.JPanel panel_calendar;
     private javax.swing.JPanel panel_header;
     private javax.swing.JPanel panel_orders;
     private javax.swing.JPanel panel_orders_sales;

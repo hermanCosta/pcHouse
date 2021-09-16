@@ -337,9 +337,9 @@ public class MainMenu extends javax.swing.JFrame {
         btn_products_list = new javax.swing.JButton();
         btn_orders = new javax.swing.JButton();
         btn_sales = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        scroll_pane_products = new javax.swing.JScrollPane();
         table_view_products_stock = new javax.swing.JTable();
-        jScrollPane3 = new javax.swing.JScrollPane();
+        scroll_pane_orders = new javax.swing.JScrollPane();
         table_view_orders = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -1085,7 +1085,7 @@ public class MainMenu extends javax.swing.JFrame {
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Products Stock Below or Stockout", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("sansserif", 0, 14))); // NOI18N
+        scroll_pane_products.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Products Stock Below or Stockout", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("sansserif", 0, 14))); // NOI18N
 
         table_view_products_stock.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         table_view_products_stock.setModel(new javax.swing.table.DefaultTableModel(
@@ -1109,13 +1109,13 @@ public class MainMenu extends javax.swing.JFrame {
                 table_view_products_stockMouseClicked(evt);
             }
         });
-        jScrollPane2.setViewportView(table_view_products_stock);
+        scroll_pane_products.setViewportView(table_view_products_stock);
         if (table_view_products_stock.getColumnModel().getColumnCount() > 0) {
             table_view_products_stock.getColumnModel().getColumn(0).setPreferredWidth(50);
             table_view_products_stock.getColumnModel().getColumn(0).setMaxWidth(100);
         }
 
-        jScrollPane3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Orders Fixed Over Three Months", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("sansserif", 0, 14))); // NOI18N
+        scroll_pane_orders.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Orders Fixed Over Three Months", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("sansserif", 0, 14))); // NOI18N
 
         table_view_orders.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         table_view_orders.setModel(new javax.swing.table.DefaultTableModel(
@@ -1139,7 +1139,7 @@ public class MainMenu extends javax.swing.JFrame {
                 table_view_ordersMouseClicked(evt);
             }
         });
-        jScrollPane3.setViewportView(table_view_orders);
+        scroll_pane_orders.setViewportView(table_view_orders);
         if (table_view_orders.getColumnModel().getColumnCount() > 0) {
             table_view_orders.getColumnModel().getColumn(0).setPreferredWidth(80);
             table_view_orders.getColumnModel().getColumn(0).setMaxWidth(120);
@@ -1156,9 +1156,9 @@ public class MainMenu extends javax.swing.JFrame {
             .addComponent(panel_buttons, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panel_main_menuLayout.createSequentialGroup()
                 .addGap(39, 39, 39)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scroll_pane_products, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 574, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scroll_pane_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 574, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_main_menuLayout.setVerticalGroup(
@@ -1168,8 +1168,8 @@ public class MainMenu extends javax.swing.JFrame {
                 .addComponent(panel_buttons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addGroup(panel_main_menuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(scroll_pane_products, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scroll_pane_orders, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(100, Short.MAX_VALUE))
         );
 
@@ -1197,7 +1197,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         getContentPane().add(panel_window, java.awt.BorderLayout.CENTER);
 
-        setSize(new java.awt.Dimension(1282, 750));
+        setSize(new java.awt.Dimension(1282, 722));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1682,8 +1682,6 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JButton btn_products_list;
     private javax.swing.JButton btn_sales;
     private javax.swing.JDesktopPane desktop_pane_main_menu;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel label_check_existing;
     private javax.swing.JLabel label_customers;
     private javax.swing.JLabel label_faults;
@@ -1716,6 +1714,8 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JPanel panel_reports;
     private javax.swing.JPanel panel_sales;
     private javax.swing.JPanel panel_window;
+    private javax.swing.JScrollPane scroll_pane_orders;
+    private javax.swing.JScrollPane scroll_pane_products;
     private javax.swing.JTable table_view_orders;
     private javax.swing.JTable table_view_products_stock;
     // End of variables declaration//GEN-END:variables

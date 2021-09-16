@@ -5,11 +5,9 @@
  */
 package InternalForms;
 
-import Forms.CloseDailyTill;
+import Forms.Login;
 import Forms.PrintFullReport;
 import Model.CashEntry;
-import Model.CompletedOrder;
-import Model.SaleReport;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -27,7 +25,6 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -55,12 +52,14 @@ public class CashEntries extends javax.swing.JInternalFrame {
         ui.setNorthPane(null);
 
         tableSettings(table_view_cash_entry_records);
-        loadRecordsOfTheDay();
+        loadRecordsFromDb();
     }
     
     public void tableSettings(JTable table) {
-        table.setRowHeight(18);
-        table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
+        table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 12));
+        
+        scroll_pane_table_cash_entry.setOpaque(false);
+        scroll_pane_table_cash_entry.getViewport().setOpaque(false);
     }
 
     public void dbConnection() {
@@ -73,61 +72,60 @@ public class CashEntries extends javax.swing.JInternalFrame {
         }
     }
 
-    public void loadRecordsOfTheDay() {
+    public void loadRecordsFromDb() {
         // TODO add your handling code here:
         ArrayList<CashEntry> recordsList = new ArrayList<>();
         double cashEntriesTotal = 0;
+
+        Date date = date_picker.getDate();
+        String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(date.getTime());
+        String endDate = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(date.getTime());
+        String dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(date.getTime());
+        
         try {
             dbConnection();
             
-            Date date = date_picker.getDate();
-            String selectedDate = new SimpleDateFormat("yyyy-MM-dd").format(date.getTime());
-            String endDay = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(date);
-
-            String query = "SELECT * FROM cashEntry WHERE entryDate >= ?";
+            String query = "SELECT * FROM cashEntry WHERE entryDate >= ? AND entryDate <= ? ORDER BY entryDate DESC";
             ps = con.prepareStatement(query);
-            ps.setString(1, selectedDate);
+            ps.setString(1, startDate);
+            ps.setString(2, endDate);
             rs = ps.executeQuery();
             
             DefaultTableModel dtm = (DefaultTableModel) table_view_cash_entry_records.getModel();
             dtm.setRowCount(0);
             
-            while (rs.next()) {
-                
-                    cashEntry = new CashEntry(rs.getDouble("value"), rs.getString("entryDate"), rs.getString("notes"));
-                    cashEntry.setCashEntryId(rs.getInt("cashentryId"));
-                    
-                    recordsList.add(cashEntry);
-                }
-                
-                // Table models
-                
-                Object[] row = new Object[4];
-                for (int i = 0; i < recordsList.size(); i++)
-                {
-                    row[0] = recordsList.get(i).getCashEntryId();
-                    row[1] = recordsList.get(i).getValue();
-                    row[2] = recordsList.get(i).getEntryDate();
-                    row[3] = recordsList.get(i).getNotes();
-                    dtm.addRow(row);
-                }
+            if (rs.isBeforeFirst()) {
+                while (rs.next()) {
+                    dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("entryDate"));
+                    cashEntry = new CashEntry(rs.getDouble("value"), dateFormat, rs.getString("notes"), rs.getString("user"));
 
-//                for (int i = 0; i < dtm.getRowCount(); i++)
-//                {
-//                    cashEntriesTotal *= (double) dtm.getValueAt(i, 1);
-//                }
+                    recordsList.add(cashEntry);
+                }     
+                    // Table models
+                    Object[] row = new Object[4];
+                    for (int i = 0; i < recordsList.size(); i++)
+                    {
+                        row[0] = recordsList.get(i).getValue();
+                        row[1] = recordsList.get(i).getEntryDate();
+                        row[2] = recordsList.get(i).getNotes();
+                        row[3] = recordsList.get(i).getUser();
+                        dtm.addRow(row);
+                    }
+
+                    for (int i = 0; i < dtm.getRowCount(); i++)
+                        cashEntriesTotal += (double) dtm.getValueAt(i, 0);
+                    
+                lbl_cash_entries_total.setText("Cash Entries Total ............. €" + String.valueOf(cashEntriesTotal));
+            }
                 
-            
-            lbl_entry_records_date.setText("Cash Entries From - " + selectedDate);
-            lbl_cash_entries_total.setText("Cash Entries Total ............. €" + String.valueOf(cashEntriesTotal));
+            else
+                JOptionPane.showMessageDialog(this, "No Cash Entries on " + dateFormat + " !");
+                
 
         } catch (SQLException ex) {
             Logger.getLogger(CashEntries.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
- 
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -135,10 +133,9 @@ public class CashEntries extends javax.swing.JInternalFrame {
 
         desktop_pane_entries = new javax.swing.JDesktopPane();
         panel_till_closing = new javax.swing.JPanel();
-        panel_calendar = new javax.swing.JPanel();
         btn_monthly_records = new javax.swing.JButton();
         scroll_pane_orders_sales = new javax.swing.JScrollPane();
-        panel_print_order = new javax.swing.JPanel();
+        panel_cash_records = new javax.swing.JPanel();
         panel_header = new javax.swing.JPanel();
         lbl_logo_icon = new javax.swing.JLabel();
         lbl_land_line_number = new javax.swing.JLabel();
@@ -146,17 +143,18 @@ public class CashEntries extends javax.swing.JInternalFrame {
         line_header = new javax.swing.JSeparator();
         lbl_address1 = new javax.swing.JLabel();
         lbl_cash_entries_total = new javax.swing.JLabel();
+        lbl_entry_records_date = new javax.swing.JLabel();
+        panel_table_view = new javax.swing.JPanel();
         scroll_pane_table_cash_entry = new javax.swing.JScrollPane();
         table_view_cash_entry_records = new javax.swing.JTable();
-        lbl_entry_records_date = new javax.swing.JLabel();
         date_picker = new com.toedter.calendar.JCalendar();
         btn_daily_records = new javax.swing.JButton();
         btn_weekly_records = new javax.swing.JButton();
         panel_cash_record = new javax.swing.JPanel();
         txt_enter_value = new javax.swing.JTextField();
         txt_notes = new javax.swing.JTextField();
-        lbl_category1 = new javax.swing.JLabel();
-        lbl_category2 = new javax.swing.JLabel();
+        lbl_enter_value = new javax.swing.JLabel();
+        lbl_notes = new javax.swing.JLabel();
         btn_register_entry = new javax.swing.JButton();
         btn_print_records = new javax.swing.JButton();
 
@@ -164,8 +162,7 @@ public class CashEntries extends javax.swing.JInternalFrame {
         setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         setPreferredSize(new java.awt.Dimension(1049, 700));
 
-        panel_calendar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        panel_calendar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panel_till_closing.setBackground(new java.awt.Color(153, 153, 153));
 
         btn_monthly_records.setBackground(new java.awt.Color(21, 76, 121));
         btn_monthly_records.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
@@ -180,8 +177,8 @@ public class CashEntries extends javax.swing.JInternalFrame {
 
         scroll_pane_orders_sales.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        panel_print_order.setBackground(new java.awt.Color(255, 255, 255));
-        panel_print_order.setPreferredSize(new java.awt.Dimension(595, 842));
+        panel_cash_records.setBackground(new java.awt.Color(255, 255, 255));
+        panel_cash_records.setPreferredSize(new java.awt.Dimension(595, 842));
 
         panel_header.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -204,22 +201,21 @@ public class CashEntries extends javax.swing.JInternalFrame {
         panel_headerLayout.setHorizontalGroup(
             panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_headerLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panel_headerLayout.createSequentialGroup()
-                        .addComponent(lbl_logo_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                        .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_mobile_number, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lbl_land_line_number, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lbl_address1, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addComponent(lbl_logo_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_mobile_number, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbl_land_line_number, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbl_address1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_headerLayout.createSequentialGroup()
+                .addComponent(line_header)
+                .addContainerGap())
         );
         panel_headerLayout.setVerticalGroup(
             panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_headerLayout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
+                .addContainerGap(10, Short.MAX_VALUE)
                 .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_logo_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panel_headerLayout.createSequentialGroup()
@@ -230,22 +226,28 @@ public class CashEntries extends javax.swing.JInternalFrame {
                         .addGap(0, 0, 0)
                         .addComponent(lbl_address1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         lbl_cash_entries_total.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
-        lbl_cash_entries_total.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_gross_total.png"))); // NOI18N
+        lbl_cash_entries_total.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_cash_entries_black.png"))); // NOI18N
         lbl_cash_entries_total.setText("cashEntriesTotal");
+
+        lbl_entry_records_date.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
+        lbl_entry_records_date.setText("Cash Entry Records");
+
+        panel_table_view.setBackground(new java.awt.Color(255, 255, 255));
+        panel_table_view.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
 
         scroll_pane_table_cash_entry.setEnabled(false);
 
-        table_view_cash_entry_records.setFont(new java.awt.Font("Lucida Grande", 0, 13)); // NOI18N
+        table_view_cash_entry_records.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         table_view_cash_entry_records.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Value €", "Entry Date", "Notes"
+                "Value €", "Entry Date", "Notes", "User"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -263,60 +265,69 @@ public class CashEntries extends javax.swing.JInternalFrame {
         });
         scroll_pane_table_cash_entry.setViewportView(table_view_cash_entry_records);
         if (table_view_cash_entry_records.getColumnModel().getColumnCount() > 0) {
-            table_view_cash_entry_records.getColumnModel().getColumn(0).setPreferredWidth(35);
-            table_view_cash_entry_records.getColumnModel().getColumn(0).setMaxWidth(80);
-            table_view_cash_entry_records.getColumnModel().getColumn(1).setPreferredWidth(80);
-            table_view_cash_entry_records.getColumnModel().getColumn(1).setMaxWidth(150);
-            table_view_cash_entry_records.getColumnModel().getColumn(2).setPreferredWidth(150);
-            table_view_cash_entry_records.getColumnModel().getColumn(2).setMaxWidth(180);
+            table_view_cash_entry_records.getColumnModel().getColumn(0).setPreferredWidth(60);
+            table_view_cash_entry_records.getColumnModel().getColumn(0).setMaxWidth(150);
+            table_view_cash_entry_records.getColumnModel().getColumn(1).setPreferredWidth(130);
+            table_view_cash_entry_records.getColumnModel().getColumn(1).setMaxWidth(180);
+            table_view_cash_entry_records.getColumnModel().getColumn(3).setPreferredWidth(80);
+            table_view_cash_entry_records.getColumnModel().getColumn(3).setMaxWidth(180);
         }
 
-        lbl_entry_records_date.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
-        lbl_entry_records_date.setText("recordsListView");
-
-        javax.swing.GroupLayout panel_print_orderLayout = new javax.swing.GroupLayout(panel_print_order);
-        panel_print_order.setLayout(panel_print_orderLayout);
-        panel_print_orderLayout.setHorizontalGroup(
-            panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_print_orderLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panel_print_orderLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(lbl_cash_entries_total, javax.swing.GroupLayout.PREFERRED_SIZE, 551, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(21, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbl_entry_records_date)
-                .addGap(190, 190, 190))
-            .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panel_print_orderLayout.createSequentialGroup()
-                    .addGap(17, 17, 17)
-                    .addComponent(scroll_pane_table_cash_entry, javax.swing.GroupLayout.PREFERRED_SIZE, 555, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(23, Short.MAX_VALUE)))
+        javax.swing.GroupLayout panel_table_viewLayout = new javax.swing.GroupLayout(panel_table_view);
+        panel_table_view.setLayout(panel_table_viewLayout);
+        panel_table_viewLayout.setHorizontalGroup(
+            panel_table_viewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(scroll_pane_table_cash_entry, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 555, Short.MAX_VALUE)
         );
-        panel_print_orderLayout.setVerticalGroup(
-            panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_print_orderLayout.createSequentialGroup()
+        panel_table_viewLayout.setVerticalGroup(
+            panel_table_viewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_table_viewLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(scroll_pane_table_cash_entry, javax.swing.GroupLayout.DEFAULT_SIZE, 608, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout panel_cash_recordsLayout = new javax.swing.GroupLayout(panel_cash_records);
+        panel_cash_records.setLayout(panel_cash_recordsLayout);
+        panel_cash_recordsLayout.setHorizontalGroup(
+            panel_cash_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_cash_recordsLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(lbl_entry_records_date)
+                .addGap(218, 218, 218))
+            .addGroup(panel_cash_recordsLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(panel_cash_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panel_table_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_cash_entries_total, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        panel_cash_recordsLayout.setVerticalGroup(
+            panel_cash_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_cash_recordsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_entry_records_date)
-                .addGap(612, 612, 612)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(panel_table_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_cash_entries_total, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(56, Short.MAX_VALUE))
-            .addGroup(panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(panel_print_orderLayout.createSequentialGroup()
-                    .addGap(160, 160, 160)
-                    .addComponent(scroll_pane_table_cash_entry, javax.swing.GroupLayout.PREFERRED_SIZE, 588, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(94, Short.MAX_VALUE)))
+                .addGap(24, 24, 24))
         );
 
-        scroll_pane_orders_sales.setViewportView(panel_print_order);
+        scroll_pane_orders_sales.setViewportView(panel_cash_records);
 
         date_picker.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        date_picker.setFont(new java.awt.Font("sansserif", 0, 11)); // NOI18N
+        date_picker.setMaxSelectableDate(new java.util.Date(253370775693000L));
         date_picker.setPreferredSize(new java.awt.Dimension(400, 200));
+        date_picker.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                date_pickerMouseClicked(evt);
+            }
+        });
         date_picker.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 date_pickerPropertyChange(evt);
@@ -345,7 +356,8 @@ public class CashEntries extends javax.swing.JInternalFrame {
             }
         });
 
-        panel_cash_record.setBackground(new java.awt.Color(255, 255, 255));
+        panel_cash_record.setBackground(new java.awt.Color(153, 153, 153));
+        panel_cash_record.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         txt_enter_value.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         txt_enter_value.addActionListener(new java.awt.event.ActionListener() {
@@ -366,11 +378,13 @@ public class CashEntries extends javax.swing.JInternalFrame {
             }
         });
 
-        lbl_category1.setFont(new java.awt.Font("Lucida Grande", 1, 12)); // NOI18N
-        lbl_category1.setText("Enter Value €");
+        lbl_enter_value.setFont(new java.awt.Font("Lucida Grande", 1, 12)); // NOI18N
+        lbl_enter_value.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_enter_value.setText("Enter Value €");
 
-        lbl_category2.setFont(new java.awt.Font("Lucida Grande", 1, 12)); // NOI18N
-        lbl_category2.setText("Notes");
+        lbl_notes.setFont(new java.awt.Font("Lucida Grande", 1, 12)); // NOI18N
+        lbl_notes.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_notes.setText("Notes");
 
         javax.swing.GroupLayout panel_cash_recordLayout = new javax.swing.GroupLayout(panel_cash_record);
         panel_cash_record.setLayout(panel_cash_recordLayout);
@@ -379,23 +393,20 @@ public class CashEntries extends javax.swing.JInternalFrame {
             .addGroup(panel_cash_recordLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panel_cash_recordLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_category1)
-                    .addComponent(txt_enter_value, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(lbl_enter_value)
+                    .addComponent(txt_enter_value, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
                 .addGroup(panel_cash_recordLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_cash_recordLayout.createSequentialGroup()
-                        .addComponent(lbl_category2)
-                        .addGap(0, 601, Short.MAX_VALUE))
-                    .addGroup(panel_cash_recordLayout.createSequentialGroup()
-                        .addComponent(txt_notes)
-                        .addContainerGap())))
+                    .addComponent(txt_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 677, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_notes))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         panel_cash_recordLayout.setVerticalGroup(
             panel_cash_recordLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_cash_recordLayout.createSequentialGroup()
                 .addGroup(panel_cash_recordLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_category2)
-                    .addComponent(lbl_category1))
+                    .addComponent(lbl_notes)
+                    .addComponent(lbl_enter_value))
                 .addGap(0, 0, 0)
                 .addGroup(panel_cash_recordLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txt_notes)
@@ -406,7 +417,7 @@ public class CashEntries extends javax.swing.JInternalFrame {
         btn_register_entry.setBackground(new java.awt.Color(21, 76, 121));
         btn_register_entry.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         btn_register_entry.setForeground(new java.awt.Color(255, 255, 255));
-        btn_register_entry.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_print.png"))); // NOI18N
+        btn_register_entry.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_save.png"))); // NOI18N
         btn_register_entry.setText("Register Entry");
         btn_register_entry.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -430,41 +441,32 @@ public class CashEntries extends javax.swing.JInternalFrame {
         panel_till_closingLayout.setHorizontalGroup(
             panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_till_closingLayout.createSequentialGroup()
+                .addGap(9, 9, 9)
                 .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panel_till_closingLayout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(panel_till_closingLayout.createSequentialGroup()
-                                .addComponent(panel_calendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1009, Short.MAX_VALUE))
-                            .addGroup(panel_till_closingLayout.createSequentialGroup()
-                                .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(btn_monthly_records, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
-                                    .addComponent(date_picker, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btn_weekly_records, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
-                                    .addComponent(btn_daily_records, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btn_print_records, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE))
-                                .addGap(18, 18, 18)
-                                .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_till_closingLayout.createSequentialGroup()
-                        .addGap(23, 23, 23)
                         .addComponent(panel_cash_record, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_register_entry, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panel_till_closingLayout.createSequentialGroup()
+                        .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btn_monthly_records, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btn_weekly_records, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btn_daily_records, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(date_picker, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                            .addComponent(btn_print_records, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btn_register_entry, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(15, 15, 15))
+                        .addComponent(scroll_pane_orders_sales)))
+                .addContainerGap())
         );
         panel_till_closingLayout.setVerticalGroup(
             panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_till_closingLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panel_calendar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btn_register_entry, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panel_cash_record, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addGap(30, 30, 30)
                 .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panel_till_closingLayout.createSequentialGroup()
                         .addComponent(date_picker, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -474,8 +476,9 @@ public class CashEntries extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btn_monthly_records, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btn_print_records, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addComponent(btn_print_records, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
         desktop_pane_entries.setLayer(panel_till_closing, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -491,34 +494,74 @@ public class CashEntries extends javax.swing.JInternalFrame {
         );
         desktop_pane_entriesLayout.setVerticalGroup(
             desktop_pane_entriesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(desktop_pane_entriesLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(panel_till_closing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(panel_till_closing, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(desktop_pane_entries)
-                .addContainerGap())
+                .addComponent(desktop_pane_entries, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addComponent(desktop_pane_entries, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 28, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_monthly_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_monthly_recordsActionPerformed
-       
+        ArrayList<CashEntry> recordsList = new ArrayList<>();
+        double cashEntriesTotal = 0;
+
+        try {
+            dbConnection();
+            
+            String query = "SELECT * FROM cashEntry WHERE MONTH(entryDate) = MONTH(NOW()) ORDER BY entryDate DESC";
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery();
+            
+            DefaultTableModel dtm = (DefaultTableModel) table_view_cash_entry_records.getModel();
+            dtm.setRowCount(0);
+            
+            if (rs.isBeforeFirst()) {
+                while (rs.next()) {
+                    String dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("entryDate"));
+                    cashEntry = new CashEntry(rs.getDouble("value"), dateFormat, rs.getString("notes"), rs.getString("user"));
+
+                    recordsList.add(cashEntry);
+                }     
+                    // Table models
+                    Object[] row = new Object[4];
+                    for (int i = 0; i < recordsList.size(); i++)
+                    {
+                        row[0] = recordsList.get(i).getValue();
+                        row[1] = recordsList.get(i).getEntryDate();
+                        row[2] = recordsList.get(i).getNotes();
+                        row[3] = recordsList.get(i).getUser();
+                        dtm.addRow(row);
+                    }
+
+                    for (int i = 0; i < dtm.getRowCount(); i++)
+                        cashEntriesTotal += (double) dtm.getValueAt(i, 0);
+                    
+                lbl_cash_entries_total.setText("Cash Entries Total ............. €" + String.valueOf(cashEntriesTotal));
+            }
+                
+            else
+                JOptionPane.showMessageDialog(this, "No Cash Entries on this month");
+                
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CashEntries.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btn_monthly_recordsActionPerformed
 
     private void date_pickerPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_date_pickerPropertyChange
@@ -527,14 +570,55 @@ public class CashEntries extends javax.swing.JInternalFrame {
 
     private void btn_daily_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_daily_recordsActionPerformed
         // TODO add your handling code here:
+        loadRecordsFromDb();
     }//GEN-LAST:event_btn_daily_recordsActionPerformed
 
     private void btn_weekly_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_weekly_recordsActionPerformed
         // TODO add your handling code here:
-        Date pickedDate = pickedDate = date_picker.getDate();
-        String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(pickedDate);
-        
-        
+        ArrayList<CashEntry> recordsList = new ArrayList<>();
+        double cashEntriesTotal = 0;
+
+        try {
+            dbConnection();
+            
+            String query = "SELECT * FROM cashEntry WHERE WEEKOFYEAR(entryDate) = WEEKOFYEAR(NOW()) ORDER BY entryDate DESC";
+            ps = con.prepareStatement(query);
+            rs = ps.executeQuery();
+            
+            DefaultTableModel dtm = (DefaultTableModel) table_view_cash_entry_records.getModel();
+            dtm.setRowCount(0);
+            
+            if (rs.isBeforeFirst()) {
+                while (rs.next()) {
+                    String dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("entryDate"));
+                    cashEntry = new CashEntry(rs.getDouble("value"), dateFormat, rs.getString("notes"), rs.getString("user"));
+
+                    recordsList.add(cashEntry);
+                }     
+                    // Table models
+                    Object[] row = new Object[4];
+                    for (int i = 0; i < recordsList.size(); i++)
+                    {
+                        row[0] = recordsList.get(i).getValue();
+                        row[1] = recordsList.get(i).getEntryDate();
+                        row[2] = recordsList.get(i).getNotes();
+                        row[3] = recordsList.get(i).getUser();
+                        dtm.addRow(row);
+                    }
+
+                    for (int i = 0; i < dtm.getRowCount(); i++)
+                        cashEntriesTotal += (double) dtm.getValueAt(i, 0);
+                    
+                lbl_cash_entries_total.setText("Cash Entries Total ............. €" + String.valueOf(cashEntriesTotal));
+            }
+                
+            else
+                JOptionPane.showMessageDialog(this, "No Cash Entries on this week");
+                
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CashEntries.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btn_weekly_recordsActionPerformed
 
     private void txt_enter_valueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_enter_valueActionPerformed
@@ -552,14 +636,14 @@ public class CashEntries extends javax.swing.JInternalFrame {
     private void btn_register_entryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_register_entryActionPerformed
         // TODO add your handling code here:
         if (txt_enter_value.getText().trim().isEmpty() || txt_notes.getText().trim().isEmpty())
-            JOptionPane.showConfirmDialog(this, "Please check empty fields !", "Cash Entry", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please check empty fields !", "Cash Entry", JOptionPane.ERROR_MESSAGE);
+        
         else {
             double value = Double.parseDouble(txt_enter_value.getText());
             String notes = txt_notes.getText();
         
             Date date = new Date();
             Timestamp currentDateTime = new Timestamp(date.getTime());
-            //String entryDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(currentDateTime);
 
             int confirmEntryRegistering = JOptionPane.showConfirmDialog(this, "Confirm Entry of €" + value + " ?", "Cash Entry", JOptionPane.YES_NO_OPTION);
 
@@ -567,15 +651,20 @@ public class CashEntries extends javax.swing.JInternalFrame {
             {
                 try {
                     dbConnection();
-                    String query = "INSERT INTO cashEntry (value, entryDate, notes) VALUES(?, ?, ?)";
+                    String query = "INSERT INTO cashEntry (value, entryDate, notes, user) VALUES(?, ?, ?, ?)";
                     ps = con.prepareStatement(query);
                     ps.setDouble(1, value);
                     ps.setTimestamp(2, currentDateTime);
                     ps.setString(3, notes);
+                    ps.setString(4, Login.fullName);
                     ps.executeUpdate();
 
                     JOptionPane.showMessageDialog(this, "Cash entry registered successfully !");
-                    loadRecordsOfTheDay();
+                    txt_enter_value.setText("");
+                    txt_notes.setText("");
+                    
+                    loadRecordsFromDb();
+                    
 
                 } catch (SQLException ex) {
                     Logger.getLogger(CashEntries.class.getName()).log(Level.SEVERE, null, ex);
@@ -603,7 +692,7 @@ public class CashEntries extends javax.swing.JInternalFrame {
                     return Printable.NO_SUCH_PAGE;
                 }
                 Graphics2D graphics2D = (Graphics2D) graphics;
-                panel_print_order.paint(graphics2D);
+                panel_cash_records.paint(graphics2D);
 
                 return Printable.PAGE_EXISTS;
             }
@@ -629,6 +718,11 @@ public class CashEntries extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_table_view_cash_entry_recordsMouseClicked
 
+    private void date_pickerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_date_pickerMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_date_pickerMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_daily_records;
     private javax.swing.JButton btn_monthly_records;
@@ -639,17 +733,17 @@ public class CashEntries extends javax.swing.JInternalFrame {
     private javax.swing.JDesktopPane desktop_pane_entries;
     private javax.swing.JLabel lbl_address1;
     private javax.swing.JLabel lbl_cash_entries_total;
-    private javax.swing.JLabel lbl_category1;
-    private javax.swing.JLabel lbl_category2;
+    private javax.swing.JLabel lbl_enter_value;
     private javax.swing.JLabel lbl_entry_records_date;
     private javax.swing.JLabel lbl_land_line_number;
     private javax.swing.JLabel lbl_logo_icon;
     private javax.swing.JLabel lbl_mobile_number;
+    private javax.swing.JLabel lbl_notes;
     private javax.swing.JSeparator line_header;
-    private javax.swing.JPanel panel_calendar;
     private javax.swing.JPanel panel_cash_record;
+    private javax.swing.JPanel panel_cash_records;
     private javax.swing.JPanel panel_header;
-    private javax.swing.JPanel panel_print_order;
+    private javax.swing.JPanel panel_table_view;
     private javax.swing.JPanel panel_till_closing;
     private javax.swing.JScrollPane scroll_pane_orders_sales;
     private javax.swing.JScrollPane scroll_pane_table_cash_entry;

@@ -12,6 +12,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -27,8 +30,8 @@ public class CloseDailyTill extends javax.swing.JFrame {
     Connection con;
     ResultSet rs;
     String tillClosingDate;
-    double cashTotal, cardTotal, totalCashIn, enterCardTotal, enterCashTotal, adjustments, balance;
-    double payments, takes, other, cashOutTotal, tillTotal, initialBalance;
+    double cashTotal, cardTotal, totalCashIn, enterCardTotal, enterCashTotal, adjustments, balance, cashEntryTotal;
+    double payments, takes, other, tillTotal, totalCashOut;
     
     public CloseDailyTill() {
         initComponents();
@@ -39,8 +42,8 @@ public class CloseDailyTill extends javax.swing.JFrame {
         this.tillClosingDate = _tillClosinDate;
         this.cashTotal = _cashTotal;
         this.cardTotal = _cardTotal;
-        this.totalCashIn = cashTotal + cardTotal;
-        this.initialBalance = totalCashIn;
+        //this.totalCashIn = cashTotal + cardTotal;
+        //this.initialBalance = totalCashIn;
         
         SwingUtilities.invokeLater(() -> {
             txt_enter_cash_total.requestFocus();
@@ -50,9 +53,78 @@ public class CloseDailyTill extends javax.swing.JFrame {
         lbl_date_cashier.setText("Cashier: " + Login.fullName);
         txt_cash_total.setText(String.valueOf(cashTotal));
         txt_card_total.setText(String.valueOf(cardTotal));
-        txt_cash_in_total.setText(String.valueOf(totalCashIn));
-        txt_till_total.setText(String.valueOf(totalCashIn));
-        txt_balance.setText(String.valueOf(initialBalance *= -1));
+        
+        loadEntriesTotal();
+        loadCashOut();
+        
+        tillTotal = totalCashIn - totalCashOut;
+        txt_till_total.setText(String.valueOf(tillTotal));
+        txt_balance.setText(String.valueOf(tillTotal *= -1));
+    }
+    
+    public void loadEntriesTotal()
+    {
+        Date date = new Date();
+        String dateFormat = new SimpleDateFormat("yyyy-MM-dd").format(date.getTime());
+        
+        try {
+            dbConnection();
+            
+            String query = "SELECT SUM(value) FROM cashEntry WHERE entryDate >= ?";
+            ps = con.prepareStatement(query);
+            ps.setString(1, dateFormat);
+            rs = ps.executeQuery();
+            
+            while (rs.next())
+            {
+                cashEntryTotal = rs.getDouble("SUM(value)");
+                txt_entries_total.setText(String.valueOf(cashEntryTotal));
+            }
+            
+            totalCashIn = cashTotal + cardTotal + cashEntryTotal;
+            txt_cash_in_total.setText(String.valueOf(totalCashIn));
+        } catch (SQLException ex) {
+            Logger.getLogger(CloseDailyTill.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    public void loadCashOut()
+    {
+        Date date = new Date();
+        String dateFormat = new SimpleDateFormat("yyyy-MM-dd").format(date.getTime());
+        
+        
+        try {
+            dbConnection();
+            
+            String query = "SELECT "
+                    + "SUM(CASE WHEN type='Payments' AND outDate >= ? THEN value END) AS 'payments', "
+                    + "SUM(CASE WHEN type='Takes' AND outDate >= ? THEN value END) AS 'takes', "
+                    + "SUM(CASE WHEN type='Other' AND outDate >= ? THEN value END) AS 'other' FROM cashOut";
+            
+            ps = con.prepareStatement(query);
+            ps.setString(1, dateFormat);
+            ps.setString(2, dateFormat);
+            ps.setString(3, dateFormat);
+            rs = ps.executeQuery();
+            
+            while (rs.next())
+            {
+                payments = rs.getDouble("payments");
+                takes = rs.getDouble("takes");
+                other = rs.getDouble("other");
+                
+                txt_payments.setText(String.valueOf(payments));
+                txt_takes.setText(String.valueOf(takes));
+                txt_other.setText(String.valueOf(other));
+            }
+            
+            totalCashOut = payments + takes + other;
+            txt_cash_out_total.setText(String.valueOf(totalCashOut));
+        } catch (SQLException ex) {
+            Logger.getLogger(CloseDailyTill.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void calcTotalEntered()
@@ -119,86 +191,6 @@ public class CloseDailyTill extends javax.swing.JFrame {
         }
     }
     
-    public void calcCashOut()
-    {
-        if (txt_payments.getText().trim().isEmpty() && txt_takes.getText().trim().isEmpty() && !txt_other.getText().trim().isEmpty()) {
-            other = Double.parseDouble(txt_other.getText());
-            cashOutTotal = other;
-            txt_cash_out_total.setText(String.valueOf(cashOutTotal));
-            txt_till_total.setText(String.valueOf(totalCashIn - cashOutTotal));
-            //txt_balance.setText(String.valueOf(balance *= -1));
-            calcTotalEntered();
-        }
-        else if (txt_payments.getText().trim().isEmpty() && !txt_takes.getText().trim().isEmpty() && txt_other.getText().trim().isEmpty()) {
-            takes = Double.parseDouble(txt_takes.getText());
-            cashOutTotal = takes;
-            txt_cash_out_total.setText(String.valueOf(cashOutTotal));
-            txt_till_total.setText(String.valueOf(totalCashIn - cashOutTotal));
-            //balance = Double.parseDouble(txt_till_total.getText());
-            //txt_balance.setText(String.valueOf(balance *= -1));
-            calcTotalEntered();
-        }
-        else if (!txt_payments.getText().trim().isEmpty() && txt_takes.getText().trim().isEmpty() && txt_other.getText().trim().isEmpty()) {
-            payments = Double.parseDouble(txt_payments.getText());
-            cashOutTotal = payments;
-            txt_cash_out_total.setText(String.valueOf(cashOutTotal));
-            txt_till_total.setText(String.valueOf(totalCashIn - cashOutTotal));
-            //balance = Double.parseDouble(txt_till_total.getText());
-            //txt_balance.setText(String.valueOf(balance *= -1));
-            calcTotalEntered();
-        }
-        else if (txt_payments.getText().trim().isEmpty() && !txt_takes.getText().trim().isEmpty() && !txt_other.getText().trim().isEmpty()) {
-            takes = Double.parseDouble(txt_takes.getText());
-            other = Double.parseDouble(txt_other.getText());
-            cashOutTotal = takes + other;
-            txt_cash_out_total.setText(String.valueOf(cashOutTotal));
-            txt_till_total.setText(String.valueOf(totalCashIn - cashOutTotal));
-//            balance = Double.parseDouble(txt_till_total.getText());
-//            txt_balance.setText(String.valueOf(balance *= -1));
-            calcTotalEntered();
-        }
-        else if (!txt_payments.getText().trim().isEmpty() && txt_takes.getText().trim().isEmpty() && !txt_other.getText().trim().isEmpty()) {
-            other = Double.parseDouble(txt_other.getText());
-            payments = Double.parseDouble(txt_payments.getText());
-            cashOutTotal = other + payments;
-            txt_cash_out_total.setText(String.valueOf(cashOutTotal));
-            txt_till_total.setText(String.valueOf(totalCashIn - cashOutTotal));
-//            balance = Double.parseDouble(txt_till_total.getText());
-//            txt_balance.setText(String.valueOf(balance *= -1));
-            calcTotalEntered();
-        }
-        else if (!txt_payments.getText().trim().isEmpty() && !txt_takes.getText().trim().isEmpty() && txt_other.getText().trim().isEmpty()) {
-            payments = Double.parseDouble(txt_payments.getText());
-            takes = Double.parseDouble(txt_takes.getText());
-            cashOutTotal = payments + takes;
-            txt_cash_out_total.setText(String.valueOf(cashOutTotal));
-            txt_till_total.setText(String.valueOf(totalCashIn - cashOutTotal));
-//            balance = Double.parseDouble(txt_till_total.getText());
-//            txt_balance.setText(String.valueOf(balance *= -1));
-            calcTotalEntered();
-        }
-        else if (!txt_payments.getText().trim().isEmpty() && !txt_takes.getText().trim().isEmpty() && !txt_other.getText().trim().isEmpty()) {
-            payments = Double.parseDouble(txt_payments.getText());
-            takes = Double.parseDouble(txt_takes.getText());
-            other = Double.parseDouble(txt_other.getText());
-            cashOutTotal = payments + takes + other;
-            txt_cash_out_total.setText(String.valueOf(cashOutTotal));
-            txt_till_total.setText(String.valueOf(totalCashIn - cashOutTotal));
-//            balance = Double.parseDouble(txt_till_total.getText());
-//            txt_balance.setText(String.valueOf(balance *= -1));
-            calcTotalEntered();
-        }
-        else
-        {
-            txt_cash_out_total.setText(String.valueOf(""));
-            txt_till_total.setText(String.valueOf(Math.abs(totalCashIn)));
-//            balance = Double.parseDouble(txt_till_total.getText());
-//            txt_balance.setText(String.valueOf(balance *= -1));
-            calcTotalEntered();
-            
-        }
-    }
-    
     public void dbConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -254,7 +246,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
         txt_card_total = new javax.swing.JTextField();
         txt_cash_in_total = new javax.swing.JTextField();
         lbl_card_total1 = new javax.swing.JLabel();
-        txt_card_total1 = new javax.swing.JTextField();
+        txt_entries_total = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -274,7 +266,9 @@ public class CloseDailyTill extends javax.swing.JFrame {
         lbl_takes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_takes.png"))); // NOI18N
         lbl_takes.setText("Takes              €");
 
+        txt_payments.setEditable(false);
         txt_payments.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        txt_payments.setFocusable(false);
         txt_payments.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_paymentsKeyPressed(evt);
@@ -284,7 +278,9 @@ public class CloseDailyTill extends javax.swing.JFrame {
             }
         });
 
+        txt_takes.setEditable(false);
         txt_takes.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        txt_takes.setFocusable(false);
         txt_takes.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_takesKeyPressed(evt);
@@ -302,7 +298,9 @@ public class CloseDailyTill extends javax.swing.JFrame {
         lbl_other.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_other.png"))); // NOI18N
         lbl_other.setText("Other              €");
 
+        txt_other.setEditable(false);
         txt_other.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        txt_other.setFocusable(false);
         txt_other.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_otherKeyPressed(evt);
@@ -573,9 +571,9 @@ public class CloseDailyTill extends javax.swing.JFrame {
         lbl_card_total1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_cash_entries_black.png"))); // NOI18N
         lbl_card_total1.setText("Entries Total €");
 
-        txt_card_total1.setEditable(false);
-        txt_card_total1.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        txt_card_total1.setFocusable(false);
+        txt_entries_total.setEditable(false);
+        txt_entries_total.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        txt_entries_total.setFocusable(false);
 
         javax.swing.GroupLayout panel_cash_inLayout = new javax.swing.GroupLayout(panel_cash_in);
         panel_cash_in.setLayout(panel_cash_inLayout);
@@ -606,7 +604,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(lbl_card_total1)
                         .addGap(4, 4, 4)
-                        .addComponent(txt_card_total1, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)))
+                        .addComponent(txt_entries_total, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panel_cash_inLayout.setVerticalGroup(
@@ -623,7 +621,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_card_total1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txt_card_total1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_entries_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
                 .addGroup(panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txt_cash_in_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -711,7 +709,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
 
     private void btn_salesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_salesActionPerformed
         // Gett date from calendar
-        double tillTotal = Double.parseDouble(txt_till_total.getText());
+        
         if (txt_enter_cash_total.getText().trim().isEmpty() && txt_enter_card_total.getText().trim().isEmpty())
             JOptionPane.showMessageDialog(this, "Please check empty fields !", "Close Daily Till", JOptionPane.ERROR_MESSAGE);
         else if (balance != 0)
@@ -721,21 +719,28 @@ public class CloseDailyTill extends javax.swing.JFrame {
             int confirmClosingTill = JOptionPane.showConfirmDialog(this, "Do you want to close till on " + tillClosingDate);
             if (confirmClosingTill == 0)
             {
+                
+                Date date = new Date();
+                Timestamp currentDateTime = new Timestamp(date.getTime());
+                enterCashTotal = Double.parseDouble(txt_enter_cash_total.getText());
+                enterCardTotal = Double.parseDouble(txt_enter_card_total.getText());
+                adjustments = Double.parseDouble(txt_adjustments.getText());
+                
                 try {
                     dbConnection();
-                    String query = "INSERT INTO tillClosing date, cashier, cashTotal, cardTotal, cashInTotal, payments, takes, "
-                            + "other, cashOutTotal, tillTotal, enterCashTotal, enterCardTotal, adjustments, balance "
+                    String query = "INSERT INTO tillClosing (date, cashier, cashTotal, cardTotal, cashInTotal, payments, takes, "
+                            + "other, cashOutTotal, tillTotal, enterCashTotal, enterCardTotal, adjustments, balance) "
                             + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                     ps = con.prepareStatement(query);
-                    ps.setString(1, Login.fullName);
-                    ps.setString(2, tillClosingDate);
+                    ps.setTimestamp(1, currentDateTime);
+                    ps.setString(2, Login.fullName);
                     ps.setDouble(3, cashTotal);
                     ps.setDouble(4, cardTotal);
                     ps.setDouble(5, totalCashIn);
                     ps.setDouble(6, payments);
                     ps.setDouble(7, takes);
                     ps.setDouble(8, other);
-                    ps.setDouble(9, cashOutTotal);
+                    ps.setDouble(9, totalCashOut);
                     ps.setDouble(10, tillTotal);
                     ps.setDouble(11, enterCashTotal);
                     ps.setDouble(12, enterCardTotal);
@@ -821,41 +826,26 @@ public class CloseDailyTill extends javax.swing.JFrame {
 
     private void txt_paymentsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_paymentsKeyReleased
         // TODO add your handling code here:
-        calcCashOut();
     }//GEN-LAST:event_txt_paymentsKeyReleased
 
     private void txt_takesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_takesKeyReleased
         // TODO add your handling code here:
-        calcCashOut();
     }//GEN-LAST:event_txt_takesKeyReleased
 
     private void txt_otherKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_otherKeyReleased
         // TODO add your handling code here:
-        calcCashOut();
     }//GEN-LAST:event_txt_otherKeyReleased
 
     private void txt_paymentsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_paymentsKeyPressed
         // TODO add your handling code here:
-        if (Character.isLetter(evt.getKeyChar()))
-            txt_payments.setEditable(false);
-        else
-            txt_payments.setEditable(true);
     }//GEN-LAST:event_txt_paymentsKeyPressed
 
     private void txt_takesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_takesKeyPressed
         // TODO add your handling code here:
-        if (Character.isLetter(evt.getKeyChar()))
-            txt_takes.setEditable(false);
-        else
-            txt_takes.setEditable(true);
     }//GEN-LAST:event_txt_takesKeyPressed
 
     private void txt_otherKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_otherKeyPressed
         // TODO add your handling code here:
-        if (Character.isLetter(evt.getKeyChar()))
-            txt_other.setEditable(false);
-        else
-            txt_other.setEditable(true);
     }//GEN-LAST:event_txt_otherKeyPressed
 
 
@@ -887,12 +877,12 @@ public class CloseDailyTill extends javax.swing.JFrame {
     private javax.swing.JTextField txt_adjustments;
     private javax.swing.JTextField txt_balance;
     private javax.swing.JTextField txt_card_total;
-    private javax.swing.JTextField txt_card_total1;
     private javax.swing.JTextField txt_cash_in_total;
     private javax.swing.JTextField txt_cash_out_total;
     private javax.swing.JTextField txt_cash_total;
     private javax.swing.JTextField txt_enter_card_total;
     private javax.swing.JTextField txt_enter_cash_total;
+    private javax.swing.JTextField txt_entries_total;
     private javax.swing.JTextField txt_other;
     private javax.swing.JTextField txt_payments;
     private javax.swing.JTextField txt_takes;

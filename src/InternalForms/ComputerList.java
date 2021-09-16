@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 
@@ -51,6 +52,10 @@ public class ComputerList extends javax.swing.JInternalFrame {
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
+        
+        SwingUtilities.invokeLater(() -> {
+            txt_search_computer.requestFocus();
+        });
 
         tableSettings(table_view_computers);
         accessDbColumn(brands, "SELECT * FROM computers", "brand");
@@ -277,6 +282,7 @@ public class ComputerList extends javax.swing.JInternalFrame {
         lbl_peocessor.setText("Processor");
 
         txt_brand.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        txt_brand.setNextFocusableComponent(txt_model);
         txt_brand.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_brandActionPerformed(evt);
@@ -539,6 +545,7 @@ public class ComputerList extends javax.swing.JInternalFrame {
         });
 
         txt_search_computer.setFont(new java.awt.Font("sansserif", 1, 16)); // NOI18N
+        txt_search_computer.setNextFocusableComponent(txt_brand);
         txt_search_computer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_search_computerActionPerformed(evt);
