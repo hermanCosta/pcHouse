@@ -5,18 +5,121 @@
  */
 package Forms;
 
+import InternalForms.TillRecords;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author user
  */
-public class Test extends javax.swing.JFrame {
+public class PrintTillRecord extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Test
-     */
-    public Test() {
+    PreparedStatement ps;
+    Connection con;
+    ResultSet rs;
+    Date date;
+    
+    String dateFormat, cashier, notes;
+    double cashTotal, cardTotal, entriesTotal, cashInTotal, 
+            enterCashTotal, enterCardTotal, adjustments, balance, 
+            cashEntryTotal, payments, takes, other, tillTotal, cashOutTotal;
+    
+    public PrintTillRecord() {
         initComponents();
     }
+    
+    public PrintTillRecord(String _dateFormat, String _cashier, double _cashTotal, double _cardTotal, 
+            double _entriesTotal, double _cashInTotal, double _payments, double _takes, double _other, 
+            double _cashOutTotal, double _tillTotal, double _enterCashTotal, double _enterCardTotal, 
+            double _adjustments, double _balance, String _notes) {
+        initComponents();
+        
+        this.dateFormat = _dateFormat;
+        this.cashier = _cashier;
+        this.cashTotal = _cashTotal;
+        this.cardTotal = _cardTotal;
+        this.entriesTotal = _entriesTotal;
+        this.cashInTotal = _cashInTotal;
+        this.payments = _payments;
+        this.takes = _takes;
+        this.other = _other;
+        this.cashOutTotal = _cashOutTotal;
+        this.tillTotal = _tillTotal;
+        this.enterCashTotal = _enterCashTotal;
+        this.enterCardTotal = _enterCardTotal;
+        this.adjustments = _adjustments;
+        this.balance = _balance;
+        this.notes = _notes;
+        
+        date = new Date();
+        
+        loadTillRecordsFromDb();
+    }
+
+    
+    public void dbConnection() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(TillRecords.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void loadTillRecordsFromDb() {
+        // TODO add your handling code here:
+        lbl_till_closed_on.setText("Till Closed on " + dateFormat);
+        lbl_cashier.setText("Cashier: " + cashier);
+        txt_cash_total.setText("€" + String.valueOf(cashTotal));
+        txt_card_total.setText("€" + String.valueOf(cardTotal));
+        txt_entries_total.setText("€" + String.valueOf(entriesTotal));
+        txt_cash_in_total.setText("€" + String.valueOf(cashInTotal));
+        txt_payments.setText("€" + String.valueOf(payments));
+        txt_takes.setText("€" + String.valueOf(takes));
+        txt_other.setText("€" + String.valueOf(other));
+        txt_cash_out_total.setText("€" + String.valueOf(cashOutTotal));
+        txt_till_total.setText("€" + String.valueOf(tillTotal));
+        txt_enter_cash_total.setText("€" + String.valueOf(enterCashTotal));
+        txt_enter_card_total.setText("€" + String.valueOf(enterCardTotal));
+        txt_adjustments.setText("€" + String.valueOf(adjustments));
+        txt_balance.setText("€" + String.valueOf(balance));
+        editor_pane_notes.setText(notes);
+    }
+    
+    public void clearFields()
+    {
+        txt_cash_total.setText("");
+        txt_card_total.setText("");
+        txt_entries_total.setText("");
+        txt_cash_in_total.setText("");
+        txt_payments.setText("");
+        txt_takes.setText("");
+        txt_other.setText("");
+        txt_cash_out_total.setText("");
+        txt_till_total.setText("");
+        txt_enter_cash_total.setText("");
+        txt_enter_card_total.setText("");
+        txt_adjustments.setText("");
+        txt_balance.setText("");
+        editor_pane_notes.setText("");
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -27,7 +130,14 @@ public class Test extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panel_closing_till_records = new javax.swing.JPanel();
+        panel_till_records = new javax.swing.JPanel();
+        panel_header = new javax.swing.JPanel();
+        lbl_logo_icon = new javax.swing.JLabel();
+        lbl_land_line_number = new javax.swing.JLabel();
+        lbl_mobile_number = new javax.swing.JLabel();
+        line_header = new javax.swing.JSeparator();
+        lbl_address1 = new javax.swing.JLabel();
+        panel_records_details = new javax.swing.JPanel();
         panel_cash_out = new javax.swing.JPanel();
         lbl_cash_out_total = new javax.swing.JLabel();
         lbl_payments = new javax.swing.JLabel();
@@ -37,7 +147,6 @@ public class Test extends javax.swing.JFrame {
         txt_cash_out_total = new javax.swing.JTextField();
         lbl_other = new javax.swing.JLabel();
         txt_other = new javax.swing.JTextField();
-        lbl_till_closing_on = new javax.swing.JLabel();
         panel_totals = new javax.swing.JPanel();
         lbl_enter_card_total = new javax.swing.JLabel();
         lbl_till_total = new javax.swing.JLabel();
@@ -61,26 +170,82 @@ public class Test extends javax.swing.JFrame {
         txt_cash_in_total = new javax.swing.JTextField();
         lbl_card_total1 = new javax.swing.JLabel();
         txt_entries_total = new javax.swing.JTextField();
+        lbl_till_closed_on = new javax.swing.JLabel();
+        panel_print_view = new javax.swing.JPanel();
+        lbl_order_print_view = new javax.swing.JLabel();
+        btn_print = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        panel_closing_till_records.setBackground(new java.awt.Color(255, 255, 255));
-        panel_closing_till_records.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        panel_till_records.setBackground(new java.awt.Color(255, 255, 255));
+        panel_till_records.setPreferredSize(new java.awt.Dimension(595, 842));
+
+        panel_header.setBackground(new java.awt.Color(255, 255, 255));
+
+        lbl_logo_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/logo_header.png"))); // NOI18N
+
+        lbl_land_line_number.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
+        lbl_land_line_number.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_phone_number.png"))); // NOI18N
+        lbl_land_line_number.setText("+353 (01) 563-9520");
+
+        lbl_mobile_number.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
+        lbl_mobile_number.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_mobile_number.png"))); // NOI18N
+        lbl_mobile_number.setText("+353 (83) 012-8190");
+
+        lbl_address1.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
+        lbl_address1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_address.png"))); // NOI18N
+        lbl_address1.setText("12A, Frederick Street North, Dublin 1");
+
+        javax.swing.GroupLayout panel_headerLayout = new javax.swing.GroupLayout(panel_header);
+        panel_header.setLayout(panel_headerLayout);
+        panel_headerLayout.setHorizontalGroup(
+            panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_headerLayout.createSequentialGroup()
+                .addComponent(lbl_logo_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_mobile_number, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbl_land_line_number, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbl_address1, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_headerLayout.createSequentialGroup()
+                .addComponent(line_header)
+                .addContainerGap())
+        );
+        panel_headerLayout.setVerticalGroup(
+            panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_headerLayout.createSequentialGroup()
+                .addContainerGap(10, Short.MAX_VALUE)
+                .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_logo_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panel_headerLayout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addComponent(lbl_land_line_number)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbl_mobile_number)
+                        .addGap(0, 0, 0)
+                        .addComponent(lbl_address1)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        panel_records_details.setBackground(new java.awt.Color(255, 255, 255));
+        panel_records_details.setBorder(null);
 
         panel_cash_out.setBackground(new java.awt.Color(255, 255, 255));
         panel_cash_out.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cash out", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("sansserif", 1, 14))); // NOI18N
 
         lbl_cash_out_total.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_cash_out_total.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_gross_total.png"))); // NOI18N
-        lbl_cash_out_total.setText("Cash out Total   €");
+        lbl_cash_out_total.setText("Cash out Total");
 
         lbl_payments.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_payments.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_payments.png"))); // NOI18N
-        lbl_payments.setText("Payments         €");
+        lbl_payments.setText("Payments");
 
         lbl_takes.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_takes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_takes.png"))); // NOI18N
-        lbl_takes.setText("Takes              €");
+        lbl_takes.setText("Takes");
 
         txt_payments.setEditable(false);
         txt_payments.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
@@ -112,7 +277,7 @@ public class Test extends javax.swing.JFrame {
 
         lbl_other.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_other.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_other.png"))); // NOI18N
-        lbl_other.setText("Other              €");
+        lbl_other.setText("Other    ");
 
         txt_other.setEditable(false);
         txt_other.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
@@ -132,22 +297,20 @@ public class Test extends javax.swing.JFrame {
             panel_cash_outLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_cash_outLayout.createSequentialGroup()
                 .addGroup(panel_cash_outLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lbl_cash_out_total, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_takes, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_other, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panel_cash_outLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(panel_cash_outLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lbl_other, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lbl_payments, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lbl_takes, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(0, 3, Short.MAX_VALUE)
+                        .addComponent(lbl_cash_out_total))
+                    .addComponent(lbl_payments, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_cash_outLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_takes)
-                    .addComponent(txt_cash_out_total, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txt_other, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txt_takes, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panel_cash_outLayout.createSequentialGroup()
-                        .addComponent(txt_payments, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(txt_payments, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 3, Short.MAX_VALUE))
+                    .addComponent(txt_cash_out_total, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txt_other)))
         );
         panel_cash_outLayout.setVerticalGroup(
             panel_cash_outLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,28 +334,26 @@ public class Test extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        lbl_till_closing_on.setFont(new java.awt.Font("sansserif", 1, 17)); // NOI18N
-        lbl_till_closing_on.setText("tillClosingOn");
-
         panel_totals.setBackground(new java.awt.Color(255, 255, 255));
         panel_totals.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Totals", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("sansserif", 1, 14))); // NOI18N
 
         lbl_enter_card_total.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_enter_card_total.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_card_total.png"))); // NOI18N
-        lbl_enter_card_total.setText("Enter Card Total €");
+        lbl_enter_card_total.setText("Enter Card Total ");
 
         lbl_till_total.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_till_total.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_gross_total.png"))); // NOI18N
-        lbl_till_total.setText("Till Total            €");
+        lbl_till_total.setText("Till Total            ");
 
         lbl_enter_cash_total.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_enter_cash_total.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_cash_total.png"))); // NOI18N
-        lbl_enter_cash_total.setText("Enter Cash Total €");
+        lbl_enter_cash_total.setText("Enter Cash Total ");
 
         txt_till_total.setEditable(false);
         txt_till_total.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         txt_till_total.setFocusable(false);
 
+        txt_enter_cash_total.setEditable(false);
         txt_enter_cash_total.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         txt_enter_cash_total.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -208,6 +369,7 @@ public class Test extends javax.swing.JFrame {
             }
         });
 
+        txt_enter_card_total.setEditable(false);
         txt_enter_card_total.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         txt_enter_card_total.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -225,7 +387,7 @@ public class Test extends javax.swing.JFrame {
 
         lbl_balance.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_balance.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_balance.png"))); // NOI18N
-        lbl_balance.setText("Balance              €");
+        lbl_balance.setText("Balance   ");
 
         jScrollPane_notes.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane_notes.setBorder(null);
@@ -233,6 +395,7 @@ public class Test extends javax.swing.JFrame {
         jScrollPane_notes.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         jScrollPane_notes.setVerifyInputWhenFocusTarget(false);
 
+        editor_pane_notes.setEditable(false);
         editor_pane_notes.setBackground(new java.awt.Color(255, 255, 255));
         editor_pane_notes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Notes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Lucida Grande", 1, 14))); // NOI18N
         editor_pane_notes.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
@@ -255,8 +418,9 @@ public class Test extends javax.swing.JFrame {
 
         lbl_adjustments.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_adjustments.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_adjustment.png"))); // NOI18N
-        lbl_adjustments.setText("Adjusments       €");
+        lbl_adjustments.setText("Adjusments       ");
 
+        txt_adjustments.setEditable(false);
         txt_adjustments.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         txt_adjustments.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -277,22 +441,24 @@ public class Test extends javax.swing.JFrame {
         panel_totalsLayout.setHorizontalGroup(
             panel_totalsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_totalsLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(panel_totalsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lbl_adjustments, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_enter_cash_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_till_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_enter_card_total, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lbl_balance, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel_totalsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txt_adjustments, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-                    .addComponent(txt_enter_card_total)
+                    .addGroup(panel_totalsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(lbl_balance, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_totalsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(lbl_adjustments, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl_enter_card_total, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(lbl_enter_cash_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(7, 7, 7)
+                .addGroup(panel_totalsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txt_adjustments)
+                    .addComponent(txt_balance)
                     .addComponent(txt_enter_cash_total)
-                    .addComponent(txt_till_total)
-                    .addComponent(txt_balance))
+                    .addComponent(txt_enter_card_total)
+                    .addComponent(txt_till_total))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane_notes, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE))
+                .addComponent(jScrollPane_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
         panel_totalsLayout.setVerticalGroup(
             panel_totalsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -330,15 +496,15 @@ public class Test extends javax.swing.JFrame {
 
         lbl_cash_in_total.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_cash_in_total.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_gross_total.png"))); // NOI18N
-        lbl_cash_in_total.setText("Cash in Total €");
+        lbl_cash_in_total.setText("Cash in Total");
 
         lbl_cash_total.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_cash_total.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_cash_total.png"))); // NOI18N
-        lbl_cash_total.setText("Cash Total   €");
+        lbl_cash_total.setText("Cash Total");
 
         lbl_card_total.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_card_total.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_card_total.png"))); // NOI18N
-        lbl_card_total.setText("Card Total  €");
+        lbl_card_total.setText("Card Total  ");
 
         txt_cash_total.setEditable(false);
         txt_cash_total.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
@@ -354,7 +520,7 @@ public class Test extends javax.swing.JFrame {
 
         lbl_card_total1.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_card_total1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_cash_entries_black.png"))); // NOI18N
-        lbl_card_total1.setText("Entries Total €");
+        lbl_card_total1.setText("Entries Total ");
 
         txt_entries_total.setEditable(false);
         txt_entries_total.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
@@ -365,31 +531,18 @@ public class Test extends javax.swing.JFrame {
         panel_cash_inLayout.setHorizontalGroup(
             panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_cash_inLayout.createSequentialGroup()
-                .addGroup(panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_cash_inLayout.createSequentialGroup()
-                        .addGroup(panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_cash_inLayout.createSequentialGroup()
-                                .addComponent(lbl_cash_in_total, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
-                                .addGap(4, 4, 4))
-                            .addGroup(panel_cash_inLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panel_cash_inLayout.createSequentialGroup()
-                                        .addComponent(lbl_cash_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                    .addGroup(panel_cash_inLayout.createSequentialGroup()
-                                        .addComponent(lbl_card_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGap(4, 4, 4)))))
-                        .addGroup(panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txt_card_total, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_cash_total, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_cash_in_total, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panel_cash_inLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lbl_card_total1)
-                        .addGap(4, 4, 4)
-                        .addComponent(txt_entries_total)))
-                .addContainerGap())
+                .addGroup(panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(lbl_card_total, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_cash_in_total, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_card_total1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_cash_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txt_entries_total, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                    .addComponent(txt_cash_in_total, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txt_cash_total)
+                    .addComponent(txt_card_total, javax.swing.GroupLayout.Alignment.LEADING))
+                .addGap(0, 0, 0))
         );
         panel_cash_inLayout.setVerticalGroup(
             panel_cash_inLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -413,34 +566,32 @@ public class Test extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout panel_closing_till_recordsLayout = new javax.swing.GroupLayout(panel_closing_till_records);
-        panel_closing_till_records.setLayout(panel_closing_till_recordsLayout);
-        panel_closing_till_recordsLayout.setHorizontalGroup(
-            panel_closing_till_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_closing_till_recordsLayout.createSequentialGroup()
-                .addGroup(panel_closing_till_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_closing_till_recordsLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lbl_cashier))
-                    .addGroup(panel_closing_till_recordsLayout.createSequentialGroup()
-                        .addGap(200, 200, 200)
-                        .addComponent(lbl_till_closing_on))
-                    .addComponent(panel_totals, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panel_closing_till_recordsLayout.createSequentialGroup()
-                        .addComponent(panel_cash_in, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(panel_cash_out, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
+        javax.swing.GroupLayout panel_records_detailsLayout = new javax.swing.GroupLayout(panel_records_details);
+        panel_records_details.setLayout(panel_records_detailsLayout);
+        panel_records_detailsLayout.setHorizontalGroup(
+            panel_records_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_records_detailsLayout.createSequentialGroup()
+                .addGroup(panel_records_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panel_totals, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panel_records_detailsLayout.createSequentialGroup()
+                        .addGroup(panel_records_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel_records_detailsLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(lbl_cashier))
+                            .addGroup(panel_records_detailsLayout.createSequentialGroup()
+                                .addComponent(panel_cash_in, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(panel_cash_out, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
-        panel_closing_till_recordsLayout.setVerticalGroup(
-            panel_closing_till_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_closing_till_recordsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lbl_till_closing_on)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        panel_records_detailsLayout.setVerticalGroup(
+            panel_records_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_records_detailsLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_cashier)
-                .addGap(18, 18, 18)
-                .addGroup(panel_closing_till_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel_records_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panel_cash_out, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panel_cash_in, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -448,28 +599,97 @@ public class Test extends javax.swing.JFrame {
                 .addGap(18, 18, 18))
         );
 
+        lbl_till_closed_on.setFont(new java.awt.Font("sansserif", 1, 17)); // NOI18N
+        lbl_till_closed_on.setText("tillClosedOn");
+
+        javax.swing.GroupLayout panel_till_recordsLayout = new javax.swing.GroupLayout(panel_till_records);
+        panel_till_records.setLayout(panel_till_recordsLayout);
+        panel_till_recordsLayout.setHorizontalGroup(
+            panel_till_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_till_recordsLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbl_till_closed_on)
+                .addGap(149, 149, 149))
+            .addGroup(panel_till_recordsLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(panel_till_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panel_records_details, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
+        panel_till_recordsLayout.setVerticalGroup(
+            panel_till_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_till_recordsLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lbl_till_closed_on)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panel_records_details, javax.swing.GroupLayout.PREFERRED_SIZE, 497, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29))
+        );
+
+        panel_print_view.setBackground(new java.awt.Color(204, 204, 204));
+
+        lbl_order_print_view.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        lbl_order_print_view.setText("Till Closing Print View");
+
+        javax.swing.GroupLayout panel_print_viewLayout = new javax.swing.GroupLayout(panel_print_view);
+        panel_print_view.setLayout(panel_print_viewLayout);
+        panel_print_viewLayout.setHorizontalGroup(
+            panel_print_viewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panel_print_viewLayout.createSequentialGroup()
+                .addGap(100, 100, 100)
+                .addComponent(lbl_order_print_view)
+                .addContainerGap(103, Short.MAX_VALUE))
+        );
+        panel_print_viewLayout.setVerticalGroup(
+            panel_print_viewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(panel_print_viewLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lbl_order_print_view, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(8, 8, 8))
+        );
+
+        btn_print.setBackground(new java.awt.Color(21, 76, 121));
+        btn_print.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        btn_print.setForeground(new java.awt.Color(255, 255, 255));
+        btn_print.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_print.png"))); // NOI18N
+        btn_print.setText("Print");
+        btn_print.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_printActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 587, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(panel_closing_till_records, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(16, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panel_till_records, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(panel_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 569, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(panel_closing_till_records, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panel_print_view, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panel_till_records, javax.swing.GroupLayout.PREFERRED_SIZE, 660, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txt_paymentsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_paymentsKeyPressed
@@ -540,44 +760,50 @@ public class Test extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_adjustmentsKeyReleased
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Test.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Test.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Test.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Test.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
+        // TODO add your handling code here:
+       // Get date from calendar
+        String tillClosingDate = tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(date.getTime());
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Test().setVisible(true);
+        PrinterJob printerJob = PrinterJob.getPrinterJob();
+        printerJob.setJobName("ClosingTillRecord" + tillClosingDate);
+        PageFormat format = printerJob.getPageFormat(null);
+
+        printerJob.setPrintable(new Printable() {
+
+            @Override
+            public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
+
+                if (pageIndex > 0) {
+                    return Printable.NO_SUCH_PAGE;
+                }
+                Graphics2D graphics2D = (Graphics2D) graphics;
+                panel_till_records.paint(graphics2D);
+
+                return Printable.PAGE_EXISTS;
             }
-        });
-    }
+        }, format);
+
+        boolean returningResult = printerJob.printDialog();
+
+        if (returningResult) {
+            try {
+
+                printerJob.print();
+
+                JOptionPane.showMessageDialog(this, "Till Records Printed Successfully");
+
+            } catch (PrinterException ex) {
+                Logger.getLogger(PrintFullReport.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btn_printActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_print;
     private javax.swing.JEditorPane editor_pane_notes;
     private javax.swing.JScrollPane jScrollPane_notes;
+    private javax.swing.JLabel lbl_address1;
     private javax.swing.JLabel lbl_adjustments;
     private javax.swing.JLabel lbl_balance;
     private javax.swing.JLabel lbl_card_total;
@@ -588,14 +814,22 @@ public class Test extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_cashier;
     private javax.swing.JLabel lbl_enter_card_total;
     private javax.swing.JLabel lbl_enter_cash_total;
+    private javax.swing.JLabel lbl_land_line_number;
+    private javax.swing.JLabel lbl_logo_icon;
+    private javax.swing.JLabel lbl_mobile_number;
+    private javax.swing.JLabel lbl_order_print_view;
     private javax.swing.JLabel lbl_other;
     private javax.swing.JLabel lbl_payments;
     private javax.swing.JLabel lbl_takes;
-    private javax.swing.JLabel lbl_till_closing_on;
+    private javax.swing.JLabel lbl_till_closed_on;
     private javax.swing.JLabel lbl_till_total;
+    private javax.swing.JSeparator line_header;
     private javax.swing.JPanel panel_cash_in;
     private javax.swing.JPanel panel_cash_out;
-    private javax.swing.JPanel panel_closing_till_records;
+    private javax.swing.JPanel panel_header;
+    private javax.swing.JPanel panel_print_view;
+    private javax.swing.JPanel panel_records_details;
+    private javax.swing.JPanel panel_till_records;
     private javax.swing.JPanel panel_totals;
     private javax.swing.JTextField txt_adjustments;
     private javax.swing.JTextField txt_balance;

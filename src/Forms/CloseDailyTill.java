@@ -30,8 +30,8 @@ public class CloseDailyTill extends javax.swing.JFrame {
     Connection con;
     ResultSet rs;
     String dateFormat, tillClosingDate;
-    double cashTotal, cardTotal, totalCashIn, enterCardTotal, enterCashTotal, adjustments, balance, cashEntryTotal;
-    double payments, takes, other, tillTotal, totalCashOut;
+    double cashTotal, cardTotal, cashInTotal, enterCardTotal, entriesTotal, enterCashTotal, adjustments, balance, cashEntryTotal;
+    double payments, takes, other, tillTotal, cashOutTotal;
     Date date;
     
     public CloseDailyTill() {
@@ -59,7 +59,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
         loadEntriesTotal();
         loadCashOut();
         
-        tillTotal = totalCashIn - totalCashOut;
+        tillTotal = cashInTotal - cashOutTotal;
         txt_till_total.setText(String.valueOf(tillTotal));
         txt_balance.setText(String.valueOf(tillTotal *= -1));
     }
@@ -82,8 +82,8 @@ public class CloseDailyTill extends javax.swing.JFrame {
                 txt_entries_total.setText(String.valueOf(cashEntryTotal));
             }
             
-            totalCashIn = cashTotal + cardTotal + cashEntryTotal;
-            txt_cash_in_total.setText(String.valueOf(totalCashIn));
+            cashInTotal = cashTotal + cardTotal + cashEntryTotal;
+            txt_cash_in_total.setText(String.valueOf(cashInTotal));
         } catch (SQLException ex) {
             Logger.getLogger(CloseDailyTill.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -119,8 +119,8 @@ public class CloseDailyTill extends javax.swing.JFrame {
                 txt_other.setText(String.valueOf(other));
             }
             
-            totalCashOut = payments + takes + other;
-            txt_cash_out_total.setText(String.valueOf(totalCashOut));
+            cashOutTotal = payments + takes + other;
+            txt_cash_out_total.setText(String.valueOf(cashOutTotal));
         } catch (SQLException ex) {
             Logger.getLogger(CloseDailyTill.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -719,6 +719,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
             if (confirmClosingTill == 0)
             {
                 Timestamp currentDateTime = new Timestamp(date.getTime());
+                
                 enterCashTotal = Double.parseDouble(txt_enter_cash_total.getText());
                 enterCardTotal = Double.parseDouble(txt_enter_card_total.getText());
                 adjustments = Double.parseDouble(txt_adjustments.getText());
@@ -726,28 +727,37 @@ public class CloseDailyTill extends javax.swing.JFrame {
                 
                 try {
                     dbConnection();
-                    String query = "INSERT INTO tillClosing (date, cashier, cashTotal, cardTotal, cashInTotal, payments, takes, "
-                            + "other, cashOutTotal, tillTotal, enterCashTotal, enterCardTotal, adjustments, balance, notes) "
-                            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    String query = "INSERT INTO tillClosing (date, cashier, cashTotal, cardTotal, entriesTotal, "
+                            + "cashInTotal, payments, takes, other, cashOutTotal, tillTotal, enterCashTotal, "
+                            + "enterCardTotal, adjustments, balance, notes) "
+                            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                     ps = con.prepareStatement(query);
                     ps.setTimestamp(1, currentDateTime);
                     ps.setString(2, Login.fullName);
                     ps.setDouble(3, cashTotal);
                     ps.setDouble(4, cardTotal);
-                    ps.setDouble(5, totalCashIn);
-                    ps.setDouble(6, payments);
-                    ps.setDouble(7, takes);
-                    ps.setDouble(8, other);
-                    ps.setDouble(9, totalCashOut);
-                    ps.setDouble(10, tillTotal);
-                    ps.setDouble(11, enterCashTotal);
-                    ps.setDouble(12, enterCardTotal);
-                    ps.setDouble(13, adjustments);
-                    ps.setDouble(14, balance);
-                    ps.setString(15, notes);
+                    ps.setDouble(5, entriesTotal);
+                    ps.setDouble(6, cashInTotal);
+                    ps.setDouble(7, payments);
+                    ps.setDouble(8, takes);
+                    ps.setDouble(9, other);
+                    ps.setDouble(10, cashOutTotal);
+                    ps.setDouble(11, tillTotal);
+                    ps.setDouble(12, enterCashTotal);
+                    ps.setDouble(13, enterCardTotal);
+                    ps.setDouble(14, adjustments);
+                    ps.setDouble(15, balance);
+                    ps.setString(16, notes);
                     ps.executeUpdate();
                     
                     JOptionPane.showMessageDialog(this, "Till Closed Successfully");
+                    
+                    String dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDateTime);
+                    PrintTillRecord printTillRecord = new PrintTillRecord(dateFormat, Login.fullName, cashTotal, cardTotal,
+                    entriesTotal, cashInTotal, payments, takes, other, cashOutTotal, tillTotal, enterCashTotal, enterCardTotal, 
+                    adjustments, balance, notes);
+                    printTillRecord.setVisible(true);
+                    
                 } catch (SQLException ex) {
                     Logger.getLogger(CloseDailyTill.class.getName()).log(Level.SEVERE, null, ex);
                 }

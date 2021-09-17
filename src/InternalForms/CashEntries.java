@@ -162,8 +162,6 @@ public class CashEntries extends javax.swing.JInternalFrame {
         setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         setPreferredSize(new java.awt.Dimension(1049, 700));
 
-        panel_till_closing.setBackground(new java.awt.Color(153, 153, 153));
-
         btn_monthly_records.setBackground(new java.awt.Color(21, 76, 121));
         btn_monthly_records.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         btn_monthly_records.setForeground(new java.awt.Color(255, 255, 255));
@@ -356,7 +354,6 @@ public class CashEntries extends javax.swing.JInternalFrame {
             }
         });
 
-        panel_cash_record.setBackground(new java.awt.Color(153, 153, 153));
         panel_cash_record.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         txt_enter_value.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
@@ -379,11 +376,9 @@ public class CashEntries extends javax.swing.JInternalFrame {
         });
 
         lbl_enter_value.setFont(new java.awt.Font("Lucida Grande", 1, 12)); // NOI18N
-        lbl_enter_value.setForeground(new java.awt.Color(255, 255, 255));
         lbl_enter_value.setText("Enter Value €");
 
         lbl_notes.setFont(new java.awt.Font("Lucida Grande", 1, 12)); // NOI18N
-        lbl_notes.setForeground(new java.awt.Color(255, 255, 255));
         lbl_notes.setText("Notes");
 
         javax.swing.GroupLayout panel_cash_recordLayout = new javax.swing.GroupLayout(panel_cash_record);
@@ -417,7 +412,7 @@ public class CashEntries extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
-        btn_register_entry.setBackground(new java.awt.Color(21, 76, 121));
+        btn_register_entry.setBackground(new java.awt.Color(0, 153, 102));
         btn_register_entry.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         btn_register_entry.setForeground(new java.awt.Color(255, 255, 255));
         btn_register_entry.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_save.png"))); // NOI18N

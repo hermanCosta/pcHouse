@@ -165,8 +165,6 @@ public class CashOuts extends javax.swing.JInternalFrame {
         setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
         setPreferredSize(new java.awt.Dimension(1049, 700));
 
-        panel_cash_out.setBackground(new java.awt.Color(255, 153, 153));
-
         btn_monthly_records.setBackground(new java.awt.Color(21, 76, 121));
         btn_monthly_records.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         btn_monthly_records.setForeground(new java.awt.Color(255, 255, 255));
@@ -361,7 +359,6 @@ public class CashOuts extends javax.swing.JInternalFrame {
             }
         });
 
-        panel_cash_record.setBackground(new java.awt.Color(255, 153, 153));
         panel_cash_record.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         txt_enter_value.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
@@ -433,7 +430,7 @@ public class CashOuts extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
-        btn_register_cash_out.setBackground(new java.awt.Color(21, 76, 121));
+        btn_register_cash_out.setBackground(new java.awt.Color(255, 51, 51));
         btn_register_cash_out.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         btn_register_cash_out.setForeground(new java.awt.Color(255, 255, 255));
         btn_register_cash_out.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_save.png"))); // NOI18N
@@ -474,7 +471,7 @@ public class CashOuts extends javax.swing.JInternalFrame {
                             .addComponent(date_picker, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
                             .addComponent(btn_print_records, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)))
+                        .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panel_cash_outLayout.setVerticalGroup(
@@ -497,7 +494,7 @@ public class CashOuts extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btn_print_records, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(scroll_pane_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         desktop_pane_entries.setLayer(panel_cash_out, javax.swing.JLayeredPane.DEFAULT_LAYER);

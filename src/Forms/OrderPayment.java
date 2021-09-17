@@ -119,7 +119,6 @@ public class OrderPayment extends javax.swing.JFrame {
             ps.executeUpdate();
 
             ps.close();
-            con.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
@@ -524,7 +523,6 @@ public class OrderPayment extends javax.swing.JFrame {
                     ps.close();
                     con.close();
                     this.dispose();
-
                 } catch (SQLException ex) {
                     Logger.getLogger(OrderPayment.class.getName()).log(Level.SEVERE, null, ex);
                 }

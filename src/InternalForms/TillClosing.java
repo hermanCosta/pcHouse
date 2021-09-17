@@ -584,7 +584,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         panel_orders_sales.add(panel_sales, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 540, 490));
 
         lbl_till_closing_date.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
-        lbl_till_closing_date.setText("fullReport");
+        lbl_till_closing_date.setText("orderReport");
 
         lbl_print_refunds.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_print_refunds.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_refund_black.png"))); // NOI18N

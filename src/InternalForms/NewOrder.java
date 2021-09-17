@@ -875,11 +875,11 @@ public class NewOrder extends javax.swing.JInternalFrame {
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addComponent(lbl_due)))))
-                .addGap(57, 57, 57)
+                .addGap(50, 50, 50)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_save_order, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1359,7 +1359,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 rs = ps.executeQuery();
 
                 if (!rs.isBeforeFirst()) {
-                    int confirmInsertion = JOptionPane.showConfirmDialog(null, "Do you want to add a new fault ?", "Add New Fault", JOptionPane.YES_NO_OPTION);
+                    int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add a new fault ?", "Add New Fault", JOptionPane.YES_NO_OPTION);
                     if (confirmInsertion == 0) {
                         String query = "INSERT INTO faults (faultName) VALUES(?)";
                         ps = con.prepareStatement(query);
