@@ -29,25 +29,27 @@ public class CloseDailyTill extends javax.swing.JFrame {
     PreparedStatement ps;
     Connection con;
     ResultSet rs;
-    String tillClosingDate;
+    String dateFormat, tillClosingDate;
     double cashTotal, cardTotal, totalCashIn, enterCardTotal, enterCashTotal, adjustments, balance, cashEntryTotal;
     double payments, takes, other, tillTotal, totalCashOut;
+    Date date;
     
     public CloseDailyTill() {
         initComponents();
     }
 
-    public CloseDailyTill(String _tillClosinDate, double _cashTotal, double _cardTotal) {
+    public CloseDailyTill(double _cashTotal, double _cardTotal) {
         initComponents();
-        this.tillClosingDate = _tillClosinDate;
         this.cashTotal = _cashTotal;
         this.cardTotal = _cardTotal;
-        //this.totalCashIn = cashTotal + cardTotal;
-        //this.initialBalance = totalCashIn;
+        
+        date = new Date();
+        tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(date);
         
         SwingUtilities.invokeLater(() -> {
             txt_enter_cash_total.requestFocus();
         });
+        
         
         lbl_till_closing_on.setText("Till Closing on: " + tillClosingDate);
         lbl_date_cashier.setText("Cashier: " + Login.fullName);
@@ -64,8 +66,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
     
     public void loadEntriesTotal()
     {
-        Date date = new Date();
-        String dateFormat = new SimpleDateFormat("yyyy-MM-dd").format(date.getTime());
+        
         
         try {
             dbConnection();
@@ -91,9 +92,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
     
     public void loadCashOut()
     {
-        Date date = new Date();
-        String dateFormat = new SimpleDateFormat("yyyy-MM-dd").format(date.getTime());
-        
+        dateFormat = new SimpleDateFormat("yyyy-MM-dd").format(date);
         
         try {
             dbConnection();
@@ -719,8 +718,6 @@ public class CloseDailyTill extends javax.swing.JFrame {
             int confirmClosingTill = JOptionPane.showConfirmDialog(this, "Do you want to close till on " + tillClosingDate);
             if (confirmClosingTill == 0)
             {
-                
-                Date date = new Date();
                 Timestamp currentDateTime = new Timestamp(date.getTime());
                 enterCashTotal = Double.parseDouble(txt_enter_cash_total.getText());
                 enterCardTotal = Double.parseDouble(txt_enter_card_total.getText());
@@ -754,7 +751,6 @@ public class CloseDailyTill extends javax.swing.JFrame {
                 } catch (SQLException ex) {
                     Logger.getLogger(CloseDailyTill.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
             }
         }
     }//GEN-LAST:event_btn_salesActionPerformed

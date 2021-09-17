@@ -14,7 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,6 +62,10 @@ public class ProductsList extends javax.swing.JInternalFrame {
     }
 
     public final void displayProductList() {
+        ArrayList<ProductService> productsList = new ArrayList<>();
+        dtm = (DefaultTableModel) table_view_products_list.getModel();
+        dtm.setRowCount(0);
+        
         try {
             vectorProducts = new Vector();
             dbConnection();
@@ -69,22 +73,26 @@ public class ProductsList extends javax.swing.JInternalFrame {
             String query = "SELECT * FROM products ORDER BY productService ASC LIMIT 17";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
-            rsmd = rs.getMetaData();
 
-            dtm = (DefaultTableModel) table_view_products_list.getModel();
-            dtm.setRowCount(0);
-
-            while (rs.next()) {
-                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                    vectorProducts.add(rs.getInt("productId"));
-                    vectorProducts.add(rs.getString("productService"));
-                    vectorProducts.add(rs.getDouble("price"));
-                    vectorProducts.add(rs.getInt("qty"));
-                    vectorProducts.add(rs.getString("notes"));
-                    vectorProducts.add(rs.getString("category"));
-                }
-
-                dtm.addRow(vectorProducts);
+                while (rs.next()) {
+                
+                    productService = new ProductService(rs.getString("productService"), rs.getDouble("price"), rs.getInt("qty"),
+                    rs.getString("notes"),rs.getString("category"));
+                    productService.setProductId(rs.getInt("productId"));
+                    
+                    productsList.add(productService);
+            }
+            
+            Object[] row = new Object[6];
+            for (int i = 0; i < productsList.size(); i++)
+            {
+                row[0] = productsList.get(i).getProductId();
+                row[1] = productsList.get(i).getProductService();
+                row[2] = productsList.get(i).getPrice();
+                row[3] = productsList.get(i).getQty();
+                row[4] = productsList.get(i).getNotes();
+                row[5] = productsList.get(i).getCategory();
+                dtm.addRow(row);
             }
         } catch (SQLException ex) {
             Logger.getLogger(ProductsList.class.getName()).log(Level.SEVERE, null, ex);
@@ -351,21 +359,7 @@ public class ProductsList extends javax.swing.JInternalFrame {
         table_view_products_list.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         table_view_products_list.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "ID", "Product | Service", "Price €", "Qty", "Notes", "Category"

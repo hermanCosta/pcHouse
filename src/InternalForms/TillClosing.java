@@ -1023,14 +1023,10 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
     private void btn_close_dayling_tillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_close_dayling_tillActionPerformed
         // TODO add your handling code here:
-        Date pickedDate = pickedDate = date_picker.getDate();
-        String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(pickedDate);
-        
         double cashTotal = ordersCashTotal + salesCashTotal;
         double cardTotal = ordersCardTotal + salesCardTotal;
-        CloseDailyTill closeDaylingTill = new CloseDailyTill(tillClosingDate, cashTotal, cardTotal);
+        CloseDailyTill closeDaylingTill = new CloseDailyTill(cashTotal, cardTotal);
         closeDaylingTill.setVisible(true);
-        
     }//GEN-LAST:event_btn_close_dayling_tillActionPerformed
 
     private void btn_money_counterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_money_counterActionPerformed
@@ -1046,6 +1042,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
     private void btn_till_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_till_recordsActionPerformed
         // TODO add your handling code here:
+        TillRecords tillRecords = new TillRecords();
+        desktop_pane_till_closing.add(tillRecords).setVisible(true);
     }//GEN-LAST:event_btn_till_recordsActionPerformed
 
     private void btn_cash_inActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cash_inActionPerformed

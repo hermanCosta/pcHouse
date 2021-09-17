@@ -899,9 +899,9 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
-                          <Component id="scroll_pane_products" min="-2" pref="380" max="-2" attributes="0"/>
+                          <Component id="scroll_pane_table_products" min="-2" pref="380" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="scroll_pane_orders" min="-2" pref="574" max="-2" attributes="0"/>
+                          <Component id="scroll_pane_table_orders" min="-2" pref="574" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
@@ -917,8 +917,8 @@
                           <Component id="panel_buttons" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="scroll_pane_products" min="-2" pref="460" max="-2" attributes="0"/>
-                              <Component id="scroll_pane_orders" min="-2" pref="460" max="-2" attributes="0"/>
+                              <Component id="scroll_pane_table_products" min="-2" pref="460" max="-2" attributes="0"/>
+                              <Component id="scroll_pane_table_orders" min="-2" pref="460" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="100" max="32767" attributes="0"/>
                       </Group>
@@ -1096,11 +1096,11 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Container class="javax.swing.JScrollPane" name="scroll_pane_products">
+                <Container class="javax.swing.JScrollPane" name="scroll_pane_table_products">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder position="5" title="Products Stock Below or Stockout">
+                        <TitledBorder position="5" title="Products Stock Below 2 or Stockout">
                           <Font PropertyName="font" name="sansserif" size="14" style="0"/>
                         </TitledBorder>
                       </Border>
@@ -1147,11 +1147,11 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Container class="javax.swing.JScrollPane" name="scroll_pane_orders">
+                <Container class="javax.swing.JScrollPane" name="scroll_pane_table_orders">
                   <Properties>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                        <TitledBorder position="5" title="Orders Fixed Over Three Months">
+                        <TitledBorder position="5" title="Orders Fixed Over 3 Months">
                           <Font PropertyName="font" name="sansserif" size="14" style="0"/>
                         </TitledBorder>
                       </Border>

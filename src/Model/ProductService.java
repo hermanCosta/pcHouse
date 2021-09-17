@@ -13,7 +13,7 @@ public class ProductService {
 
     String productService;
     double price;
-    int qty;
+    int productId, qty;
     String notes;
     String category;
 
@@ -64,4 +64,14 @@ public class ProductService {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+    
+    
 }
