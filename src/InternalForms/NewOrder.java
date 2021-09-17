@@ -74,6 +74,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
     ResultSet rs;
     ResultSetMetaData rsmd;
     CompletedOrder completedOrder;
+    Timestamp currentDate;
 
     String orderNo, firstName, lastName, contactNo, email, deviceBrand,
             deviceModel, serialNumber, importantNotes, stringFaults,
@@ -317,7 +318,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             status = "In Progress";
 
             Date date = new java.util.Date();
-            Timestamp currentDate = new Timestamp(date.getTime());
+            currentDate = new Timestamp(date.getTime());
             issueDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDate);
 
             //Empty vector before looping to avoid duplicate values on tableView
@@ -724,6 +725,11 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 txt_faultActionPerformed(evt);
             }
         });
+        txt_fault.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_faultKeyReleased(evt);
+            }
+        });
 
         combo_box_product_service.setEditable(true);
         combo_box_product_service.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
@@ -916,8 +922,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void btn_save_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save_orderActionPerformed
         // TODO add your handling code here:
-        if (deposit <= 0) {
-            int confirmNewOrder = JOptionPane.showConfirmDialog(this, "Do you want to save this new Order " + orderNo + " ?");
+        if (deposit == 0) {
+            int confirmNewOrder = JOptionPane.showConfirmDialog(this, "Do you want to save this new Order " + order.getOrderNo() + " ?");
             if (confirmNewOrder == 0) {
                 loadOrderList();
 
@@ -967,7 +973,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     cleanAllFields(table_view_products);
                     //Generate new OrderNo.
                     autoID();
-
+                    
+                    String issueDateFormat = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
+                    order.setIssueDate(issueDateFormat);
                     PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
                     printOrder.setVisible(true);
 
@@ -1394,6 +1402,24 @@ public class NewOrder extends javax.swing.JInternalFrame {
             txt_fault.requestFocus();
         
     }//GEN-LAST:event_editor_pane_notesKeyPressed
+
+    private void txt_faultKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_faultKeyReleased
+        // TODO add your handling code here:
+         //Sugest autoComplete firstNames from Database
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_BACKSPACE:
+                break;
+
+            case KeyEvent.VK_ENTER:
+                txt_fault.setText(txt_fault.getText());
+                break;
+            default:
+                EventQueue.invokeLater(() -> {
+                    String text = txt_fault.getText();
+                    autoCompleteFromDb(faults, text, txt_fault);
+                });
+        }
+    }//GEN-LAST:event_txt_faultKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btn_add_product;

@@ -739,6 +739,7 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_faultActionPerformed"/>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_faultKeyReleased"/>
           </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="combo_box_product_service">

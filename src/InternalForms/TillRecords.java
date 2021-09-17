@@ -215,7 +215,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
             .addGroup(panel_till_closing_recordsLayout.createSequentialGroup()
                 .addGap(370, 370, 370)
                 .addComponent(lbl_order_print_view)
-                .addContainerGap(466, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_till_closing_recordsLayout.setVerticalGroup(
             panel_till_closing_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -280,7 +280,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
         );
 
         lbl_till_closed_on.setFont(new java.awt.Font("sansserif", 1, 17)); // NOI18N
-        lbl_till_closed_on.setText("tillClosedOn");
+        lbl_till_closed_on.setText("Till Closing Records");
 
         lbl_cash_in_total.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_cash_in_total.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_gross_total.png"))); // NOI18N
@@ -349,7 +349,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_till_recordsLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_till_closed_on)
-                .addGap(149, 149, 149))
+                .addGap(207, 207, 207))
             .addGroup(panel_till_recordsLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(panel_till_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -395,13 +395,10 @@ public class TillRecords extends javax.swing.JInternalFrame {
             .addGroup(panel_till_closingLayout.createSequentialGroup()
                 .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_till_closingLayout.createSequentialGroup()
-                        .addGap(9, 9, 9)
-                        .addComponent(panel_till_closing_records, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(panel_till_closingLayout.createSequentialGroup()
                         .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_till_closingLayout.createSequentialGroup()
                                 .addGap(9, 9, 9)
-                                .addComponent(date_picker, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(date_picker, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
                                 .addGap(11, 11, 11))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_till_closingLayout.createSequentialGroup()
                                 .addContainerGap()
@@ -411,7 +408,10 @@ public class TillRecords extends javax.swing.JInternalFrame {
                                     .addComponent(btn_daily_records, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btn_print_records, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                        .addComponent(scroll_pane_till_records, javax.swing.GroupLayout.DEFAULT_SIZE, 594, Short.MAX_VALUE)))
+                        .addComponent(scroll_pane_till_records, javax.swing.GroupLayout.DEFAULT_SIZE, 608, Short.MAX_VALUE))
+                    .addGroup(panel_till_closingLayout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addComponent(panel_till_closing_records, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panel_till_closingLayout.setVerticalGroup(
@@ -432,7 +432,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btn_print_records, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(scroll_pane_till_records, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addContainerGap(63, Short.MAX_VALUE))
         );
 
         desktop_pane_entries.setLayer(panel_till_closing, javax.swing.JLayeredPane.DEFAULT_LAYER);

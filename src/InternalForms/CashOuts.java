@@ -297,7 +297,7 @@ public class CashOuts extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_cash_recordsLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(lbl_entry_records)
-                .addGap(218, 218, 218))
+                .addGap(225, 225, 225))
             .addGroup(panel_cash_recordsLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(panel_cash_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

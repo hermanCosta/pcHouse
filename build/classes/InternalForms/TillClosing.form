@@ -296,8 +296,8 @@
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="lbl_till_closing_date" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="190" max="-2" attributes="0"/>
+                              <Component id="lbl_report_date" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="177" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -307,7 +307,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="panel_header" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="lbl_till_closing_date" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_report_date" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="panel_orders_sales" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -671,12 +671,12 @@
                         </Container>
                       </SubComponents>
                     </Container>
-                    <Component class="javax.swing.JLabel" name="lbl_till_closing_date">
+                    <Component class="javax.swing.JLabel" name="lbl_report_date">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Lucida Grande" size="16" style="1"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="orderReport"/>
+                        <Property name="text" type="java.lang.String" value="ordersReport"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="lbl_print_refunds">

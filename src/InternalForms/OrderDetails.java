@@ -80,7 +80,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
     String orderNo, firstName, lastName, contactNo, email, deviceBrand,
             deviceModel, serialNumber, importantNotes, stringFaults,
-            stringProducts, stringQty, stringUnitPrice, stringPriceTotal, status, issueDate, finishedDate, pickedDate;
+            stringProducts, stringQty, stringUnitPrice, stringPriceTotal, status, issueDate, finishDate, pickedDate;
 
     double total, deposit, cashDeposit, cardDeposit, due;
     double cash, card, changeTotal;
@@ -96,8 +96,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
-        finishedDate = new SimpleDateFormat("yyyy/MM/dd").format(currentDate);
-        order.setFinishDate(finishedDate);
+        finishDate = new SimpleDateFormat("yyyy/MM/dd").format(currentDate);
+        order.setFinishDate(finishDate);
 
         //Remove borders
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -1377,6 +1377,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         boolean isOrderDetails = true;
+        
         PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
         printOrder.setVisible(true);
     }//GEN-LAST:event_btn_printActionPerformed

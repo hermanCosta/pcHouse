@@ -228,7 +228,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         for (double d : refundList)
             ordersRefundTotal += d;
 
-        lbl_till_closing_date.setText("Orders Report - " + tillClosingDate);
+        lbl_report_date.setText("Orders Report - " + tillClosingDate);
         lbl_print_gross_total.setText("Gross Orders Total ............. €" + String.valueOf(ordersTotal));
         lbl_print_total_cash.setText("Cash Total ......................... €" + String.valueOf(ordersCashTotal));
         lbl_print_total_card.setText("Card Total ......................... €" + String.valueOf(ordersCardTotal));
@@ -299,7 +299,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
             //Gross total (cash&card    
             double salesGrossTotal = salesTotal;
 
-            lbl_till_closing_date.setText("Sales Report - " + tillClosingDate);
+            lbl_report_date.setText("Sales Report - " + tillClosingDate);
             lbl_print_gross_total.setText("Gross Sales Total .............. €" + String.valueOf(salesGrossTotal));
             lbl_print_total_cash.setText("Cash Total ........................ €" + String.valueOf(salesCashTotal));
             lbl_print_total_card.setText("Card Total ........................ €" + String.valueOf(salesCardTotal));
@@ -335,7 +335,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         panel_sales = new javax.swing.JPanel();
         scroll_pane_table_sales = new javax.swing.JScrollPane();
         table_view_sales = new javax.swing.JTable();
-        lbl_till_closing_date = new javax.swing.JLabel();
+        lbl_report_date = new javax.swing.JLabel();
         lbl_print_refunds = new javax.swing.JLabel();
         date_picker = new com.toedter.calendar.JCalendar();
         btn_print = new javax.swing.JButton();
@@ -583,8 +583,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
         panel_orders_sales.add(panel_sales, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 540, 490));
 
-        lbl_till_closing_date.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
-        lbl_till_closing_date.setText("orderReport");
+        lbl_report_date.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
+        lbl_report_date.setText("ordersReport");
 
         lbl_print_refunds.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_print_refunds.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_refund_black.png"))); // NOI18N
@@ -612,8 +612,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 .addContainerGap(21, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_print_orderLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbl_till_closing_date)
-                .addGap(190, 190, 190))
+                .addComponent(lbl_report_date)
+                .addGap(177, 177, 177))
         );
         panel_print_orderLayout.setVerticalGroup(
             panel_print_orderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -621,7 +621,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lbl_till_closing_date)
+                .addComponent(lbl_report_date)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panel_orders_sales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -855,7 +855,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         
         if (loadSalesList().isEmpty() || pickedDate.after(currentDate)) {
             JOptionPane.showMessageDialog(this, "No Sales on " + tillClosingDate + " !");
-            lbl_till_closing_date.setText("Sales Report - " + tillClosingDate);
+            lbl_report_date.setText("Sales Report - " + tillClosingDate);
             loadSalesOfTheDay();
         } else {
             loadSalesOfTheDay();
@@ -1073,7 +1073,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lbl_print_refunds;
     private javax.swing.JLabel lbl_print_total_card;
     private javax.swing.JLabel lbl_print_total_cash;
-    private javax.swing.JLabel lbl_till_closing_date;
+    private javax.swing.JLabel lbl_report_date;
     private javax.swing.JSeparator line_header;
     private javax.swing.JPanel panel_header;
     private javax.swing.JPanel panel_orders;
