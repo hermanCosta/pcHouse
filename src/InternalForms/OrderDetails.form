@@ -73,8 +73,8 @@
                   <Component id="panel_buttons" alignment="1" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <EmptySpace min="21" pref="21" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Component id="lbl_order_no" min="-2" max="-2" attributes="0"/>
@@ -83,8 +83,10 @@
                                   </Group>
                                   <Component id="lbl_issue_date" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" pref="289" max="-2" attributes="0"/>
-                              <Component id="txt_fault" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="lbl_fault" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="txt_fault" min="-2" pref="511" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -124,12 +126,12 @@
                                           </Group>
                                           <Group type="102" attributes="0">
                                               <Component id="lbl_contact" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="11" pref="11" max="-2" attributes="0"/>
-                                              <Component id="txt_contact" min="-2" pref="190" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
-                                              <Component id="btn_international_number" min="-2" pref="50" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+                                              <Component id="txt_contact" max="32767" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="btn_copy" min="-2" pref="50" max="-2" attributes="0"/>
+                                              <Component id="btn_international_number" min="-2" pref="35" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="btn_copy" min="-2" pref="35" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
@@ -141,30 +143,27 @@
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="30" pref="30" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="lbl_fault" min="-2" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                              <Component id="jScrollPane3" max="32767" attributes="0"/>
-                                              <Group type="102" attributes="0">
-                                                  <Component id="lbl_service_product" min="-2" max="-2" attributes="0"/>
-                                                  <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                                                  <Component id="combo_box_product_service" min="-2" pref="390" max="-2" attributes="0"/>
-                                                  <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                                                  <Component id="lbl_add_product" min="-2" max="-2" attributes="0"/>
-                                              </Group>
-                                              <Group type="102" attributes="0">
-                                                  <Component id="lbl_due" min="-2" max="-2" attributes="0"/>
-                                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                                  <Component id="txt_due" min="-2" pref="110" max="-2" attributes="0"/>
-                                                  <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
-                                                  <Component id="lbl_deposit" min="-2" max="-2" attributes="0"/>
-                                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                                  <Component id="txt_deposit" min="-2" pref="110" max="-2" attributes="0"/>
-                                                  <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
-                                                  <Component id="lbl_price" min="-2" max="-2" attributes="0"/>
-                                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                                  <Component id="txt_total" min="-2" pref="110" max="-2" attributes="0"/>
-                                              </Group>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Component id="jScrollPane3" max="32767" attributes="0"/>
+                                          <Group type="102" attributes="0">
+                                              <Component id="lbl_service_product" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                                              <Component id="combo_box_product_service" min="-2" pref="390" max="-2" attributes="0"/>
+                                              <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
+                                              <Component id="lbl_add_product" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" attributes="0">
+                                              <Component id="lbl_due" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                              <Component id="txt_due" min="-2" pref="110" max="-2" attributes="0"/>
+                                              <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
+                                              <Component id="lbl_deposit" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                              <Component id="txt_deposit" min="-2" pref="110" max="-2" attributes="0"/>
+                                              <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
+                                              <Component id="lbl_price" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                                              <Component id="txt_total" min="-2" pref="110" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
@@ -223,7 +222,7 @@
                                   </Group>
                                   <Component id="txt_contact" min="-2" pref="30" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="btn_copy" alignment="0" min="-2" pref="28" max="-2" attributes="0"/>
+                                      <Component id="btn_copy" alignment="1" min="-2" pref="28" max="-2" attributes="0"/>
                                       <Component id="btn_international_number" alignment="1" min="-2" pref="28" max="-2" attributes="0"/>
                                   </Group>
                               </Group>

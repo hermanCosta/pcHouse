@@ -113,7 +113,15 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         lbl_auto_order_no.setText(order.getOrderNo());
         txt_first_name.setText(order.getFirstName());
         txt_last_name.setText(order.getLastName());
-        txt_contact.setText(order.getContactNo());
+        
+        // If ContactNo is foreign number disable text format of Irish number and set the foreign number to the textField
+        if (order.getContactNo().contains("+"))
+        {
+            txt_contact.setFormatterFactory(null);
+            txt_contact.setText(order.getContactNo());
+        } else
+            txt_contact.setText(order.getContactNo());    
+        
         txt_email.setText(order.getEmail());
         txt_brand.setText(order.getBrand());
         txt_model.setText(order.getModel());

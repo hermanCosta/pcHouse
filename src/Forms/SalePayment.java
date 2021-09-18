@@ -395,10 +395,6 @@ public class SalePayment extends javax.swing.JFrame {
 
     private void btn_payActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_payActionPerformed
         // TODO add your handling code here:
-//        Date date = new Date();
-//        Timestamp currentDateTime = new Timestamp(date.getTime());
-//        saleDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDateTime);
-//        sale.setSaleDate(saleDate);
         sale.setStatus("Paid");
         boolean isPaid = false;
         
@@ -406,9 +402,7 @@ public class SalePayment extends javax.swing.JFrame {
         {
             JOptionPane.showMessageDialog(this, "Values can not be Empty !", "Payment",  JOptionPane.ERROR_MESSAGE);
             return;
-        }
-        
-        else if(txt_cash.getText().isEmpty() && !txt_card.getText().isEmpty())
+        } else if (txt_cash.getText().isEmpty() && !txt_card.getText().isEmpty())
         {
             sale.setCard(Double.parseDouble(txt_card.getText()));
             
@@ -417,14 +411,10 @@ public class SalePayment extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Payment by Card can't be greater than Total Due !", "Payment",  JOptionPane.ERROR_MESSAGE); 
                 return;
             }
-            else if ((sale.getTotal() - sale.getCard()) == 0) 
+            else if ((sale.getTotal() - sale.getCard()) <= 0) 
             {
                 isPaid = true; 
                 sale.setCash(0);
-            }
-            else if ((sale.getTotal() - sale.getCard()) > 0)
-            {
-                sale.setCard(Double.parseDouble(txt_card.getText()));
             }
         }
         
@@ -435,7 +425,6 @@ public class SalePayment extends javax.swing.JFrame {
             {
                 isPaid = true;
                 sale.setCard(0);
-                sale.setChangeTotal(sale.getCash() - sale.getTotal());
             }
         }
         else if (!txt_cash.getText().isEmpty() && !txt_card.getText().isEmpty())
@@ -451,15 +440,15 @@ public class SalePayment extends javax.swing.JFrame {
             } 
             else if ((sale.getTotal() - totalPaid) <= 0)
             {
-               changeTotal = (sale.getCash() + sale.getCard()) - sale.getTotal();
                isPaid = true;
-               sale.setChangeTotal(changeTotal);
             }
         }
         
         if (isPaid)
         {
+            changeTotal = (sale.getCash() + sale.getCard()) - sale.getTotal();
             lbl_change.setText(String.valueOf(changeTotal));
+            sale.setChangeTotal(changeTotal);
             
          int confirmPayment = JOptionPane.showConfirmDialog(this, "Confirm payment on Sale " 
                  + sale.getSaleNo() + " ?", "Payment", JOptionPane.YES_NO_OPTION);

@@ -128,7 +128,15 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         lbl_auto_order_no.setText(order.getOrderNo());
         txt_first_name.setText(order.getFirstName());
         txt_last_name.setText(order.getLastName());
-        txt_contact.setText(order.getContactNo());
+        
+        // If ContactNo is foreign number disable text format of Irish number and set the foreign number to the textField
+        if (order.getContactNo().contains("+"))
+        {
+            txt_contact.setFormatterFactory(null);
+            txt_contact.setText(order.getContactNo());
+        } else
+            txt_contact.setText(order.getContactNo());    
+
         txt_email.setText(order.getEmail());
         txt_brand.setText(order.getBrand());
         txt_model.setText(order.getModel());
@@ -634,14 +642,14 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
 
         panel_order_details.add(jScrollPane_notes, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 419, 399, 178));
 
-        btn_copy.setBackground(new java.awt.Color(21, 76, 121));
+        btn_copy.setBackground(new java.awt.Color(0, 0, 0));
         btn_copy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_copy.png"))); // NOI18N
         btn_copy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_copyActionPerformed(evt);
             }
         });
-        panel_order_details.add(btn_copy, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 210, -1, -1));
+        panel_order_details.add(btn_copy, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 210, 40, 30));
 
         desktop_pane_not_fixed_order.setLayer(panel_order_details, javax.swing.JLayeredPane.DEFAULT_LAYER);
 

@@ -33,47 +33,48 @@ public class CloseDailyTill extends javax.swing.JFrame {
     double cashTotal, cardTotal, cashInTotal, enterCardTotal, entriesTotal, enterCashTotal, adjustments, balance, cashEntryTotal;
     double payments, takes, other, tillTotal, cashOutTotal;
     Date date;
+    Date tillOpeningDate;
     
     public CloseDailyTill() {
         initComponents();
     }
 
-    public CloseDailyTill(double _cashTotal, double _cardTotal) {
+    public CloseDailyTill(Date _tillOpeningDate) {
         initComponents();
-        this.cashTotal = _cashTotal;
-        this.cardTotal = _cardTotal;
+        this.tillOpeningDate = _tillOpeningDate;
         
         date = new Date();
         tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(date);
+        dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(tillOpeningDate);
         
         SwingUtilities.invokeLater(() -> {
             txt_enter_cash_total.requestFocus();
         });
         
         
-        lbl_till_closing_on.setText("Till Closing on: " + tillClosingDate);
+        lbl_till_closing_on.setText("Till Closing Date: " + tillClosingDate);
         lbl_date_cashier.setText("Cashier: " + Login.fullName);
-        txt_cash_total.setText(String.valueOf(cashTotal));
-        txt_card_total.setText(String.valueOf(cardTotal));
+        lbl_till_opening_date.setText("Till Opening Date: " + dateFormat);
         
+        loadCashInCashOutTotal();
         loadEntriesTotal();
         loadCashOut();
-        
-        tillTotal = cashInTotal - cashOutTotal;
-        txt_till_total.setText(String.valueOf(tillTotal));
-        txt_balance.setText(String.valueOf(tillTotal *= -1));
     }
     
     public void loadEntriesTotal()
     {
+        String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(tillOpeningDate);
+        String endDate = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(tillOpeningDate);
         
+        System.out.println("Entry Date " + dateFormat);
         
         try {
             dbConnection();
             
-            String query = "SELECT SUM(value) FROM cashEntry WHERE entryDate >= ?";
+            String query = "SELECT SUM(value) FROM cashEntry WHERE entryDate >= ? AND entryDate <= ?";
             ps = con.prepareStatement(query);
-            ps.setString(1, dateFormat);
+            ps.setString(1, startDate);
+            ps.setString(2, endDate);
             rs = ps.executeQuery();
             
             while (rs.next())
@@ -92,20 +93,25 @@ public class CloseDailyTill extends javax.swing.JFrame {
     
     public void loadCashOut()
     {
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(tillOpeningDate);
+        String endDate = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(tillOpeningDate);
         
         try {
             dbConnection();
             
             String query = "SELECT "
-                    + "SUM(CASE WHEN type='Payments' AND outDate >= ? THEN value END) AS 'payments', "
-                    + "SUM(CASE WHEN type='Takes' AND outDate >= ? THEN value END) AS 'takes', "
-                    + "SUM(CASE WHEN type='Other' AND outDate >= ? THEN value END) AS 'other' FROM cashOut";
+                    + "SUM(CASE WHEN type='Payments' AND outDate >= ? AND outDate <= ? THEN value END) AS 'payments', "
+                    + "SUM(CASE WHEN type='Takes' AND outDate >= ? AND outDate <= ? THEN value END) AS 'takes', "
+                    + "SUM(CASE WHEN type='Other' AND outDate >= ? AND outDate <= ? THEN value END) AS 'other' FROM cashOut";
             
             ps = con.prepareStatement(query);
-            ps.setString(1, dateFormat);
-            ps.setString(2, dateFormat);
-            ps.setString(3, dateFormat);
+            ps.setString(1, startDate);
+            ps.setString(2, endDate);
+            ps.setString(3, startDate);
+            ps.setString(4, endDate);
+            ps.setString(5, startDate);
+            ps.setString(6, endDate);
+            
             rs = ps.executeQuery();
             
             while (rs.next())
@@ -121,6 +127,63 @@ public class CloseDailyTill extends javax.swing.JFrame {
             
             cashOutTotal = payments + takes + other;
             txt_cash_out_total.setText(String.valueOf(cashOutTotal));
+        } catch (SQLException ex) {
+            Logger.getLogger(CloseDailyTill.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void loadCashInCashOutTotal()
+    {
+        dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(tillOpeningDate);
+        
+        double ordersCashTotal = 0, ordersCardTotal = 0, ordersChangeTotal = 0, 
+                salesCashTotal = 0, salesCardTotal = 0, salesChangeTotal  = 0;
+        try {
+            dbConnection();
+            String queryCompletedOrder = "SELECT "
+                    + "SUM(CASE WHEN payDate = ? THEN cash END) AS 'ordersCashTotal', "
+                    + "SUM(CASE WHEN payDate = ? THEN card END) AS 'ordersCardTotal',"
+                    + "SUM(CASE WHEN payDate = ? THEN changeTotal END) AS 'ordersChangeTotal' FROM completedOrders";
+            ps = con.prepareStatement(queryCompletedOrder);
+            ps.setString(1, dateFormat);
+            ps.setString(2, dateFormat);
+            ps.setString(3, dateFormat);
+            rs = ps.executeQuery();
+            
+            while (rs.next())
+            {
+                ordersCashTotal = rs.getDouble("ordersCashTotal");
+                ordersCardTotal = rs.getDouble("ordersCardTotal");
+                ordersChangeTotal = rs.getDouble("ordersChangeTotal");
+            }
+            
+            
+            String querySales = "SELECT "
+                    + "SUM(CASE WHEN saleDate = ? THEN cash END) AS 'salesCashTotal', "
+                    + "SUM(CASE WHEN saleDate = ? THEN card END) AS 'salesCardTotal',"
+                    + "SUM(CASE WHEN saleDate = ? THEN changeTotal END) AS 'salesChangeTotal' FROM sales";
+            ps = con.prepareStatement(querySales);
+            ps.setString(1, dateFormat);
+            ps.setString(2, dateFormat);
+            ps.setString(3, dateFormat);
+            rs = ps.executeQuery();
+            
+            while (rs.next())
+            {
+                salesCashTotal = rs.getDouble("salesCashTotal");
+                salesCardTotal = rs.getDouble("salesCardTotal");
+                salesChangeTotal = rs.getDouble("salesChangeTotal");
+            }
+            
+            cashTotal = (ordersCashTotal + salesCashTotal) - ordersChangeTotal;
+            cardTotal = (ordersCardTotal + salesCardTotal) - salesChangeTotal;
+            
+            txt_cash_total.setText(String.valueOf(cashTotal));
+            txt_card_total.setText(String.valueOf(cardTotal));
+            tillTotal = cashInTotal - cashOutTotal;
+            txt_till_total.setText(String.valueOf(tillTotal));
+            txt_balance.setText(String.valueOf(tillTotal *= -1));
+            
         } catch (SQLException ex) {
             Logger.getLogger(CloseDailyTill.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -246,6 +309,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
         txt_cash_in_total = new javax.swing.JTextField();
         lbl_card_total1 = new javax.swing.JLabel();
         txt_entries_total = new javax.swing.JTextField();
+        lbl_till_opening_date = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -505,7 +569,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
                     .addComponent(txt_till_total)
                     .addComponent(txt_balance))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane_notes)
                 .addContainerGap())
         );
         panel_totalsLayout.setVerticalGroup(
@@ -537,7 +601,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        lbl_date_cashier.setFont(new java.awt.Font("sansserif", 1, 13)); // NOI18N
+        lbl_date_cashier.setFont(new java.awt.Font("sansserif", 0, 13)); // NOI18N
         lbl_date_cashier.setText("dateCashier");
 
         panel_cash_in.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cash in", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("sansserif", 1, 14))); // NOI18N
@@ -628,19 +692,20 @@ public class CloseDailyTill extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        lbl_till_opening_date.setFont(new java.awt.Font("sansserif", 0, 13)); // NOI18N
+        lbl_till_opening_date.setText("tillOpeningDate");
+        lbl_till_opening_date.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
         javax.swing.GroupLayout panel_daily_closing_tillLayout = new javax.swing.GroupLayout(panel_daily_closing_till);
         panel_daily_closing_till.setLayout(panel_daily_closing_tillLayout);
         panel_daily_closing_tillLayout.setHorizontalGroup(
             panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_daily_closing_tillLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbl_till_closing_on)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(panel_daily_closing_tillLayout.createSequentialGroup()
                 .addGroup(panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_daily_closing_tillLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(lbl_date_cashier))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_daily_closing_tillLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lbl_till_closing_on)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(panel_daily_closing_tillLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -658,21 +723,29 @@ public class CloseDailyTill extends javax.swing.JFrame {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(panel_cash_out, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap())
+            .addGroup(panel_daily_closing_tillLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(lbl_date_cashier)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbl_till_opening_date)
+                .addGap(18, 18, 18))
         );
         panel_daily_closing_tillLayout.setVerticalGroup(
             panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_daily_closing_tillLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lbl_till_closing_on)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_date_cashier)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(30, 30, 30)
+                .addGroup(panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_date_cashier)
+                    .addComponent(lbl_till_opening_date))
+                .addGap(30, 30, 30)
                 .addGroup(panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panel_cash_out, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panel_cash_in, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panel_totals, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_sales, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -752,7 +825,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
                     
                     JOptionPane.showMessageDialog(this, "Till Closed Successfully");
                     
-                    String dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDateTime);
+                    dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDateTime);
                     PrintTillRecord printTillRecord = new PrintTillRecord(dateFormat, Login.fullName, cashTotal, cardTotal,
                     entriesTotal, cashInTotal, payments, takes, other, cashOutTotal, tillTotal, enterCashTotal, enterCardTotal, 
                     adjustments, balance, notes);
@@ -877,6 +950,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_payments;
     private javax.swing.JLabel lbl_takes;
     private javax.swing.JLabel lbl_till_closing_on;
+    private javax.swing.JLabel lbl_till_opening_date;
     private javax.swing.JLabel lbl_till_total;
     private javax.swing.JPanel panel_cash_in;
     private javax.swing.JPanel panel_cash_out;

@@ -504,8 +504,6 @@ public class PrintTillRecord extends javax.swing.JFrame {
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
        // Get date from calendar
-       // String tillClosingDate = tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(date.getTime());
-
         PrinterJob printerJob = PrinterJob.getPrinterJob();
         printerJob.setJobName("ClosingTillRecord" + dateFormat);
         PageFormat format = printerJob.getPageFormat(null);

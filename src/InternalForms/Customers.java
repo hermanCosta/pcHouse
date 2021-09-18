@@ -488,9 +488,9 @@ public class Customers extends javax.swing.JInternalFrame {
                             .addGroup(panel_customersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(lbl_contact)
                                 .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panel_customersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addGroup(panel_customersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(btn_copy, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btn_international_number, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btn_international_number, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
                         .addGroup(panel_customersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_email)
@@ -772,6 +772,15 @@ public class Customers extends javax.swing.JInternalFrame {
             String contact = dtm.getValueAt(row, 3).toString();
             String mail = dtm.getValueAt(row, 4).toString();
 
+            // If ContactNo is foreign number disable text format of Irish number and set the foreign number to the textField
+            if (contact.contains("+"))
+            {
+                txt_contact.setFormatterFactory(null);
+                txt_contact.setText(contact);
+            } else {
+                txt_contact.setText(contact);    
+            }
+            
             txt_first_name.setText(fname);
             txt_last_name.setText(lname);
             txt_contact.setText(contact);

@@ -122,7 +122,15 @@ public class SaleRefund extends javax.swing.JInternalFrame {
         lbl_auto_order_no.setText(sale.getSaleNo());
         txt_first_name.setText(sale.getFirstName());
         txt_last_name.setText(sale.getLastName());
-        txt_contact.setText(sale.getContactNo());
+        
+        // If ContactNo is foreign number disable text format of Irish number and set the foreign number to the textField
+        if (sale.getContactNo().contains("+"))
+        {
+            txt_contact.setFormatterFactory(null);
+            txt_contact.setText(sale.getContactNo());
+        } else
+            txt_contact.setText(sale.getContactNo());    
+        
         txt_email.setText(sale.getEmail());
         txt_total.setText(String.valueOf(sale.getTotal()));
         lbl_sale_refunded_on.setText("Refund Date: " + sale.getSaleDate() + " - by " + sale.getUsername());

@@ -124,6 +124,28 @@ public class OrderPayment extends javax.swing.JFrame {
             Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void calcChangeDue()
+    {
+        double inputCash;
+        double inputCard;
+        if (txt_cash.getText().trim().isEmpty()) {
+            inputCard = Double.parseDouble(txt_card.getText());
+            changeTotal = order.getDue() - inputCard;
+            lbl_change.setText(String.valueOf(changeTotal));
+        } else if (txt_card.getText().trim().isEmpty()) {
+            inputCash = Double.parseDouble(txt_cash.getText());
+            changeTotal = order.getDue() - inputCash;
+            lbl_change.setText(String.valueOf(changeTotal));
+        } else if (!txt_cash.getText().trim().isEmpty() && !txt_card.getText().trim().isEmpty()){
+            inputCash = Double.parseDouble(txt_cash.getText());
+            inputCard = Double.parseDouble(txt_card.getText());
+            changeTotal = order.getDue() - (inputCash + inputCard);
+            lbl_change.setText(String.valueOf(changeTotal));
+        } else {
+            lbl_change.setText("");
+        }
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -440,11 +462,9 @@ public class OrderPayment extends javax.swing.JFrame {
             if (completedOrder.getCard() > order.getDue()) {
                 JOptionPane.showMessageDialog(this, "Payment by Card can't be greater than Total Due !", "Payment", JOptionPane.ERROR_MESSAGE);
                 return;
-            } else if ((order.getDue() - completedOrder.getCard()) == 0) {
+            } else if ((order.getDue() - completedOrder.getCard()) <= 0) {
                 isPaid = true;
                 completedOrder.setCash(0);
-            } else if ((order.getDue() - completedOrder.getCard()) > 0) {
-                completedOrder.setCard(Double.parseDouble(txt_card.getText()));
             }
 
         } else if (!txt_cash.getText().isEmpty() && txt_card.getText().isEmpty()) {
@@ -453,26 +473,25 @@ public class OrderPayment extends javax.swing.JFrame {
             if ((order.getDue() - completedOrder.getCash()) <= 0) {
                 isPaid = true;
                 completedOrder.setCard(0);
-                completedOrder.setChangeTotal(completedOrder.getCash() - order.getDue());
             }
         } else if (!txt_cash.getText().isEmpty() && !txt_card.getText().isEmpty()) {
             completedOrder.setCash(Double.parseDouble(txt_cash.getText()));
             completedOrder.setCard(Double.parseDouble(txt_card.getText()));
-
             totalPaid = completedOrder.getCash() + completedOrder.getCard();
-            if (completedOrder.getCard() > order.getDue()) {
+            
+            if ((order.getDue() - totalPaid) <= 0)
+                isPaid = true;
+            else if (completedOrder.getCard() > order.getDue()) {
                 JOptionPane.showMessageDialog(this, "Payment by Card can't be greater than Total Due !", "Payment", JOptionPane.ERROR_MESSAGE);
                 return;
-            } else if ((order.getDue() - totalPaid) <= 0) {
-                changeTotal = (completedOrder.getCash() + completedOrder.getCard()) - order.getDue();
-                isPaid = true;
-                completedOrder.setChangeTotal(changeTotal);
-            }
+            } 
         }
 
         if (isPaid) {
+            changeTotal = (completedOrder.getCash() + completedOrder.getCard()) - order.getDue();
             lbl_change.setText(String.valueOf(changeTotal));
-
+            completedOrder.setChangeTotal(changeTotal);
+            
             int confirmPayment = JOptionPane.showConfirmDialog(this, "Confirm Payment on Order " + order.getOrderNo() + " ?", "Payment", JOptionPane.YES_NO_OPTION);
             if (confirmPayment == 0) {
                 completedOrder = new CompletedOrder(order.getOrderNo(), order.getFirstName(), order.getLastName(), order.getContactNo(),
@@ -534,7 +553,6 @@ public class OrderPayment extends javax.swing.JFrame {
 
     private void txt_cashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cashActionPerformed
         // TODO add your handling code here:
-
     }//GEN-LAST:event_txt_cashActionPerformed
 
     private void txt_cashKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cashKeyReleased

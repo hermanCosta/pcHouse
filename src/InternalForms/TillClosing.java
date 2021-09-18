@@ -28,8 +28,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -660,7 +662,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         btn_close_dayling_till.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
         btn_close_dayling_till.setForeground(new java.awt.Color(255, 255, 255));
         btn_close_dayling_till.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_close_day_till.png"))); // NOI18N
-        btn_close_dayling_till.setText("Close Dayling Till");
+        btn_close_dayling_till.setText("Close Daily Till");
         btn_close_dayling_till.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_close_dayling_tillActionPerformed(evt);
@@ -1023,10 +1025,46 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
     private void btn_close_dayling_tillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_close_dayling_tillActionPerformed
         // TODO add your handling code here:
-        double cashTotal = ordersCashTotal + salesCashTotal;
-        double cardTotal = ordersCardTotal + salesCardTotal;
-        CloseDailyTill closeDaylingTill = new CloseDailyTill(cashTotal, cardTotal);
-        closeDaylingTill.setVisible(true);
+        Calendar calendar = Calendar.getInstance();
+        Date pickedDate = date_picker.getDate();
+        String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(pickedDate);
+        String endDate = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(pickedDate);
+        String tillOpeningDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, -2);
+        
+        
+        
+        try {
+            dbConnection();
+            String queryTillClosing = "SELECT * FROM tillClosing where date >= ? AND date <= ?";
+            ps = con.prepareStatement(queryTillClosing);
+            ps.setString(1, startDate);
+            ps.setString(2, endDate);
+            rs = ps.executeQuery();
+            
+            if(rs.isBeforeFirst()) {
+                JOptionPane.showMessageDialog(this, "No Till Pending to Close on " + tillOpeningDate + "!");
+            }
+//            else if (pickedDate.before(cal.getTime()) || pickedDate.after(calendar.getTime()))
+//            {
+//                System.out.println(cal.getTime());
+//                JOptionPane.showMessageDialog(this, tillClosingDate + " is not Valid Date to Close The Till !", "Till Closing", 
+//                        JOptionPane.ERROR_MESSAGE);
+//            }
+//            
+            else
+            {
+                double cashTotal = ordersCashTotal + salesCashTotal;
+                double cardTotal = ordersCardTotal + salesCardTotal;
+                CloseDailyTill closeDailyTill = new CloseDailyTill(pickedDate);
+                closeDailyTill.setVisible(true);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TillClosing.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btn_close_dayling_tillActionPerformed
 
     private void btn_money_counterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_money_counterActionPerformed

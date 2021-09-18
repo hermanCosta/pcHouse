@@ -15,6 +15,8 @@ import Model.ProductService;
 import Model.Sale;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -99,7 +101,15 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         lbl_auto_order_no.setText(sale.getSaleNo());
         txt_first_name.setText(sale.getFirstName());
         txt_last_name.setText(sale.getLastName());
-        txt_contact.setText(sale.getContactNo());
+        
+        // If ContactNo is foreign number disable text format of Irish number and set the foreign number to the textField
+        if (sale.getContactNo().contains("+"))
+        {
+            txt_contact.setFormatterFactory(null);
+            txt_contact.setText(sale.getContactNo());
+        } else
+            txt_contact.setText(sale.getContactNo());    
+        
         txt_email.setText(sale.getEmail());
         txt_total.setText(String.valueOf(sale.getTotal()));
         lbl_sale_paid_on.setText("Sale Date: " + sale.getSaleDate());
@@ -245,6 +255,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         panel_sale_status = new javax.swing.JPanel();
         lbl_sale_paid_on = new javax.swing.JLabel();
         lbl_paid_by = new javax.swing.JLabel();
+        btn_copy = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -441,6 +452,14 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                 .addContainerGap(7, Short.MAX_VALUE))
         );
 
+        btn_copy.setBackground(new java.awt.Color(0, 0, 0));
+        btn_copy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_copy.png"))); // NOI18N
+        btn_copy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_copyActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);
         panel_order_detailsLayout.setHorizontalGroup(
@@ -472,8 +491,12 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                                             .addComponent(lbl_contact)
                                             .addGap(11, 11, 11)))
                                     .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txt_contact, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                                        .addComponent(txt_last_name))))
+                                        .addComponent(txt_last_name, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                            .addComponent(txt_contact)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(btn_copy, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(3, 3, 3)))))
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_total)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -520,7 +543,8 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                         .addGap(18, 18, Short.MAX_VALUE)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_contact)
-                            .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_copy, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, Short.MAX_VALUE)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_email)
@@ -679,7 +703,15 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btn_refundActionPerformed
 
+    private void btn_copyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_copyActionPerformed
+        // TODO add your handling code here:
+        StringSelection stringSelection = new StringSelection(txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", ""));
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection , null);
+        JOptionPane.showMessageDialog(this, txt_contact.getText() + " Copied to Clipboard");
+    }//GEN-LAST:event_btn_copyActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_copy;
     private javax.swing.JButton btn_notes;
     private javax.swing.JButton btn_refund;
     private javax.swing.JButton jButton1;

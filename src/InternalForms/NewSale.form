@@ -112,11 +112,11 @@
                                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                               <Component id="txt_last_name" min="-2" pref="300" max="-2" attributes="0"/>
                                               <Group type="102" attributes="0">
-                                                  <Component id="txt_contact" min="-2" pref="190" max="-2" attributes="0"/>
-                                                  <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
-                                                  <Component id="btn_international_number" min="-2" pref="50" max="-2" attributes="0"/>
+                                                  <Component id="txt_contact" max="32767" attributes="0"/>
                                                   <EmptySpace max="-2" attributes="0"/>
-                                                  <Component id="btn_copy" min="-2" pref="50" max="-2" attributes="0"/>
+                                                  <Component id="btn_international_number" min="-2" pref="35" max="-2" attributes="0"/>
+                                                  <EmptySpace max="-2" attributes="0"/>
+                                                  <Component id="btn_copy" min="-2" pref="35" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
                                       </Group>
@@ -193,20 +193,23 @@
                                           <Component id="txt_contact" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="lbl_email" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="txt_email" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="lbl_price" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="txt_total" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
-                                      </Group>
                                   </Group>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="btn_copy" alignment="0" min="-2" pref="28" max="-2" attributes="0"/>
-                                      <Component id="btn_international_number" alignment="1" min="-2" pref="28" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Group type="103" groupAlignment="1" attributes="0">
+                                          <Component id="btn_international_number" min="-2" pref="28" max="-2" attributes="0"/>
+                                          <Component id="btn_copy" min="-2" pref="28" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
                                   </Group>
+                              </Group>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="lbl_email" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txt_email" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="lbl_price" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txt_total" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">

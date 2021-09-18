@@ -322,11 +322,11 @@ public class NewOrder extends javax.swing.JInternalFrame {
             issueDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDate);
 
             //Empty vector before looping to avoid duplicate values on tableView
-            vecFaults.removeAllElements();
-            vecProducts.removeAllElements();
-            vecQty.removeAllElements();
-            vecUnitPrice.removeAllElements();
-            vecPriceTotal.removeAllElements();
+            vecFaults.clear();
+            vecProducts.clear();
+            vecQty.clear();
+            vecUnitPrice.clear();
+            vecPriceTotal.clear();
             //pass table items from faults and products table to vector 
             for (int i = 0; i < table_view_faults.getRowCount(); i++) {
                 vecFaults.add(table_view_faults.getValueAt(i, 0));
@@ -392,10 +392,10 @@ public class NewOrder extends javax.swing.JInternalFrame {
         txt_due = new javax.swing.JTextField();
         jScrollPane_notes = new javax.swing.JScrollPane();
         editor_pane_notes = new javax.swing.JEditorPane();
-        btn_copy = new javax.swing.JButton();
-        btn_international_number = new javax.swing.JButton();
         txt_fault = new javax.swing.JTextField();
         combo_box_product_service = new javax.swing.JComboBox<>();
+        btn_international_number = new javax.swing.JButton();
+        btn_copy = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -702,22 +702,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
         });
         jScrollPane_notes.setViewportView(editor_pane_notes);
 
-        btn_copy.setBackground(new java.awt.Color(0, 0, 0));
-        btn_copy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_copy.png"))); // NOI18N
-        btn_copy.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_copyActionPerformed(evt);
-            }
-        });
-
-        btn_international_number.setBackground(new java.awt.Color(0, 0, 0));
-        btn_international_number.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_international_number.png"))); // NOI18N
-        btn_international_number.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_international_numberActionPerformed(evt);
-            }
-        });
-
         txt_fault.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         txt_fault.setNextFocusableComponent(combo_box_product_service);
         txt_fault.addActionListener(new java.awt.event.ActionListener() {
@@ -736,6 +720,22 @@ public class NewOrder extends javax.swing.JInternalFrame {
         combo_box_product_service.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select or Type" }));
         combo_box_product_service.setNextFocusableComponent(txt_deposit);
 
+        btn_international_number.setBackground(new java.awt.Color(0, 0, 0));
+        btn_international_number.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_international_number.png"))); // NOI18N
+        btn_international_number.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_international_numberActionPerformed(evt);
+            }
+        });
+
+        btn_copy.setBackground(new java.awt.Color(0, 0, 0));
+        btn_copy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_copy.png"))); // NOI18N
+        btn_copy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_copyActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);
         panel_order_detailsLayout.setHorizontalGroup(
@@ -744,7 +744,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGap(21, 21, 21)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_order_no)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -770,11 +770,11 @@ public class NewOrder extends javax.swing.JInternalFrame {
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_contact)
                                 .addGap(11, 11, 11)
-                                .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(3, 3, 3)
-                                .addComponent(btn_international_number, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btn_copy, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btn_international_number, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btn_copy, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
                                     .addComponent(lbl_first_name)
@@ -837,12 +837,12 @@ public class NewOrder extends javax.swing.JInternalFrame {
                             .addComponent(lbl_last_name)
                             .addComponent(txt_last_name, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(15, 15, 15)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_international_number, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(lbl_contact)
                                 .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btn_copy, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btn_international_number, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_copy, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(15, 15, 15)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_email)
@@ -922,6 +922,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void btn_save_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save_orderActionPerformed
         // TODO add your handling code here:
+        loadOrderList();
+        
         if (deposit == 0) {
             int confirmNewOrder = JOptionPane.showConfirmDialog(this, "Do you want to save this new Order " + order.getOrderNo() + " ?");
             if (confirmNewOrder == 0) {
@@ -1327,21 +1329,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_modelKeyReleased
 
-    private void btn_copyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_copyActionPerformed
-        // TODO add your handling code here:
-        StringSelection stringSelection = new StringSelection(txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", ""));
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection , null);
-        JOptionPane.showMessageDialog(this, txt_contact.getText() + " Copied to Clipboard");
-    }//GEN-LAST:event_btn_copyActionPerformed
-
-    private void btn_international_numberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_international_numberActionPerformed
-        // TODO add your handling code here:
-        txt_contact.setFormatterFactory(null);
-        txt_contact.setText("");
-        txt_contact.requestFocus();
-        
-    }//GEN-LAST:event_btn_international_numberActionPerformed
-
     private void txt_faultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_faultActionPerformed
         // TODO add your handling code here:
          String faultText = txt_fault.getText();
@@ -1420,6 +1407,20 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 });
         }
     }//GEN-LAST:event_txt_faultKeyReleased
+
+    private void btn_international_numberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_international_numberActionPerformed
+        // TODO add your handling code here:
+        txt_contact.setFormatterFactory(null);
+        txt_contact.setText("");
+        txt_contact.requestFocus();
+    }//GEN-LAST:event_btn_international_numberActionPerformed
+
+    private void btn_copyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_copyActionPerformed
+        // TODO add your handling code here:
+        StringSelection stringSelection = new StringSelection(txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", ""));
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection , null);
+        JOptionPane.showMessageDialog(this, txt_contact.getText() + " Copied to Clipboard");
+    }//GEN-LAST:event_btn_copyActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btn_add_product;

@@ -136,7 +136,15 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         lbl_auto_order_no.setText(order.getOrderNo());
         txt_first_name.setText(order.getFirstName());
         txt_last_name.setText(order.getLastName());
-        txt_contact.setText(order.getContactNo());
+        
+        // If ContactNo is foreign number disable text format of Irish number and set the foreign number to the textField
+        if (order.getContactNo().contains("+"))
+        {
+            txt_contact.setFormatterFactory(null);
+            txt_contact.setText(order.getContactNo());
+        } else
+            txt_contact.setText(order.getContactNo());    
+        
         txt_email.setText(order.getEmail());
         txt_brand.setText(order.getBrand());
         txt_model.setText(order.getModel());
@@ -699,7 +707,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 btn_copyActionPerformed(evt);
             }
         });
-        panel_order_details.add(btn_copy, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 212, -1, 30));
+        panel_order_details.add(btn_copy, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 210, 40, 30));
 
         desktop_pane_fixed_order.setLayer(panel_order_details, javax.swing.JLayeredPane.DEFAULT_LAYER);
 

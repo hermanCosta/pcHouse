@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
  *
  * @author HermanCosta
  */
-public class DepositUpdatePayment extends javax.swing.JFrame {
+public class UpdateDepositPayment extends javax.swing.JFrame {
 
     Connection con;
     PreparedStatement ps;
@@ -31,11 +31,11 @@ public class DepositUpdatePayment extends javax.swing.JFrame {
     double newDeposit;
     CompletedOrder completedOrder;
 
-    public DepositUpdatePayment() {
+    public UpdateDepositPayment() {
         initComponents();
     }
 
-    public DepositUpdatePayment(Order _order, CompletedOrder _completedOrder, double _newDeposit) {
+    public UpdateDepositPayment(Order _order, CompletedOrder _completedOrder, double _newDeposit) {
         initComponents();
 
         this.order = _order;
@@ -77,7 +77,7 @@ public class DepositUpdatePayment extends javax.swing.JFrame {
             con.close();
 
         } catch (SQLException ex) {
-            Logger.getLogger(DepositUpdatePayment.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UpdateDepositPayment.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }

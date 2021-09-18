@@ -6,7 +6,7 @@
 package InternalForms;
 
 import Forms.DepositPayment;
-import Forms.DepositUpdatePayment;
+import Forms.UpdateDepositPayment;
 import Forms.PrintOrder;
 import Forms.OrderNotes;
 import Model.CompletedOrder;
@@ -132,7 +132,15 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         lbl_auto_order_no.setText(order.getOrderNo());
         txt_first_name.setText(order.getFirstName());
         txt_last_name.setText(order.getLastName());
-        txt_contact.setText(order.getContactNo());
+        
+        // If ContactNo is foreign number disable text format of Irish number and set the foreign number to the textField
+        if (order.getContactNo().contains("+"))
+        {
+            txt_contact.setFormatterFactory(null);
+            txt_contact.setText(order.getContactNo());
+        } else
+            txt_contact.setText(order.getContactNo());    
+
         txt_email.setText(order.getEmail());
         txt_brand.setText(order.getBrand());
         txt_model.setText(order.getModel());
@@ -143,7 +151,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         txt_due.setText(String.valueOf(order.getDue()));
         lbl_issue_date.setText("Created on: " + order.getIssueDate() + " - by " + order.getUsername());
 
-        // Pass arrayPrices to a vector and add as a new column
         Vector vecFaults = new Vector();
         Vector vecProducts = new Vector();
         Vector vecQty = new Vector();
@@ -763,16 +770,18 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             .addComponent(panel_buttons, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                 .addGap(21, 21, 21)
-                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panel_order_detailsLayout.createSequentialGroup()
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_order_no)
                                 .addGap(12, 12, 12)
                                 .addComponent(lbl_auto_order_no))
                             .addComponent(lbl_issue_date))
-                        .addGap(289, 289, 289)
-                        .addComponent(txt_fault))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lbl_fault)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txt_fault, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
@@ -806,39 +815,37 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                         .addComponent(lbl_contact)
                                         .addGap(11, 11, 11)
-                                        .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(3, 3, 3)
-                                        .addComponent(btn_international_number, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txt_contact)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btn_copy, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addComponent(btn_international_number, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btn_copy, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_order_detailsLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 571, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addGap(30, 30, 30)
-                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lbl_fault)
-                                    .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jScrollPane3)
-                                        .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                            .addComponent(lbl_service_product)
-                                            .addGap(6, 6, 6)
-                                            .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(10, 10, 10)
-                                            .addComponent(lbl_add_product))
-                                        .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                            .addComponent(lbl_due)
-                                            .addGap(0, 0, 0)
-                                            .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(lbl_deposit)
-                                            .addGap(0, 0, 0)
-                                            .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(lbl_price)
-                                            .addGap(0, 0, 0)
-                                            .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))))))
+                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jScrollPane3)
+                                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                        .addComponent(lbl_service_product)
+                                        .addGap(6, 6, 6)
+                                        .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(10, 10, 10)
+                                        .addComponent(lbl_add_product))
+                                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                        .addComponent(lbl_due)
+                                        .addGap(0, 0, 0)
+                                        .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(lbl_deposit)
+                                        .addGap(0, 0, 0)
+                                        .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(lbl_price)
+                                        .addGap(0, 0, 0)
+                                        .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_order_detailsLayout.setVerticalGroup(
@@ -879,7 +886,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                                 .addComponent(lbl_contact))
                             .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(btn_copy, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btn_copy, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(btn_international_number, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(12, 12, 12)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1378,6 +1385,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         boolean isOrderDetails = true;
         
+        String issueDateFormat = order.getIssueDate().substring(0, 11);
+        order.setIssueDate(issueDateFormat);
         PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
         printOrder.setVisible(true);
     }//GEN-LAST:event_btn_printActionPerformed
@@ -1418,7 +1427,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 | txt_contact.getText().trim().isEmpty() | txt_brand.getText().trim().isEmpty()
                 | txt_model.getText().trim().isEmpty() | txt_serial_number.getText().trim().isEmpty()
                 | table_view_products.getRowCount() == 0 | table_view_faults.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(this, "Please, check Empty fields", "Update Order", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please, check Empty fields", "Update Order Details", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -1427,13 +1436,13 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         String updateDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDate);
 
         //Empty vector before looping to avoid duplicate values on tableView
-        vecUpdateFaults.removeAllElements();
-        vecUpdateProducts.removeAllElements();
-        vecUpdateQty.removeAllElements();
-        vecUpdateUnitPrice.removeAllElements();
-        vecUpdatePriceTotal.removeAllElements();
-
-        //pass table items from faults and products table to vector 
+        vecUpdateFaults.clear();
+        vecUpdateProducts.clear();
+        vecUpdateQty.clear();
+        vecUpdateUnitPrice.clear();
+        vecUpdatePriceTotal.clear();
+        
+        //pass table faults and products to vector 
         for (int i = 0; i < table_view_faults.getRowCount(); i++) {
             vecUpdateFaults.add(table_view_faults.getValueAt(i, 0));
         }
@@ -1445,25 +1454,25 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             vecUpdatePriceTotal.add(table_view_products.getValueAt(j, 3));
         }
         //Remove Brackets from the vector to pass to Database  
-        stringFaults = vecUpdateFaults.toString().replace("[", "").replace("]", "");
+        stringFaults = vecUpdateFaults.toString().replace("[", "").replace("]", "").replace("  ", " ");
         stringProducts = vecUpdateProducts.toString().replace("[", "").replace("]", "");
         stringQty = vecUpdateQty.toString().replace("[", "").replace("]", "");
         stringUnitPrice = vecUpdateUnitPrice.toString().replace("[", "").replace("]", "");
         stringPriceTotal = vecUpdatePriceTotal.toString().replace("[", "").replace("]", "");
-
+        
+        // Do not update if input values are equal to existing ones
         if (order.getFirstName().equals(txt_first_name.getText()) && order.getLastName().equals(txt_last_name.getText())
                 && order.getContactNo().equals(txt_contact.getText()) && order.getEmail().equals(txt_email.getText())
                 && order.getBrand().equals(txt_brand.getText()) && order.getModel().equals(txt_model.getText())
                 && order.getSerialNumber().equals(txt_serial_number.getText()) && order.getStringFaults().equals(stringFaults)
                 && order.getImportantNotes().equals(editor_pane_important_notes.getText()) && order.getStringProducts().equals(stringProducts)
                 && order.getStringQty().equals(stringQty) && order.getUnitPrice().equals(stringUnitPrice)
-                && order.getPriceTotal().equals(stringPriceTotal) && order.getTotal() == Double.parseDouble(txt_total.getText())
-                //&& order.getDeposit() == Double.parseDouble(txt_deposit.getText()) 
-                && order.getDue() == Double.parseDouble(txt_due.getText())) {
+                && order.getPriceTotal().equals(stringPriceTotal) && order.getDeposit() == Double.parseDouble(txt_deposit.getText())
+                && order.getTotal() == Double.parseDouble(txt_total.getText()) && order.getDue() == Double.parseDouble(txt_due.getText())) {
             JOptionPane.showMessageDialog(this, "No changes to be Updated", "Update Order Details", JOptionPane.ERROR_MESSAGE);
 
         } else if (Double.parseDouble(txt_deposit.getText()) < order.getDeposit()) {
-            JOptionPane.showMessageDialog(this, "Deposit can not be equal or less than " + order.getDeposit() + " !", "Update Order Details", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Deposit can not be less than " + order.getDeposit() + " !", "Update Order Details", JOptionPane.ERROR_MESSAGE);
         } else {
             order.setFirstName(txt_first_name.getText().toUpperCase());
             order.setLastName(txt_last_name.getText().toUpperCase());
@@ -1482,16 +1491,16 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             order.setDue(Double.parseDouble(txt_due.getText()));
             order.setIssueDate(updateDate);
 
-            int confirmUpdate = JOptionPane.showConfirmDialog(null, "Save changes on order "
+            int confirmUpdating = JOptionPane.showConfirmDialog(null, "Save changes on order "
                     + order.getOrderNo() + " ?", "Update Order Details", JOptionPane.YES_NO_OPTION);
 
-            if (confirmUpdate == 0) {
+            if (confirmUpdating == 0) {
                 double newDeposit = Double.parseDouble(txt_deposit.getText());
 
                 if (newDeposit > order.getDeposit()) {
                     newDeposit -= order.getDeposit();
-                    DepositUpdatePayment depositUpdatePayment = new DepositUpdatePayment(order, completedOrder, newDeposit);
-                    depositUpdatePayment.setVisible(true);
+                    UpdateDepositPayment updateDepositPayment = new UpdateDepositPayment(order, completedOrder, newDeposit);
+                    updateDepositPayment.setVisible(true);
                 } else {
                     try {
                         String queryUpdate = "UPDATE orderDetails SET firstName = ?, lastName = ? , contactNo = ?, email = ?,"
