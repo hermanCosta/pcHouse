@@ -28,7 +28,7 @@ public class PrintTillRecord extends javax.swing.JFrame {
     Connection con;
     ResultSet rs;
     
-    String dateFormat, cashier, notes;
+    String tillClosingDate, cashier, tillOpeningDate, notes;
     double cashTotal, cardTotal, entriesTotal, cashInTotal, 
             enterCashTotal, enterCardTotal, adjustments, balance, 
             cashEntryTotal, payments, takes, other, tillTotal, cashOutTotal;
@@ -37,14 +37,15 @@ public class PrintTillRecord extends javax.swing.JFrame {
         initComponents();
     }
     
-    public PrintTillRecord(String _dateFormat, String _cashier, double _cashTotal, double _cardTotal, 
+    public PrintTillRecord(String _tillClosingDate, String _cashier, String _tillOpeningDate, double _cashTotal, double _cardTotal, 
             double _entriesTotal, double _cashInTotal, double _payments, double _takes, double _other, 
             double _cashOutTotal, double _tillTotal, double _enterCashTotal, double _enterCardTotal, 
             double _adjustments, double _balance, String _notes) {
         initComponents();
         
-        this.dateFormat = _dateFormat;
+        this.tillClosingDate = _tillClosingDate;
         this.cashier = _cashier;
+        this.tillOpeningDate = _tillOpeningDate;
         this.cashTotal = _cashTotal;
         this.cardTotal = _cardTotal;
         this.entriesTotal = _entriesTotal;
@@ -60,15 +61,14 @@ public class PrintTillRecord extends javax.swing.JFrame {
         this.balance = _balance;
         this.notes = _notes;
         
-        //date = new Date();
-        
         loadTillRecordsFromDb();
     }
 
     public void loadTillRecordsFromDb() {
         // TODO add your handling code here:
-        lbl_till_closed_on.setText("Till Closed on " + dateFormat);
+        lbl_till_closed_on.setText("Till Closed on " + tillClosingDate);
         lbl_cashier.setText("Cashier: " + cashier);
+        lbl_till_opening_date.setText("Till Opening Date: " + tillOpeningDate);
         lbl_cash_total.setText("Cash Total........................ €" + String.valueOf(cashTotal));
         lbl_card_total.setText("Card Total........................ €" + String.valueOf(cardTotal));
         lbl_entries_total.setText("Entries Total..................... €" + String.valueOf(entriesTotal));
@@ -137,6 +137,7 @@ public class PrintTillRecord extends javax.swing.JFrame {
         lbl_notes = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
+        lbl_till_opening_date = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(660, 700));
@@ -362,7 +363,6 @@ public class PrintTillRecord extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        lbl_cashier.setFont(new java.awt.Font("sansserif", 0, 13)); // NOI18N
         lbl_cashier.setText("cashier");
 
         lbl_cash_in_details.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
@@ -396,6 +396,9 @@ public class PrintTillRecord extends javax.swing.JFrame {
         lbl_notes.setFont(new java.awt.Font("Lucida Grande", 1, 15)); // NOI18N
         lbl_notes.setText("Notes");
 
+        lbl_till_opening_date.setText("tillOpeningDate");
+        lbl_till_opening_date.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
         javax.swing.GroupLayout panel_till_recordsLayout = new javax.swing.GroupLayout(panel_till_records);
         panel_till_records.setLayout(panel_till_recordsLayout);
         panel_till_recordsLayout.setHorizontalGroup(
@@ -416,7 +419,7 @@ public class PrintTillRecord extends javax.swing.JFrame {
                             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(panel_totals, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lbl_cashier, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(scroll_pane_notes)
                             .addGroup(panel_till_recordsLayout.createSequentialGroup()
                                 .addGroup(panel_till_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbl_notes)
@@ -430,7 +433,11 @@ public class PrintTillRecord extends javax.swing.JFrame {
                                             .addComponent(lbl_cash_out_details)
                                             .addComponent(panel_cash_out, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(scroll_pane_notes))))
+                            .addGroup(panel_till_recordsLayout.createSequentialGroup()
+                                .addComponent(lbl_cashier)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lbl_till_opening_date, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(8, 8, 8)))))
                 .addGap(21, 21, 21))
         );
         panel_till_recordsLayout.setVerticalGroup(
@@ -440,12 +447,14 @@ public class PrintTillRecord extends javax.swing.JFrame {
                 .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(lbl_till_closed_on)
-                .addGap(18, 18, 18)
-                .addComponent(lbl_cashier)
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addGroup(panel_till_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_cash_in_details)
-                    .addComponent(lbl_cash_out_details))
+                    .addComponent(lbl_cashier)
+                    .addComponent(lbl_till_opening_date))
+                .addGap(30, 30, 30)
+                .addGroup(panel_till_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_cash_out_details)
+                    .addComponent(lbl_cash_in_details))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_till_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panel_cash_out, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -462,7 +471,7 @@ public class PrintTillRecord extends javax.swing.JFrame {
                 .addComponent(lbl_notes)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scroll_pane_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         scroll_pane_till_closing.setViewportView(panel_till_records);
@@ -505,7 +514,7 @@ public class PrintTillRecord extends javax.swing.JFrame {
         // TODO add your handling code here:
        // Get date from calendar
         PrinterJob printerJob = PrinterJob.getPrinterJob();
-        printerJob.setJobName("ClosingTillRecord" + dateFormat);
+        printerJob.setJobName("ClosingTillRecord" + tillClosingDate);
         PageFormat format = printerJob.getPageFormat(null);
 
         printerJob.setPrintable(new Printable() {
@@ -565,6 +574,7 @@ public class PrintTillRecord extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_payments;
     private javax.swing.JLabel lbl_takes;
     private javax.swing.JLabel lbl_till_closed_on;
+    private javax.swing.JLabel lbl_till_opening_date;
     private javax.swing.JLabel lbl_till_total;
     private javax.swing.JLabel lbl_totals;
     private javax.swing.JSeparator line_header;

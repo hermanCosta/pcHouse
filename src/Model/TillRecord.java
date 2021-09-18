@@ -10,22 +10,30 @@ package Model;
  * @author user
  */
 public class TillRecord {
-    String date, notes;
+    String tillClosingDate, tillOpeningDate, notes;
     double cashInTotal, cashOutTotal;
 
-    public TillRecord(String _date, double _cashInTotal, double _cashOutTotal, String _notes) {
-        this.date = _date;
+    public TillRecord(String _tillOpeningDate, double _cashInTotal, double _cashOutTotal, String _notes) {
+        this.tillOpeningDate = _tillOpeningDate;
         this.cashInTotal = _cashInTotal;
         this.cashOutTotal = _cashOutTotal;
         this.notes = _notes;
     }
 
-    public String getDate() {
-        return date;
+    public String getTillClosingDate() {
+        return tillClosingDate;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setTillClosingDate(String tillClosingDate) {
+        this.tillClosingDate = tillClosingDate;
+    }
+
+    public String getTillOpeningDate() {
+        return tillOpeningDate;
+    }
+
+    public void setTillOpeningDate(String tillOpeningDate) {
+        this.tillOpeningDate = tillOpeningDate;
     }
 
     public String getNotes() {

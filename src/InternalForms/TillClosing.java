@@ -1035,8 +1035,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
         cal.setTime(new Date());
         cal.add(Calendar.DATE, -2);
         
-        
-        
         try {
             dbConnection();
             String queryTillClosing = "SELECT * FROM tillClosing where date >= ? AND date <= ?";
@@ -1048,17 +1046,14 @@ public class TillClosing extends javax.swing.JInternalFrame {
             if(rs.isBeforeFirst()) {
                 JOptionPane.showMessageDialog(this, "No Till Pending to Close on " + tillOpeningDate + "!");
             }
-//            else if (pickedDate.before(cal.getTime()) || pickedDate.after(calendar.getTime()))
-//            {
-//                System.out.println(cal.getTime());
-//                JOptionPane.showMessageDialog(this, tillClosingDate + " is not Valid Date to Close The Till !", "Till Closing", 
-//                        JOptionPane.ERROR_MESSAGE);
-//            }
-//            
+            else if (pickedDate.before(cal.getTime()) || pickedDate.after(calendar.getTime()))
+            {
+                JOptionPane.showMessageDialog(this, tillOpeningDate + " is not Valid Date to Close The Till !", "Till Closing", 
+                        JOptionPane.ERROR_MESSAGE);
+            }
+            
             else
             {
-                double cashTotal = ordersCashTotal + salesCashTotal;
-                double cardTotal = ordersCardTotal + salesCardTotal;
                 CloseDailyTill closeDailyTill = new CloseDailyTill(pickedDate);
                 closeDailyTill.setVisible(true);
             }

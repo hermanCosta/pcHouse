@@ -149,7 +149,7 @@
                                   <Component id="jSeparator1" alignment="1" max="32767" attributes="0"/>
                                   <Component id="jSeparator2" alignment="1" max="32767" attributes="0"/>
                                   <Component id="panel_totals" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="lbl_cashier" max="32767" attributes="0"/>
+                                  <Component id="scroll_pane_notes" alignment="0" max="32767" attributes="0"/>
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="lbl_notes" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -168,7 +168,12 @@
                                       </Group>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
-                                  <Component id="scroll_pane_notes" alignment="0" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="lbl_cashier" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Component id="lbl_till_opening_date" min="-2" pref="192" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                       </Group>
@@ -183,12 +188,15 @@
                       <Component id="panel_header" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="lbl_till_closed_on" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="lbl_cashier" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="lbl_cash_in_details" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbl_cashier" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbl_till_opening_date" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="lbl_cash_out_details" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbl_cash_in_details" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -207,7 +215,7 @@
                       <Component id="lbl_notes" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="scroll_pane_notes" min="-2" pref="162" max="-2" attributes="0"/>
-                      <EmptySpace pref="26" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -555,9 +563,6 @@
             </Container>
             <Component class="javax.swing.JLabel" name="lbl_cashier">
               <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="sansserif" size="13" style="0"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="cashier"/>
               </Properties>
             </Component>
@@ -637,6 +642,12 @@
             <Component class="javax.swing.JSeparator" name="jSeparator1">
             </Component>
             <Component class="javax.swing.JSeparator" name="jSeparator2">
+            </Component>
+            <Component class="javax.swing.JLabel" name="lbl_till_opening_date">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="tillOpeningDate"/>
+                <Property name="horizontalTextPosition" type="int" value="2"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

@@ -65,7 +65,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                                  <Component id="btn_sales" min="-2" pref="195" max="-2" attributes="0"/>
+                                  <Component id="btn_save" min="-2" pref="195" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="btn_money_counter" min="-2" pref="195" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -112,7 +112,7 @@
                   <Component id="panel_totals" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="btn_sales" alignment="3" min="-2" pref="50" max="-2" attributes="0"/>
+                      <Component id="btn_save" alignment="3" min="-2" pref="50" max="-2" attributes="0"/>
                       <Component id="btn_cancel" alignment="3" min="-2" pref="50" max="-2" attributes="0"/>
                       <Component id="btn_money_counter" alignment="3" min="-2" pref="50" max="-2" attributes="0"/>
                   </Group>
@@ -330,7 +330,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_cancelActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btn_sales">
+        <Component class="javax.swing.JButton" name="btn_save">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="79" green="4c" red="15" type="rgb"/>
@@ -347,7 +347,7 @@
             <Property name="text" type="java.lang.String" value="Save"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_salesActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_saveActionPerformed"/>
           </Events>
         </Component>
         <Container class="javax.swing.JPanel" name="panel_totals">

@@ -72,7 +72,7 @@
                                   <Group type="102" alignment="1" attributes="0">
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="btn_weekly_records1" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="btn_monthly_records" alignment="0" max="32767" attributes="0"/>
                                           <Component id="btn_weekly_records" max="32767" attributes="0"/>
                                           <Component id="btn_daily_records" max="32767" attributes="0"/>
                                           <Component id="btn_print_records" alignment="1" max="32767" attributes="0"/>
@@ -105,7 +105,7 @@
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="btn_weekly_records" min="-2" pref="50" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                              <Component id="btn_weekly_records1" min="-2" pref="50" max="-2" attributes="0"/>
+                              <Component id="btn_monthly_records" min="-2" pref="50" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="btn_print_records" min="-2" pref="50" max="-2" attributes="0"/>
                           </Group>
@@ -264,7 +264,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="lbl_till_closed_on" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_till_closing_records" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="207" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -285,7 +285,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="panel_header" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="lbl_till_closed_on" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbl_till_closing_records" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="panel_table_records" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -390,7 +390,7 @@
                         </Component>
                       </SubComponents>
                     </Container>
-                    <Component class="javax.swing.JLabel" name="lbl_till_closed_on">
+                    <Component class="javax.swing.JLabel" name="lbl_till_closing_records">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="sansserif" size="17" style="1"/>
@@ -517,7 +517,7 @@
                 </Container>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="btn_weekly_records1">
+            <Component class="javax.swing.JButton" name="btn_monthly_records">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="79" green="4c" red="15" type="rgb"/>
@@ -534,7 +534,7 @@
                 <Property name="text" type="java.lang.String" value="Monthly Records"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_weekly_records1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_monthly_recordsActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

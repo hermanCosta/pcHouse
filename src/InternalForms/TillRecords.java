@@ -70,29 +70,27 @@ public class TillRecords extends javax.swing.JInternalFrame {
     public void loadWeeklyRecordsFromDb() {
         // TODO add your handling code here:
         ArrayList<TillRecord> tillRecordsList = new ArrayList<>();
-        String dateFormat = "";
+        //String dateFormat = "";
         double cashInTotal = 0, cashOutTotal = 0;
         DefaultTableModel dtm = (DefaultTableModel) table_view_till_records.getModel();
         dtm.setRowCount(0);
         try {
             dbConnection();
             
-            String query = "SELECT * FROM tillClosing WHERE WEEKOFYEAR(date) = WEEKOFYEAR(NOW()) ORDER BY date DESC";
+            String query = "SELECT * FROM tillClosing WHERE WEEKOFYEAR(tillOpeningDate) = WEEKOFYEAR(NOW()) ORDER BY date DESC";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
             
             if (!rs.isBeforeFirst())
             {
-                dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(date.getTime());
-                JOptionPane.showConfirmDialog(this, "No Till Records on this week " + dateFormat + " !");
-                
+                JOptionPane.showMessageDialog(this, "No Till Records on this week !");
             }
             else {
                 while (rs.next()) {
-                    dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("date"));
+                    //dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("date"));
                     
-                    tillRecord = new TillRecord(dateFormat, rs.getDouble("cashInTotal"), rs.getDouble("cashOutTotal"), rs.getString("notes"));
-                    lbl_till_closed_on.setText("Till Closing Records");
+                    tillRecord = new TillRecord(rs.getString("tillOpeningDate"), rs.getDouble("cashInTotal"), rs.getDouble("cashOutTotal"), rs.getString("notes"));
+                    lbl_till_closing_records.setText("Till Closing Records");
                     
                     tillRecordsList.add(tillRecord);
                 }
@@ -100,7 +98,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
                 Object[] row = new Object[4];
                 for (int i = 0; i < tillRecordsList.size(); i++)
                 {
-                    row[0] = tillRecordsList.get(i).getDate();
+                    row[0] = tillRecordsList.get(i).getTillOpeningDate();
                     row[1] = tillRecordsList.get(i).getCashInTotal();
                     row[2] = tillRecordsList.get(i).getCashOutTotal();
                     row[3] = tillRecordsList.get(i).getNotes();
@@ -142,13 +140,13 @@ public class TillRecords extends javax.swing.JInternalFrame {
         lbl_mobile_number = new javax.swing.JLabel();
         line_header = new javax.swing.JSeparator();
         lbl_address1 = new javax.swing.JLabel();
-        lbl_till_closed_on = new javax.swing.JLabel();
+        lbl_till_closing_records = new javax.swing.JLabel();
         lbl_cash_in_total = new javax.swing.JLabel();
         lbl_cash_out_total = new javax.swing.JLabel();
         panel_table_records = new javax.swing.JPanel();
         scroll_pane_table_till_records = new javax.swing.JScrollPane();
         table_view_till_records = new javax.swing.JTable();
-        btn_weekly_records1 = new javax.swing.JButton();
+        btn_monthly_records = new javax.swing.JButton();
 
         setBorder(null);
         setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
@@ -279,8 +277,8 @@ public class TillRecords extends javax.swing.JInternalFrame {
                 .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        lbl_till_closed_on.setFont(new java.awt.Font("sansserif", 1, 17)); // NOI18N
-        lbl_till_closed_on.setText("Till Closing Records");
+        lbl_till_closing_records.setFont(new java.awt.Font("sansserif", 1, 17)); // NOI18N
+        lbl_till_closing_records.setText("Till Closing Records");
 
         lbl_cash_in_total.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_cash_in_total.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_gross_total.png"))); // NOI18N
@@ -348,7 +346,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
             panel_till_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_till_recordsLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbl_till_closed_on)
+                .addComponent(lbl_till_closing_records)
                 .addGap(207, 207, 207))
             .addGroup(panel_till_recordsLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
@@ -365,7 +363,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(lbl_till_closed_on)
+                .addComponent(lbl_till_closing_records)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(panel_table_records, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -377,14 +375,14 @@ public class TillRecords extends javax.swing.JInternalFrame {
 
         scroll_pane_till_records.setViewportView(panel_till_records);
 
-        btn_weekly_records1.setBackground(new java.awt.Color(21, 76, 121));
-        btn_weekly_records1.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
-        btn_weekly_records1.setForeground(new java.awt.Color(255, 255, 255));
-        btn_weekly_records1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_monthly_record.png"))); // NOI18N
-        btn_weekly_records1.setText("Monthly Records");
-        btn_weekly_records1.addActionListener(new java.awt.event.ActionListener() {
+        btn_monthly_records.setBackground(new java.awt.Color(21, 76, 121));
+        btn_monthly_records.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        btn_monthly_records.setForeground(new java.awt.Color(255, 255, 255));
+        btn_monthly_records.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_monthly_record.png"))); // NOI18N
+        btn_monthly_records.setText("Monthly Records");
+        btn_monthly_records.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_weekly_records1ActionPerformed(evt);
+                btn_monthly_recordsActionPerformed(evt);
             }
         });
 
@@ -403,7 +401,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_till_closingLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(panel_till_closingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(btn_weekly_records1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btn_monthly_records, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btn_weekly_records, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btn_daily_records, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btn_print_records, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -428,7 +426,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
                         .addGap(18, 18, 18)
                         .addComponent(btn_weekly_records, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btn_weekly_records1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_monthly_records, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btn_print_records, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(scroll_pane_till_records, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -468,37 +466,39 @@ public class TillRecords extends javax.swing.JInternalFrame {
 
     private void btn_daily_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_daily_recordsActionPerformed
         // TODO add your handling code here:
-        String dateFormat = "";
+        String tillClosingDate = "";
 
         Date datePicker = date_picker.getDate();
-        String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(datePicker.getTime());
-        String endDate = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(datePicker.getTime());
+        String tillOpeningDate = new SimpleDateFormat("dd/MM/yyyy").format(datePicker.getTime());
+//        String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(datePicker.getTime());
+//        String endDate = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(datePicker.getTime());
         
         try {
             dbConnection();
             
-            String query = "SELECT * FROM tillClosing WHERE date >= ? AND date <= ?";
+            //String query = "SELECT * FROM tillClosing WHERE tillOpeningDate >= ? AND date <= ?";
+            String query = "SELECT * FROM tillClosing WHERE tillOpeningDate = ?";
             ps = con.prepareStatement(query);
-            ps.setString(1, startDate);
-            ps.setString(2, endDate);
+            ps.setString(1, tillOpeningDate);
+            //ps.setString(2, endDate);
             rs = ps.executeQuery();
             
             if (!rs.isBeforeFirst())
             {
-                dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(datePicker.getTime());
-                JOptionPane.showMessageDialog(this, "No Till records on " + dateFormat + "!");
+                //tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(datePicker.getTime());
+                JOptionPane.showMessageDialog(this, "No Till records on " + tillOpeningDate + "!");
             }
             else
             {
                 while (rs.next())
                 {
-                    dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("date"));
+                    tillClosingDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("date"));
 
-                    PrintTillRecord printTillRecord = new PrintTillRecord(dateFormat, rs.getString("cashier"),
-                    rs.getDouble("cashTotal"), rs.getDouble("cardTotal"), rs.getDouble("entriesTotal"), 
-                    rs.getDouble("cashInTotal"), rs.getDouble("payments"), rs.getDouble("takes"), rs.getDouble("other"),
-                    rs.getDouble("cashOutTotal"), rs.getDouble("tillTotal"), rs.getDouble("enterCashTotal"), 
-                    rs.getDouble("enterCardTotal"), rs.getDouble("adjustments"), rs.getDouble("balance"), rs.getString("notes"));
+                    PrintTillRecord printTillRecord = new PrintTillRecord(tillClosingDate, rs.getString("cashier"),
+                        rs.getString("tillOpeningDate"), rs.getDouble("cashTotal"), rs.getDouble("cardTotal"), rs.getDouble("entriesTotal"), 
+                        rs.getDouble("cashInTotal"), rs.getDouble("payments"), rs.getDouble("takes"), rs.getDouble("other"),
+                        rs.getDouble("cashOutTotal"), rs.getDouble("tillTotal"), rs.getDouble("enterCashTotal"), 
+                        rs.getDouble("enterCardTotal"), rs.getDouble("adjustments"), rs.getDouble("balance"), rs.getString("notes"));
                     
                     printTillRecord.setVisible(true);
                 }
@@ -561,7 +561,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_table_view_till_recordsMouseClicked
 
-    private void btn_weekly_records1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_weekly_records1ActionPerformed
+    private void btn_monthly_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_monthly_recordsActionPerformed
         // TODO add your handling code here:
         ArrayList<TillRecord> tillRecordsList = new ArrayList<>();
         String dateFormat = "";
@@ -571,30 +571,31 @@ public class TillRecords extends javax.swing.JInternalFrame {
         try {
             dbConnection();
             
-            String query = "SELECT * FROM tillClosing WHERE MONTH(date) = MONTH(NOW()) ORDER BY date DESC";
+            String query = "SELECT * FROM tillClosing WHERE MONTH(tillOpeningDate) = MONTH(NOW()) ORDER BY date DESC";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
             
             if (!rs.isBeforeFirst())
             {
-                dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(date.getTime());
-                JOptionPane.showConfirmDialog(this, "No Till Records on this Month " + dateFormat + " !");
+                JOptionPane.showMessageDialog(this, "No Till Records on this Month !");
                 
             }
             else {
                 while (rs.next()) {
-                    dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("date"));
+                   dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate("tillOpeningDate"));
                     
                     tillRecord = new TillRecord(dateFormat, rs.getDouble("cashInTotal"), rs.getDouble("cashOutTotal"), rs.getString("notes"));
-                    lbl_till_closed_on.setText("Till Closing Records");
+                    lbl_till_closing_records.setText("Till Closing Records");
                     
                     tillRecordsList.add(tillRecord);
+                    
+                    System.out.print("Till Opening Date: " + tillRecord.getTillOpeningDate());
                 }
                 
                 Object[] row = new Object[4];
                 for (int i = 0; i < tillRecordsList.size(); i++)
                 {
-                    row[0] = tillRecordsList.get(i).getDate();
+                    row[0] = tillRecordsList.get(i).getTillOpeningDate();
                     row[1] = tillRecordsList.get(i).getCashInTotal();
                     row[2] = tillRecordsList.get(i).getCashOutTotal();
                     row[3] = tillRecordsList.get(i).getNotes();
@@ -613,13 +614,13 @@ public class TillRecords extends javax.swing.JInternalFrame {
         } catch (SQLException ex) {
             Logger.getLogger(TillRecords.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btn_weekly_records1ActionPerformed
+    }//GEN-LAST:event_btn_monthly_recordsActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_daily_records;
+    private javax.swing.JButton btn_monthly_records;
     private javax.swing.JButton btn_print_records;
     private javax.swing.JButton btn_weekly_records;
-    private javax.swing.JButton btn_weekly_records1;
     private com.toedter.calendar.JCalendar date_picker;
     private javax.swing.JDesktopPane desktop_pane_entries;
     private javax.swing.JLabel lbl_address1;
@@ -629,7 +630,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lbl_logo_icon;
     private javax.swing.JLabel lbl_mobile_number;
     private javax.swing.JLabel lbl_order_print_view;
-    private javax.swing.JLabel lbl_till_closed_on;
+    private javax.swing.JLabel lbl_till_closing_records;
     private javax.swing.JSeparator line_header;
     private javax.swing.JPanel panel_header;
     private javax.swing.JPanel panel_table_records;
