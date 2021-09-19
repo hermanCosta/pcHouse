@@ -540,6 +540,7 @@ public class PrintTillRecord extends javax.swing.JFrame {
                 printerJob.print();
 
                 JOptionPane.showMessageDialog(this, "Till Records Printed Successfully");
+                this.dispose();
 
             } catch (PrinterException ex) {
                 Logger.getLogger(PrintFullReport.class.getName()).log(Level.SEVERE, null, ex);

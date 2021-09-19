@@ -41,6 +41,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
     ResultSet rs;
     TillRecord tillRecord;
     Date date;
+    String tillOpeningDate;
 
     public TillRecords() {
         initComponents();
@@ -87,9 +88,9 @@ public class TillRecords extends javax.swing.JInternalFrame {
             }
             else {
                 while (rs.next()) {
-                    //dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("date"));
+                    tillOpeningDate = new SimpleDateFormat("dd/MM/yyyy").format(rs.getTimestamp("tillOpeningDate"));
                     
-                    tillRecord = new TillRecord(rs.getString("tillOpeningDate"), rs.getDouble("cashInTotal"), rs.getDouble("cashOutTotal"), rs.getString("notes"));
+                    tillRecord = new TillRecord(tillOpeningDate, rs.getDouble("cashInTotal"), rs.getDouble("cashOutTotal"), rs.getString("notes"));
                     lbl_till_closing_records.setText("Till Closing Records");
                     
                     tillRecordsList.add(tillRecord);
@@ -300,7 +301,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "Date", "Cash In", "Cash Out", "Notes"
+                "Till Open Date ", "Cash In", "Cash Out", "Notes"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -318,7 +319,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
         });
         scroll_pane_table_till_records.setViewportView(table_view_till_records);
         if (table_view_till_records.getColumnModel().getColumnCount() > 0) {
-            table_view_till_records.getColumnModel().getColumn(0).setPreferredWidth(120);
+            table_view_till_records.getColumnModel().getColumn(0).setPreferredWidth(110);
             table_view_till_records.getColumnModel().getColumn(0).setMaxWidth(200);
             table_view_till_records.getColumnModel().getColumn(1).setPreferredWidth(80);
             table_view_till_records.getColumnModel().getColumn(1).setMaxWidth(120);
@@ -469,7 +470,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
         String tillClosingDate = "";
 
         Date datePicker = date_picker.getDate();
-        String tillOpeningDate = new SimpleDateFormat("dd/MM/yyyy").format(datePicker.getTime());
+        tillOpeningDate = new SimpleDateFormat("yyyy-MM-dd").format(datePicker.getTime());
 //        String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(datePicker.getTime());
 //        String endDate = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(datePicker.getTime());
         
@@ -485,17 +486,18 @@ public class TillRecords extends javax.swing.JInternalFrame {
             
             if (!rs.isBeforeFirst())
             {
-                //tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(datePicker.getTime());
+                tillOpeningDate = new SimpleDateFormat("dd/MM/yyyy").format(datePicker.getTime());
                 JOptionPane.showMessageDialog(this, "No Till records on " + tillOpeningDate + "!");
             }
             else
             {
                 while (rs.next())
                 {
-                    tillClosingDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("date"));
-
+                    tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate("date"));
+                    tillOpeningDate = new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate("tillOpeningDate"));
+                    
                     PrintTillRecord printTillRecord = new PrintTillRecord(tillClosingDate, rs.getString("cashier"),
-                        rs.getString("tillOpeningDate"), rs.getDouble("cashTotal"), rs.getDouble("cardTotal"), rs.getDouble("entriesTotal"), 
+                        tillOpeningDate, rs.getDouble("cashTotal"), rs.getDouble("cardTotal"), rs.getDouble("entriesTotal"), 
                         rs.getDouble("cashInTotal"), rs.getDouble("payments"), rs.getDouble("takes"), rs.getDouble("other"),
                         rs.getDouble("cashOutTotal"), rs.getDouble("tillTotal"), rs.getDouble("enterCashTotal"), 
                         rs.getDouble("enterCardTotal"), rs.getDouble("adjustments"), rs.getDouble("balance"), rs.getString("notes"));
@@ -582,14 +584,12 @@ public class TillRecords extends javax.swing.JInternalFrame {
             }
             else {
                 while (rs.next()) {
-                   dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate("tillOpeningDate"));
+                    tillOpeningDate = new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate("tillOpeningDate"));
                     
-                    tillRecord = new TillRecord(dateFormat, rs.getDouble("cashInTotal"), rs.getDouble("cashOutTotal"), rs.getString("notes"));
+                    tillRecord = new TillRecord(tillOpeningDate, rs.getDouble("cashInTotal"), rs.getDouble("cashOutTotal"), rs.getString("notes"));
                     lbl_till_closing_records.setText("Till Closing Records");
                     
                     tillRecordsList.add(tillRecord);
-                    
-                    System.out.print("Till Opening Date: " + tillRecord.getTillOpeningDate());
                 }
                 
                 Object[] row = new Object[4];

@@ -98,7 +98,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
         TableColumnModel tableModel = table_view_products.getColumnModel();
 
-        if (order.getPickDate() != null && !order.getPickDate().trim().isEmpty()) {
+        if (order.getPickDate() != null || !order.getPickDate().trim().isEmpty()) {
             lbl_order_picked_on.setVisible(true);
             lbl_order_picked_on.setText("Picked on: " + order.getPickDate());
 
@@ -106,8 +106,10 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
                 lbl_refunded_by.setVisible(false);
             else if (order.getCashDeposit() == 0)
                 lbl_refunded_by.setText("Deposit Refunded by Card: €" + order.getCardDeposit());
-            else
+            else if (order.getCardDeposit() == 0)
                 lbl_refunded_by.setText("Deposit Refunded by Cash: €" + order.getCashDeposit());
+            else
+                lbl_refunded_by.setText("Deposit Refunded by Cash: €" + order.getCashDeposit() + " | Card: €" + order.getCardDeposit());
 
             btn_undo.setVisible(false);
             btn_pick_up.setVisible(false);
@@ -210,8 +212,6 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
             ps.setString(4, user);
             ps.executeUpdate();
 
-            ps.close();
-            con.close();
         } catch (SQLException ex) {
             Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
         }

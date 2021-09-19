@@ -8,6 +8,7 @@ package InternalForms;
 import Forms.Login;
 import Forms.PrintFullReport;
 import Model.CashOut;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -43,16 +44,17 @@ public class CashOuts extends javax.swing.JInternalFrame {
     ResultSet rs;
     ResultSetMetaData rsmd;
     CashOut cashOut;
+    Date pickedDate;
 
-    public CashOuts() {
+    public CashOuts(Date _date) {
         initComponents();
-
+        this.pickedDate = _date;
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
 
         tableSettings(table_view_cash_out_records);
-        loadRecordsFromDb();
+        loadRecordsOfTheDay();
     }
     
     public void tableSettings(JTable table) {
@@ -72,15 +74,15 @@ public class CashOuts extends javax.swing.JInternalFrame {
         }
     }
 
-    public void loadRecordsFromDb() {
+    public void loadRecordsOfTheDay() {
         // TODO add your handling code here:
         ArrayList<CashOut> recordsList = new ArrayList<>();
         double cashOutTotal = 0;
 
-        Date date = date_picker.getDate();
-        String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(date.getTime());
-        String endDate = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(date.getTime());
-        String dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(date.getTime());
+//        Date date = date_picker.getDate();
+        String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(date_picker.getDate());
+        String endDate = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(date_picker.getDate());
+        String dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(date_picker.getDate());
         
         try {
             dbConnection();
@@ -117,12 +119,18 @@ public class CashOuts extends javax.swing.JInternalFrame {
                     for (int i = 0; i < dtm.getRowCount(); i++)
                         cashOutTotal += (double) dtm.getValueAt(i, 0);
                     
-                lbl_cash_entries_total.setText("Cash Out Total ............. €" + String.valueOf(cashOutTotal));
+                lbl_cash_out_records.setText("Cash Out Records");
+                lbl_cash_out_records.setForeground(Color.black);    
+                lbl_cash_outs.setText("Cash Out Total ............. €" + String.valueOf(cashOutTotal));
+                lbl_cash_outs.setVisible(true);
             }
                 
             else
-                JOptionPane.showMessageDialog(this, "No Cash Out on " + dateFormat + " !");
-                
+            {
+                lbl_cash_out_records.setText("No Cash Outs on " + dateFormat + " !");
+                lbl_cash_out_records.setForeground(Color.red);
+                lbl_cash_outs.setVisible(false);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(CashOuts.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -143,8 +151,8 @@ public class CashOuts extends javax.swing.JInternalFrame {
         lbl_mobile_number = new javax.swing.JLabel();
         line_header = new javax.swing.JSeparator();
         lbl_address1 = new javax.swing.JLabel();
-        lbl_cash_entries_total = new javax.swing.JLabel();
-        lbl_entry_records = new javax.swing.JLabel();
+        lbl_cash_outs = new javax.swing.JLabel();
+        lbl_cash_out_records = new javax.swing.JLabel();
         panel_table_view = new javax.swing.JPanel();
         scroll_pane_table_cash_out = new javax.swing.JScrollPane();
         table_view_cash_out_records = new javax.swing.JTable();
@@ -230,12 +238,12 @@ public class CashOuts extends javax.swing.JInternalFrame {
                 .addComponent(line_header, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        lbl_cash_entries_total.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
-        lbl_cash_entries_total.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_cash_entries_black.png"))); // NOI18N
-        lbl_cash_entries_total.setText("cashEntriesTotal");
+        lbl_cash_outs.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        lbl_cash_outs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_cash_entries_black.png"))); // NOI18N
+        lbl_cash_outs.setText("cashEntriesTotal");
 
-        lbl_entry_records.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
-        lbl_entry_records.setText("Cash Out Records");
+        lbl_cash_out_records.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
+        lbl_cash_out_records.setText("Cash Out Records");
 
         panel_table_view.setBackground(new java.awt.Color(255, 255, 255));
         panel_table_view.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
@@ -294,16 +302,16 @@ public class CashOuts extends javax.swing.JInternalFrame {
         panel_cash_records.setLayout(panel_cash_recordsLayout);
         panel_cash_recordsLayout.setHorizontalGroup(
             panel_cash_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_cash_recordsLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(lbl_entry_records)
-                .addGap(225, 225, 225))
             .addGroup(panel_cash_recordsLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(panel_cash_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panel_table_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_cash_entries_total, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbl_cash_out_records, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panel_cash_recordsLayout.createSequentialGroup()
+                        .addGroup(panel_cash_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(panel_table_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbl_cash_outs, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panel_cash_recordsLayout.setVerticalGroup(
@@ -311,12 +319,12 @@ public class CashOuts extends javax.swing.JInternalFrame {
             .addGroup(panel_cash_recordsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_entry_records)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lbl_cash_out_records)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panel_table_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_cash_entries_total, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lbl_cash_outs, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24))
         );
 
@@ -561,12 +569,16 @@ public class CashOuts extends javax.swing.JInternalFrame {
                     for (int i = 0; i < dtm.getRowCount(); i++)
                         cashOutTotal += (double) dtm.getValueAt(i, 0);
                     
-                lbl_cash_entries_total.setText("Cash Out Total ............. €" + String.valueOf(cashOutTotal));
+                lbl_cash_out_records.setText("Cash Out Records");
+                lbl_cash_out_records.setForeground(Color.black);    
+                lbl_cash_outs.setText("Cash Out Total ............. €" + String.valueOf(cashOutTotal));
+                lbl_cash_outs.setVisible(true);
             }
                 
-            else
+            else {
                 JOptionPane.showMessageDialog(this, "No Cash Out on this month !");
-                
+                lbl_cash_outs.setVisible(false);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(CashOuts.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -578,7 +590,7 @@ public class CashOuts extends javax.swing.JInternalFrame {
 
     private void btn_daily_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_daily_recordsActionPerformed
         // TODO add your handling code here:
-        loadRecordsFromDb();
+        loadRecordsOfTheDay();
     }//GEN-LAST:event_btn_daily_recordsActionPerformed
 
     private void btn_weekly_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_weekly_recordsActionPerformed
@@ -620,11 +632,16 @@ public class CashOuts extends javax.swing.JInternalFrame {
                     for (int i = 0; i < dtm.getRowCount(); i++)
                         cashOutTotal += (double) dtm.getValueAt(i, 0);
                     
-                lbl_cash_entries_total.setText("Cash Out Total ............. €" + String.valueOf(cashOutTotal));
+                lbl_cash_out_records.setText("Cash Out Records");
+                lbl_cash_out_records.setForeground(Color.black);    
+                lbl_cash_outs.setText("Cash Out Total ............. €" + String.valueOf(cashOutTotal));
+                lbl_cash_outs.setVisible(true);
             }
                 
-            else
+            else {
                 JOptionPane.showMessageDialog(this, "No Cash Out on this week !");
+                lbl_cash_outs.setVisible(false);
+            }
                 
         } catch (SQLException ex) {
             Logger.getLogger(CashOuts.class.getName()).log(Level.SEVERE, null, ex);
@@ -678,7 +695,7 @@ public class CashOuts extends javax.swing.JInternalFrame {
                     combo_box_type.setSelectedIndex(0);
                     txt_enter_value.requestFocus();
                     
-                    loadRecordsFromDb();
+                    loadRecordsOfTheDay();
                     
 
                 } catch (SQLException ex) {
@@ -748,9 +765,9 @@ public class CashOuts extends javax.swing.JInternalFrame {
     private com.toedter.calendar.JCalendar date_picker;
     private javax.swing.JDesktopPane desktop_pane_entries;
     private javax.swing.JLabel lbl_address1;
-    private javax.swing.JLabel lbl_cash_entries_total;
+    private javax.swing.JLabel lbl_cash_out_records;
+    private javax.swing.JLabel lbl_cash_outs;
     private javax.swing.JLabel lbl_enter_value;
-    private javax.swing.JLabel lbl_entry_records;
     private javax.swing.JLabel lbl_land_line_number;
     private javax.swing.JLabel lbl_logo_icon;
     private javax.swing.JLabel lbl_mobile_number;

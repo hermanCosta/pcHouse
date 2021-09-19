@@ -8,6 +8,7 @@ package InternalForms;
 import Forms.Login;
 import Forms.PrintFullReport;
 import Model.CashEntry;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -43,16 +44,18 @@ public class CashEntries extends javax.swing.JInternalFrame {
     ResultSet rs;
     ResultSetMetaData rsmd;
     CashEntry cashEntry;
+    Date datePicked;
 
-    public CashEntries() {
+    public CashEntries(Date _date) {
         initComponents();
-
+        this.datePicked = _date;
+        
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
 
         tableSettings(table_view_cash_entry_records);
-        loadRecordsFromDb();
+        loadRecordsOfTheDay();
     }
     
     public void tableSettings(JTable table) {
@@ -72,15 +75,15 @@ public class CashEntries extends javax.swing.JInternalFrame {
         }
     }
 
-    public void loadRecordsFromDb() {
+    public void loadRecordsOfTheDay() {
         // TODO add your handling code here:
         ArrayList<CashEntry> recordsList = new ArrayList<>();
         double cashEntriesTotal = 0;
 
-        Date date = date_picker.getDate();
-        String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(date.getTime());
-        String endDate = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(date.getTime());
-        String dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(date.getTime());
+//        Date date = date_picker.getDate();
+        String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(date_picker.getDate());
+        String endDate = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(date_picker.getDate());
+        String dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(date_picker.getDate());
         
         try {
             dbConnection();
@@ -114,14 +117,19 @@ public class CashEntries extends javax.swing.JInternalFrame {
 
                     for (int i = 0; i < dtm.getRowCount(); i++)
                         cashEntriesTotal += (double) dtm.getValueAt(i, 0);
-                    
-                lbl_cash_entries_total.setText("Cash Entries Total ............. €" + String.valueOf(cashEntriesTotal));
+                
+                lbl_entry_records.setText("Cash Entries Records ");
+                lbl_entry_records.setForeground(Color.black);
+                lbl_cash_entries_total.setText("Cash Entries Total ............. € " + String.valueOf(cashEntriesTotal));
+                lbl_cash_entries_total.setVisible(true);
             }
                 
             else
-                JOptionPane.showMessageDialog(this, "No Cash Entries on " + dateFormat + " !");
-                
-
+            {
+                lbl_entry_records.setText("No Cash Entries on " + dateFormat + " !");
+                lbl_entry_records.setForeground(Color.red);
+                lbl_cash_entries_total.setVisible(false);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(CashEntries.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -292,14 +300,11 @@ public class CashEntries extends javax.swing.JInternalFrame {
             .addGroup(panel_cash_recordsLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(panel_cash_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_entry_records, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panel_table_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_cash_entries_total, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(17, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_cash_recordsLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbl_entry_records)
-                .addGap(218, 218, 218))
         );
         panel_cash_recordsLayout.setVerticalGroup(
             panel_cash_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -541,11 +546,17 @@ public class CashEntries extends javax.swing.JInternalFrame {
                     for (int i = 0; i < dtm.getRowCount(); i++)
                         cashEntriesTotal += (double) dtm.getValueAt(i, 0);
                     
+                lbl_entry_records.setText("Cash Entries Records");
+                lbl_entry_records.setForeground(Color.black);
                 lbl_cash_entries_total.setText("Cash Entries Total ............. €" + String.valueOf(cashEntriesTotal));
+                lbl_cash_entries_total.setVisible(true);
             }
                 
-            else
+            else {
+                
                 JOptionPane.showMessageDialog(this, "No Cash Entries on this month");
+                lbl_cash_entries_total.setVisible(false);
+            }
                 
 
         } catch (SQLException ex) {
@@ -559,7 +570,7 @@ public class CashEntries extends javax.swing.JInternalFrame {
 
     private void btn_daily_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_daily_recordsActionPerformed
         // TODO add your handling code here:
-        loadRecordsFromDb();
+        loadRecordsOfTheDay();
     }//GEN-LAST:event_btn_daily_recordsActionPerformed
 
     private void btn_weekly_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_weekly_recordsActionPerformed
@@ -598,11 +609,16 @@ public class CashEntries extends javax.swing.JInternalFrame {
                     for (int i = 0; i < dtm.getRowCount(); i++)
                         cashEntriesTotal += (double) dtm.getValueAt(i, 0);
                     
+                lbl_entry_records.setText("Cash Entries Records");
+                lbl_entry_records.setForeground(Color.black);   
                 lbl_cash_entries_total.setText("Cash Entries Total ............. €" + String.valueOf(cashEntriesTotal));
+                lbl_cash_entries_total.setVisible(true);
             }
                 
-            else
+            else {
                 JOptionPane.showMessageDialog(this, "No Cash Entries on this week");
+                lbl_cash_entries_total.setVisible(false);
+            }
                 
 
         } catch (SQLException ex) {
@@ -652,7 +668,7 @@ public class CashEntries extends javax.swing.JInternalFrame {
                     txt_enter_value.setText("");
                     txt_notes.setText("");
                     
-                    loadRecordsFromDb();
+                    loadRecordsOfTheDay();
                     
 
                 } catch (SQLException ex) {

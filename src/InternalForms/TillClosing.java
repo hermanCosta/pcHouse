@@ -28,7 +28,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -124,8 +123,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
         try {
             dbConnection();
-            Date date = date_picker.getDate();
-            String selectedDate = new SimpleDateFormat("dd/MM/yyyy").format(date);
+            //Date date = date_picker.getDate();
+            String selectedDate = new SimpleDateFormat("dd/MM/yyyy").format(date_picker.getDate());
 
             String queryOrders = "SELECT * FROM completedOrders WHERE payDate = ?";
             ps = con.prepareStatement(queryOrders);
@@ -156,11 +155,12 @@ public class TillClosing extends javax.swing.JInternalFrame {
         panel_sales.setVisible(false);
 
         // Get Current date for checking cash entries
-        Date pickedDate = pickedDate = date_picker.getDate();
-        String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
+        //Date pickedDate = pickedDate = date_picker.getDate();
+        String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(date_picker.getDate());
 
         //Lists for holding list from the constructor
         ArrayList<CompletedOrder> listOrders = loadOrdersList();
+        
         // This Lists hold all values paid by cash and card
         ArrayList<Double> cashList = new ArrayList<>();
         ArrayList<Double> cardList = new ArrayList<>();
@@ -680,7 +680,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
             }
         });
 
-        btn_cash_out.setBackground(new java.awt.Color(21, 76, 121));
+        btn_cash_out.setBackground(new java.awt.Color(255, 51, 51));
         btn_cash_out.setFont(new java.awt.Font("Lucida Grande", 1, 17)); // NOI18N
         btn_cash_out.setForeground(new java.awt.Color(255, 255, 255));
         btn_cash_out.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_cash_out.png"))); // NOI18N
@@ -702,7 +702,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
             }
         });
 
-        btn_cash_in.setBackground(new java.awt.Color(21, 76, 121));
+        btn_cash_in.setBackground(new java.awt.Color(0, 153, 102));
         btn_cash_in.setFont(new java.awt.Font("Lucida Grande", 1, 17)); // NOI18N
         btn_cash_in.setForeground(new java.awt.Color(255, 255, 255));
         btn_cash_in.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_cash_entries.png"))); // NOI18N
@@ -813,15 +813,15 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
     private void btn_ordersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ordersActionPerformed
         // get date from calendar
-        Date pickedDate = pickedDate = date_picker.getDate();
-        String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
+        //Date pickedDate = pickedDate = date_picker.getDate();
+        String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(date_picker.getDate());
 
         // Get Current date for checking cash entries
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
 
-        if (loadOrdersList().isEmpty() || pickedDate.after(currentDate)) {
-            JOptionPane.showMessageDialog(this, "No Order completed on " + tillClosingDate + " !");
+        if (loadOrdersList().isEmpty() || date_picker.getDate().after(currentDate)) {
+            JOptionPane.showMessageDialog(this, "No Orders completed on " + tillClosingDate + " !");
             loadOrdersReportOfTheDay();
         } else {
             loadOrdersReportOfTheDay();
@@ -839,7 +839,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         Timestamp currentDateFull = new Timestamp(dateFullReport.getTime());
 
         if (pickedDate.after(currentDateFull) || listSales.isEmpty() && listOrders.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No Entries on " + tillClosingDate + " !", "Till Closing", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No Orders or Sales on " + tillClosingDate + " !");
         } else {
             PrintFullReport printFullReport = new PrintFullReport(tillClosingDate, listSales, listOrders);
             printFullReport.setVisible(true);
@@ -1037,24 +1037,26 @@ public class TillClosing extends javax.swing.JInternalFrame {
         
         try {
             dbConnection();
-            String queryTillClosing = "SELECT * FROM tillClosing where date >= ? AND date <= ?";
+            String queryTillClosing = "SELECT * FROM tillClosing where tillOpeningDate >= ? AND tillOpeningDate <= ?";
             ps = con.prepareStatement(queryTillClosing);
             ps.setString(1, startDate);
             ps.setString(2, endDate);
             rs = ps.executeQuery();
             
             if(rs.isBeforeFirst()) {
-                JOptionPane.showMessageDialog(this, "No Till Pending to Close on " + tillOpeningDate + "!");
+                JOptionPane.showMessageDialog(this, "No Till Pending to Close on " + tillOpeningDate + " !");
             }
             else if (pickedDate.before(cal.getTime()) || pickedDate.after(calendar.getTime()))
             {
-                JOptionPane.showMessageDialog(this, tillOpeningDate + " is not Valid Date to Close The Till !", "Till Closing", 
+                JOptionPane.showMessageDialog(this, tillOpeningDate + " is not a valid date to Close The Till !", "Till Closing", 
                         JOptionPane.ERROR_MESSAGE);
             }
             
             else
             {
-                CloseDailyTill closeDailyTill = new CloseDailyTill(pickedDate);
+                double cashTotal = ordersCashTotal + salesCashTotal;
+                double cardTotal = ordersCardTotal + salesCardTotal ;
+                CloseDailyTill closeDailyTill = new CloseDailyTill(pickedDate, cashTotal, cardTotal);
                 closeDailyTill.setVisible(true);
             }
         } catch (SQLException ex) {
@@ -1069,7 +1071,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
     private void btn_cash_outActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cash_outActionPerformed
         // TODO add your handling code here:
-        CashOuts cashOut = new CashOuts();
+        CashOuts cashOut = new CashOuts(date_picker.getDate());
         desktop_pane_till_closing.add(cashOut).setVisible(true);
     }//GEN-LAST:event_btn_cash_outActionPerformed
 
@@ -1081,7 +1083,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
     private void btn_cash_inActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cash_inActionPerformed
         // TODO add your handling code here:
-        CashEntries cashEntry = new CashEntries();
+        CashEntries cashEntry = new CashEntries(date_picker.getDate());
         desktop_pane_till_closing.add(cashEntry).setVisible(true);
     }//GEN-LAST:event_btn_cash_inActionPerformed
 

@@ -14,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,9 +40,11 @@ public class CloseDailyTill extends javax.swing.JFrame {
         initComponents();
     }
 
-    public CloseDailyTill(Date _pickedDate) {
+    public CloseDailyTill(Date _pickedDate, double _cashTotal, double _cardTotal) {
         initComponents();
         this.pickedDate = _pickedDate;
+        this.cashTotal = _cashTotal;
+        this.cardTotal = _cardTotal;
         
         date = new Date();
         timestamp = new Timestamp(date.getTime());
@@ -62,8 +63,10 @@ public class CloseDailyTill extends javax.swing.JFrame {
         
         loadEntriesTotal();
         loadCashOut();
-        loadCashInCashOutTotal();
+        //loadCashInCashOutTotal();
         
+        txt_cash_total.setText(String.valueOf(cashTotal));
+        txt_card_total.setText(String.valueOf(cardTotal));
         cashInTotal = cashTotal + cardTotal + entriesTotal;
         txt_cash_in_total.setText(String.valueOf(cashInTotal));
         
@@ -142,53 +145,53 @@ public class CloseDailyTill extends javax.swing.JFrame {
     
     public void loadCashInCashOutTotal()
     {
-        double ordersCashTotal = 0, ordersCardTotal = 0, ordersChangeTotal = 0, 
-                salesCashTotal = 0, salesCardTotal = 0, salesChangeTotal  = 0;
-        try {
-            dbConnection();
-            String queryCompletedOrder = "SELECT "
-                    + "SUM(CASE WHEN payDate = ? THEN cash END) AS 'ordersCashTotal', "
-                    + "SUM(CASE WHEN payDate = ? THEN card END) AS 'ordersCardTotal',"
-                    + "SUM(CASE WHEN payDate = ? THEN changeTotal END) AS 'ordersChangeTotal' FROM completedOrders";
-            ps = con.prepareStatement(queryCompletedOrder);
-            ps.setString(1, tillOpeningDate);
-            ps.setString(2, tillOpeningDate);
-            ps.setString(3, tillOpeningDate);
-            rs = ps.executeQuery();
+//        double ordersCashTotal = 0, ordersCardTotal = 0, ordersChangeTotal = 0, 
+//                salesCashTotal = 0, salesCardTotal = 0, salesChangeTotal  = 0;
+//        try {
+//            dbConnection();
+//            String queryCompletedOrder = "SELECT "
+//                    + "SUM(CASE WHEN payDate = ? THEN cash END) AS 'ordersCashTotal', "
+//                    + "SUM(CASE WHEN payDate = ? THEN card END) AS 'ordersCardTotal',"
+//                    + "SUM(CASE WHEN payDate = ? THEN changeTotal END) AS 'ordersChangeTotal' FROM completedOrders";
+//            ps = con.prepareStatement(queryCompletedOrder);
+//            ps.setString(1, tillOpeningDate);
+//            ps.setString(2, tillOpeningDate);
+//            ps.setString(3, tillOpeningDate);
+//            rs = ps.executeQuery();
+//            
+//            while (rs.next())
+//            {
+//                ordersCashTotal = rs.getDouble("ordersCashTotal");
+//                ordersCardTotal = rs.getDouble("ordersCardTotal");
+//                ordersChangeTotal = rs.getDouble("ordersChangeTotal");
+//            }
+//            
+//            
+//            String querySales = "SELECT "
+//                    + "SUM(CASE WHEN saleDate = ? THEN cash END) AS 'salesCashTotal', "
+//                    + "SUM(CASE WHEN saleDate = ? THEN card END) AS 'salesCardTotal',"
+//                    + "SUM(CASE WHEN saleDate = ? THEN changeTotal END) AS 'salesChangeTotal' FROM sales";
+//            ps = con.prepareStatement(querySales);
+//            ps.setString(1, tillOpeningDate);
+//            ps.setString(2, tillOpeningDate);
+//            ps.setString(3, tillOpeningDate);
+//            rs = ps.executeQuery();
+//            
+//            while (rs.next())
+//            {
+//                salesCashTotal = rs.getDouble("salesCashTotal");
+//                salesCardTotal = rs.getDouble("salesCardTotal");
+//                salesChangeTotal = rs.getDouble("salesChangeTotal");
+//            }
+//            
+//            cashTotal = (ordersCashTotal + salesCashTotal) - (ordersChangeTotal + salesChangeTotal) ;
+//            cardTotal = (ordersCardTotal + salesCardTotal);
             
-            while (rs.next())
-            {
-                ordersCashTotal = rs.getDouble("ordersCashTotal");
-                ordersCardTotal = rs.getDouble("ordersCardTotal");
-                ordersChangeTotal = rs.getDouble("ordersChangeTotal");
-            }
+        
             
-            
-            String querySales = "SELECT "
-                    + "SUM(CASE WHEN saleDate = ? THEN cash END) AS 'salesCashTotal', "
-                    + "SUM(CASE WHEN saleDate = ? THEN card END) AS 'salesCardTotal',"
-                    + "SUM(CASE WHEN saleDate = ? THEN changeTotal END) AS 'salesChangeTotal' FROM sales";
-            ps = con.prepareStatement(querySales);
-            ps.setString(1, tillOpeningDate);
-            ps.setString(2, tillOpeningDate);
-            ps.setString(3, tillOpeningDate);
-            rs = ps.executeQuery();
-            
-            while (rs.next())
-            {
-                salesCashTotal = rs.getDouble("salesCashTotal");
-                salesCardTotal = rs.getDouble("salesCardTotal");
-                salesChangeTotal = rs.getDouble("salesChangeTotal");
-            }
-            
-            cashTotal = (ordersCashTotal + salesCashTotal) - (ordersChangeTotal + salesChangeTotal) ;
-            cardTotal = (ordersCardTotal + salesCardTotal);
-            
-            txt_cash_total.setText(String.valueOf(cashTotal));
-            txt_card_total.setText(String.valueOf(cardTotal));
-        } catch (SQLException ex) {
-            Logger.getLogger(CloseDailyTill.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(CloseDailyTill.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
     
     public void calcTotalEntered()
@@ -805,9 +808,6 @@ public class CloseDailyTill extends javax.swing.JFrame {
                 String sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd").format(pickedDate);
                 java.sql.Date sqlDate = java.sql.Date.valueOf(sqlDateFormat);
                 calcTotalEntered();
-                //enterCashTotal = Double.parseDouble(txt_enter_cash_total.getText());
-                //enterCardTotal = Double.parseDouble(txt_enter_card_total.getText());
-                //adjustments = Double.parseDouble(txt_adjustments.getText());
                 String notes = editor_pane_notes.getText();
                 
                 try {
@@ -844,6 +844,8 @@ public class CloseDailyTill extends javax.swing.JFrame {
                     entriesTotal, cashInTotal, payments, takes, other, cashOutTotal, tillTotal, enterCashTotal, enterCardTotal, 
                     adjustments, balance, notes);
                     printTillRecord.setVisible(true);
+                    
+                    this.dispose();
                     
                 } catch (SQLException ex) {
                     Logger.getLogger(CloseDailyTill.class.getName()).log(Level.SEVERE, null, ex);

@@ -5,13 +5,13 @@
         <group>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/TillClosing.java</file>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/PrintTillRecord.java</file>
-            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/OrderDetails.java</file>
-            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/PrintOrder.java</file>
-            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/PrintFullReport.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/Customers.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/MainMenu.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/CloseDailyTill.java</file>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/CashEntries.java</file>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/CashOuts.java</file>
+            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/Forms/Login.java</file>
             <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/TillRecords.java</file>
-            <file>file:/Users/HermanCosta/NetBeansProjects/PcHouse/src/InternalForms/NewOrder.java</file>
         </group>
     </open-files>
 </project-private>

@@ -153,17 +153,18 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              <Component id="lbl_entry_records" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="225" max="-2" attributes="0"/>
-                          </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="panel_table_view" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lbl_cash_entries_total" min="-2" pref="548" max="-2" attributes="0"/>
-                                  <Component id="panel_header" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lbl_cash_out_records" max="32767" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="panel_table_view" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lbl_cash_outs" min="-2" pref="548" max="-2" attributes="0"/>
+                                          <Component id="panel_header" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
@@ -174,12 +175,12 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="panel_header" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="lbl_entry_records" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="lbl_cash_out_records" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="panel_table_view" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="lbl_cash_entries_total" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="lbl_cash_outs" min="-2" pref="26" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -278,7 +279,7 @@
                         </Component>
                       </SubComponents>
                     </Container>
-                    <Component class="javax.swing.JLabel" name="lbl_cash_entries_total">
+                    <Component class="javax.swing.JLabel" name="lbl_cash_outs">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Lucida Grande" size="15" style="0"/>
@@ -289,7 +290,7 @@
                         <Property name="text" type="java.lang.String" value="cashEntriesTotal"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="lbl_entry_records">
+                    <Component class="javax.swing.JLabel" name="lbl_cash_out_records">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Lucida Grande" size="16" style="1"/>

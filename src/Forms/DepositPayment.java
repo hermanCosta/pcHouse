@@ -13,6 +13,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -84,6 +86,8 @@ public class DepositPayment extends javax.swing.JFrame {
     }
 
     public void payDeposit(double cash, double card) {
+        Date date = new Date();
+        String payDateFormat = new SimpleDateFormat("dd/MM/yyyy").format(date.getTime());
         try {
             dbConnection();
 
@@ -105,7 +109,7 @@ public class DepositPayment extends javax.swing.JFrame {
             ps.setDouble(11, 0);
             ps.setDouble(12, 0);
             ps.setDouble(13, 0);
-            ps.setString(14, order.getIssueDate());
+            ps.setString(14, payDateFormat);
             ps.setString(15, "Deposit");
             ps.executeUpdate();
             

@@ -79,17 +79,12 @@ public class OrderReceipt extends javax.swing.JFrame {
             txt_pane_total.setText(txt_pane_total.getText() + "€" + s + "\n");
     }
 
-    public void backToPreviousFrame() {
-        FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
-        MainMenu.mainMenuDesktopPane.removeAll();
-        MainMenu.mainMenuDesktopPane.add(fixedOrder).setVisible(true);
-    }
 
     @Override
     protected void processWindowEvent(WindowEvent e) {
         super.processWindowEvent(e);
         if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-            //backToPreviousFrame();
+            new MainMenu().setVisible(true);
         }
     }
 
@@ -130,7 +125,8 @@ public class OrderReceipt extends javax.swing.JFrame {
         txt_pane_total = new javax.swing.JTextPane();
         lbl_change = new javax.swing.JLabel();
         btn_print = new javax.swing.JButton();
-        lbl_payment_print_view = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        lbl_order_print_view1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -402,8 +398,27 @@ public class OrderReceipt extends javax.swing.JFrame {
             }
         });
 
-        lbl_payment_print_view.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
-        lbl_payment_print_view.setText("Payment Receipt Print View");
+        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
+
+        lbl_order_print_view1.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        lbl_order_print_view1.setText("Payment Receipt Print View");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbl_order_print_view1)
+                .addGap(73, 73, 73))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lbl_order_print_view1)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -413,8 +428,8 @@ public class OrderReceipt extends javax.swing.JFrame {
                 .addContainerGap(22, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lbl_payment_print_view, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(panel_print_order, javax.swing.GroupLayout.PREFERRED_SIZE, 589, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18))
@@ -422,11 +437,15 @@ public class OrderReceipt extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_payment_print_view))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addComponent(panel_print_order, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
         );
@@ -464,6 +483,8 @@ public class OrderReceipt extends javax.swing.JFrame {
 
                 JOptionPane.showMessageDialog(this, "Receipt: " + order.getOrderNo() + " Printed Successfully", "Payment Receipt", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
+                
+                new MainMenu().setVisible(true);
 
             } catch (PrinterException ex) {
                 Logger.getLogger(OrderReceipt.class.getName()).log(Level.SEVERE, null, ex);
@@ -473,6 +494,8 @@ public class OrderReceipt extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_print;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane12;
@@ -483,8 +506,9 @@ public class OrderReceipt extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_land_line_number1;
     private javax.swing.JLabel lbl_logo_icon1;
     private javax.swing.JLabel lbl_mobile_number1;
+    private javax.swing.JLabel lbl_order_print_view;
+    private javax.swing.JLabel lbl_order_print_view1;
     private javax.swing.JLabel lbl_paid_by;
-    private javax.swing.JLabel lbl_payment_print_view;
     private javax.swing.JLabel lbl_print_brand;
     private javax.swing.JLabel lbl_print_contact;
     private javax.swing.JLabel lbl_print_email;
