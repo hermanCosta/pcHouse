@@ -696,6 +696,7 @@ public class NewSale extends javax.swing.JInternalFrame {
 
         btn_add_product_service.setBackground(new java.awt.Color(0, 0, 0));
         btn_add_product_service.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_add_new.png"))); // NOI18N
+        btn_add_product_service.setNextFocusableComponent(txt_search_computer);
         btn_add_product_service.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_add_product_serviceActionPerformed(evt);
@@ -810,24 +811,25 @@ public class NewSale extends javax.swing.JInternalFrame {
                             .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panel_sale_detailsLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_service_product)
-                            .addComponent(btn_add_product_service))
-                        .addGap(14, 14, 14)
+                        .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btn_add_product_service)
+                            .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lbl_service_product)))
+                        .addGap(12, 12, 12)
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                 .addGap(35, 35, 35)
                 .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_save_sale)
                     .addComponent(btn_cancel)
                     .addComponent(btn_computers))
-                .addGap(18, 18, 18)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lbl_search_icon, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txt_search_computer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         desktop_pane_new_sale.setLayer(panel_sale_details, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -845,7 +847,7 @@ public class NewSale extends javax.swing.JInternalFrame {
             desktop_pane_new_saleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(desktop_pane_new_saleLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(panel_sale_details, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
+                .addComponent(panel_sale_details, javax.swing.GroupLayout.DEFAULT_SIZE, 684, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 

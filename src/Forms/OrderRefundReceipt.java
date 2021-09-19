@@ -33,6 +33,7 @@ public class OrderRefundReceipt extends javax.swing.JFrame {
 
     public OrderRefundReceipt(Order _order, CompletedOrder _completedOrders) {
         initComponents();
+        setResizable(false);  
         this.order = _order;
         this.completedOrders = _completedOrders;
 

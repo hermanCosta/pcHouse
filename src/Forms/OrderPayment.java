@@ -44,6 +44,7 @@ public class OrderPayment extends javax.swing.JFrame {
 
     public OrderPayment(Order _order, CompletedOrder _completedOrder, JTable _tableViewProducts) {
         initComponents();
+        setResizable(false);  
         this.order = _order;
         this.completedOrder = _completedOrder;
         this.tableViewProducts = _tableViewProducts;

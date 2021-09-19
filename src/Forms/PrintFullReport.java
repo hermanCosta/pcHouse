@@ -37,6 +37,7 @@ public class PrintFullReport extends javax.swing.JFrame {
     public PrintFullReport(String _TillClosingDate, ArrayList<SaleReport> _saleList, ArrayList<CompletedOrder> _ordersList )
     {
         initComponents();
+        setResizable(false);  
         this.tillClosingDate = _TillClosingDate;
         this.salesList = _saleList;
         this.ordersList = _ordersList;

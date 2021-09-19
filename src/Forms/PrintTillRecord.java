@@ -42,6 +42,7 @@ public class PrintTillRecord extends javax.swing.JFrame {
             double _cashOutTotal, double _tillTotal, double _enterCashTotal, double _enterCardTotal, 
             double _adjustments, double _balance, String _notes) {
         initComponents();
+        setResizable(false);  
         
         this.tillClosingDate = _tillClosingDate;
         this.cashier = _cashier;

@@ -40,6 +40,7 @@ public class DepositPayment extends javax.swing.JFrame {
 
     public DepositPayment(Order _order, double _newDeposit, CompletedOrder _completedOrder, boolean _isOrderDetails) {
         initComponents();
+        setResizable(false);  
 
         this.order = _order;
         this.newDeposit = _newDeposit;

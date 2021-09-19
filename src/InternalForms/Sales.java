@@ -9,6 +9,7 @@ import Model.CompletedOrder;
 import Model.Customer;
 import Model.ProductService;
 import Model.Sale;
+import com.sun.glass.events.KeyEvent;
 import java.awt.Font;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -176,6 +177,46 @@ public class Sales extends javax.swing.JInternalFrame {
             Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void openSelectedSale() {
+        int row = table_view_sales.getSelectedRow();
+        DefaultTableModel dtm = (DefaultTableModel) table_view_sales.getModel();
+
+        
+            saleNo = dtm.getValueAt(row, 0).toString();
+
+            try {
+
+                dbConnection();
+
+                String query = "SELECT * FROM sales WHERE saleNo = ?";
+                ps = con.prepareStatement(query);
+                ps.setString(1, saleNo);
+                rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
+                            rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), rs.getString("qty"),
+                            rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getString("saleDate"),
+                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getString("status"), rs.getString("createdBy"));
+
+                    if (rs.getString("status").equals("Paid")) {
+                        SaleDetails saleDetails = new SaleDetails(sale);
+                        //desktop_pane_sales.removeAll();
+                        desktop_pane_sales.add(saleDetails).setVisible(true);
+                    } else {
+                        SaleRefund saleRefund = new SaleRefund(sale);
+                        //desktop_pane_sales.removeAll();
+                        desktop_pane_sales.add(saleRefund).setVisible(true);
+                    }
+                }
+
+                ps.close();
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -214,6 +255,11 @@ public class Sales extends javax.swing.JInternalFrame {
         table_view_sales.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 table_view_salesMouseClicked(evt);
+            }
+        });
+        table_view_sales.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                table_view_salesKeyPressed(evt);
             }
         });
         jScrollPane2.setViewportView(table_view_sales);
@@ -336,46 +382,19 @@ public class Sales extends javax.swing.JInternalFrame {
 
     private void table_view_salesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_salesMouseClicked
         // TODO add your handling code here:
-        //Delete products|Service item of the selected row (Function is called with 2 clicks)
-        int row = table_view_sales.getSelectedRow();
-        DefaultTableModel dtm = (DefaultTableModel) table_view_sales.getModel();
-
         if (evt.getClickCount() == 2) {
-            saleNo = dtm.getValueAt(row, 0).toString();
-
-            try {
-
-                dbConnection();
-
-                String query = "SELECT * FROM sales WHERE saleNo = ?";
-                ps = con.prepareStatement(query);
-                ps.setString(1, saleNo);
-                rs = ps.executeQuery();
-
-                while (rs.next()) {
-                    sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
-                            rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), rs.getString("qty"),
-                            rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getString("saleDate"),
-                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getString("status"), rs.getString("createdBy"));
-
-                    if (rs.getString("status").equals("Paid")) {
-                        SaleDetails saleDetails = new SaleDetails(sale);
-                        //desktop_pane_sales.removeAll();
-                        desktop_pane_sales.add(saleDetails).setVisible(true);
-                    } else {
-                        SaleRefund saleRefund = new SaleRefund(sale);
-                        //desktop_pane_sales.removeAll();
-                        desktop_pane_sales.add(saleRefund).setVisible(true);
-                    }
-                }
-
-                ps.close();
-                con.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            openSelectedSale();
         }
+        
     }//GEN-LAST:event_table_view_salesMouseClicked
+
+    private void table_view_salesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_table_view_salesKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        {
+            openSelectedSale();   
+        }
+    }//GEN-LAST:event_table_view_salesKeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktop_pane_sales;

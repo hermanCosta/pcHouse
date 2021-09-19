@@ -673,6 +673,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         btn_notes.setForeground(new java.awt.Color(255, 255, 255));
         btn_notes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_notes.png"))); // NOI18N
         btn_notes.setText("Notes");
+        btn_notes.setNextFocusableComponent(txt_first_name);
         btn_notes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_notesActionPerformed(evt);
@@ -759,6 +760,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
         btn_add_product_service.setBackground(new java.awt.Color(0, 0, 0));
         btn_add_product_service.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_add_new.png"))); // NOI18N
+        btn_add_product_service.setNextFocusableComponent(txt_deposit);
 
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);

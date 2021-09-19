@@ -41,7 +41,7 @@ public class SalePayment extends javax.swing.JFrame {
 
     public SalePayment(Sale _sale, JTable _tableViewProducts) {
         initComponents();
-        
+        setResizable(false);  
         this.sale = _sale;
         this.tableViewProducts = _tableViewProducts;
         

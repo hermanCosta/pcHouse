@@ -605,6 +605,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         btn_cancel.setForeground(new java.awt.Color(255, 255, 255));
         btn_cancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_cancel.png"))); // NOI18N
         btn_cancel.setText("Cancel");
+        btn_cancel.setNextFocusableComponent(txt_first_name);
         btn_cancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_cancelActionPerformed(evt);
@@ -731,6 +732,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
         btn_add_product_service.setBackground(new java.awt.Color(0, 0, 0));
         btn_add_product_service.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_add_new.png"))); // NOI18N
+        btn_add_product_service.setNextFocusableComponent(txt_deposit);
         btn_add_product_service.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_add_product_serviceActionPerformed(evt);

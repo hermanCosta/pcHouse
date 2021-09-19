@@ -33,6 +33,7 @@ public class PrintComputerLabel extends javax.swing.JFrame {
 
     public PrintComputerLabel(Computer _computer) {
         initComponents();
+        setResizable(false);  
         this.computer = _computer;
         
         loadOrderToPrint();

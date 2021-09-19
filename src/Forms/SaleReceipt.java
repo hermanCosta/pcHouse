@@ -34,6 +34,7 @@ public class SaleReceipt extends javax.swing.JFrame {
 
     public SaleReceipt(Sale _sale, boolean _isSaleDetails) {
         initComponents();
+        setResizable(false);  
         this.sale = _sale;
         this.isSaleDetails = _isSaleDetails;
 

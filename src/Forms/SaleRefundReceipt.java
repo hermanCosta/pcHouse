@@ -31,7 +31,7 @@ public class SaleRefundReceipt extends javax.swing.JFrame {
 
     public SaleRefundReceipt(Sale _sale) {
         initComponents();
-        
+        setResizable(false);  
         this.sale = _sale;
 
         loadSaleToPrint();

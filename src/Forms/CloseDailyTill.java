@@ -13,14 +13,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import static jdk.nashorn.internal.objects.NativeMath.round;
 
 /**
  *
@@ -40,6 +38,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
     
     public CloseDailyTill() {
         initComponents();
+        setResizable(false);  
     }
 
     public CloseDailyTill(Date _pickedDate, double _cashTotal, double _cardTotal) {

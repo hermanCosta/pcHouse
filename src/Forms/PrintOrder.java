@@ -39,7 +39,7 @@ public class PrintOrder extends javax.swing.JFrame {
     
     public PrintOrder(Order _order, CompletedOrder _completedOrder, boolean _isOrderDetails) {
         initComponents();
-        
+        setResizable(false);  
         this.order = _order;
         this.isOrderDetails = _isOrderDetails;
         this.completedOrder = _completedOrder;

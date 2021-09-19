@@ -33,6 +33,7 @@ public class Login extends javax.swing.JFrame {
 
     public Login() {
         initComponents();
+        setResizable(false);  
     }
 
     public void dbConnection() {

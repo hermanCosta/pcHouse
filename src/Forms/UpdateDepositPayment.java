@@ -39,7 +39,7 @@ public class UpdateDepositPayment extends javax.swing.JFrame {
 
     public UpdateDepositPayment(Order _order, CompletedOrder _completedOrder, double _newDeposit) {
         initComponents();
-
+        setResizable(false);  
         this.order = _order;
         this.completedOrder = _completedOrder;
         this.newDeposit = _newDeposit;

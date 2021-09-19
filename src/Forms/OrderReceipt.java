@@ -5,7 +5,6 @@
  */
 package Forms;
 
-import InternalForms.FixedOrder;
 import Model.CompletedOrder;
 import Model.Order;
 import java.awt.Graphics;
@@ -35,6 +34,7 @@ public class OrderReceipt extends javax.swing.JFrame {
 
     public OrderReceipt(Order _order, CompletedOrder _completedOrder) {
         initComponents();
+        setResizable(false);  
         this.order = _order;
         this.completedOrder = _completedOrder;
 

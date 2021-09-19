@@ -21,6 +21,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -35,7 +36,6 @@ import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
@@ -299,6 +299,52 @@ public class MainMenu extends javax.swing.JFrame {
         panel_new_sale.setVisible(false);
         panel_sales.setVisible(false);
     }
+    
+    public void openSelectedOrder() {
+        DefaultTableModel dtm = (DefaultTableModel) table_view_orders.getModel();
+            int orderSelected = table_view_orders.getSelectedRow();
+            String selectedOrderNo = dtm.getValueAt(orderSelected, 0).toString();
+
+            try {
+                dbConnection();
+                
+                String query = "SELECT * FROM orderDetails WHERE orderNo = ? ";
+                ps = con.prepareStatement(query);
+                ps.setString(1, selectedOrderNo);
+                rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    order = new Order(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"),
+                            rs.getString("email"), rs.getString("deviceBrand"), rs.getString("deviceModel"), rs.getString("serialNumber"), rs.getString("importantNotes"),
+                            rs.getString("fault"), rs.getString("productService"), rs.getString("qty"), rs.getString("unitPrice"), rs.getString("priceTotal"),
+                            rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"),
+                            rs.getString("status"), rs.getString("issueDate"), rs.getString("finishDate"), rs.getString("pickDate"),
+                            rs.getString("refundDate"), Login.fullName);
+                }
+
+                String queryPayDate = "SELECT * FROM completedOrders WHERE orderNo = ?";
+                ps = con.prepareStatement(queryPayDate);
+                ps.setString(1, selectedOrderNo);
+                rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    completedOrder = new CompletedOrder(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"),
+                            "", "", rs.getString("brand"), rs.getString("model"),
+                            "", rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("due"),
+                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getDouble("cashDeposit"),
+                            rs.getDouble("cardDeposit"), rs.getString("payDate"), rs.getString("status"));
+                }
+                FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
+                desktop_pane_main_menu.removeAll();
+                desktop_pane_main_menu.add(fixedOrder).setVisible(true);
+                
+                ps.close();
+                con.close();
+
+            } catch (SQLException ex) {
+                Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -309,6 +355,8 @@ public class MainMenu extends javax.swing.JFrame {
         lbl_time_stamp = new javax.swing.JLabel();
         lbl_username = new javax.swing.JLabel();
         lbl_slogan = new javax.swing.JLabel();
+        btn_minimize = new javax.swing.JLabel();
+        btn_close = new javax.swing.JLabel();
         panel_menu_bar = new javax.swing.JPanel();
         panel_home = new javax.swing.JPanel();
         label_home = new javax.swing.JLabel();
@@ -347,7 +395,7 @@ public class MainMenu extends javax.swing.JFrame {
         scroll_pane_table_orders = new javax.swing.JScrollPane();
         table_view_orders = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(21, 76, 121));
 
         panel_header.setBackground(new java.awt.Color(6, 57, 112));
@@ -365,6 +413,20 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
 
+        btn_minimize.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_minimize.png"))); // NOI18N
+        btn_minimize.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_minimizeMouseClicked(evt);
+            }
+        });
+
+        btn_close.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_close_window.png"))); // NOI18N
+        btn_close.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_closeMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_headerLayout = new javax.swing.GroupLayout(panel_header);
         panel_header.setLayout(panel_headerLayout);
         panel_headerLayout.setHorizontalGroup(
@@ -376,18 +438,26 @@ public class MainMenu extends javax.swing.JFrame {
                 .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_username, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbl_time_stamp, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE))
-                .addGap(783, 783, 783))
+                .addGap(707, 707, 707)
+                .addComponent(btn_minimize)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_close)
+                .addContainerGap())
         );
         panel_headerLayout.setVerticalGroup(
             panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_headerLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(lbl_slogan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(panel_headerLayout.createSequentialGroup()
-                        .addComponent(lbl_username)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbl_time_stamp)))
+                .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(btn_close, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_minimize, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panel_headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(lbl_slogan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(panel_headerLayout.createSequentialGroup()
+                            .addComponent(lbl_username)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lbl_time_stamp))))
                 .addContainerGap(8, Short.MAX_VALUE))
         );
 
@@ -1144,6 +1214,11 @@ public class MainMenu extends javax.swing.JFrame {
                 table_view_ordersMouseClicked(evt);
             }
         });
+        table_view_orders.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                table_view_ordersKeyPressed(evt);
+            }
+        });
         scroll_pane_table_orders.setViewportView(table_view_orders);
         if (table_view_orders.getColumnModel().getColumnCount() > 0) {
             table_view_orders.getColumnModel().getColumn(0).setPreferredWidth(80);
@@ -1237,8 +1312,8 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void label_homeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_homeMouseClicked
         // TODO add your handling code here:
-        this.dispose();
         new MainMenu().setVisible(true);
+        //this.dispose();
         
     }//GEN-LAST:event_label_homeMouseClicked
 
@@ -1634,50 +1709,7 @@ public class MainMenu extends javax.swing.JFrame {
     private void table_view_ordersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_ordersMouseClicked
         // TODO add your handling code here:
         if (evt.getClickCount() == 2) {
-            
-            DefaultTableModel dtm = (DefaultTableModel) table_view_orders.getModel();
-            int orderSelected = table_view_orders.getSelectedRow();
-            String selectedOrderNo = dtm.getValueAt(orderSelected, 0).toString();
-
-            try {
-                dbConnection();
-                
-                String query = "SELECT * FROM orderDetails WHERE orderNo = ? ";
-                ps = con.prepareStatement(query);
-                ps.setString(1, selectedOrderNo);
-                rs = ps.executeQuery();
-
-                while (rs.next()) {
-                    order = new Order(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"),
-                            rs.getString("email"), rs.getString("deviceBrand"), rs.getString("deviceModel"), rs.getString("serialNumber"), rs.getString("importantNotes"),
-                            rs.getString("fault"), rs.getString("productService"), rs.getString("qty"), rs.getString("unitPrice"), rs.getString("priceTotal"),
-                            rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"),
-                            rs.getString("status"), rs.getString("issueDate"), rs.getString("finishDate"), rs.getString("pickDate"),
-                            rs.getString("refundDate"), Login.fullName);
-                }
-
-                String queryPayDate = "SELECT * FROM completedOrders WHERE orderNo = ?";
-                ps = con.prepareStatement(queryPayDate);
-                ps.setString(1, selectedOrderNo);
-                rs = ps.executeQuery();
-
-                while (rs.next()) {
-                    completedOrder = new CompletedOrder(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"),
-                            "", "", rs.getString("brand"), rs.getString("model"),
-                            "", rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("due"),
-                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getDouble("cashDeposit"),
-                            rs.getDouble("cardDeposit"), rs.getString("payDate"), rs.getString("status"));
-                }
-                FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
-                desktop_pane_main_menu.removeAll();
-                desktop_pane_main_menu.add(fixedOrder).setVisible(true);
-                
-                ps.close();
-                con.close();
-
-            } catch (SQLException ex) {
-                Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            openSelectedOrder();
         }
     }//GEN-LAST:event_table_view_ordersMouseClicked
 
@@ -1685,7 +1717,26 @@ public class MainMenu extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_lbl_sloganMouseClicked
 
+    private void table_view_ordersKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_table_view_ordersKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            openSelectedOrder();
+        }
+    }//GEN-LAST:event_table_view_ordersKeyPressed
+
+    private void btn_minimizeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_minimizeMouseClicked
+        // TODO add your handling code here:
+        this.setState(JFrame.ICONIFIED);
+    }//GEN-LAST:event_btn_minimizeMouseClicked
+
+    private void btn_closeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_closeMouseClicked
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_btn_closeMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel btn_close;
+    private javax.swing.JLabel btn_minimize;
     private javax.swing.JButton btn_new_order;
     private javax.swing.JButton btn_new_sale;
     private javax.swing.JButton btn_orders;

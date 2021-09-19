@@ -43,9 +43,10 @@ public class OrderNotes extends javax.swing.JFrame {
 
     public OrderNotes(String _orderNo, String _user) {
         initComponents();
+        setResizable(false);  
         this.orderNo = _orderNo;
         this.user = _user;
-
+        
         loadTableNotes();
     }
 
