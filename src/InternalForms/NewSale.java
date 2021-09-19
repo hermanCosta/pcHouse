@@ -429,7 +429,6 @@ public class NewSale extends javax.swing.JInternalFrame {
         btn_cancel = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         table_view_computers = new javax.swing.JTable();
-        btn_add_products = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         table_view_products = new javax.swing.JTable();
         txt_search_computer = new javax.swing.JTextField();
@@ -437,6 +436,7 @@ public class NewSale extends javax.swing.JInternalFrame {
         btn_computers = new javax.swing.JButton();
         btn_international_number = new javax.swing.JButton();
         btn_copy = new javax.swing.JButton();
+        btn_add_product_service = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -535,7 +535,6 @@ public class NewSale extends javax.swing.JInternalFrame {
         combo_box_product_service.setEditable(true);
         combo_box_product_service.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         combo_box_product_service.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select or Type" }));
-        combo_box_product_service.setNextFocusableComponent(btn_add_products);
         combo_box_product_service.setSize(new java.awt.Dimension(96, 30));
         combo_box_product_service.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -618,13 +617,6 @@ public class NewSale extends javax.swing.JInternalFrame {
             table_view_computers.getColumnModel().getColumn(8).setMaxWidth(150);
         }
 
-        btn_add_products.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_add_to_product_table.png"))); // NOI18N
-        btn_add_products.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                btn_add_productsMousePressed(evt);
-            }
-        });
-
         table_view_products.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         table_view_products.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -702,6 +694,14 @@ public class NewSale extends javax.swing.JInternalFrame {
             }
         });
 
+        btn_add_product_service.setBackground(new java.awt.Color(0, 0, 0));
+        btn_add_product_service.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_add_new.png"))); // NOI18N
+        btn_add_product_service.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_add_product_serviceActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_sale_detailsLayout = new javax.swing.GroupLayout(panel_sale_details);
         panel_sale_details.setLayout(panel_sale_detailsLayout);
         panel_sale_detailsLayout.setHorizontalGroup(
@@ -750,12 +750,12 @@ public class NewSale extends javax.swing.JInternalFrame {
                                 .addGap(30, 30, 30)
                                 .addComponent(lbl_service_product)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(btn_add_products))
+                                .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btn_add_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panel_sale_detailsLayout.createSequentialGroup()
                                 .addGap(18, 18, 18)
-                                .addComponent(jScrollPane4)))))
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)))))
                 .addGap(0, 18, Short.MAX_VALUE))
             .addGroup(panel_sale_detailsLayout.createSequentialGroup()
                 .addGap(116, 116, 116)
@@ -775,9 +775,9 @@ public class NewSale extends javax.swing.JInternalFrame {
         panel_sale_detailsLayout.setVerticalGroup(
             panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_sale_detailsLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_sale_detailsLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
                         .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_auto_sale_no, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_sale_no))
@@ -809,12 +809,12 @@ public class NewSale extends javax.swing.JInternalFrame {
                             .addComponent(lbl_price)
                             .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panel_sale_detailsLayout.createSequentialGroup()
-                        .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_add_products)
-                            .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lbl_service_product)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
+                        .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbl_service_product)
+                            .addComponent(btn_add_product_service))
+                        .addGap(14, 14, 14)
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                 .addGap(35, 35, 35)
                 .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -942,85 +942,6 @@ public class NewSale extends javax.swing.JInternalFrame {
         else
             txt_total.setEditable(true);
     }//GEN-LAST:event_txt_totalKeyPressed
-
-    private void btn_add_productsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_add_productsMousePressed
-          // TODO add your handling code here:
-        // Add selected items to the products table
-        DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
-        String selectedItem = combo_box_product_service.getSelectedItem().toString();
-        String productName = "", newProdAdd = "", category = "";
-        int qty = 0;
-        double unitPrice = 0;
-        double totalPrice = 0;
-        Vector vector = new Vector();
-
-        for (int i = 0; i < dtm.getRowCount(); i++) {
-            productName = dtm.getValueAt(i, 0).toString();
-        }
-
-        if (selectedItem.isEmpty() || selectedItem.matches("Select or Type"))
-            JOptionPane.showMessageDialog(this, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
-        else if (selectedItem.equals(productName))
-            JOptionPane.showMessageDialog(this, "Item '" + selectedItem + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
-        else {
-            try {
-                dbConnection();
-
-                String query = "SELECT * FROM products WHERE productService = '" + selectedItem + "'";
-                ps = con.prepareStatement(query);
-                rs = ps.executeQuery();
-
-                if (!rs.isBeforeFirst()) {
-                    JOptionPane.showMessageDialog(this, "Item not Found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    while (rs.next()) {
-                        newProdAdd = rs.getString("productService");
-                        unitPrice = rs.getDouble("price");
-                        category = rs.getString("category");
-                    }
-
-                    if (category.equals("Product")) {
-                        boolean valid = false;
-                        while (!valid) {
-                            try {
-                                qty = Integer.parseInt(JOptionPane.showInputDialog("Enter '" + selectedItem + "' Qty:"));
-                                if (qty > 0) {
-                                    valid = true;
-                                }
-                            } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(this, "Qty must be an Integer!", "Product | Service", JOptionPane.ERROR_MESSAGE);
-                            }
-
-                            totalPrice = unitPrice * qty;
-                            vector.add(newProdAdd);
-                            vector.add(qty);
-                            vector.add(unitPrice);
-                            vector.add(totalPrice);
-                            dtm.addRow(vector);
-                        }
-
-                    } else {
-                            qty = 1;
-                            totalPrice = unitPrice * qty;
-
-                            vector.add(newProdAdd);
-                            vector.add(qty);
-                            vector.add(unitPrice);
-                            vector.add(totalPrice);
-                            dtm.addRow(vector);
-                    }
-
-                    combo_box_product_service.setSelectedIndex(-1);
-                    // Sum price column and set into total textField
-                    getPriceSum();
-                    ps.close();
-                    con.close();
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }//GEN-LAST:event_btn_add_productsMousePressed
 
     private void table_view_computersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_computersMouseClicked
         // TODO add your handling code here:
@@ -1214,8 +1135,87 @@ public class NewSale extends javax.swing.JInternalFrame {
         JOptionPane.showMessageDialog(this, txt_contact.getText() + " Copied to Clipboard");
     }//GEN-LAST:event_btn_copyActionPerformed
 
+    private void btn_add_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add_product_serviceActionPerformed
+        // TODO add your handling code here:
+        // Add selected items to the products table
+        DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
+        String selectedItem = combo_box_product_service.getSelectedItem().toString();
+        String productName = "", newProdAdd = "", category = "";
+        int qty = 0;
+        double unitPrice = 0;
+        double totalPrice = 0;
+        Vector vector = new Vector();
+
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            productName = dtm.getValueAt(i, 0).toString();
+        }
+
+        if (selectedItem.isEmpty() || selectedItem.matches("Select or Type"))
+        JOptionPane.showMessageDialog(this, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
+        else if (selectedItem.equals(productName))
+        JOptionPane.showMessageDialog(this, "Item '" + selectedItem + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
+        else {
+            try {
+                dbConnection();
+
+                String query = "SELECT * FROM products WHERE productService = '" + selectedItem + "'";
+                ps = con.prepareStatement(query);
+                rs = ps.executeQuery();
+
+                if (!rs.isBeforeFirst()) {
+                    JOptionPane.showMessageDialog(this, "Item not Found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    while (rs.next()) {
+                        newProdAdd = rs.getString("productService");
+                        unitPrice = rs.getDouble("price");
+                        category = rs.getString("category");
+                    }
+
+                    if (category.equals("Product")) {
+                        boolean valid = false;
+                        while (!valid) {
+                            try {
+                                qty = Integer.parseInt(JOptionPane.showInputDialog("Enter '" + selectedItem + "' Qty:"));
+                                if (qty > 0) {
+                                    valid = true;
+                                }
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(this, "Qty must be an Integer!", "Product | Service", JOptionPane.ERROR_MESSAGE);
+                            }
+
+                            totalPrice = unitPrice * qty;
+                            vector.add(newProdAdd);
+                            vector.add(qty);
+                            vector.add(unitPrice);
+                            vector.add(totalPrice);
+                            dtm.addRow(vector);
+                        }
+
+                    } else {
+                        qty = 1;
+                        totalPrice = unitPrice * qty;
+
+                        vector.add(newProdAdd);
+                        vector.add(qty);
+                        vector.add(unitPrice);
+                        vector.add(totalPrice);
+                        dtm.addRow(vector);
+                    }
+
+                    combo_box_product_service.setSelectedIndex(-1);
+                    // Sum price column and set into total textField
+                    getPriceSum();
+                    ps.close();
+                    con.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btn_add_product_serviceActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel btn_add_products;
+    private javax.swing.JButton btn_add_product_service;
     private javax.swing.JButton btn_cancel;
     private javax.swing.JButton btn_computers;
     private javax.swing.JButton btn_copy;

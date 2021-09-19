@@ -13,12 +13,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import static jdk.nashorn.internal.objects.NativeMath.round;
 
 /**
  *
@@ -55,15 +57,12 @@ public class CloseDailyTill extends javax.swing.JFrame {
             txt_enter_cash_total.requestFocus();
         });
         
-        
         lbl_till_closing_on.setText("Till Closing Date: " + tillClosingDate);
         lbl_date_cashier.setText("Cashier: " + Login.fullName);
         lbl_till_opening_date.setText("Till Opening Date: " + tillOpeningDate);
         
-        
         loadEntriesTotal();
         loadCashOut();
-        //loadCashInCashOutTotal();
         
         txt_cash_total.setText(String.valueOf(cashTotal));
         txt_card_total.setText(String.valueOf(cardTotal));
@@ -197,12 +196,12 @@ public class CloseDailyTill extends javax.swing.JFrame {
     public void calcTotalEntered()
     {
         tillTotal = Double.parseDouble(txt_till_total.getText());
-        
         if (txt_enter_cash_total.getText().trim().isEmpty() && txt_adjustments.getText().trim().isEmpty() && !txt_enter_card_total.getText().trim().isEmpty()) {
             enterCardTotal = Double.parseDouble(txt_enter_card_total.getText());
             adjustments = 0;
             enterCashTotal = 0;
             balance = tillTotal - enterCardTotal;
+            balance = Math.floor(balance * 100) / 100;
             txt_balance.setText(String.valueOf(balance));
         }
         
@@ -211,6 +210,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
             enterCardTotal = 0;
             adjustments = Double.parseDouble(txt_adjustments.getText());
             balance = tillTotal - adjustments;
+            balance = Math.floor(balance * 100) / 100;
             txt_balance.setText(String.valueOf(balance));
         }
         
@@ -219,6 +219,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
             adjustments = 0;
             enterCardTotal = 0;
             balance = tillTotal - enterCashTotal;
+            balance = Math.floor(balance * 100) / 100;
             txt_balance.setText(String.valueOf(balance));
         }
         
@@ -227,6 +228,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
             enterCardTotal = Double.parseDouble(txt_enter_card_total.getText());
             adjustments = Double.parseDouble(txt_adjustments.getText());
             balance = tillTotal - (enterCardTotal + adjustments);
+            balance = Math.floor(balance * 100) / 100;
             txt_balance.setText(String.valueOf(balance));
         }
         
@@ -235,6 +237,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
             enterCardTotal = Double.parseDouble(txt_enter_card_total.getText());
             adjustments = 0;
             balance = tillTotal - (enterCashTotal + enterCardTotal);
+            balance = Math.floor(balance * 100) / 100;
             txt_balance.setText(String.valueOf(balance));
         }
         
@@ -243,6 +246,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
             enterCardTotal = 0;
             adjustments = Double.parseDouble(txt_adjustments.getText());
             balance = tillTotal - (enterCashTotal + adjustments);
+            balance = Math.floor(balance * 100) / 100;
             txt_balance.setText(String.valueOf(balance));
         }
         
@@ -251,6 +255,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
             enterCardTotal = Double.parseDouble(txt_enter_card_total.getText());
             adjustments = Double.parseDouble(txt_adjustments.getText());
             balance = tillTotal - (enterCashTotal + enterCardTotal + adjustments);
+            balance = Math.floor(balance * 100) / 100;
             txt_balance.setText(String.valueOf(balance));
         }
         else

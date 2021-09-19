@@ -353,7 +353,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         txt_total = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         table_view_faults = new javax.swing.JTable();
-        lbl_add_product = new javax.swing.JLabel();
         txt_due = new javax.swing.JTextField();
         lbl_issue_date = new javax.swing.JLabel();
         panel_buttons = new javax.swing.JPanel();
@@ -368,6 +367,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         table_view_products = new javax.swing.JTable();
         btn_international_number = new javax.swing.JButton();
         btn_copy = new javax.swing.JButton();
+        btn_add_product_service = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -611,13 +611,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         });
         jScrollPane3.setViewportView(table_view_faults);
 
-        lbl_add_product.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_add_to_product_table.png"))); // NOI18N
-        lbl_add_product.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                lbl_add_productMousePressed(evt);
-            }
-        });
-
         txt_due.setEditable(false);
         txt_due.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         txt_due.setForeground(new java.awt.Color(255, 0, 51));
@@ -764,6 +757,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             }
         });
 
+        btn_add_product_service.setBackground(new java.awt.Color(0, 0, 0));
+        btn_add_product_service.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_add_new.png"))); // NOI18N
+
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);
         panel_order_detailsLayout.setHorizontalGroup(
@@ -833,8 +829,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                                         .addComponent(lbl_service_product)
                                         .addGap(6, 6, 6)
                                         .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(10, 10, 10)
-                                        .addComponent(lbl_add_product))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btn_add_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                         .addComponent(lbl_due)
                                         .addGap(0, 0, 0)
@@ -865,7 +861,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_order_no)
                             .addComponent(lbl_auto_order_no))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGap(8, 8, 8)
@@ -916,16 +911,18 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                         .addGap(12, 12, 12)
                         .addComponent(jScrollPane_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(6, 6, 6)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btn_add_product_service)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addGap(4, 4, 4)
-                                .addComponent(lbl_service_product))
-                            .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_add_product))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(6, 6, 6)
+                                .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panel_order_detailsLayout.createSequentialGroup()
+                                        .addGap(4, 4, 4)
+                                        .addComponent(lbl_service_product))
+                                    .addComponent(combo_box_product_service, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(3, 3, 3)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
@@ -1169,89 +1166,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
     private void combo_box_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combo_box_product_serviceActionPerformed
     }//GEN-LAST:event_combo_box_product_serviceActionPerformed
-
-    private void lbl_add_productMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_add_productMousePressed
-        // TODO add your handling code here:
-        // Add selected items to the products table
-        DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
-        ArrayList<String> tableProductsList = new ArrayList<>();
-        String selectedItem = combo_box_product_service.getSelectedItem().toString().replace(" ", "");
-        
-        String productName = "", newProdAdd = "", category = "";
-        int qty = 0;
-        double unitPrice = 0;
-        double totalPrice = 0;
-        Vector vector = new Vector();
-
-        for (int i = 0; i < dtm.getRowCount(); i++) {
-            productName = dtm.getValueAt(i, 0).toString().replace(" ", "");
-            tableProductsList.add(productName);
-        }
-
-        if (selectedItem.isEmpty() || selectedItem.matches("Select or Type"))
-            JOptionPane.showMessageDialog(this, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
-        else if (tableProductsList.contains(selectedItem))
-            JOptionPane.showMessageDialog(this, "Item '" + selectedItem + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
-        else {
-            try {
-                dbConnection();
-
-                selectedItem = combo_box_product_service.getSelectedItem().toString();
-                String query = "SELECT * FROM products WHERE productService = '" + selectedItem + "'";
-                ps = con.prepareStatement(query);
-                rs = ps.executeQuery();
-
-                if (!rs.isBeforeFirst()) {
-                    JOptionPane.showMessageDialog(this, "Item not Found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    while (rs.next()) {
-                        newProdAdd = rs.getString("productService");
-                        unitPrice = rs.getDouble("price");
-                        category = rs.getString("category");
-                    }
-
-                    if (category.equals("Product")) {
-                        boolean valid = false;
-                        while (!valid) {
-                            try {
-                                qty = Integer.parseInt(JOptionPane.showInputDialog("Enter '" + selectedItem + "' Qty:"));
-                                if (qty > 0) {
-                                    valid = true;
-                                }
-                            } catch (NumberFormatException e) {
-                                JOptionPane.showMessageDialog(this, "Qty must be an Integer!", "Product | Service", JOptionPane.ERROR_MESSAGE);
-                            }
-
-                            totalPrice = unitPrice * qty;
-                            vector.add(newProdAdd);
-                            vector.add(qty);
-                            vector.add(unitPrice);
-                            vector.add(totalPrice);
-                            dtm.addRow(vector);
-                        }
-
-                    } else {
-                            qty = 1;
-                            totalPrice = unitPrice * qty;
-
-                            vector.add(newProdAdd);
-                            vector.add(qty);
-                            vector.add(unitPrice);
-                            vector.add(totalPrice);
-                            dtm.addRow(vector);
-                    }
-
-                    combo_box_product_service.setSelectedIndex(-1);
-                    // Sum price column and set into total textField
-                    getPriceSum();
-                    ps.close();
-                    con.close();
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }//GEN-LAST:event_lbl_add_productMousePressed
 
     private void table_view_faultsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_faultsMouseClicked
         // TODO add your handling code here:
@@ -1627,6 +1541,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_editor_pane_important_notesKeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_add_product_service;
     private javax.swing.JButton btn_copy;
     private javax.swing.JButton btn_fix;
     private javax.swing.JButton btn_international_number;
@@ -1640,7 +1555,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane_notes;
-    private javax.swing.JLabel lbl_add_product;
     private javax.swing.JLabel lbl_auto_order_no;
     private javax.swing.JLabel lbl_brand;
     private javax.swing.JLabel lbl_contact;

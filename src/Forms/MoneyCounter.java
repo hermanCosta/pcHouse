@@ -381,6 +381,11 @@ public class MoneyCounter extends javax.swing.JFrame {
         lbl_€500.setText("€500");
 
         txt_500.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        txt_500.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_500ActionPerformed(evt);
+            }
+        });
         txt_500.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_500KeyPressed(evt);
@@ -491,7 +496,6 @@ public class MoneyCounter extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_bank_notesLayout.createSequentialGroup()
                         .addComponent(lbl_€200)
                         .addGap(16, 16, 16)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panel_bank_notesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txt_100, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panel_bank_notesLayout.createSequentialGroup()
@@ -1029,6 +1033,10 @@ public class MoneyCounter extends javax.swing.JFrame {
     private void txt_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_2ActionPerformed
+
+    private void txt_500ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_500ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_500ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
