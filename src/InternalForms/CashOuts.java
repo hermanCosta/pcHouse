@@ -79,7 +79,6 @@ public class CashOuts extends javax.swing.JInternalFrame {
         ArrayList<CashOut> recordsList = new ArrayList<>();
         double cashOutTotal = 0;
 
-//        Date date = date_picker.getDate();
         String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(date_picker.getDate());
         String endDate = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(date_picker.getDate());
         String dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(date_picker.getDate());

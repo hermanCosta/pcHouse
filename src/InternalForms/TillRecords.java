@@ -26,7 +26,6 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 
@@ -45,19 +44,19 @@ public class TillRecords extends javax.swing.JInternalFrame {
 
     public TillRecords() {
         initComponents();
-        
+
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
-        
+
         table_view_till_records.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 12));
         scroll_pane_table_till_records.setOpaque(false);
         scroll_pane_table_till_records.getViewport().setOpaque(false);
-        
+
         date = new Date();
         loadWeeklyRecordsFromDb();
     }
-    
+
     public void dbConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -77,41 +76,37 @@ public class TillRecords extends javax.swing.JInternalFrame {
         dtm.setRowCount(0);
         try {
             dbConnection();
-            
+
             String query = "SELECT * FROM tillClosing WHERE WEEKOFYEAR(tillOpeningDate) = WEEKOFYEAR(NOW()) ORDER BY date DESC";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
-            
-            if (!rs.isBeforeFirst())
-            {
+
+            if (!rs.isBeforeFirst()) {
                 JOptionPane.showMessageDialog(this, "No Till Records on this week !");
-            }
-            else {
+            } else {
                 while (rs.next()) {
                     tillOpeningDate = new SimpleDateFormat("dd/MM/yyyy").format(rs.getTimestamp("tillOpeningDate"));
-                    
+
                     tillRecord = new TillRecord(tillOpeningDate, rs.getDouble("cashInTotal"), rs.getDouble("cashOutTotal"), rs.getString("notes"));
                     lbl_till_closing_records.setText("Till Closing Records");
-                    
+
                     tillRecordsList.add(tillRecord);
                 }
-                
+
                 Object[] row = new Object[4];
-                for (int i = 0; i < tillRecordsList.size(); i++)
-                {
+                for (int i = 0; i < tillRecordsList.size(); i++) {
                     row[0] = tillRecordsList.get(i).getTillOpeningDate();
                     row[1] = tillRecordsList.get(i).getCashInTotal();
                     row[2] = tillRecordsList.get(i).getCashOutTotal();
                     row[3] = tillRecordsList.get(i).getNotes();
                     dtm.addRow(row);
                 }
-                
-                for (int i = 0; i < dtm.getRowCount(); i++)
-                {
+
+                for (int i = 0; i < dtm.getRowCount(); i++) {
                     cashInTotal += (double) dtm.getValueAt(i, 1);
                     cashOutTotal += (double) dtm.getValueAt(i, 2);
                 }
-                
+
                 lbl_cash_in_total.setText("Cash In Records Total " + cashInTotal);
                 lbl_cash_out_total.setText("Cash Out Records Total " + cashOutTotal);
             }
@@ -119,7 +114,6 @@ public class TillRecords extends javax.swing.JInternalFrame {
             Logger.getLogger(TillRecords.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -468,43 +462,34 @@ public class TillRecords extends javax.swing.JInternalFrame {
     private void btn_daily_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_daily_recordsActionPerformed
         // TODO add your handling code here:
         String tillClosingDate = "";
-
         Date datePicker = date_picker.getDate();
         tillOpeningDate = new SimpleDateFormat("yyyy-MM-dd").format(datePicker.getTime());
-//        String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(datePicker.getTime());
-//        String endDate = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(datePicker.getTime());
-        
+
         try {
             dbConnection();
-            
-            //String query = "SELECT * FROM tillClosing WHERE tillOpeningDate >= ? AND date <= ?";
+
             String query = "SELECT * FROM tillClosing WHERE tillOpeningDate = ?";
             ps = con.prepareStatement(query);
             ps.setString(1, tillOpeningDate);
-            //ps.setString(2, endDate);
             rs = ps.executeQuery();
-            
-            if (!rs.isBeforeFirst())
-            {
+
+            if (!rs.isBeforeFirst()) {
                 tillOpeningDate = new SimpleDateFormat("dd/MM/yyyy").format(datePicker.getTime());
                 JOptionPane.showMessageDialog(this, "No Till records on " + tillOpeningDate + "!");
-            }
-            else
-            {
-                while (rs.next())
-                {
+            } else {
+                while (rs.next()) {
                     tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate("date"));
                     tillOpeningDate = new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate("tillOpeningDate"));
-                    
+
                     PrintTillRecord printTillRecord = new PrintTillRecord(tillClosingDate, rs.getString("cashier"),
-                        tillOpeningDate, rs.getDouble("cashTotal"), rs.getDouble("cardTotal"), rs.getDouble("entriesTotal"), 
-                        rs.getDouble("cashInTotal"), rs.getDouble("payments"), rs.getDouble("takes"), rs.getDouble("other"),
-                        rs.getDouble("cashOutTotal"), rs.getDouble("tillTotal"), rs.getDouble("enterCashTotal"), 
-                        rs.getDouble("enterCardTotal"), rs.getDouble("adjustments"), rs.getDouble("balance"), rs.getString("notes"));
-                    
+                            tillOpeningDate, rs.getDouble("cashTotal"), rs.getDouble("cardTotal"), rs.getDouble("entriesTotal"),
+                            rs.getDouble("cashInTotal"), rs.getDouble("payments"), rs.getDouble("takes"), rs.getDouble("other"),
+                            rs.getDouble("cashOutTotal"), rs.getDouble("tillTotal"), rs.getDouble("enterCashTotal"),
+                            rs.getDouble("enterCardTotal"), rs.getDouble("adjustments"), rs.getDouble("balance"), rs.getString("notes"));
+
                     printTillRecord.setVisible(true);
                 }
-            }   
+            }
         } catch (SQLException ex) {
             Logger.getLogger(TillRecords.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -572,42 +557,38 @@ public class TillRecords extends javax.swing.JInternalFrame {
         dtm.setRowCount(0);
         try {
             dbConnection();
-            
+
             String query = "SELECT * FROM tillClosing WHERE MONTH(tillOpeningDate) = MONTH(NOW()) ORDER BY date DESC";
             ps = con.prepareStatement(query);
             rs = ps.executeQuery();
-            
-            if (!rs.isBeforeFirst())
-            {
+
+            if (!rs.isBeforeFirst()) {
                 JOptionPane.showMessageDialog(this, "No Till Records on this Month !");
-                
-            }
-            else {
+
+            } else {
                 while (rs.next()) {
                     tillOpeningDate = new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate("tillOpeningDate"));
-                    
+
                     tillRecord = new TillRecord(tillOpeningDate, rs.getDouble("cashInTotal"), rs.getDouble("cashOutTotal"), rs.getString("notes"));
                     lbl_till_closing_records.setText("Till Closing Records");
-                    
+
                     tillRecordsList.add(tillRecord);
                 }
-                
+
                 Object[] row = new Object[4];
-                for (int i = 0; i < tillRecordsList.size(); i++)
-                {
+                for (int i = 0; i < tillRecordsList.size(); i++) {
                     row[0] = tillRecordsList.get(i).getTillOpeningDate();
                     row[1] = tillRecordsList.get(i).getCashInTotal();
                     row[2] = tillRecordsList.get(i).getCashOutTotal();
                     row[3] = tillRecordsList.get(i).getNotes();
                     dtm.addRow(row);
                 }
-                
-                for (int i = 0; i < dtm.getRowCount(); i++)
-                {
+
+                for (int i = 0; i < dtm.getRowCount(); i++) {
                     cashInTotal += (double) dtm.getValueAt(i, 1);
                     cashOutTotal += (double) dtm.getValueAt(i, 2);
                 }
-                
+
                 lbl_cash_in_total.setText("Cash In Records Total " + cashInTotal);
                 lbl_cash_out_total.setText("Cash Out Records Total " + cashOutTotal);
             }

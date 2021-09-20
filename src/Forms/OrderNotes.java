@@ -43,10 +43,10 @@ public class OrderNotes extends javax.swing.JFrame {
 
     public OrderNotes(String _orderNo, String _user) {
         initComponents();
-        setResizable(false);  
+        setResizable(false);
         this.orderNo = _orderNo;
         this.user = _user;
-        
+
         loadTableNotes();
     }
 
@@ -76,10 +76,8 @@ public class OrderNotes extends javax.swing.JFrame {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                //String dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(rs.getString("date"));
                 orderNote = new OrderNote(rs.getString("date"), rs.getString("note"), rs.getString("user"));
                 noteList.add(orderNote);
-
             }
 
             Object[] noteRow = new Object[3];
@@ -199,7 +197,7 @@ public class OrderNotes extends javax.swing.JFrame {
                 ps.setString(3, note);
                 ps.setString(4, user);
                 ps.executeUpdate();
-                
+
                 ps.close();
                 con.close();
 
@@ -235,7 +233,7 @@ public class OrderNotes extends javax.swing.JFrame {
                         ps.executeUpdate();
 
                         loadTableNotes();
-                        
+
                         ps.close();
                         con.close();
 

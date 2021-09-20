@@ -56,7 +56,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
     ArrayList<Double> refundList = new ArrayList<>();
     double refundTotal;
-    
+
     double ordersCashTotal, ordersCardTotal, salesCardTotal, salesCashTotal;
 
     public TillClosing() {
@@ -78,7 +78,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
         loadSalesOfTheDay();
         loadOrdersReportOfTheDay();
     }
-
 
     public void dbConnection() {
         try {
@@ -160,7 +159,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
         //Lists for holding list from the constructor
         ArrayList<CompletedOrder> listOrders = loadOrdersList();
-        
+
         // This Lists hold all values paid by cash and card
         ArrayList<Double> cashList = new ArrayList<>();
         ArrayList<Double> cardList = new ArrayList<>();
@@ -183,9 +182,10 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
             if (listOrders.get(i).getTotal() == 0) {
                 orderDueColumn.add(listOrders.get(i).getDeposit());
-                
-                if (listOrders.get(i).getTotal() == 0 && listOrders.get(i).getDeposit() < 0)
+
+                if (listOrders.get(i).getTotal() == 0 && listOrders.get(i).getDeposit() < 0) {
                     refundList.add(listOrders.get(i).getDeposit());
+                }
             }
             // check if there's negative values, pass due + deposit if true, else, pass as normal to the list
             // set deposit row = 0, and dont get changeTotal for calculation
@@ -196,11 +196,9 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
                 cashList.add(listOrders.get(i).getCash() + listOrders.get(i).getCashDeposit() + listOrders.get(i).getChangeTotal());
                 cardList.add(listOrders.get(i).getCard() + listOrders.get(i).getCardDeposit());
-                
+
                 refundList.add(listOrders.get(i).getTotal());
-            } 
-               
-            else {
+            } else {
                 rowOrders[3] = listOrders.get(i).getDeposit();
                 rowOrders[4] = listOrders.get(i).getDue();
 
@@ -211,24 +209,27 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
             ordersModel.addRow(rowOrders);
         }
-        
+
         //Loop the List and sum Cash payments
         ordersCashTotal = 0;
         ordersCardTotal = 0;
-        for (double d : cashList)
+        for (double d : cashList) {
             ordersCashTotal += d;
+        }
 
-        
-        for (double d : cardList)
+        for (double d : cardList) {
             ordersCardTotal += d;
+        }
 
         double ordersTotal = 0;
-        for (double d : orderDueColumn)
+        for (double d : orderDueColumn) {
             ordersTotal += d;
+        }
 
         double ordersRefundTotal = 0;
-        for (double d : refundList)
+        for (double d : refundList) {
             ordersRefundTotal += d;
+        }
 
         lbl_report_date.setText("Orders Report - " + tillClosingDate);
         lbl_print_gross_total.setText("Gross Orders Total ............. €" + String.valueOf(ordersTotal));
@@ -236,9 +237,8 @@ public class TillClosing extends javax.swing.JInternalFrame {
         lbl_print_total_card.setText("Card Total ......................... €" + String.valueOf(ordersCardTotal));
         lbl_print_refunds.setText("Refunds ............................ €" + String.valueOf(ordersRefundTotal));
     }
-    
-    public void loadSalesOfTheDay()
-    {
+
+    public void loadSalesOfTheDay() {
         Date pickedDate = pickedDate = date_picker.getDate();
         String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
 
@@ -248,64 +248,68 @@ public class TillClosing extends javax.swing.JInternalFrame {
         //Lists for holding list from the constructor
         ArrayList<SaleReport> listSales = loadSalesList();
 
-            // This Lists hold all values paid by cash and card
-            ArrayList<Double> cashList = new ArrayList<>();
-            ArrayList<Double> cardList = new ArrayList<>();
+        // This Lists hold all values paid by cash and card
+        ArrayList<Double> cashList = new ArrayList<>();
+        ArrayList<Double> cardList = new ArrayList<>();
 
-            //This Lists hold total due of all orders
-            ArrayList<Double> salesTotalColumn = new ArrayList<>();
+        //This Lists hold total due of all orders
+        ArrayList<Double> salesTotalColumn = new ArrayList<>();
 
-            // Table models
-            DefaultTableModel ordersModel = (DefaultTableModel) table_view_orders.getModel();
-            ordersModel.setRowCount(0);
-            DefaultTableModel salesModel = (DefaultTableModel) table_view_sales.getModel();
-            salesModel.setRowCount(0);
+        // Table models
+        DefaultTableModel ordersModel = (DefaultTableModel) table_view_orders.getModel();
+        ordersModel.setRowCount(0);
+        DefaultTableModel salesModel = (DefaultTableModel) table_view_sales.getModel();
+        salesModel.setRowCount(0);
 
-            refundList.clear();
+        refundList.clear();
 
-            Object[] rowSales = new Object[4];
-            for (int i = 0; i < listSales.size(); i++) {
-                rowSales[0] = listSales.get(i).getSaleNo();
-                rowSales[1] = listSales.get(i).getFirstName() + " " + listSales.get(i).getLastName();
-                rowSales[2] = listSales.get(i).getProductsService();
-                rowSales[3] = listSales.get(i).getTotal();
-                salesModel.addRow(rowSales);
-                salesTotalColumn.add(listSales.get(i).getTotal());
-                cardList.add(listSales.get(i).getCard());
+        Object[] rowSales = new Object[4];
+        for (int i = 0; i < listSales.size(); i++) {
+            rowSales[0] = listSales.get(i).getSaleNo();
+            rowSales[1] = listSales.get(i).getFirstName() + " " + listSales.get(i).getLastName();
+            rowSales[2] = listSales.get(i).getProductsService();
+            rowSales[3] = listSales.get(i).getTotal();
+            salesModel.addRow(rowSales);
+            salesTotalColumn.add(listSales.get(i).getTotal());
+            cardList.add(listSales.get(i).getCard());
 
-                if (listSales.get(i).getTotal() < 0) {
-                    cashList.add(listSales.get(i).getCash() + listSales.get(i).getChangeTotal());
-                    refundList.add(listSales.get(i).getTotal());
-                } else {
-                    cashList.add(listSales.get(i).getCash() - listSales.get(i).getChangeTotal());
-                }
+            if (listSales.get(i).getTotal() < 0) {
+                cashList.add(listSales.get(i).getCash() + listSales.get(i).getChangeTotal());
+                refundList.add(listSales.get(i).getTotal());
+            } else {
+                cashList.add(listSales.get(i).getCash() - listSales.get(i).getChangeTotal());
             }
+        }
 
-            //Loop the List and sum Cash payments
-            salesCashTotal = 0;
-            salesCardTotal = 0;
-            for (double d : cashList)
-                salesCashTotal += d;
+        //Loop the List and sum Cash payments
+        salesCashTotal = 0;
+        salesCardTotal = 0;
+        for (double d : cashList) {
+            salesCashTotal += d;
+        }
 
-            for (double d : cardList)
-                salesCardTotal += d;
+        for (double d : cardList) {
+            salesCardTotal += d;
+        }
 
-            double salesTotal = 0;
-            for (double d : salesTotalColumn)
-                salesTotal += d;
+        double salesTotal = 0;
+        for (double d : salesTotalColumn) {
+            salesTotal += d;
+        }
 
-            double salesRefundTotal = 0;
-            for (double d : refundList)
-                salesRefundTotal += d;
+        double salesRefundTotal = 0;
+        for (double d : refundList) {
+            salesRefundTotal += d;
+        }
 
-            //Gross total (cash&card    
-            double salesGrossTotal = salesTotal;
+        //Gross total (cash&card    
+        double salesGrossTotal = salesTotal;
 
-            lbl_report_date.setText("Sales Report - " + tillClosingDate);
-            lbl_print_gross_total.setText("Gross Sales Total .............. €" + String.valueOf(salesGrossTotal));
-            lbl_print_total_cash.setText("Cash Total ........................ €" + String.valueOf(salesCashTotal));
-            lbl_print_total_card.setText("Card Total ........................ €" + String.valueOf(salesCardTotal));
-            lbl_print_refunds.setText("Refunds ........................... €" + String.valueOf(salesRefundTotal));
+        lbl_report_date.setText("Sales Report - " + tillClosingDate);
+        lbl_print_gross_total.setText("Gross Sales Total .............. €" + String.valueOf(salesGrossTotal));
+        lbl_print_total_cash.setText("Cash Total ........................ €" + String.valueOf(salesCashTotal));
+        lbl_print_total_card.setText("Card Total ........................ €" + String.valueOf(salesCardTotal));
+        lbl_print_refunds.setText("Refunds ........................... €" + String.valueOf(salesRefundTotal));
     }
 
     @SuppressWarnings("unchecked")
@@ -850,11 +854,11 @@ public class TillClosing extends javax.swing.JInternalFrame {
         // Gett date from calendar
         Date pickedDate = pickedDate = date_picker.getDate();
         String tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
-        
+
         // Get Current date for checking cash entries
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
-        
+
         if (loadSalesList().isEmpty() || pickedDate.after(currentDate)) {
             JOptionPane.showMessageDialog(this, "No Sales on " + tillClosingDate + " !");
             lbl_report_date.setText("Sales Report - " + tillClosingDate);
@@ -862,7 +866,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         } else {
             loadSalesOfTheDay();
         }
-        
+
     }//GEN-LAST:event_btn_salesActionPerformed
 
     private void date_pickerPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_date_pickerPropertyChange
@@ -947,23 +951,23 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
                 switch (order.getStatus()) {
 
-                    case "Refunded" :
+                    case "Refunded":
                         OrderRefund refundOrder = new OrderRefund(order, completedOrder);
                         desktop_pane_till_closing.add(refundOrder).setVisible(true);
                         MainMenu mainMenu = new MainMenu();
                         mainMenu.expandOrders();
                         break;
 
-                    case "Not Fixed" :
+                    case "Not Fixed":
                         NotFixedOrder notFixed = new NotFixedOrder(order, completedOrder);
                         desktop_pane_till_closing.add(notFixed).setVisible(true);
                         break;
 
-                    case "In Progress" :
+                    case "In Progress":
                         OrderDetails orderDetails = new OrderDetails(order, completedOrder);
                         desktop_pane_till_closing.add(orderDetails).setVisible(true);
                         break;
-                        
+
                     default:
                         FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
                         desktop_pane_till_closing.add(fixedOrder).setVisible(true);
@@ -1009,7 +1013,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
                         desktop_pane_till_closing.add(saleRefund).setVisible(true);
                     }
                 }
-                
+
                 ps.close();
                 con.close();
 
@@ -1030,11 +1034,11 @@ public class TillClosing extends javax.swing.JInternalFrame {
         String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(pickedDate);
         String endDate = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(pickedDate);
         String tillOpeningDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
-        
+
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.DATE, -2);
-        
+
         try {
             dbConnection();
             String queryTillClosing = "SELECT * FROM tillClosing where tillOpeningDate >= ? AND tillOpeningDate <= ?";
@@ -1042,20 +1046,15 @@ public class TillClosing extends javax.swing.JInternalFrame {
             ps.setString(1, startDate);
             ps.setString(2, endDate);
             rs = ps.executeQuery();
-            
-            if(rs.isBeforeFirst()) {
+
+            if (rs.isBeforeFirst()) {
                 JOptionPane.showMessageDialog(this, "No Till Pending to Close on " + tillOpeningDate + " !");
-            }
-            else if (pickedDate.before(cal.getTime()) || pickedDate.after(calendar.getTime()))
-            {
-                JOptionPane.showMessageDialog(this, tillOpeningDate + " is not a valid date to Close The Till !", "Till Closing", 
+            } else if (pickedDate.before(cal.getTime()) || pickedDate.after(calendar.getTime())) {
+                JOptionPane.showMessageDialog(this, tillOpeningDate + " is not a valid date to Close The Till !", "Till Closing",
                         JOptionPane.ERROR_MESSAGE);
-            }
-            
-            else
-            {
+            } else {
                 double cashTotal = ordersCashTotal + salesCashTotal;
-                double cardTotal = ordersCardTotal + salesCardTotal ;
+                double cardTotal = ordersCardTotal + salesCardTotal;
                 CloseDailyTill closeDailyTill = new CloseDailyTill(pickedDate, cashTotal, cardTotal);
                 closeDailyTill.setVisible(true);
             }

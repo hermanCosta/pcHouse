@@ -17,18 +17,17 @@ import javax.swing.JOptionPane;
 public class MoneyCounter extends javax.swing.JFrame {
 
     String tillClosingDate;
-    double totalMoney = 0; 
-    int input500Qty, input200Qty, input100Qty, input50Qty, input20Qty, input10Qty, input5Qty; 
+    double totalMoney = 0;
+    int input500Qty, input200Qty, input100Qty, input50Qty, input20Qty, input10Qty, input5Qty;
     int input2Qty, input1Qty, input50cQty, input20cQty, input10cQty, input5cQty, input2cQty, input1cQty;
     int countBankNotes, countTotalCoins;
-    
+
     public MoneyCounter() {
         initComponents();
-        setResizable(false);  
+        setResizable(false);
     }
 
-    public void calcMoneyCounter()
-    {
+    public void calcMoneyCounter() {
         double total500 = 500 * input500Qty;
         double total200 = 200 * input200Qty;
         double total100 = 100 * input100Qty;
@@ -36,27 +35,27 @@ public class MoneyCounter extends javax.swing.JFrame {
         double total20 = 20 * input20Qty;
         double total10 = 10 * input10Qty;
         double total5 = 5 * input5Qty;
-         
+
         double total2 = 2 * input2Qty;
         double total1 = 1 * input1Qty;
         double total50c = 0.5 * input50cQty;
         double total20c = 0.2 * input20cQty;
-        double total10c = 0.1 * input10cQty; 
+        double total10c = 0.1 * input10cQty;
         double total5c = 0.05 * input5cQty;
         double total2c = 0.02 * input2cQty;
         double total1c = 0.01 * input1cQty;
-        
+
         totalMoney = total500 + total200 + total100 + total50 + total20 + total10 + total5
-                + total2 + total1 + total50c + + total20c + total10c + total5c
+                + total2 + total1 + total50c + +total20c + total10c + total5c
                 + total2c + total1c;
-        
+
         totalMoney = Math.round(totalMoney * 100d) / 100d;
         txt_total_money.setText(String.valueOf(totalMoney));
-        
+
         //count bank notes qty
         countBankNotes = input500Qty + input200Qty + input100Qty + input50Qty + input20Qty + input10Qty + input5Qty;
         txt_total_bank_notes.setText(String.valueOf(countBankNotes));
-        
+
         //count coins qty
         countTotalCoins = input2Qty + input1Qty + input50cQty + input20cQty + input10cQty + input5cQty + input2cQty + input1cQty;
         txt_total_coins.setText(String.valueOf(countTotalCoins));
@@ -846,7 +845,7 @@ public class MoneyCounter extends javax.swing.JFrame {
     private void btn_copyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_copyActionPerformed
         // TODO add your handling code here:
         StringSelection stringSelection = new StringSelection(txt_total_money.getText());
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection , null);
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
         JOptionPane.showMessageDialog(this, txt_total_money.getText() + " Copied to Clipboard");
     }//GEN-LAST:event_btn_copyActionPerformed
 
@@ -870,7 +869,7 @@ public class MoneyCounter extends javax.swing.JFrame {
         txt_total_money.setText("");
         txt_total_bank_notes.setText("");
         txt_total_coins.setText("");
-        
+
         input500Qty = 0;
         input200Qty = 0;
         input100Qty = 0;
@@ -889,41 +888,39 @@ public class MoneyCounter extends javax.swing.JFrame {
         totalMoney = 0;
         countBankNotes = 0;
         countTotalCoins = 0;
-        
-        lbl_500_result.setForeground(new Color(204,204,204));
-        lbl_200_result.setForeground(new Color(204,204,204));
-        lbl_100_result.setForeground(new Color(204,204,204));
-        lbl_50_result.setForeground(new Color(204,204,204));
-        lbl_20_result.setForeground(new Color(204,204,204));
-        lbl_10_result.setForeground(new Color(204,204,204));
-        lbl_5_result.setForeground(new Color(204,204,204));
-        lbl_2_result.setForeground(new Color(204,204,204));
-        lbl_1_result.setForeground(new Color(204,204,204));
-        lbl_50c_result.setForeground(new Color(204,204,204));
-        lbl_20c_result.setForeground(new Color(204,204,204));
-        lbl_10c_result.setForeground(new Color(204,204,204));
-        lbl_5c_result.setForeground(new Color(204,204,204));
-        lbl_2c_result.setForeground(new Color(204,204,204));
-        lbl_1c_result.setForeground(new Color(204,204,204));
-        
+
+        lbl_500_result.setForeground(new Color(204, 204, 204));
+        lbl_200_result.setForeground(new Color(204, 204, 204));
+        lbl_100_result.setForeground(new Color(204, 204, 204));
+        lbl_50_result.setForeground(new Color(204, 204, 204));
+        lbl_20_result.setForeground(new Color(204, 204, 204));
+        lbl_10_result.setForeground(new Color(204, 204, 204));
+        lbl_5_result.setForeground(new Color(204, 204, 204));
+        lbl_2_result.setForeground(new Color(204, 204, 204));
+        lbl_1_result.setForeground(new Color(204, 204, 204));
+        lbl_50c_result.setForeground(new Color(204, 204, 204));
+        lbl_20c_result.setForeground(new Color(204, 204, 204));
+        lbl_10c_result.setForeground(new Color(204, 204, 204));
+        lbl_5c_result.setForeground(new Color(204, 204, 204));
+        lbl_2c_result.setForeground(new Color(204, 204, 204));
+        lbl_1c_result.setForeground(new Color(204, 204, 204));
+
         txt_500.requestFocus();
-        
+
     }//GEN-LAST:event_btn_clearActionPerformed
 
     private void txt_total_bank_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_total_bank_notesActionPerformed
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_txt_total_bank_notesActionPerformed
 
     private void txt_500KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_500KeyReleased
         // TODO add your handling code here:
         if (txt_500.getText().trim().isEmpty()) {
             input500Qty = 0;
-            lbl_500_result.setForeground(new Color(204,204,204));
+            lbl_500_result.setForeground(new Color(204, 204, 204));
             calcMoneyCounter();
-        }
-        else
-        {
+        } else {
             input500Qty = Integer.parseInt(txt_500.getText());
             lbl_500_result.setText(String.valueOf(500 * input500Qty));
             lbl_500_result.setForeground(Color.black);
@@ -935,11 +932,9 @@ public class MoneyCounter extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (txt_200.getText().trim().isEmpty()) {
             input200Qty = 0;
-            lbl_200_result.setForeground(new Color(204,204,204));
+            lbl_200_result.setForeground(new Color(204, 204, 204));
             calcMoneyCounter();
-        }
-        else
-        {
+        } else {
             input200Qty = Integer.parseInt(txt_200.getText());
             lbl_200_result.setText(String.valueOf(200 * input200Qty));
             lbl_200_result.setForeground(Color.black);
@@ -951,11 +946,9 @@ public class MoneyCounter extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (txt_100.getText().trim().isEmpty()) {
             input100Qty = 0;
-            lbl_100_result.setForeground(new Color(204,204,204));
+            lbl_100_result.setForeground(new Color(204, 204, 204));
             calcMoneyCounter();
-        }
-        else
-        {
+        } else {
             input100Qty = Integer.parseInt(txt_100.getText());
             lbl_100_result.setText(String.valueOf(100 * input100Qty));
             lbl_100_result.setForeground(Color.black);
@@ -967,11 +960,9 @@ public class MoneyCounter extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (txt_50.getText().trim().isEmpty()) {
             input50Qty = 0;
-            lbl_50_result.setForeground(new Color(204,204,204));
+            lbl_50_result.setForeground(new Color(204, 204, 204));
             calcMoneyCounter();
-        }
-        else
-        {
+        } else {
             input50Qty = Integer.parseInt(txt_50.getText());
             lbl_50_result.setText(String.valueOf(50 * input50Qty));
             lbl_50_result.setForeground(Color.black);
@@ -982,12 +973,10 @@ public class MoneyCounter extends javax.swing.JFrame {
     private void txt_10KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_10KeyReleased
         // TODO add your handling code here:
         if (txt_10.getText().trim().isEmpty()) {
-             input10Qty = 0;
-            lbl_10_result.setForeground(new Color(204,204,204));
+            input10Qty = 0;
+            lbl_10_result.setForeground(new Color(204, 204, 204));
             calcMoneyCounter();
-        }
-        else
-        {
+        } else {
             input10Qty = Integer.parseInt(txt_10.getText());
             lbl_10_result.setText(String.valueOf(10 * input10Qty));
             lbl_10_result.setForeground(Color.black);
@@ -998,14 +987,11 @@ public class MoneyCounter extends javax.swing.JFrame {
     private void txt_20KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_20KeyReleased
         // TODO add your handling code here:
         if (txt_20.getText().trim().isEmpty()) {
-           
-        
-        input20Qty = 0;
-            lbl_20_result.setForeground(new Color(204,204,204));
+
+            input20Qty = 0;
+            lbl_20_result.setForeground(new Color(204, 204, 204));
             calcMoneyCounter();
-        }
-        else
-        {
+        } else {
             input20Qty = Integer.parseInt(txt_20.getText());
             lbl_20_result.setText(String.valueOf(20 * input20Qty));
             lbl_20_result.setForeground(Color.black);
@@ -1017,11 +1003,9 @@ public class MoneyCounter extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (txt_5.getText().trim().isEmpty()) {
             input5Qty = 0;
-            lbl_5_result.setForeground(new Color(204,204,204));
+            lbl_5_result.setForeground(new Color(204, 204, 204));
             calcMoneyCounter();
-        }
-        else
-        {
+        } else {
             input5Qty = Integer.parseInt(txt_5.getText());
             lbl_5_result.setText(String.valueOf(5 * input5Qty));
             lbl_5_result.setForeground(Color.black);
@@ -1033,11 +1017,9 @@ public class MoneyCounter extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (txt_2.getText().trim().isEmpty()) {
             input2Qty = 0;
-            lbl_2_result.setForeground(new Color(204,204,204));
+            lbl_2_result.setForeground(new Color(204, 204, 204));
             calcMoneyCounter();
-        }
-        else
-        {
+        } else {
             input2Qty = Integer.parseInt(txt_2.getText());
             lbl_2_result.setText(String.valueOf(2 * input2Qty));
             lbl_2_result.setForeground(Color.black);
@@ -1049,11 +1031,9 @@ public class MoneyCounter extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (txt_1.getText().trim().isEmpty()) {
             input1Qty = 0;
-            lbl_1_result.setForeground(new Color(204,204,204));
+            lbl_1_result.setForeground(new Color(204, 204, 204));
             calcMoneyCounter();
-        }
-        else
-        {
+        } else {
             input1Qty = Integer.parseInt(txt_1.getText());
             lbl_1_result.setText(String.valueOf(1 * input1Qty));
             lbl_1_result.setForeground(Color.black);
@@ -1065,11 +1045,9 @@ public class MoneyCounter extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (txt_50c.getText().trim().isEmpty()) {
             input50cQty = 0;
-            lbl_50c_result.setForeground(new Color(204,204,204));
+            lbl_50c_result.setForeground(new Color(204, 204, 204));
             calcMoneyCounter();
-        }
-        else
-        {
+        } else {
             input50cQty = Integer.parseInt(txt_50c.getText());
             lbl_50c_result.setText(String.valueOf(Math.floor(0.50 * input50cQty * 100) / 100));
             lbl_50c_result.setForeground(Color.black);
@@ -1079,13 +1057,11 @@ public class MoneyCounter extends javax.swing.JFrame {
 
     private void txt_20cKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_20cKeyReleased
         // TODO add your handling code here:
-         if (txt_20c.getText().trim().isEmpty()) {
+        if (txt_20c.getText().trim().isEmpty()) {
             input20cQty = 0;
-            lbl_20c_result.setForeground(new Color(204,204,204));
+            lbl_20c_result.setForeground(new Color(204, 204, 204));
             calcMoneyCounter();
-        }
-        else
-        {
+        } else {
             input20cQty = Integer.parseInt(txt_20c.getText());
             lbl_20c_result.setText(String.valueOf(Math.floor(0.20 * input20cQty * 100) / 100));
             lbl_20c_result.setForeground(Color.black);
@@ -1095,13 +1071,11 @@ public class MoneyCounter extends javax.swing.JFrame {
 
     private void txt_10cKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_10cKeyReleased
         // TODO add your handling code here:
-         if (txt_10c.getText().trim().isEmpty()) {
+        if (txt_10c.getText().trim().isEmpty()) {
             input10cQty = 0;
-            lbl_10c_result.setForeground(new Color(204,204,204));
+            lbl_10c_result.setForeground(new Color(204, 204, 204));
             calcMoneyCounter();
-        }
-        else
-        {
+        } else {
             input10cQty = Integer.parseInt(txt_10c.getText());
             lbl_10c_result.setText(String.valueOf(Math.floor(0.10 * input10cQty * 100) / 100));
             lbl_10c_result.setForeground(Color.black);
@@ -1111,13 +1085,11 @@ public class MoneyCounter extends javax.swing.JFrame {
 
     private void txt_5cKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_5cKeyReleased
         // TODO add your handling code here:
-         if (txt_5c.getText().trim().isEmpty()) {
+        if (txt_5c.getText().trim().isEmpty()) {
             input5cQty = 0;
-            lbl_5c_result.setForeground(new Color(204,204,204));
+            lbl_5c_result.setForeground(new Color(204, 204, 204));
             calcMoneyCounter();
-        }
-        else
-        {
+        } else {
             input5cQty = Integer.parseInt(txt_5c.getText());
             lbl_5c_result.setText(String.valueOf(Math.floor(0.05 * input5cQty * 100) / 100));
             lbl_5c_result.setForeground(Color.black);
@@ -1127,13 +1099,11 @@ public class MoneyCounter extends javax.swing.JFrame {
 
     private void txt_2cKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_2cKeyReleased
         // TODO add your handling code here:
-         if (txt_2c.getText().trim().isEmpty()) {
+        if (txt_2c.getText().trim().isEmpty()) {
             input2cQty = 0;
-            lbl_2c_result.setForeground(new Color(204,204,204));
+            lbl_2c_result.setForeground(new Color(204, 204, 204));
             calcMoneyCounter();
-        }
-        else
-        {
+        } else {
             input2cQty = Integer.parseInt(txt_2c.getText());
             lbl_2c_result.setText(String.valueOf(Math.floor(0.02 * input2cQty * 100) / 100));
             lbl_2c_result.setForeground(Color.black);
@@ -1143,13 +1113,11 @@ public class MoneyCounter extends javax.swing.JFrame {
 
     private void txt_1cKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_1cKeyReleased
         // TODO add your handling code here:
-         if (txt_1c.getText().trim().isEmpty()) {
+        if (txt_1c.getText().trim().isEmpty()) {
             input1cQty = 0;
-            lbl_1c_result.setForeground(new Color(204,204,204));
+            lbl_1c_result.setForeground(new Color(204, 204, 204));
             calcMoneyCounter();
-        }
-        else
-        {
+        } else {
             input1cQty = Integer.parseInt(txt_1c.getText());
             lbl_1c_result.setText(String.valueOf(Math.floor(0.01 * input1cQty * 100) / 100));
             lbl_1c_result.setForeground(Color.black);
@@ -1164,131 +1132,146 @@ public class MoneyCounter extends javax.swing.JFrame {
     private void txt_500KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_500KeyPressed
         // TODO add your handling code here:
         //Accepts number characters only
-        if (Character.isLetter(evt.getKeyChar()))
+        if (Character.isLetter(evt.getKeyChar())) {
             txt_500.setEditable(false);
-        else
+        } else {
             txt_500.setEditable(true);
+        }
     }//GEN-LAST:event_txt_500KeyPressed
 
     private void txt_200KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_200KeyPressed
         // TODO add your handling code here:
-         //Accepts number characters only
-        if (Character.isLetter(evt.getKeyChar()))
+        //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar())) {
             txt_200.setEditable(false);
-        else
+        } else {
             txt_200.setEditable(true);
+        }
     }//GEN-LAST:event_txt_200KeyPressed
 
     private void txt_100KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_100KeyPressed
         // TODO add your handling code here:
-         //Accepts number characters only
-        if (Character.isLetter(evt.getKeyChar()))
+        //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar())) {
             txt_100.setEditable(false);
-        else
+        } else {
             txt_100.setEditable(true);
+        }
     }//GEN-LAST:event_txt_100KeyPressed
 
     private void txt_50KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_50KeyPressed
         // TODO add your handling code here:
-         //Accepts number characters only
-        if (Character.isLetter(evt.getKeyChar()))
+        //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar())) {
             txt_50.setEditable(false);
-        else
+        } else {
             txt_50.setEditable(true);
+        }
     }//GEN-LAST:event_txt_50KeyPressed
 
     private void txt_10KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_10KeyPressed
         // TODO add your handling code here:
-         //Accepts number characters only
-        if (Character.isLetter(evt.getKeyChar()))
+        //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar())) {
             txt_10.setEditable(false);
-        else
+        } else {
             txt_10.setEditable(true);
+        }
     }//GEN-LAST:event_txt_10KeyPressed
 
     private void txt_20KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_20KeyPressed
         // TODO add your handling code here:
-         //Accepts number characters only
-        if (Character.isLetter(evt.getKeyChar()))
+        //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar())) {
             txt_20.setEditable(false);
-        else
+        } else {
             txt_20.setEditable(true);
+        }
     }//GEN-LAST:event_txt_20KeyPressed
 
     private void txt_5KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_5KeyPressed
         // TODO add your handling code here:
-         //Accepts number characters only
-        if (Character.isLetter(evt.getKeyChar()))
+        //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar())) {
             txt_5.setEditable(false);
-        else
+        } else {
             txt_5.setEditable(true);
+        }
     }//GEN-LAST:event_txt_5KeyPressed
 
     private void txt_2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_2KeyPressed
         // TODO add your handling code here:
-         //Accepts number characters only
-        if (Character.isLetter(evt.getKeyChar()))
+        //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar())) {
             txt_2.setEditable(false);
-        else
+        } else {
             txt_2.setEditable(true);
+        }
     }//GEN-LAST:event_txt_2KeyPressed
 
     private void txt_1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_1KeyPressed
         // TODO add your handling code here:
-         //Accepts number characters only
-        if (Character.isLetter(evt.getKeyChar()))
+        //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar())) {
             txt_1.setEditable(false);
-        else
+        } else {
             txt_1.setEditable(true);
+        }
     }//GEN-LAST:event_txt_1KeyPressed
 
     private void txt_20cKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_20cKeyPressed
         // TODO add your handling code here:
-         //Accepts number characters only
-        if (Character.isLetter(evt.getKeyChar()))
+        //Accepts number characters only
+        if (Character.isLetter(evt.getKeyChar())) {
             txt_20c.setEditable(false);
-        else
+        } else {
             txt_20c.setEditable(true);
+        }
     }//GEN-LAST:event_txt_20cKeyPressed
 
     private void txt_50cKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_50cKeyPressed
         // TODO add your handling code here:
-         if (Character.isLetter(evt.getKeyChar()))
+        if (Character.isLetter(evt.getKeyChar())) {
             txt_50c.setEditable(false);
-        else
+        } else {
             txt_50c.setEditable(true);
+        }
     }//GEN-LAST:event_txt_50cKeyPressed
 
     private void txt_10cKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_10cKeyPressed
         // TODO add your handling code here:
-         if (Character.isLetter(evt.getKeyChar()))
+        if (Character.isLetter(evt.getKeyChar())) {
             txt_10c.setEditable(false);
-        else
+        } else {
             txt_10c.setEditable(true);
+        }
     }//GEN-LAST:event_txt_10cKeyPressed
 
     private void txt_5cKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_5cKeyPressed
         // TODO add your handling code here:
-         if (Character.isLetter(evt.getKeyChar()))
+        if (Character.isLetter(evt.getKeyChar())) {
             txt_5c.setEditable(false);
-        else
+        } else {
             txt_5c.setEditable(true);
+        }
     }//GEN-LAST:event_txt_5cKeyPressed
 
     private void txt_2cKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_2cKeyPressed
         // TODO add your handling code here:
-         if (Character.isLetter(evt.getKeyChar()))
+        if (Character.isLetter(evt.getKeyChar())) {
             txt_2c.setEditable(false);
-        else
+        } else {
             txt_2c.setEditable(true);
+        }
     }//GEN-LAST:event_txt_2cKeyPressed
 
     private void txt_1cKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_1cKeyPressed
         // TODO add your handling code here:
-         if (Character.isLetter(evt.getKeyChar()))
+        if (Character.isLetter(evt.getKeyChar())) {
             txt_1c.setEditable(false);
-        else
+        } else {
             txt_1c.setEditable(true);
+        }
     }//GEN-LAST:event_txt_1cKeyPressed
 
     private void txt_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_2ActionPerformed

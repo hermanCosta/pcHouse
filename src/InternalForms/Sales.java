@@ -66,7 +66,7 @@ public class Sales extends javax.swing.JInternalFrame {
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
-        
+
         SwingUtilities.invokeLater(() -> {
             txt_search_sale.requestFocus();
         });
@@ -100,7 +100,7 @@ public class Sales extends javax.swing.JInternalFrame {
             String query = "SELECT * FROM sales WHERE firstName LIKE '%" + searchSale + "%'"
                     + "OR lastName LIKE '%" + searchSale + "%' OR contactNo LIKE '%" + searchSale + "%'"
                     + " OR email LIKE '%" + searchSale + "%'";
-            
+
             ps = con.prepareStatement(query);
             rs = ps.executeQuery(query);
 
@@ -121,7 +121,7 @@ public class Sales extends javax.swing.JInternalFrame {
             Object[] row = new Object[8];
             for (int i = 0; i < saleList.size(); i++) {
                 row[0] = saleList.get(i).getSaleNo();
-                row[1] = saleList.get(i).getFirstName(); 
+                row[1] = saleList.get(i).getFirstName();
                 row[2] = saleList.get(i).getLastName();
                 row[3] = saleList.get(i).getContactNo();
                 row[4] = saleList.get(i).getStringProducts();
@@ -172,50 +172,49 @@ public class Sales extends javax.swing.JInternalFrame {
 
                 dtm.addRow(row);
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void openSelectedSale() {
         int row = table_view_sales.getSelectedRow();
         DefaultTableModel dtm = (DefaultTableModel) table_view_sales.getModel();
 
-        
-            saleNo = dtm.getValueAt(row, 0).toString();
+        saleNo = dtm.getValueAt(row, 0).toString();
 
-            try {
+        try {
 
-                dbConnection();
+            dbConnection();
 
-                String query = "SELECT * FROM sales WHERE saleNo = ?";
-                ps = con.prepareStatement(query);
-                ps.setString(1, saleNo);
-                rs = ps.executeQuery();
+            String query = "SELECT * FROM sales WHERE saleNo = ?";
+            ps = con.prepareStatement(query);
+            ps.setString(1, saleNo);
+            rs = ps.executeQuery();
 
-                while (rs.next()) {
-                    sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
-                            rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), rs.getString("qty"),
-                            rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getString("saleDate"),
-                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getString("status"), rs.getString("createdBy"));
+            while (rs.next()) {
+                sale = new Sale(rs.getString("saleNo"), rs.getString("firstName"), rs.getString("lastName"),
+                        rs.getString("contactNo"), rs.getString("email"), rs.getString("productService"), rs.getString("qty"),
+                        rs.getString("unitPrice"), rs.getString("priceTotal"), rs.getDouble("total"), rs.getString("saleDate"),
+                        rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getString("status"), rs.getString("createdBy"));
 
-                    if (rs.getString("status").equals("Paid")) {
-                        SaleDetails saleDetails = new SaleDetails(sale);
-                        //desktop_pane_sales.removeAll();
-                        desktop_pane_sales.add(saleDetails).setVisible(true);
-                    } else {
-                        SaleRefund saleRefund = new SaleRefund(sale);
-                        //desktop_pane_sales.removeAll();
-                        desktop_pane_sales.add(saleRefund).setVisible(true);
-                    }
+                if (rs.getString("status").equals("Paid")) {
+                    SaleDetails saleDetails = new SaleDetails(sale);
+                    //desktop_pane_sales.removeAll();
+                    desktop_pane_sales.add(saleDetails).setVisible(true);
+                } else {
+                    SaleRefund saleRefund = new SaleRefund(sale);
+                    //desktop_pane_sales.removeAll();
+                    desktop_pane_sales.add(saleRefund).setVisible(true);
                 }
-
-                ps.close();
-                con.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
             }
+
+            ps.close();
+            con.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Sales.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -385,14 +384,13 @@ public class Sales extends javax.swing.JInternalFrame {
         if (evt.getClickCount() == 2) {
             openSelectedSale();
         }
-        
+
     }//GEN-LAST:event_table_view_salesMouseClicked
 
     private void table_view_salesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_table_view_salesKeyPressed
         // TODO add your handling code here:
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
-        {
-            openSelectedSale();   
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            openSelectedSale();
         }
     }//GEN-LAST:event_table_view_salesKeyPressed
 

@@ -97,11 +97,9 @@ public class SaleRefund extends javax.swing.JInternalFrame {
                 createdOn = rs.getString("saleDate");
             }
 
-            
             rs.close();
             ps.close();
             con.close();
-            
 
         } catch (SQLException ex) {
             Logger.getLogger(SaleRefund.class.getName()).log(Level.SEVERE, null, ex);
@@ -122,34 +120,36 @@ public class SaleRefund extends javax.swing.JInternalFrame {
         lbl_auto_order_no.setText(sale.getSaleNo());
         txt_first_name.setText(sale.getFirstName());
         txt_last_name.setText(sale.getLastName());
-        
+
         // If ContactNo is foreign number disable text format of Irish number and set the foreign number to the textField
-        if (sale.getContactNo().contains("+"))
-        {
+        if (sale.getContactNo().contains("+")) {
             txt_contact.setFormatterFactory(null);
             txt_contact.setText(sale.getContactNo());
-        } else
-            txt_contact.setText(sale.getContactNo());    
-        
+        } else {
+            txt_contact.setText(sale.getContactNo());
+        }
+
         txt_email.setText(sale.getEmail());
         txt_total.setText(String.valueOf(sale.getTotal()));
         lbl_sale_refunded_on.setText("Refund Date: " + sale.getSaleDate() + " - by " + sale.getUsername());
         lbl_sale_created_on.setText("Created On: " + sale.getSaleDate() + " - by " + sale.getUsername());
 
-        if (sale.getCash() == 0)
+        if (sale.getCash() == 0) {
             lbl_refunded_by.setText("Refunded by Card: €" + sale.getCard());
-        else if (sale.getCard() == 0)
+        } else if (sale.getCard() == 0) {
             lbl_refunded_by.setText("Refunded by Cash: €" + (sale.getCash() - sale.getChangeTotal()));
-        else
+        } else {
             lbl_refunded_by.setText("Refunded by Cash: €" + (sale.getCash() - sale.getChangeTotal()) + " | Card: €" + sale.getCard());
+        }
 
         String[] arrayProducts = sale.getStringProducts().split(",");
         String[] arrayQty = sale.getStringQty().split(",");
         String[] arrayUnitPrice = sale.getStringUnitPrice().split(",");
         String[] arrayPriceTotal = sale.getStringPriceTotal().split(",");
 
-        for (Object objProducts : arrayProducts)
+        for (Object objProducts : arrayProducts) {
             dtm.addRow(new Object[]{objProducts});
+        }
 
         Vector vecProducts = new Vector();
         Vector vecQty = new Vector();

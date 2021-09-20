@@ -40,7 +40,7 @@ public class DepositPayment extends javax.swing.JFrame {
 
     public DepositPayment(Order _order, double _newDeposit, CompletedOrder _completedOrder, boolean _isOrderDetails) {
         initComponents();
-        setResizable(false);  
+        setResizable(false);
 
         this.order = _order;
         this.newDeposit = _newDeposit;
@@ -95,7 +95,7 @@ public class DepositPayment extends javax.swing.JFrame {
             String queryDepositInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, "
                     + "brand, model, total, deposit, due, cash, card, changeTotal, cashDeposit, "
                     + "cardDeposit, payDate, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            
+
             ps = con.prepareStatement(queryDepositInsert);
             ps.setString(1, order.getOrderNo());
             ps.setString(2, order.getFirstName());
@@ -113,7 +113,7 @@ public class DepositPayment extends javax.swing.JFrame {
             ps.setString(14, payDateFormat);
             ps.setString(15, "Deposit");
             ps.executeUpdate();
-            
+
             ps.close();
             con.close();
         } catch (SQLException ex) {
@@ -301,7 +301,7 @@ public class DepositPayment extends javax.swing.JFrame {
         // TODO add your handling code here:
         int confirmCardDeposit = JOptionPane.showConfirmDialog(this, "Confirm €" + order.getDeposit() + " Deposit Payment by CASH ?", "Confirm Payment", JOptionPane.YES_NO_OPTION);
         if (confirmCardDeposit == 0) {
-            
+
             order.setCashDeposit(order.getDeposit());
 
             try {
@@ -344,7 +344,7 @@ public class DepositPayment extends javax.swing.JFrame {
                         + "qty = REPLACE(qty, '  ', ' '), "
                         + "unitPrice = REPLACE(unitPrice, '  ', ' '), "
                         + "total = REPLACE(total, '  ', ' ')";
-                
+
                 ps = con.prepareStatement(removeSpace);
                 ps.executeUpdate();
 
@@ -354,7 +354,7 @@ public class DepositPayment extends javax.swing.JFrame {
 
                 PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
                 printOrder.setVisible(true);
-                
+
                 ps.close();
                 con.close();
             } catch (SQLException ex) {
@@ -413,7 +413,7 @@ public class DepositPayment extends javax.swing.JFrame {
                         + "qty = REPLACE(qty, '  ', ' '), "
                         + "unitPrice = REPLACE(unitPrice, '  ', ' '), "
                         + "total = REPLACE(total, '  ', ' ')";
-                
+
                 ps = con.prepareStatement(removeSpace);
                 ps.executeUpdate();
 
@@ -423,7 +423,7 @@ public class DepositPayment extends javax.swing.JFrame {
 
                 PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
                 printOrder.setVisible(true);
-                
+
                 ps.close();
                 con.close();
             } catch (SQLException ex) {

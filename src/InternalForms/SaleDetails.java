@@ -32,6 +32,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -541,10 +542,11 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                             .addComponent(lbl_last_name)
                             .addComponent(txt_last_name, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, Short.MAX_VALUE)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbl_contact)
-                            .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_copy, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btn_copy, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(lbl_contact)
+                                .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, Short.MAX_VALUE)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_email)
@@ -640,63 +642,77 @@ public class SaleDetails extends javax.swing.JInternalFrame {
 
     private void btn_refundActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_refundActionPerformed
         // TODO add your handling code here:
-        int confirmRefund = JOptionPane.showConfirmDialog(this, "Do you really want to Refund " + sale.getSaleNo() + " ?",
-                "Confirm Refund", JOptionPane.YES_NO_OPTION);
-
-        if (confirmRefund == 0) {
+        JPasswordField pf = new JPasswordField();
+        int askPassword = JOptionPane.showConfirmDialog(null, pf, "Enter Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        
+        if (askPassword == JOptionPane.OK_OPTION) {
+            String password = new String(pf.getPassword());
             try {
                 dbConnection();
-                Date date = new Date();
-                Timestamp currentDate = new Timestamp(date.getTime());
-                String refundDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
+                
+                String query = "SELECT password FROM users WHERE password = ?";
+                ps = con.prepareStatement(query);
+                ps.setString(1, password);
+                rs = ps.executeQuery();
+                
+                if (rs.isBeforeFirst())
+                {
 
-                sale.setStatus("Refunded");
-                sale.setSaleDate(refundDate);
+                    Date date = new Date();
+                    Timestamp currentDate = new Timestamp(date.getTime());
+                    String refundDate = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
 
-                cash = sale.getCash();
-                card = sale.getCard();
-                total = sale.getTotal();
+                    sale.setStatus("Refunded");
+                    sale.setSaleDate(refundDate);
 
-                sale.setCash(cash *= -1);
-                sale.setCard(card *= -1);
-                sale.setTotal(total *= -1);
+                    cash = sale.getCash();
+                    card = sale.getCard();
+                    total = sale.getTotal();
 
-                sale = new Sale(sale.getSaleNo(), sale.getFirstName(), sale.getLastName(), sale.getContactNo(), sale.getEmail(),
-                        sale.getStringProducts(), sale.getStringQty(), sale.getStringUnitPrice(), sale.getStringPriceTotal(), sale.getTotal(),
-                        sale.getSaleDate(), sale.getCash(), sale.getCard(), sale.getChangeTotal(), sale.getStatus(), sale.getUsername());
+                    sale.setCash(cash *= -1);
+                    sale.setCard(card *= -1);
+                    sale.setTotal(total *= -1);
 
-                String queryInsert = "INSERT INTO sales(saleNo, firstName, lastName, contactNo, email, productService, qty, unitPrice, priceTotal, total, "
-                        + "saleDate, cash, card, changeTotal, status, createdBy) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    sale = new Sale(sale.getSaleNo(), sale.getFirstName(), sale.getLastName(), sale.getContactNo(), sale.getEmail(),
+                            sale.getStringProducts(), sale.getStringQty(), sale.getStringUnitPrice(), sale.getStringPriceTotal(), sale.getTotal(),
+                            sale.getSaleDate(), sale.getCash(), sale.getCard(), sale.getChangeTotal(), sale.getStatus(), sale.getUsername());
 
-                ps = con.prepareStatement(queryInsert);
-                ps.setString(1, sale.getSaleNo());
-                ps.setString(2, sale.getFirstName());
-                ps.setString(3, sale.getLastName());
-                ps.setString(4, sale.getContactNo());
-                ps.setString(5, sale.getEmail());
-                ps.setString(6, sale.getStringProducts());
-                ps.setString(7, sale.getStringQty());
-                ps.setString(8, sale.getStringUnitPrice());
-                ps.setString(9, sale.getStringPriceTotal());
-                ps.setDouble(10, sale.getTotal());
-                ps.setString(11, sale.getSaleDate());
-                ps.setDouble(12, sale.getCash());
-                ps.setDouble(13, sale.getCard());
-                ps.setDouble(14, sale.getChangeTotal());
-                ps.setString(15, sale.getStatus());
-                ps.setString(16, sale.getUsername());
-                ps.executeUpdate();
-                updateProductQty();
+                    String queryInsert = "INSERT INTO sales(saleNo, firstName, lastName, contactNo, email, productService, qty, unitPrice, priceTotal, total, "
+                            + "saleDate, cash, card, changeTotal, status, createdBy) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                JOptionPane.showMessageDialog(this, sale.getSaleNo() + "Refunded Successfully!");
+                    ps = con.prepareStatement(queryInsert);
+                    ps.setString(1, sale.getSaleNo());
+                    ps.setString(2, sale.getFirstName());
+                    ps.setString(3, sale.getLastName());
+                    ps.setString(4, sale.getContactNo());
+                    ps.setString(5, sale.getEmail());
+                    ps.setString(6, sale.getStringProducts());
+                    ps.setString(7, sale.getStringQty());
+                    ps.setString(8, sale.getStringUnitPrice());
+                    ps.setString(9, sale.getStringPriceTotal());
+                    ps.setDouble(10, sale.getTotal());
+                    ps.setString(11, sale.getSaleDate());
+                    ps.setDouble(12, sale.getCash());
+                    ps.setDouble(13, sale.getCard());
+                    ps.setDouble(14, sale.getChangeTotal());
+                    ps.setString(15, sale.getStatus());
+                    ps.setString(16, sale.getUsername());
+                    ps.executeUpdate();
+                    updateProductQty();
 
-                addEventNote("Refunded");
+                    JOptionPane.showMessageDialog(this, sale.getSaleNo() + "Refunded Successfully!");
 
-                SaleRefundReceipt saleRefundReceipt = new SaleRefundReceipt(sale);
-                saleRefundReceipt.setVisible(true);
+                    addEventNote("Refunded");
 
-                ps.close();
-                con.close();
+                    SaleRefundReceipt saleRefundReceipt = new SaleRefundReceipt(sale);
+                    saleRefundReceipt.setVisible(true);
+
+                    ps.close();
+                    con.close();
+                }
+                else
+                    JOptionPane.showMessageDialog(this, "Wrong Password !", "Till Closing", JOptionPane.ERROR_MESSAGE);
+                
             } catch (SQLException ex) {
                 Logger.getLogger(SaleDetails.class.getName()).log(Level.SEVERE, null, ex);
             }

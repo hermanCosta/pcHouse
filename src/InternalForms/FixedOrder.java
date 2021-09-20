@@ -35,6 +35,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -890,12 +891,53 @@ public class FixedOrder extends javax.swing.JInternalFrame {
 
     private void btn_refundActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_refundActionPerformed
         // TODO add your handling code here:
-        int confirmRefund = JOptionPane.showConfirmDialog(this, "Do you really want to Refund " + order.getOrderNo() + " ?",
-                "Confirm Refund", JOptionPane.YES_NO_OPTION);
-
-        if (confirmRefund == 0) {
+        
+        /*
+        JPasswordField pf = new JPasswordField();
+        int askPassword = JOptionPane.showConfirmDialog(null, pf, "Enter Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        
+        if (askPassword == JOptionPane.OK_OPTION) {
+            
+            try {
+                String password = new String(pf.getPassword());
+                
+                dbConnection();
+                String query = "SELECT password FROM users WHERE password = ?";
+                ps = con.prepareStatement(query);
+                ps.setString(1, password);
+                rs = ps.executeQuery();
+                if (rs.isBeforeFirst())
+                {
+                    TillClosing closeTill = new TillClosing();
+                    desktop_pane_main_menu.removeAll();
+                    desktop_pane_main_menu.add(closeTill).setVisible(true);
+                }
+                else 
+                {
+                    JOptionPane.showMessageDialog(this, "Wrong Password !", "Till Closing", JOptionPane.ERROR_MESSAGE);
+                }
+                    
+                    } catch (SQLException ex) {
+                Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        */
+        JPasswordField pf = new JPasswordField();
+        int askPassword = JOptionPane.showConfirmDialog(null, pf, "Enter Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        
+        if (askPassword == JOptionPane.OK_OPTION) {
+            String password = new String(pf.getPassword());
             try {
                 dbConnection();
+                
+                String query = "SELECT password FROM users WHERE password = ?";
+                ps = con.prepareStatement(query);
+                ps.setString(1, password);
+                rs = ps.executeQuery();
+                if (rs.isBeforeFirst())
+                {
+                
+                
 
                 Date date = new Date();
                 Timestamp currentDate = new Timestamp(date.getTime());
@@ -965,6 +1007,10 @@ public class FixedOrder extends javax.swing.JInternalFrame {
 
                 ps.close();
                 con.close();
+                }
+                else 
+                   JOptionPane.showMessageDialog(this, "Wrong Password !", "Till Closing", JOptionPane.ERROR_MESSAGE);
+                    
             } catch (SQLException ex) {
                 Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);
             }

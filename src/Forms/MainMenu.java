@@ -17,6 +17,7 @@ import InternalForms.Sales;
 import Model.CompletedOrder;
 import Model.Order;
 import Model.ProductService;
+import com.apple.eawt.Application;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -33,9 +34,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
@@ -62,10 +65,11 @@ public class MainMenu extends javax.swing.JFrame {
     Timer updateTimer;
     int DELAY = 100;
 
-    public MainMenu() { 
+    public MainMenu() {
         initComponents();
-          setResizable(false);  
+        setResizable(false);
         
+
         tableSettings(table_view_products_stock);
         tableSettings(table_view_orders);
         mainMenuDesktopPane = desktop_pane_main_menu;
@@ -82,10 +86,10 @@ public class MainMenu extends javax.swing.JFrame {
     public void tableSettings(JTable table) {
         table.setRowHeight(25);
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
-        
+
         scroll_pane_table_orders.setOpaque(false);
         scroll_pane_table_orders.getViewport().setOpaque(false);
-        
+
         scroll_pane_table_products.setOpaque(false);
         scroll_pane_table_products.getViewport().setOpaque(false);
     }
@@ -105,18 +109,18 @@ public class MainMenu extends javax.swing.JFrame {
         updateTimer.start();
         lbl_username.setText("Hello, " + Login.fullName);
     }
-    
+
     public void dbConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
-            
+
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     public void loadProductsStockTable() {
         ArrayList<ProductService> productList = new ArrayList<>();
         try {
@@ -187,7 +191,7 @@ public class MainMenu extends javax.swing.JFrame {
 
             ps.close();
             con.close();
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -223,7 +227,7 @@ public class MainMenu extends javax.swing.JFrame {
         panel_reports.setBackground(defaultColor);
     }
 
-    public  void expandOrders() {
+    public void expandOrders() {
         panel_check_existing.setVisible(true);
         panel_new_order.setVisible(true);
 
@@ -299,51 +303,51 @@ public class MainMenu extends javax.swing.JFrame {
         panel_new_sale.setVisible(false);
         panel_sales.setVisible(false);
     }
-    
+
     public void openSelectedOrder() {
         DefaultTableModel dtm = (DefaultTableModel) table_view_orders.getModel();
-            int orderSelected = table_view_orders.getSelectedRow();
-            String selectedOrderNo = dtm.getValueAt(orderSelected, 0).toString();
+        int orderSelected = table_view_orders.getSelectedRow();
+        String selectedOrderNo = dtm.getValueAt(orderSelected, 0).toString();
 
-            try {
-                dbConnection();
-                
-                String query = "SELECT * FROM orderDetails WHERE orderNo = ? ";
-                ps = con.prepareStatement(query);
-                ps.setString(1, selectedOrderNo);
-                rs = ps.executeQuery();
+        try {
+            dbConnection();
 
-                while (rs.next()) {
-                    order = new Order(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"),
-                            rs.getString("email"), rs.getString("deviceBrand"), rs.getString("deviceModel"), rs.getString("serialNumber"), rs.getString("importantNotes"),
-                            rs.getString("fault"), rs.getString("productService"), rs.getString("qty"), rs.getString("unitPrice"), rs.getString("priceTotal"),
-                            rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"),
-                            rs.getString("status"), rs.getString("issueDate"), rs.getString("finishDate"), rs.getString("pickDate"),
-                            rs.getString("refundDate"), Login.fullName);
-                }
+            String query = "SELECT * FROM orderDetails WHERE orderNo = ? ";
+            ps = con.prepareStatement(query);
+            ps.setString(1, selectedOrderNo);
+            rs = ps.executeQuery();
 
-                String queryPayDate = "SELECT * FROM completedOrders WHERE orderNo = ?";
-                ps = con.prepareStatement(queryPayDate);
-                ps.setString(1, selectedOrderNo);
-                rs = ps.executeQuery();
-
-                while (rs.next()) {
-                    completedOrder = new CompletedOrder(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"),
-                            "", "", rs.getString("brand"), rs.getString("model"),
-                            "", rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("due"),
-                            rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getDouble("cashDeposit"),
-                            rs.getDouble("cardDeposit"), rs.getString("payDate"), rs.getString("status"));
-                }
-                FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
-                desktop_pane_main_menu.removeAll();
-                desktop_pane_main_menu.add(fixedOrder).setVisible(true);
-                
-                ps.close();
-                con.close();
-
-            } catch (SQLException ex) {
-                Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
+            while (rs.next()) {
+                order = new Order(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("contactNo"),
+                        rs.getString("email"), rs.getString("deviceBrand"), rs.getString("deviceModel"), rs.getString("serialNumber"), rs.getString("importantNotes"),
+                        rs.getString("fault"), rs.getString("productService"), rs.getString("qty"), rs.getString("unitPrice"), rs.getString("priceTotal"),
+                        rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("cashDeposit"), rs.getDouble("cardDeposit"), rs.getDouble("due"),
+                        rs.getString("status"), rs.getString("issueDate"), rs.getString("finishDate"), rs.getString("pickDate"),
+                        rs.getString("refundDate"), Login.fullName);
             }
+
+            String queryPayDate = "SELECT * FROM completedOrders WHERE orderNo = ?";
+            ps = con.prepareStatement(queryPayDate);
+            ps.setString(1, selectedOrderNo);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                completedOrder = new CompletedOrder(rs.getString("orderNo"), rs.getString("firstName"), rs.getString("lastName"),
+                        "", "", rs.getString("brand"), rs.getString("model"),
+                        "", rs.getDouble("total"), rs.getDouble("deposit"), rs.getDouble("due"),
+                        rs.getDouble("cash"), rs.getDouble("card"), rs.getDouble("changeTotal"), rs.getDouble("cashDeposit"),
+                        rs.getDouble("cardDeposit"), rs.getString("payDate"), rs.getString("status"));
+            }
+            FixedOrder fixedOrder = new FixedOrder(order, completedOrder);
+            desktop_pane_main_menu.removeAll();
+            desktop_pane_main_menu.add(fixedOrder).setVisible(true);
+
+            ps.close();
+            con.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderList.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -1291,7 +1295,7 @@ public class MainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_label_homeMousePressed
 
     private void panel_homeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_homeMousePressed
-         // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_panel_homeMousePressed
 
     private void label_productsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_productsMousePressed
@@ -1313,8 +1317,6 @@ public class MainMenu extends javax.swing.JFrame {
     private void label_homeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_homeMouseClicked
         // TODO add your handling code here:
         new MainMenu().setVisible(true);
-        //this.dispose();
-        
     }//GEN-LAST:event_label_homeMouseClicked
 
     private void panel_homeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panel_homeMouseClicked
@@ -1475,13 +1477,36 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void label_till_closingMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_till_closingMouseClicked
         // TODO add your handling code here:
-        TillClosing closeTill = new TillClosing();
-        desktop_pane_main_menu.removeAll();
-        desktop_pane_main_menu.add(closeTill).setVisible(true);
-
         panel_customers.setBackground(defaultColor);
         panel_close_till.setBackground(clickedColor);
         panel_faults.setBackground(defaultColor);
+
+        JPasswordField pf = new JPasswordField();
+        int askPassword = JOptionPane.showConfirmDialog(null, pf, "Enter Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (askPassword == JOptionPane.OK_OPTION) {
+
+            try {
+                String password = new String(pf.getPassword());
+
+                dbConnection();
+                String query = "SELECT password FROM users WHERE password = ?";
+                ps = con.prepareStatement(query);
+                ps.setString(1, password);
+                rs = ps.executeQuery();
+                if (rs.isBeforeFirst()) {
+                    TillClosing closeTill = new TillClosing();
+                    desktop_pane_main_menu.removeAll();
+                    desktop_pane_main_menu.add(closeTill).setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Wrong Password !", "Till Closing", JOptionPane.ERROR_MESSAGE);
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
     }//GEN-LAST:event_label_till_closingMouseClicked
 
     private void label_till_closingMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_till_closingMouseExited

@@ -44,7 +44,7 @@ public class OrderPayment extends javax.swing.JFrame {
 
     public OrderPayment(Order _order, CompletedOrder _completedOrder, JTable _tableViewProducts) {
         initComponents();
-        setResizable(false);  
+        setResizable(false);
         this.order = _order;
         this.completedOrder = _completedOrder;
         this.tableViewProducts = _tableViewProducts;
@@ -60,7 +60,7 @@ public class OrderPayment extends javax.swing.JFrame {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost/pcHouse", "root", "hellmans");
-            
+
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
@@ -91,7 +91,7 @@ public class OrderPayment extends javax.swing.JFrame {
                         ps.setString(2, cellProduct);
                         ps.executeUpdate();
                     }
-                    
+
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(SalePayment.class.getName()).log(Level.SEVERE, null, ex);
@@ -118,14 +118,12 @@ public class OrderPayment extends javax.swing.JFrame {
             ps.setString(4, user);
             ps.executeUpdate();
 
-
         } catch (SQLException ex) {
             Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void calcChangeDue()
-    {
+
+    public void calcChangeDue() {
         double inputCash;
         double inputCard;
         if (txt_cash.getText().trim().isEmpty()) {
@@ -136,7 +134,7 @@ public class OrderPayment extends javax.swing.JFrame {
             inputCash = Double.parseDouble(txt_cash.getText());
             changeTotal = order.getDue() - inputCash;
             lbl_change.setText(String.valueOf(changeTotal));
-        } else if (!txt_cash.getText().trim().isEmpty() && !txt_card.getText().trim().isEmpty()){
+        } else if (!txt_cash.getText().trim().isEmpty() && !txt_card.getText().trim().isEmpty()) {
             inputCash = Double.parseDouble(txt_cash.getText());
             inputCard = Double.parseDouble(txt_card.getText());
             changeTotal = order.getDue() - (inputCash + inputCard);
@@ -477,20 +475,20 @@ public class OrderPayment extends javax.swing.JFrame {
             completedOrder.setCash(Double.parseDouble(txt_cash.getText()));
             completedOrder.setCard(Double.parseDouble(txt_card.getText()));
             totalPaid = completedOrder.getCash() + completedOrder.getCard();
-            
-            if ((order.getDue() - totalPaid) <= 0)
+
+            if ((order.getDue() - totalPaid) <= 0) {
                 isPaid = true;
-            else if (completedOrder.getCard() > order.getDue()) {
+            } else if (completedOrder.getCard() > order.getDue()) {
                 JOptionPane.showMessageDialog(this, "Payment by Card can't be greater than Total Due !", "Payment", JOptionPane.ERROR_MESSAGE);
                 return;
-            } 
+            }
         }
 
         if (isPaid) {
             changeTotal = (completedOrder.getCash() + completedOrder.getCard()) - order.getDue();
             lbl_change.setText(String.valueOf(changeTotal));
             completedOrder.setChangeTotal(changeTotal);
-            
+
             int confirmPayment = JOptionPane.showConfirmDialog(this, "Confirm Payment on Order " + order.getOrderNo() + " ?", "Payment", JOptionPane.YES_NO_OPTION);
             if (confirmPayment == 0) {
                 completedOrder = new CompletedOrder(order.getOrderNo(), order.getFirstName(), order.getLastName(), order.getContactNo(),
@@ -531,7 +529,7 @@ public class OrderPayment extends javax.swing.JFrame {
                     ps.executeUpdate();
 
                     JOptionPane.showMessageDialog(this, order.getOrderNo() + " Paid Successfully");
-                    
+
                     OrderReceipt receipt = new OrderReceipt(order, completedOrder);
                     receipt.setVisible(true);
 
@@ -560,18 +558,20 @@ public class OrderPayment extends javax.swing.JFrame {
 
     private void txt_cashKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cashKeyPressed
         // TODO add your handling code here:
-        if (Character.isLetter(evt.getKeyChar()))
+        if (Character.isLetter(evt.getKeyChar())) {
             txt_cash.setEditable(false);
-        else 
+        } else {
             txt_cash.setEditable(true);
+        }
     }//GEN-LAST:event_txt_cashKeyPressed
 
     private void txt_cardKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cardKeyPressed
         // TODO add your handling code here:
-        if (Character.isLetter(evt.getKeyChar()))
+        if (Character.isLetter(evt.getKeyChar())) {
             txt_card.setEditable(false);
-        else 
+        } else {
             txt_card.setEditable(true);
+        }
     }//GEN-LAST:event_txt_cardKeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
