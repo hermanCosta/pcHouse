@@ -326,8 +326,10 @@ public class OrderList extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(table_view_orders);
         if (table_view_orders.getColumnModel().getColumnCount() > 0) {
-            table_view_orders.getColumnModel().getColumn(0).setPreferredWidth(100);
+            table_view_orders.getColumnModel().getColumn(0).setPreferredWidth(90);
             table_view_orders.getColumnModel().getColumn(0).setMaxWidth(120);
+            table_view_orders.getColumnModel().getColumn(3).setPreferredWidth(170);
+            table_view_orders.getColumnModel().getColumn(3).setMaxWidth(200);
         }
 
         jScrollPane2.setVerifyInputWhenFocusTarget(false);

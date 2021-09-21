@@ -20,7 +20,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author user
+ * @author HermanCosta
  */
 public class PrintTillRecord extends javax.swing.JFrame {
 
@@ -78,11 +78,11 @@ public class PrintTillRecord extends javax.swing.JFrame {
         lbl_takes.setText("Takes................................. €" + String.valueOf(takes));
         lbl_other.setText("Other................................. €" + String.valueOf(other));
         lbl_cash_out_total.setText("Cash Out Total................... €" + String.valueOf(cashOutTotal));
-        lbl_till_total.setText("Till Total............................................ €" + String.valueOf(tillTotal));
-        lbl_enter_cash_total.setText("Entered Cash Total.............................. €" + String.valueOf(enterCashTotal));
-        lbl_enter_card_total.setText("Entered Card Total.............................. €" + String.valueOf(enterCardTotal));
-        lbl_adjustments.setText("Adjustments...................................... €" + String.valueOf(adjustments));
-        lbl_balance.setText("Balance....................................................... €" + String.valueOf(balance));
+        lbl_till_total.setText("Till Total.................................................................................... €" + String.valueOf(tillTotal));
+        lbl_enter_cash_total.setText("Entered Cash Total...................................................................... €" + String.valueOf(enterCashTotal));
+        lbl_enter_card_total.setText("Entered Card Total...................................................................... €" + String.valueOf(enterCardTotal));
+        lbl_adjustments.setText("Adjustments............................................................................... €" + String.valueOf(adjustments));
+        lbl_balance.setText("Balance............................................................................................................. €" + String.valueOf(balance));
         
         if (notes.trim().isEmpty())
             lbl_notes.setVisible(false);

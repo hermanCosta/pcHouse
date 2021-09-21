@@ -94,7 +94,6 @@ public class SalePayment extends javax.swing.JFrame {
                     String[] split = cellProduct.split("|");
                     int computerId = Integer.parseInt(split[0]);
                     
-                    System.out.println("Comp ID: " + computerId);
                     
                     String queryCompQty = "SELECT qty FROM computers WHERE computerId = ?";
                     ps = con.prepareStatement(queryCompQty);
@@ -112,8 +111,6 @@ public class SalePayment extends javax.swing.JFrame {
                         ps.setInt(1, updateCompQty);
                         ps.setInt(2, computerId);
                         ps.executeUpdate();
-                        
-                        System.out.println("New Comp Qty: " + updateCompQty);
                     }
                     
                     ps.close();

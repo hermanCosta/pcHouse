@@ -269,11 +269,12 @@ public class Sales extends javax.swing.JInternalFrame {
             table_view_sales.getColumnModel().getColumn(1).setMaxWidth(200);
             table_view_sales.getColumnModel().getColumn(2).setPreferredWidth(100);
             table_view_sales.getColumnModel().getColumn(2).setMaxWidth(200);
-            table_view_sales.getColumnModel().getColumn(3).setPreferredWidth(150);
+            table_view_sales.getColumnModel().getColumn(3).setPreferredWidth(170);
             table_view_sales.getColumnModel().getColumn(3).setMaxWidth(200);
-            table_view_sales.getColumnModel().getColumn(5).setPreferredWidth(100);
-            table_view_sales.getColumnModel().getColumn(5).setMaxWidth(200);
-            table_view_sales.getColumnModel().getColumn(6).setMaxWidth(80);
+            table_view_sales.getColumnModel().getColumn(5).setPreferredWidth(40);
+            table_view_sales.getColumnModel().getColumn(5).setMaxWidth(60);
+            table_view_sales.getColumnModel().getColumn(6).setPreferredWidth(80);
+            table_view_sales.getColumnModel().getColumn(6).setMaxWidth(120);
             table_view_sales.getColumnModel().getColumn(7).setPreferredWidth(90);
             table_view_sales.getColumnModel().getColumn(7).setMaxWidth(150);
         }

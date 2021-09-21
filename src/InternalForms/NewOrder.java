@@ -1161,7 +1161,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
     private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
        try {
             dbConnection();
-
             String query = "SELECT contactNo FROM customers WHERE contactNo = ? ";
             ps = con.prepareStatement(query);
             ps.setString(1, txt_contact.getText());
@@ -1174,7 +1173,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             else if (!rs.isBeforeFirst()&& !txt_first_name.getText().trim().isEmpty() && !txt_last_name.getText().trim().isEmpty()) {
                 int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add a new Customer ?", "Add New Customer", JOptionPane.YES_NO_OPTION);
                 if (confirmInsertion == 0) {
-                    customer = new Customer(txt_first_name.getText(), txt_last_name.getText(), txt_contact.getText(), txt_email.getText());
+                    customer = new Customer(txt_first_name.getText().toUpperCase(), txt_last_name.getText().toUpperCase(), txt_contact.getText(), txt_email.getText());
                     
                     String queryInsert = "INSERT INTO customers (firstName, lastName, contactNo, email) VALUES(?, ?, ?, ?)";
                     ps = con.prepareStatement(queryInsert);
@@ -1183,6 +1182,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
                     ps.setString(3, customer.getContactNo());
                     ps.setString(4, customer.getEmail());
                     ps.executeUpdate();
+                    
                 }
                  
             } else {

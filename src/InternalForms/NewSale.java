@@ -343,16 +343,19 @@ public class NewSale extends javax.swing.JInternalFrame {
             DefaultTableModel dtm = (DefaultTableModel) table_view_computers.getModel();
             dtm.setRowCount(0);
 
-            Object[] row = new Object[3];
+            Object[] row = new Object[9];
             for (int i = 0; i < computerList.size(); i++) {
-                row[0] = computerList.get(i).getComputerId();
-                row[1] = computerList.get(i).getBrand() + " | " + computerList.get(i).getModel() + " | " + computerList.get(i).getSerialNumber()
-                        + computerList.get(i).getProcessor() + " | " + computerList.get(i).getRam() + " | " + computerList.get(i).getStorage()
-                        + computerList.get(i).getScreen();
-
-                row[2] = computerList.get(i).getPrice();
-
-                dtm.addRow(row);
+            row[0] = computerList.get(i).getComputerId();
+            row[1] = computerList.get(i).getBrand();
+            row[2] = computerList.get(i).getModel();
+            row[3] = computerList.get(i).getSerialNumber();
+            row[4] = computerList.get(i).getProcessor();
+            row[5] = computerList.get(i).getRam();
+            row[6] = computerList.get(i).getStorage();
+            row[7] = computerList.get(i).getQty();
+            row[8] = computerList.get(i).getPrice();
+            
+            dtm.addRow(row);
             }
             
             ps.close();

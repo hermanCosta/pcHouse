@@ -902,6 +902,9 @@
                   <ComponentRef name="txt_deposit"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_add_product_serviceActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

@@ -98,7 +98,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         DefaultTableModel productsModel = (DefaultTableModel) table_view_products.getModel();
         TableColumnModel tableModel = table_view_products.getColumnModel();
 
-        if (order.getPickDate() != null || !order.getPickDate().trim().isEmpty()) {
+        if (order.getPickDate() != null && !order.getPickDate().trim().isEmpty()) {
             lbl_order_picked_on.setVisible(true);
             lbl_order_picked_on.setText("Picked on: " + order.getPickDate());
 
@@ -115,6 +115,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
             btn_pick_up.setVisible(false);
             btn_notes.setVisible(false);
             btn_notes1.setVisible(true);
+            
         } else {
             lbl_order_picked_on.setVisible(false);
             lbl_refunded_by.setVisible(false);

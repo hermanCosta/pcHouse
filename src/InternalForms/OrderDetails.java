@@ -229,7 +229,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                 combo_box_product_service.addItem(rs.getString("productService"));
             }
 
-            ps.close();
         } catch (SQLException ex) {
             Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -761,6 +760,11 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         btn_add_product_service.setBackground(new java.awt.Color(0, 0, 0));
         btn_add_product_service.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_add_new.png"))); // NOI18N
         btn_add_product_service.setNextFocusableComponent(txt_deposit);
+        btn_add_product_service.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_add_product_serviceActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);
@@ -1541,6 +1545,84 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         else if (evt.getKeyCode() == KeyEvent.VK_TAB)
             txt_fault.requestFocus();
     }//GEN-LAST:event_editor_pane_important_notesKeyPressed
+
+    private void btn_add_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add_product_serviceActionPerformed
+        // TODO add your handling code here:
+         // Add selected items to the products table
+        DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
+        String selectedItem = combo_box_product_service.getSelectedItem().toString();
+        String productName = "", newProdAdd = "", category = "";
+        int qty = 0;
+        double unitPrice = 0;
+        double totalPrice = 0;
+        Vector vector = new Vector();
+
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            productName = dtm.getValueAt(i, 0).toString();
+        }
+
+        if (selectedItem.isEmpty() || selectedItem.matches("Select or Type"))
+            JOptionPane.showMessageDialog(this, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
+        else if (selectedItem.equals(productName))
+            JOptionPane.showMessageDialog(this, "Item '" + selectedItem + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
+        else {
+            try {
+                dbConnection();
+
+                String query = "SELECT * FROM products WHERE productService = '" + selectedItem + "'";
+                ps = con.prepareStatement(query);
+                rs = ps.executeQuery();
+
+                if (!rs.isBeforeFirst()) {
+                    JOptionPane.showMessageDialog(this, "Item not Found!", "Service | Product", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    while (rs.next()) {
+                        newProdAdd = rs.getString("productService");
+                        unitPrice = rs.getDouble("price");
+                        category = rs.getString("category");
+                    }
+
+                    if (category.equals("Product")) {
+                        boolean valid = false;
+                        while (!valid) {
+                            try {
+                                qty = Integer.parseInt(JOptionPane.showInputDialog("Enter '" + selectedItem + "' Qty:"));
+                                if (qty > 0) {
+                                    valid = true;
+                                }
+                            } catch (NumberFormatException e) {
+                                JOptionPane.showMessageDialog(this, "Qty must be an Integer!", "Product | Service", JOptionPane.ERROR_MESSAGE);
+                            }
+
+                            totalPrice = unitPrice * qty;
+                            vector.add(newProdAdd);
+                            vector.add(qty);
+                            vector.add(unitPrice);
+                            vector.add(totalPrice);
+                            dtm.addRow(vector);
+                        }
+
+                    } else {
+                            qty = 1;
+                            totalPrice = unitPrice * qty;
+
+                            vector.add(newProdAdd);
+                            vector.add(qty);
+                            vector.add(unitPrice);
+                            vector.add(totalPrice);
+                            dtm.addRow(vector);
+                    }
+
+                    combo_box_product_service.setSelectedIndex(-1);
+                    // Sum price column and set into total textField
+                    getPriceSum();
+                    ps.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btn_add_product_serviceActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_add_product_service;

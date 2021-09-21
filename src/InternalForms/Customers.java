@@ -557,8 +557,8 @@ public class Customers extends javax.swing.JInternalFrame {
                 || txt_contact.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Costumer", JOptionPane.ERROR_MESSAGE);
         } else {
-            firstName = txt_first_name.getText();
-            lastName = txt_last_name.getText();
+            firstName = txt_first_name.getText().toUpperCase();
+            lastName = txt_last_name.getText().toUpperCase();
             contactNo = txt_contact.getText();
             email = txt_email.getText();
 
@@ -608,8 +608,8 @@ public class Customers extends javax.swing.JInternalFrame {
                 || txt_contact.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please, check Empty fields", "New Costumer", JOptionPane.ERROR_MESSAGE);
         } else {
-            firstName = txt_first_name.getText();
-            lastName = txt_last_name.getText();
+            firstName = txt_first_name.getText().toUpperCase();
+            lastName = txt_last_name.getText().toUpperCase();
             contactNo = txt_contact.getText();
             email = txt_email.getText();
 
@@ -682,7 +682,6 @@ public class Customers extends javax.swing.JInternalFrame {
 
     private void txt_last_nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_last_nameKeyReleased
         // TODO add your handling code here:
-        txt_last_name.setText(txt_last_name.getText().toUpperCase());
     }//GEN-LAST:event_txt_last_nameKeyReleased
 
     private void txt_last_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_last_nameKeyPressed
