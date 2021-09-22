@@ -66,6 +66,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
     CompletedOrder completedOrders;
     ResultSet rs;
     ResultSetMetaData rsmd;
+    String formatContactNo;
 
     public FixedOrder() {
         initComponents();
@@ -826,7 +827,8 @@ public class FixedOrder extends javax.swing.JInternalFrame {
 
     private void btn_payActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_payActionPerformed
         // TODO add your handling code here:
-        OrderPayment orderPayment = new OrderPayment(order, completedOrders, table_view_products);
+        formatContactNo = txt_contact.getText();
+        OrderPayment orderPayment = new OrderPayment(order, completedOrders, table_view_products, formatContactNo);
         orderPayment.setVisible(true);
     }//GEN-LAST:event_btn_payActionPerformed
 
@@ -871,6 +873,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
 
     private void btn_receiptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_receiptActionPerformed
         // TODO add your handling code here:
+        formatContactNo = txt_contact.getText();
         try {
             dbConnection();
 
@@ -879,7 +882,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
             ps.setString(1, order.getOrderNo());
             rs = ps.executeQuery();
 
-            OrderReceipt orderReceipt = new OrderReceipt(order, completedOrders);
+            OrderReceipt orderReceipt = new OrderReceipt(order, completedOrders, formatContactNo);
             orderReceipt.setVisible(true);
 
             ps.close();
@@ -891,37 +894,6 @@ public class FixedOrder extends javax.swing.JInternalFrame {
 
     private void btn_refundActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_refundActionPerformed
         // TODO add your handling code here:
-        
-        /*
-        JPasswordField pf = new JPasswordField();
-        int askPassword = JOptionPane.showConfirmDialog(null, pf, "Enter Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        
-        if (askPassword == JOptionPane.OK_OPTION) {
-            
-            try {
-                String password = new String(pf.getPassword());
-                
-                dbConnection();
-                String query = "SELECT password FROM users WHERE password = ?";
-                ps = con.prepareStatement(query);
-                ps.setString(1, password);
-                rs = ps.executeQuery();
-                if (rs.isBeforeFirst())
-                {
-                    TillClosing closeTill = new TillClosing();
-                    desktop_pane_main_menu.removeAll();
-                    desktop_pane_main_menu.add(closeTill).setVisible(true);
-                }
-                else 
-                {
-                    JOptionPane.showMessageDialog(this, "Wrong Password !", "Till Closing", JOptionPane.ERROR_MESSAGE);
-                }
-                    
-                    } catch (SQLException ex) {
-                Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        */
         JPasswordField pf = new JPasswordField();
         int askPassword = JOptionPane.showConfirmDialog(null, pf, "Enter Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         
@@ -937,79 +909,77 @@ public class FixedOrder extends javax.swing.JInternalFrame {
                 if (rs.isBeforeFirst())
                 {
                 
-                
+                    Date date = new Date();
+                    Timestamp currentDate = new Timestamp(date.getTime());
+                    String refundDate = new SimpleDateFormat("dd/MM/yyy").format(currentDate);
 
-                Date date = new Date();
-                Timestamp currentDate = new Timestamp(date.getTime());
-                String refundDate = new SimpleDateFormat("dd/MM/yyy").format(currentDate);
+                    completedOrders.setStatus("Refunded");
+                    completedOrders.setPayDate(refundDate);
 
-                completedOrders.setStatus("Refunded");
-                completedOrders.setPayDate(refundDate);
+                    String queryUpdate = "UPDATE orderDetails SET status = ?, refundDate = ? WHERE orderNo = ?";
+                    ps = con.prepareStatement(queryUpdate);
+                    ps.setString(1, completedOrders.getStatus());
+                    ps.setString(2, completedOrders.getPayDate());
+                    ps.setString(3, completedOrders.getOrderNo());
+                    ps.executeUpdate();
 
-                String queryUpdate = "UPDATE orderDetails SET status = ?, refundDate = ? WHERE orderNo = ?";
-                ps = con.prepareStatement(queryUpdate);
-                ps.setString(1, completedOrders.getStatus());
-                ps.setString(2, completedOrders.getPayDate());
-                ps.setString(3, completedOrders.getOrderNo());
-                ps.executeUpdate();
+                    double refundCash = completedOrders.getCash();
+                    double refundCard = completedOrders.getCard();
+                    double refundCashDeposit = completedOrders.getCashDeposit();
+                    double refundCardDeposit = completedOrders.getCardDeposit();
+                    double refundTotal = order.getTotal();
+                    double refundDeposit = order.getDeposit();
+                    double refundDue = order.getDue();
 
-                double refundCash = completedOrders.getCash();
-                double refundCard = completedOrders.getCard();
-                double refundCashDeposit = completedOrders.getCashDeposit();
-                double refundCardDeposit = completedOrders.getCardDeposit();
-                double refundTotal = order.getTotal();
-                double refundDeposit = order.getDeposit();
-                double refundDue = order.getDue();
+                    completedOrders.setCash(refundCash *= -1);
+                    completedOrders.setCard(refundCard *= -1);
+                    completedOrders.setCashDeposit(refundCashDeposit *= -1);
+                    completedOrders.setCardDeposit(refundCardDeposit *= -1);
+                    completedOrders.setTotal(refundTotal *= -1);
+                    completedOrders.setDeposit(refundDeposit *= -1);
+                    completedOrders.setDue(refundDue *= -1);
 
-                completedOrders.setCash(refundCash *= -1);
-                completedOrders.setCard(refundCard *= -1);
-                completedOrders.setCashDeposit(refundCashDeposit *= -1);
-                completedOrders.setCardDeposit(refundCardDeposit *= -1);
-                completedOrders.setTotal(refundTotal *= -1);
-                completedOrders.setDeposit(refundDeposit *= -1);
-                completedOrders.setDue(refundDue *= -1);
+                    completedOrders = new CompletedOrder(completedOrders.getOrderNo(), completedOrders.getFirstName(), completedOrders.getLastName(),
+                            "", "", completedOrders.getBrand(), completedOrders.getModel(), "", completedOrders.getTotal(), completedOrders.getDeposit(),
+                            completedOrders.getDue(), completedOrders.getCash(), completedOrders.getCard(), completedOrders.getChangeTotal(),
+                            completedOrders.getCashDeposit(), completedOrders.getCardDeposit(), completedOrders.getPayDate(), completedOrders.getStatus());
 
-                completedOrders = new CompletedOrder(completedOrders.getOrderNo(), completedOrders.getFirstName(), completedOrders.getLastName(),
-                        "", "", completedOrders.getBrand(), completedOrders.getModel(), "", completedOrders.getTotal(), completedOrders.getDeposit(),
-                        completedOrders.getDue(), completedOrders.getCash(), completedOrders.getCard(), completedOrders.getChangeTotal(),
-                        completedOrders.getCashDeposit(), completedOrders.getCardDeposit(), completedOrders.getPayDate(), completedOrders.getStatus());
+                    String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, brand, model, total, "
+                            + "deposit, due, cash, card, changeTotal, cashDeposit, cardDeposit, payDate, status) "
+                            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                String queryInsert = "INSERT INTO completedOrders(orderNo, firstName, lastName, brand, model, total, "
-                        + "deposit, due, cash, card, changeTotal, cashDeposit, cardDeposit, payDate, status) "
-                        + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    ps = con.prepareStatement(queryInsert);
+                    ps.setString(1, completedOrders.getOrderNo());
+                    ps.setString(2, completedOrders.getFirstName());
+                    ps.setString(3, completedOrders.getLastName());
+                    ps.setString(4, completedOrders.getBrand());
+                    ps.setString(5, completedOrders.getModel());
+                    ps.setDouble(6, completedOrders.getTotal());
+                    ps.setDouble(7, completedOrders.getDeposit());
+                    ps.setDouble(8, completedOrders.getDue());
+                    ps.setDouble(9, completedOrders.getCash());
+                    ps.setDouble(10, completedOrders.getCard());
+                    ps.setDouble(11, completedOrders.getChangeTotal());
+                    ps.setDouble(12, completedOrders.getCashDeposit());
+                    ps.setDouble(13, completedOrders.getCardDeposit());
+                    ps.setString(14, completedOrders.getPayDate());
+                    ps.setString(15, completedOrders.getStatus());
+                    ps.executeUpdate();
 
-                ps = con.prepareStatement(queryInsert);
-                ps.setString(1, completedOrders.getOrderNo());
-                ps.setString(2, completedOrders.getFirstName());
-                ps.setString(3, completedOrders.getLastName());
-                ps.setString(4, completedOrders.getBrand());
-                ps.setString(5, completedOrders.getModel());
-                ps.setDouble(6, completedOrders.getTotal());
-                ps.setDouble(7, completedOrders.getDeposit());
-                ps.setDouble(8, completedOrders.getDue());
-                ps.setDouble(9, completedOrders.getCash());
-                ps.setDouble(10, completedOrders.getCard());
-                ps.setDouble(11, completedOrders.getChangeTotal());
-                ps.setDouble(12, completedOrders.getCashDeposit());
-                ps.setDouble(13, completedOrders.getCardDeposit());
-                ps.setString(14, completedOrders.getPayDate());
-                ps.setString(15, completedOrders.getStatus());
-                ps.executeUpdate();
+                    updateProductQty();
+                    addEventNote("Refunded");
 
-                updateProductQty();
-                addEventNote("Refunded");
+                    JOptionPane.showMessageDialog(this, order.getOrderNo() + " Refunded Successfully!",
+                            "Refund Order", JOptionPane.INFORMATION_MESSAGE);
 
-                JOptionPane.showMessageDialog(this, order.getOrderNo() + " Refunded Successfully!",
-                        "Refund Order", JOptionPane.INFORMATION_MESSAGE);
+                    OrderRefundReceipt refundReceipt = new OrderRefundReceipt(order, completedOrders, txt_contact.getText());
+                    refundReceipt.setVisible(true);
 
-                OrderRefundReceipt refundReceipt = new OrderRefundReceipt(order, completedOrders);
-                refundReceipt.setVisible(true);
-
-                ps.close();
-                con.close();
-                }
+                    ps.close();
+                    con.close();
+                    }
                 else 
-                   JOptionPane.showMessageDialog(this, "Wrong Password !", "Till Closing", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Wrong Password !", "Till Closing", JOptionPane.ERROR_MESSAGE);
                     
             } catch (SQLException ex) {
                 Logger.getLogger(FixedOrder.class.getName()).log(Level.SEVERE, null, ex);

@@ -5,7 +5,6 @@
  */
 package Forms;
 
-import InternalForms.FixedOrder;
 import InternalForms.NewOrder;
 import Model.CompletedOrder;
 import Model.Order;
@@ -34,7 +33,7 @@ public class OrderPayment extends javax.swing.JFrame {
     JTable tableViewProducts;
     Order order;
     CompletedOrder completedOrder;
-    String payDate;
+    String payDate, formatContactNo;
 
     double total, deposit, due, cash, card, changeTotal, totalPaid;
 
@@ -42,12 +41,13 @@ public class OrderPayment extends javax.swing.JFrame {
         initComponents();
     }
 
-    public OrderPayment(Order _order, CompletedOrder _completedOrder, JTable _tableViewProducts) {
+    public OrderPayment(Order _order, CompletedOrder _completedOrder, JTable _tableViewProducts, String _formatContactNo) {
         initComponents();
         setResizable(false);
         this.order = _order;
         this.completedOrder = _completedOrder;
         this.tableViewProducts = _tableViewProducts;
+        this.formatContactNo = _formatContactNo;
 
         lbl_order_no.setText(this.order.getOrderNo());
         lbl_total.setText(String.valueOf(this.order.getTotal()));
@@ -530,7 +530,7 @@ public class OrderPayment extends javax.swing.JFrame {
 
                     JOptionPane.showMessageDialog(this, order.getOrderNo() + " Paid Successfully");
 
-                    OrderReceipt receipt = new OrderReceipt(order, completedOrder);
+                    OrderReceipt receipt = new OrderReceipt(order, completedOrder, formatContactNo);
                     receipt.setVisible(true);
 
                     addNoteEvent("Paid");

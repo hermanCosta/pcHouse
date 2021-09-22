@@ -33,12 +33,13 @@ public class DepositPayment extends javax.swing.JFrame {
     double cashDeposit, cardDeposit;
     double newDeposit;
     boolean isOrderDetails;
+    String formatContactNo;
 
     public DepositPayment() {
         initComponents();
     }
 
-    public DepositPayment(Order _order, double _newDeposit, CompletedOrder _completedOrder, boolean _isOrderDetails) {
+    public DepositPayment(Order _order, double _newDeposit, CompletedOrder _completedOrder, boolean _isOrderDetails, String _formatContactNo) {
         initComponents();
         setResizable(false);
 
@@ -46,6 +47,7 @@ public class DepositPayment extends javax.swing.JFrame {
         this.newDeposit = _newDeposit;
         this.completedOrder = _completedOrder;
         this.isOrderDetails = _isOrderDetails;
+        this.formatContactNo = _formatContactNo;
 
         lbl_order_no.setText(this.order.getOrderNo());
         lbl_total.setText(String.valueOf(this.order.getTotal()));
@@ -352,7 +354,7 @@ public class DepositPayment extends javax.swing.JFrame {
                 payDeposit(order.getCashDeposit(), 0);
                 this.dispose();
 
-                PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
+                PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails, formatContactNo);
                 printOrder.setVisible(true);
 
                 ps.close();
@@ -421,7 +423,7 @@ public class DepositPayment extends javax.swing.JFrame {
                 payDeposit(0, order.getCardDeposit());
                 this.dispose();
 
-                PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
+                PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails, formatContactNo);
                 printOrder.setVisible(true);
 
                 ps.close();

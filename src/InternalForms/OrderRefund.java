@@ -832,7 +832,7 @@ public class OrderRefund extends javax.swing.JInternalFrame {
 
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
-        OrderRefundReceipt refundReceipt = new OrderRefundReceipt(order, completedOrders);
+        OrderRefundReceipt refundReceipt = new OrderRefundReceipt(order, completedOrders, txt_contact.getText());
         refundReceipt.setVisible(true);
     }//GEN-LAST:event_btn_printActionPerformed
 

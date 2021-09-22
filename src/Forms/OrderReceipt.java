@@ -27,16 +27,18 @@ public class OrderReceipt extends javax.swing.JFrame {
     Order order;
     CompletedOrder completedOrder;
     double deposit, due, total;
+    String formatContactNo;
 
     public OrderReceipt() {
         initComponents();
     }
 
-    public OrderReceipt(Order _order, CompletedOrder _completedOrder) {
+    public OrderReceipt(Order _order, CompletedOrder _completedOrder, String _formatContactNo) {
         initComponents();
         setResizable(false);  
         this.order = _order;
         this.completedOrder = _completedOrder;
+        this.formatContactNo = _formatContactNo;
 
         loadOrderToPrint();
     }
@@ -44,7 +46,7 @@ public class OrderReceipt extends javax.swing.JFrame {
     public void loadOrderToPrint() {
         lbl_print_order_no.setText("Order: " + order.getOrderNo());
         lbl_print_first_name.setText("Customer name: " + order.getFirstName() + " " + order.getLastName());
-        lbl_print_contact.setText("Contact no.: " + order.getContactNo());
+        lbl_print_contact.setText("Contact no.: " + formatContactNo);
         lbl_print_email.setText("Email: " + order.getEmail());
         lbl_print_brand.setText("Device brand: " + order.getBrand());
         lbl_print_model.setText("Device model: " + order.getModel());

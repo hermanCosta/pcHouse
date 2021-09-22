@@ -24,6 +24,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +32,7 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTable;
@@ -38,6 +40,8 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.MaskFormatter;
 
 /**
  *
@@ -74,6 +78,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
 
         tableSettings(table_view_products);
         loadSaleDetails();
+        loadContactNo();
     }
 
     public void tableSettings(JTable table) {
@@ -93,8 +98,33 @@ public class SaleDetails extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    public void loadContactNo() {
+        // If ContactNo is foreign number disable text format of Irish number and set the foreign number to the textField
+        if (sale.getContactNo().contains("+"))
+        {
+            txt_contact.setFormatterFactory(null);
+            txt_contact.setText(sale.getContactNo());
+        }
+        else if (sale.getContactNo().length() == 9) {  
+            
+            try {
+               MaskFormatter ssnFormatter = new MaskFormatter("(##) ###-####");
+               txt_contact = new JFormattedTextField(ssnFormatter);
+               txt_contact.setValue(sale.getContactNo());
+               System.out.println("FormatLandLine " + txt_contact.getText());
+               
+            } catch (ParseException ex) {
+                Logger.getLogger(SaleDetails.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        } else
+            txt_contact.setText(sale.getContactNo());    
+    }
+            
 
     public void loadSaleDetails() {
+        
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
         TableColumnModel model = table_view_products.getColumnModel();
         dtm.setRowCount(0);
@@ -102,15 +132,6 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         lbl_auto_order_no.setText(sale.getSaleNo());
         txt_first_name.setText(sale.getFirstName());
         txt_last_name.setText(sale.getLastName());
-        
-        // If ContactNo is foreign number disable text format of Irish number and set the foreign number to the textField
-        if (sale.getContactNo().contains("+"))
-        {
-            txt_contact.setFormatterFactory(null);
-            txt_contact.setText(sale.getContactNo());
-        } else
-            txt_contact.setText(sale.getContactNo());    
-        
         txt_email.setText(sale.getEmail());
         txt_total.setText(String.valueOf(sale.getTotal()));
         lbl_sale_paid_on.setText("Sale Date: " + sale.getSaleDate());
@@ -250,7 +271,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         txt_total = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         table_view_products = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        btn_print = new javax.swing.JButton();
         btn_notes = new javax.swing.JButton();
         btn_refund = new javax.swing.JButton();
         panel_sale_status = new javax.swing.JPanel();
@@ -387,14 +408,14 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         });
         jScrollPane2.setViewportView(table_view_products);
 
-        jButton1.setBackground(new java.awt.Color(21, 76, 121));
-        jButton1.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_print.png"))); // NOI18N
-        jButton1.setText("Print");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btn_print.setBackground(new java.awt.Color(21, 76, 121));
+        btn_print.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        btn_print.setForeground(new java.awt.Color(255, 255, 255));
+        btn_print.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_print.png"))); // NOI18N
+        btn_print.setText("Print");
+        btn_print.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btn_printActionPerformed(evt);
             }
         });
 
@@ -510,7 +531,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                                 .addGap(15, 15, 15)
                                 .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(15, 15, 15)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(panel_sale_status, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 22, Short.MAX_VALUE))
         );
@@ -523,7 +544,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_print, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btn_notes, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btn_refund, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(15, 15, 15))
@@ -627,12 +648,13 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_contactKeyReleased
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         boolean isSaleDetails = true;
-        SaleReceipt saleReceipt = new SaleReceipt(sale, isSaleDetails);
+        String formatContactNo = txt_contact.getText();
+        SaleReceipt saleReceipt = new SaleReceipt(sale, isSaleDetails, formatContactNo);
         saleReceipt.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btn_printActionPerformed
 
     private void btn_notesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_notesActionPerformed
         // TODO add your handling code here:
@@ -704,7 +726,7 @@ public class SaleDetails extends javax.swing.JInternalFrame {
 
                     addEventNote("Refunded");
 
-                    SaleRefundReceipt saleRefundReceipt = new SaleRefundReceipt(sale);
+                    SaleRefundReceipt saleRefundReceipt = new SaleRefundReceipt(sale, txt_contact.getText());
                     saleRefundReceipt.setVisible(true);
 
                     ps.close();
@@ -729,8 +751,8 @@ public class SaleDetails extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_copy;
     private javax.swing.JButton btn_notes;
+    private javax.swing.JButton btn_print;
     private javax.swing.JButton btn_refund;
-    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lbl_auto_order_no;
     private javax.swing.JLabel lbl_contact;

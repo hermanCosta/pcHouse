@@ -274,7 +274,7 @@ public class NewSale extends javax.swing.JInternalFrame {
             saleNo = lbl_auto_sale_no.getText();
             firstName = txt_first_name.getText().toUpperCase();
             lastName = txt_last_name.getText().toUpperCase();
-            contactNo = txt_contact.getText();
+            contactNo = txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", "");
             email = txt_email.getText();
             total = Double.parseDouble(txt_total.getText());
 
@@ -406,6 +406,47 @@ public class NewSale extends javax.swing.JInternalFrame {
             row[8] = computerList.get(i).getPrice();
             dtm.addRow(row);
         }
+    }
+    
+    public boolean saveCustomerIntoDb() {
+         boolean isContactNo = false;
+         contactNo = txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", "");
+         try {
+            dbConnection();
+            String query = "SELECT contactNo, firstName, lastName FROM customers WHERE contactNo = ? ";
+            ps = con.prepareStatement(query);
+            ps.setString(1, contactNo);
+            rs = ps.executeQuery();
+            
+            if (!rs.isBeforeFirst()) {
+                customer = new Customer(txt_first_name.getText().toUpperCase(), txt_last_name.getText().toUpperCase(), contactNo, txt_email.getText());
+                    
+                String queryInsert = "INSERT INTO customers (firstName, lastName, contactNo, email) VALUES(?, ?, ?, ?)";
+                ps = con.prepareStatement(queryInsert);
+                ps.setString(1, customer.getFirstName());
+                ps.setString(2, customer.getLastName());
+                ps.setString(3, customer.getContactNo());
+                ps.setString(4, customer.getEmail());
+                ps.executeUpdate();
+            }
+            
+            else  {
+                while (rs.next()) {
+                    firstName = rs.getString("firstName");
+                    lastName = rs.getString("lastName");
+                }
+            
+                if (!firstName.equals(txt_first_name.getText())
+                    && !lastName.equals(txt_last_name.getText())) {
+                    JOptionPane.showMessageDialog(this, "There is another Customer associated with ContactNo " + txt_contact.getText(), "New Customer", JOptionPane.ERROR_MESSAGE);
+                    isContactNo = true;
+                }
+            }
+         } catch (SQLException ex) {
+            Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return isContactNo;
     }
 
     @SuppressWarnings("unchecked")
@@ -885,8 +926,12 @@ public class NewSale extends javax.swing.JInternalFrame {
     private void btn_save_saleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save_saleActionPerformed
         // TODO add your handling code here:
         getSaleValues();
-        SalePayment salePayment = new SalePayment(sale, table_view_products);
-        salePayment.setVisible(true);
+        if (!saveCustomerIntoDb())
+        {
+           String formatContactNo = txt_contact.getText();
+           SalePayment salePayment = new SalePayment(sale, table_view_products, formatContactNo);
+            salePayment.setVisible(true);
+        }
     }//GEN-LAST:event_btn_save_saleActionPerformed
 
     private void txt_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_totalActionPerformed
@@ -1019,49 +1064,26 @@ public class NewSale extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameKeyPressed
 
     private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
-
-        saleNo = lbl_auto_sale_no.getText();
+        contactNo = txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", "");
         try {
             dbConnection();
-
-            String query = "SELECT contactNo FROM customers WHERE contactNo = ? ";
+            
+            String query = "SELECT * FROM customers WHERE contactNo = ? ";
             ps = con.prepareStatement(query);
-            ps.setString(1, txt_contact.getText());
+            ps.setString(1, contactNo);
             rs = ps.executeQuery();
             
-            //show a message if a costumer is not found in the db
-            if (!rs.isBeforeFirst()&& txt_first_name.getText().trim().isEmpty() && txt_last_name.getText().trim().isEmpty()) {
+            if (!rs.isBeforeFirst()) {
                 JOptionPane.showMessageDialog(this, "Customer not found in the Database", "New Customer", JOptionPane.ERROR_MESSAGE);
-            } //add a new customer if not exists AND fields are not empty
-            else if (!rs.isBeforeFirst()&& !txt_first_name.getText().trim().isEmpty() && !txt_last_name.getText().trim().isEmpty()) {
-                int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add a new Customer ?", "Add New Customer", JOptionPane.YES_NO_OPTION);
-                if (confirmInsertion == 0) {
-                    customer = new Customer(txt_first_name.getText(), txt_last_name.getText(), txt_contact.getText(), txt_email.getText());
-                    
-                    String queryInsert = "INSERT INTO customers (firstName, lastName, contactNo, email) VALUES(?, ?, ?, ?)";
-                    ps = con.prepareStatement(queryInsert);
-                    ps.setString(1, customer.getFirstName());
-                    ps.setString(2, customer.getLastName());
-                    ps.setString(3, customer.getContactNo());
-                    ps.setString(4, customer.getEmail());
-                    ps.executeUpdate();
+            } 
+            else {
+                    while (rs.next()) {
+                        txt_first_name.setText(rs.getString("firstName"));
+                        txt_last_name.setText(rs.getString("lastName"));
+                        txt_contact.setText(rs.getString("contactNo"));
+                        txt_email.setText(rs.getString("email"));
+                    }
                 }
-                 
-            } else {
-                String queryFill = "SELECT * FROM customers WHERE contactNo = ? ";
-                ps = con.prepareStatement(queryFill);
-                ps.setString(1, txt_contact.getText());
-                rs = ps.executeQuery();
-                while (rs.next()) {
-                    txt_first_name.setText(rs.getString("firstName"));
-                    txt_last_name.setText(rs.getString("lastName"));
-                    txt_contact.setText(rs.getString("contactNo"));
-                    txt_email.setText(rs.getString("email"));
-                }
-            }
-            
-            ps.close();
-            con.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);

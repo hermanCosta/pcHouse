@@ -299,7 +299,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             orderNo = lbl_auto_order_no.getText();
             firstName = txt_first_name.getText().toUpperCase();
             lastName = txt_last_name.getText().toUpperCase();
-            contactNo = txt_contact.getText();
+            contactNo = txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", "");
             email = txt_email.getText();
             deviceBrand = txt_brand.getText().toUpperCase();
             deviceModel = txt_model.getText().toUpperCase();
@@ -354,6 +354,46 @@ public class NewOrder extends javax.swing.JInternalFrame {
         }
     }
     
+    public boolean saveCustomerIntoDb() {
+         boolean isContactNo = false;
+         contactNo = txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", "");
+         try {
+            dbConnection();
+            String query = "SELECT contactNo, firstName, lastName FROM customers WHERE contactNo = ? ";
+            ps = con.prepareStatement(query);
+            ps.setString(1, contactNo);
+            rs = ps.executeQuery();
+            
+            if (!rs.isBeforeFirst()) {
+                customer = new Customer(txt_first_name.getText().toUpperCase(), txt_last_name.getText().toUpperCase(), contactNo, txt_email.getText());
+                    
+                String queryInsert = "INSERT INTO customers (firstName, lastName, contactNo, email) VALUES(?, ?, ?, ?)";
+                ps = con.prepareStatement(queryInsert);
+                ps.setString(1, customer.getFirstName());
+                ps.setString(2, customer.getLastName());
+                ps.setString(3, customer.getContactNo());
+                ps.setString(4, customer.getEmail());
+                ps.executeUpdate();
+            }
+            
+            else  {
+                while (rs.next()) {
+                    firstName = rs.getString("firstName");
+                    lastName = rs.getString("lastName");
+                }
+            
+                if (!firstName.equals(txt_first_name.getText())
+                    && !lastName.equals(txt_last_name.getText())) {
+                    JOptionPane.showMessageDialog(this, "There is another Customer associated with ContactNo " + txt_contact.getText(), "New Customer", JOptionPane.ERROR_MESSAGE);
+                    isContactNo = true;
+                }
+            }
+         } catch (SQLException ex) {
+            Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return isContactNo;
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -927,74 +967,78 @@ public class NewOrder extends javax.swing.JInternalFrame {
     private void btn_save_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save_orderActionPerformed
         // TODO add your handling code here:
         loadOrderList();
+        String formatContactNo = txt_contact.getText();
         
-        if (deposit == 0) {
-            int confirmNewOrder = JOptionPane.showConfirmDialog(this, "Do you want to save this new Order " + order.getOrderNo() + " ?");
-            if (confirmNewOrder == 0) {
-                loadOrderList();
+        if (!saveCustomerIntoDb()) {
+             
+            if (deposit == 0) {
+                int confirmNewOrder = JOptionPane.showConfirmDialog(this, "Do you want to save this new Order " + order.getOrderNo() + " ?");
+                if (confirmNewOrder == 0) {
 
-                try {
-                    dbConnection();
-                    String query = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
-                            + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
-                            + "productService, qty, unitPrice, priceTotal, total, deposit, cashDeposit, cardDeposit, "
-                            + "due, status, issueDate, createdBy) VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                    ps = con.prepareStatement(query);
-                    ps.setString(1, order.getOrderNo());
-                    ps.setString(2, order.getFirstName());
-                    ps.setString(3, order.getLastName());
-                    ps.setString(4, order.getContactNo());
-                    ps.setString(5, order.getEmail());
-                    ps.setString(6, order.getBrand());
-                    ps.setString(7, order.getModel());
-                    ps.setString(8, order.getSerialNumber());
-                    ps.setString(9, order.getImportantNotes());
-                    ps.setString(10, order.getStringFaults());
-                    ps.setString(11, order.getStringProducts());
-                    ps.setString(12, order.getStringQty());
-                    ps.setString(13, order.getUnitPrice());
-                    ps.setString(14, order.getPriceTotal());
-                    ps.setDouble(15, order.getTotal());
-                    ps.setDouble(16, order.getDeposit());
-                    ps.setDouble(17, order.getCashDeposit());
-                    ps.setDouble(18, order.getCardDeposit());
-                    ps.setDouble(19, order.getDue());
-                    ps.setString(20, order.getStatus());
-                    ps.setString(21, order.getIssueDate());
-                    ps.setString(22, order.getUsername());
-                    ps.executeUpdate();
+                        try {
+                            dbConnection();
+                            String query = "INSERT INTO orderDetails(orderNo, firstName, lastName, contactNo, "
+                                    + "email, deviceBrand, deviceModel, serialNumber, importantNotes, fault, "
+                                    + "productService, qty, unitPrice, priceTotal, total, deposit, cashDeposit, cardDeposit, "
+                                    + "due, status, issueDate, createdBy) VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                    String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "
-                            + "productService = REPLACE(productService, '  ', ' '), "
-                            + "qty = REPLACE(qty, '  ', ' '), "
-                            + "unitPrice = REPLACE(unitPrice, '  ', ' '), "
-                            + "total = REPLACE(total, '  ', ' ')";
-                    ps = con.prepareStatement(removeSpace);
-                    ps.executeUpdate();
+                            ps = con.prepareStatement(query);
+                            ps.setString(1, order.getOrderNo());
+                            ps.setString(2, order.getFirstName());
+                            ps.setString(3, order.getLastName());
+                            ps.setString(4, order.getContactNo());
+                            ps.setString(5, order.getEmail());
+                            ps.setString(6, order.getBrand());
+                            ps.setString(7, order.getModel());
+                            ps.setString(8, order.getSerialNumber());
+                            ps.setString(9, order.getImportantNotes());
+                            ps.setString(10, order.getStringFaults());
+                            ps.setString(11, order.getStringProducts());
+                            ps.setString(12, order.getStringQty());
+                            ps.setString(13, order.getUnitPrice());
+                            ps.setString(14, order.getPriceTotal());
+                            ps.setDouble(15, order.getTotal());
+                            ps.setDouble(16, order.getDeposit());
+                            ps.setDouble(17, order.getCashDeposit());
+                            ps.setDouble(18, order.getCardDeposit());
+                            ps.setDouble(19, order.getDue());
+                            ps.setString(20, order.getStatus());
+                            ps.setString(21, order.getIssueDate());
+                            ps.setString(22, order.getUsername());
+                            ps.executeUpdate();
 
-                    JOptionPane.showMessageDialog(this, order.getOrderNo() + " Created successfully!");
+                            String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "
+                                    + "productService = REPLACE(productService, '  ', ' '), "
+                                    + "qty = REPLACE(qty, '  ', ' '), "
+                                    + "unitPrice = REPLACE(unitPrice, '  ', ' '), "
+                                    + "total = REPLACE(total, '  ', ' ')";
+                            ps = con.prepareStatement(removeSpace);
+                            ps.executeUpdate();
 
-                    cleanAllFields(table_view_faults);
-                    cleanAllFields(table_view_products);
-                    //Generate new OrderNo.
-                    autoID();
-                    
-                    String issueDateFormat = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
-                    order.setIssueDate(issueDateFormat);
-                    PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
-                    printOrder.setVisible(true);
+                            JOptionPane.showMessageDialog(this, order.getOrderNo() + " Created successfully!");
 
-                    ps.close();
-                    con.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                            cleanAllFields(table_view_faults);
+                            cleanAllFields(table_view_products);
+                            //Generate new OrderNo.
+                            autoID();
+
+                            String issueDateFormat = new SimpleDateFormat("dd/MM/yyyy").format(currentDate);
+                            order.setIssueDate(issueDateFormat);
+
+                            PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails, formatContactNo);
+                            printOrder.setVisible(true);
+
+                            ps.close();
+                            con.close();
+                        } catch (SQLException ex) {
+                            Logger.getLogger(NewOrder.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                } else {
+                    DepositPayment depositPayment = new DepositPayment(order, 0, completedOrder, isOrderDetails, formatContactNo);
+                    depositPayment.setVisible(true);
             }
-        } else {
-            loadOrderList();
-            DepositPayment depositPayment = new DepositPayment(order, 0, completedOrder, isOrderDetails);
-            depositPayment.setVisible(true);
         }
     }//GEN-LAST:event_btn_save_orderActionPerformed
 
@@ -1161,45 +1205,23 @@ public class NewOrder extends javax.swing.JInternalFrame {
     private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
        try {
             dbConnection();
-            String query = "SELECT contactNo FROM customers WHERE contactNo = ? ";
+            
+            String query = "SELECT * FROM customers WHERE contactNo = ? ";
             ps = con.prepareStatement(query);
             ps.setString(1, txt_contact.getText());
             rs = ps.executeQuery();
             
-            //show a message if a costumer is not found in the db
-            if (!rs.isBeforeFirst()&& txt_first_name.getText().trim().isEmpty() && txt_last_name.getText().trim().isEmpty()) {
+            if (!rs.isBeforeFirst()) {
                 JOptionPane.showMessageDialog(this, "Customer not found in the Database", "New Customer", JOptionPane.ERROR_MESSAGE);
-            } //add a new customer if not exists AND fields are not empty
-            else if (!rs.isBeforeFirst()&& !txt_first_name.getText().trim().isEmpty() && !txt_last_name.getText().trim().isEmpty()) {
-                int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add a new Customer ?", "Add New Customer", JOptionPane.YES_NO_OPTION);
-                if (confirmInsertion == 0) {
-                    customer = new Customer(txt_first_name.getText().toUpperCase(), txt_last_name.getText().toUpperCase(), txt_contact.getText(), txt_email.getText());
-                    
-                    String queryInsert = "INSERT INTO customers (firstName, lastName, contactNo, email) VALUES(?, ?, ?, ?)";
-                    ps = con.prepareStatement(queryInsert);
-                    ps.setString(1, customer.getFirstName());
-                    ps.setString(2, customer.getLastName());
-                    ps.setString(3, customer.getContactNo());
-                    ps.setString(4, customer.getEmail());
-                    ps.executeUpdate();
-                    
+            } 
+            else {
+                    while (rs.next()) {
+                        txt_first_name.setText(rs.getString("firstName"));
+                        txt_last_name.setText(rs.getString("lastName"));
+                        txt_contact.setText(rs.getString("contactNo"));
+                        txt_email.setText(rs.getString("email"));
+                    }
                 }
-                 
-            } else {
-                String queryFill = "SELECT * FROM customers WHERE contactNo = ? ";
-                ps = con.prepareStatement(queryFill);
-                ps.setString(1, txt_contact.getText());
-                rs = ps.executeQuery();
-                while (rs.next()) {
-                    txt_first_name.setText(rs.getString("firstName"));
-                    txt_last_name.setText(rs.getString("lastName"));
-                    txt_contact.setText(rs.getString("contactNo"));
-                    txt_email.setText(rs.getString("email"));
-                }
-            }
-            
-            ps.close();
-            con.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);

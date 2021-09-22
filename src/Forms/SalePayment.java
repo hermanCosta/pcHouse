@@ -33,17 +33,18 @@ public class SalePayment extends javax.swing.JFrame {
     JTable tableViewProducts;
     double deposit, total, cash, card, totalPaid, changeTotal;
     String saleNo, firstName, lastName, contactNo, email, stringProducts, stringQty, stringUnitprice, 
-            stringPriceTotal, saleDate;
+            stringPriceTotal, saleDate, formatContactNo;
     
     public SalePayment() {
         initComponents();
     }
 
-    public SalePayment(Sale _sale, JTable _tableViewProducts) {
+    public SalePayment(Sale _sale, JTable _tableViewProducts, String _formatContactNo) {
         initComponents();
         setResizable(false);  
         this.sale = _sale;
         this.tableViewProducts = _tableViewProducts;
+        this.formatContactNo = _formatContactNo;
         
         lbl_sale_no.setText(sale.getSaleNo());
         lbl_total.setText(String.valueOf(sale.getTotal()));
@@ -483,7 +484,7 @@ public class SalePayment extends javax.swing.JFrame {
                 addNoteEvent();
                         
                 boolean isSaleDetails = false;
-                SaleReceipt saleReceipt =  new SaleReceipt(sale, isSaleDetails);
+                SaleReceipt saleReceipt =  new SaleReceipt(sale, isSaleDetails, formatContactNo);
                 saleReceipt.setVisible(true);
 
                 ps.close();

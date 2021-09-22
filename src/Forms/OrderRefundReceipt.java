@@ -26,16 +26,18 @@ public class OrderRefundReceipt extends javax.swing.JFrame {
 
     Order order;
     CompletedOrder completedOrders;
+    String formatContactNo;
 
     public OrderRefundReceipt() {
         initComponents();
     }
 
-    public OrderRefundReceipt(Order _order, CompletedOrder _completedOrders) {
+    public OrderRefundReceipt(Order _order, CompletedOrder _completedOrders, String _formatContactNo) {
         initComponents();
         setResizable(false);  
         this.order = _order;
         this.completedOrders = _completedOrders;
+        this.formatContactNo = _formatContactNo;
 
         loadOrderToPrint();
     }
@@ -57,7 +59,7 @@ public class OrderRefundReceipt extends javax.swing.JFrame {
         lbl_refund_date.setText("Date: " + order.getPickDate());
         lbl_print_order_no.setText("Order: " + order.getOrderNo());
         lbl_print_first_name.setText("Customer name: " + order.getFirstName() + " " + order.getLastName());
-        lbl_print_contact.setText("Contact no.: " + order.getContactNo());
+        lbl_print_contact.setText("Contact no.: " + formatContactNo);
         lbl_print_email.setText("Email: " + order.getEmail());
         lbl_print_brand.setText("Device brand: " + order.getBrand());
         lbl_print_model.setText("Device model: " + order.getModel());

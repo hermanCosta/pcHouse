@@ -6,7 +6,6 @@
 package InternalForms;
 
 import Forms.DepositPayment;
-import Forms.MainMenu;
 import Forms.UpdateDepositPayment;
 import Forms.PrintOrder;
 import Forms.OrderNotes;
@@ -317,6 +316,47 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         } catch (SQLException ex) {
             Logger.getLogger(DepositPayment.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public boolean saveCustomerIntoDb() {
+         boolean isContactNo = false;
+         contactNo = txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", "");
+         try {
+            dbConnection();
+            String query = "SELECT contactNo, firstName, lastName FROM customers WHERE contactNo = ? ";
+            ps = con.prepareStatement(query);
+            ps.setString(1, contactNo);
+            rs = ps.executeQuery();
+            
+            if (!rs.isBeforeFirst()) {
+                customer = new Customer(txt_first_name.getText().toUpperCase(), txt_last_name.getText().toUpperCase(), contactNo, txt_email.getText());
+                    
+                String queryInsert = "INSERT INTO customers (firstName, lastName, contactNo, email) VALUES(?, ?, ?, ?)";
+                ps = con.prepareStatement(queryInsert);
+                ps.setString(1, customer.getFirstName());
+                ps.setString(2, customer.getLastName());
+                ps.setString(3, customer.getContactNo());
+                ps.setString(4, customer.getEmail());
+                ps.executeUpdate();
+            }
+            
+            else  {
+                while (rs.next()) {
+                    firstName = rs.getString("firstName");
+                    lastName = rs.getString("lastName");
+                }
+            
+                if (!firstName.equals(txt_first_name.getText())
+                    && !lastName.equals(txt_last_name.getText())) {
+                    JOptionPane.showMessageDialog(this, "There is another Customer associated with ContactNo " + txt_contact.getText(), "New Customer", JOptionPane.ERROR_MESSAGE);
+                    isContactNo = true;
+                }
+            }
+         } catch (SQLException ex) {
+            Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return isContactNo;
     }
 
     @SuppressWarnings("unchecked")
@@ -1215,55 +1255,29 @@ public class OrderDetails extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameKeyPressed
 
     private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
-        firstName = txt_first_name.getText();
-        lastName = txt_last_name.getText();
-        contactNo = txt_contact.getText();
-        email = txt_email.getText();
-
         try {
             dbConnection();
+            
             String query = "SELECT * FROM customers WHERE contactNo = ? ";
             ps = con.prepareStatement(query);
-            ps.setString(1, contactNo);
+            ps.setString(1, txt_contact.getText());
             rs = ps.executeQuery();
+            
+            if (!rs.isBeforeFirst()) {
+                JOptionPane.showMessageDialog(this, "Customer not found in the Database", "New Customer", JOptionPane.ERROR_MESSAGE);
+            } 
 
-            //show a message if a costumer is not found in the db
-            if (!rs.isBeforeFirst() && firstName.trim().isEmpty() && lastName.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Customer not found in the Database", "New Order", JOptionPane.ERROR_MESSAGE);
-            } //add a new costumer if not exist AND fields are not empty
-            else if (!rs.isBeforeFirst() && !firstName.trim().isEmpty() && !lastName.trim().isEmpty()) {
-                int confirmInsertion = JOptionPane.showConfirmDialog(null, "Do you want to add a new Customer ?", "Add New Customer", JOptionPane.YES_NO_OPTION);
-                if (confirmInsertion == 0) {
-                    customer = new Customer(firstName, lastName, contactNo, email);
-                    String insertQuery = "INSERT INTO customers (firstName, lastName, contactNo, email) VALUES(?, ?, ?, ?)";
-
-                    ps = con.prepareStatement(insertQuery);
-                    ps.setString(1, customer.getFirstName());
-                    ps.setString(2, customer.getLastName());
-                    ps.setString(3, customer.getContactNo());
-                    ps.setString(4, customer.getEmail());
-                    ps.executeUpdate();
-                    txt_brand.requestFocus();
+            else {
+                    while (rs.next()) {
+                        txt_first_name.setText(rs.getString("firstName"));
+                        txt_last_name.setText(rs.getString("lastName"));
+                        txt_contact.setText(rs.getString("contactNo"));
+                        txt_email.setText(rs.getString("email"));
+                    }
                 }
-            } else {
-                String fillQuery = "Select * from customers WHERE contactNo = ? ";
-                ps = con.prepareStatement(fillQuery);
-                ps.setString(1, txt_contact.getText());
-                rs = ps.executeQuery();
 
-                while (rs.next()) {
-                    txt_first_name.setText(rs.getString("firstName"));
-                    txt_last_name.setText(rs.getString("lastName"));
-                    txt_contact.setText(rs.getString("contactNo"));
-                    txt_email.setText(rs.getString("email"));
-                    int id = rs.getInt("customerID");
-                }
-            }
-
-            ps.close();
-            con.close();
         } catch (SQLException ex) {
-            Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_txt_contactActionPerformed
 
@@ -1308,7 +1322,8 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         
         String issueDateFormat = order.getIssueDate().substring(0, 11);
         order.setIssueDate(issueDateFormat);
-        PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails);
+        String formatContactNo = txt_contact.getText();
+        PrintOrder printOrder = new PrintOrder(order, completedOrder, isOrderDetails, formatContactNo);
         printOrder.setVisible(true);
     }//GEN-LAST:event_btn_printActionPerformed
 
@@ -1351,7 +1366,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, "Please, check Empty fields", "Update Order Details", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
         Date date = new Date();
         Timestamp currentDate = new Timestamp(date.getTime());
         String updateDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentDate);
@@ -1397,7 +1411,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         } else {
             order.setFirstName(txt_first_name.getText().toUpperCase());
             order.setLastName(txt_last_name.getText().toUpperCase());
-            order.setContactNo(txt_contact.getText());
+            order.setContactNo(txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", ""));
             order.setEmail(txt_email.getText());
             order.setBrand(txt_brand.getText().toUpperCase());
             order.setModel(txt_model.getText().toUpperCase());
@@ -1412,57 +1426,61 @@ public class OrderDetails extends javax.swing.JInternalFrame {
             order.setDue(Double.parseDouble(txt_due.getText()));
             order.setIssueDate(updateDate);
 
-            int confirmUpdating = JOptionPane.showConfirmDialog(null, "Save changes on order "
+            int confirmUpdating = JOptionPane.showConfirmDialog(this, "Save changes on order "
                     + order.getOrderNo() + " ?", "Update Order Details", JOptionPane.YES_NO_OPTION);
 
             if (confirmUpdating == 0) {
-                double newDeposit = Double.parseDouble(txt_deposit.getText());
+                if (!saveCustomerIntoDb())
+                {
+                    double newDeposit = Double.parseDouble(txt_deposit.getText());
 
-                if (newDeposit > order.getDeposit()) {
-                    newDeposit -= order.getDeposit();
-                    UpdateDepositPayment updateDepositPayment = new UpdateDepositPayment(order, completedOrder, newDeposit);
-                    updateDepositPayment.setVisible(true);
-                } else {
-                    try {
-                        String queryUpdate = "UPDATE orderDetails SET firstName = ?, lastName = ? , contactNo = ?, email = ?,"
-                                + " deviceBrand = ?, deviceModel = ?, serialNumber = ?, fault = ?, importantNotes = ?, "
-                                + "productService = ?, qty = ?, unitPrice = ?, priceTotal = ?, total = ?, due = ?, "
-                                + "issueDate = ? WHERE orderNo = ? ";
-                        ps = con.prepareStatement(queryUpdate);
-                        ps.setString(1, order.getFirstName());
-                        ps.setString(2, order.getLastName());
-                        ps.setString(3, order.getContactNo());
-                        ps.setString(4, order.getEmail());
-                        ps.setString(5, order.getBrand());
-                        ps.setString(6, order.getModel());
-                        ps.setString(7, order.getSerialNumber());
-                        ps.setString(8, order.getStringFaults());
-                        ps.setString(9, order.getImportantNotes());
-                        ps.setString(10, order.getStringProducts());
-                        ps.setString(11, order.getStringQty());
-                        ps.setString(12, order.getUnitPrice());
-                        ps.setString(13, order.getPriceTotal());
-                        ps.setDouble(14, order.getTotal());
-                        ps.setDouble(15, order.getDue());
-                        ps.setString(16, order.getIssueDate());
-                        ps.setString(17, order.getOrderNo());
-                        ps.executeUpdate();
 
-                        String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "
-                                + "productService = REPLACE(productService, '  ', ' '), "
-                                + "qty = REPLACE(qty, '  ', ' '), "
-                                + "unitPrice = REPLACE(unitPrice, '  ', ' '), "
-                                + "total = REPLACE(total, '  ', ' ')";
-                        
-                        ps = con.prepareStatement(removeSpace);
-                        ps.executeUpdate();
+                    if (newDeposit > order.getDeposit()) {
+                        newDeposit -= order.getDeposit();
+                        UpdateDepositPayment updateDepositPayment = new UpdateDepositPayment(order, completedOrder, newDeposit);
+                        updateDepositPayment.setVisible(true);
+                    } else {
+                        try {
+                            String queryUpdate = "UPDATE orderDetails SET firstName = ?, lastName = ? , contactNo = ?, email = ?,"
+                                    + " deviceBrand = ?, deviceModel = ?, serialNumber = ?, fault = ?, importantNotes = ?, "
+                                    + "productService = ?, qty = ?, unitPrice = ?, priceTotal = ?, total = ?, due = ?, "
+                                    + "issueDate = ? WHERE orderNo = ? ";
+                            ps = con.prepareStatement(queryUpdate);
+                            ps.setString(1, order.getFirstName());
+                            ps.setString(2, order.getLastName());
+                            ps.setString(3, order.getContactNo());
+                            ps.setString(4, order.getEmail());
+                            ps.setString(5, order.getBrand());
+                            ps.setString(6, order.getModel());
+                            ps.setString(7, order.getSerialNumber());
+                            ps.setString(8, order.getStringFaults());
+                            ps.setString(9, order.getImportantNotes());
+                            ps.setString(10, order.getStringProducts());
+                            ps.setString(11, order.getStringQty());
+                            ps.setString(12, order.getUnitPrice());
+                            ps.setString(13, order.getPriceTotal());
+                            ps.setDouble(14, order.getTotal());
+                            ps.setDouble(15, order.getDue());
+                            ps.setString(16, order.getIssueDate());
+                            ps.setString(17, order.getOrderNo());
+                            ps.executeUpdate();
 
-                        JOptionPane.showMessageDialog(this, "Order " + order.getOrderNo() + " Updated successfully!");
-                        
-                        ps.close();
-                        con.close();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
+                            String removeSpace = "UPDATE orderDetails SET fault = REPLACE(fault, '  ', ' '), "
+                                    + "productService = REPLACE(productService, '  ', ' '), "
+                                    + "qty = REPLACE(qty, '  ', ' '), "
+                                    + "unitPrice = REPLACE(unitPrice, '  ', ' '), "
+                                    + "total = REPLACE(total, '  ', ' ')";
+
+                            ps = con.prepareStatement(removeSpace);
+                            ps.executeUpdate();
+
+                            JOptionPane.showMessageDialog(this, "Order " + order.getOrderNo() + " Updated successfully!");
+
+                            ps.close();
+                            con.close();
+                        } catch (SQLException ex) {
+                            Logger.getLogger(OrderDetails.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
             }

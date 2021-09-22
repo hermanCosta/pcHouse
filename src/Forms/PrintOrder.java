@@ -32,17 +32,19 @@ public class PrintOrder extends javax.swing.JFrame {
     Order order;
     CompletedOrder completedOrder;
     boolean isOrderDetails;
+    String formatContactNo;
     
     public PrintOrder() {
         initComponents();
     }
     
-    public PrintOrder(Order _order, CompletedOrder _completedOrder, boolean _isOrderDetails) {
+    public PrintOrder(Order _order, CompletedOrder _completedOrder, boolean _isOrderDetails, String _formatContactNo) {
         initComponents();
         setResizable(false);  
         this.order = _order;
         this.isOrderDetails = _isOrderDetails;
         this.completedOrder = _completedOrder;
+        this.formatContactNo = _formatContactNo;
         
         loadOrderToPrint();
     }
@@ -60,7 +62,7 @@ public class PrintOrder extends javax.swing.JFrame {
         lbl_print_issue_date.setText("Date: " + order.getIssueDate());
         lbl_print_order_no.setText("Order: " + order.getOrderNo());
         lbl_print_first_name.setText("Customer name: " + order.getFirstName() + " " + order.getLastName());
-        lbl_print_contact.setText("Contact no.: " + order.getContactNo());
+        lbl_print_contact.setText("Contact no.: " + formatContactNo);
         lbl_print_email.setText("Email: " + order.getEmail());
         lbl_print_brand.setText("Device brand: " + order.getBrand());
         lbl_print_model.setText("Device model: " + order.getModel());

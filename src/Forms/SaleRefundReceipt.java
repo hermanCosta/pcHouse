@@ -24,15 +24,17 @@ import javax.swing.JOptionPane;
 public class SaleRefundReceipt extends javax.swing.JFrame {
 
     Sale sale;
+    String formatContactNo;
 
     public SaleRefundReceipt() {
         initComponents();
     }
 
-    public SaleRefundReceipt(Sale _sale) {
+    public SaleRefundReceipt(Sale _sale, String _formatContactNo) {
         initComponents();
         setResizable(false);  
         this.sale = _sale;
+        this.formatContactNo = _formatContactNo;
 
         loadSaleToPrint();
     }
@@ -52,7 +54,7 @@ public class SaleRefundReceipt extends javax.swing.JFrame {
         lbl_refund_date.setText("Date: " + sale.getSaleDate());
         lbl_print_order_no.setText("Sale: " + sale.getSaleNo());
         lbl_print_first_name.setText("Customer name: " + sale.getFirstName() + " " + sale.getLastName());
-        lbl_print_contact.setText("Contact no.: " + sale.getContactNo());
+        lbl_print_contact.setText("Contact no.: " + formatContactNo);
         lbl_print_email.setText("Email: " + sale.getEmail());
         lbl_print_total_products.setText("Total: €" + String.valueOf(sale.getTotal()));
 
