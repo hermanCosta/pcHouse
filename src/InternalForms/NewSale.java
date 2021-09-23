@@ -594,6 +594,7 @@ public class NewSale extends javax.swing.JInternalFrame {
             }
         });
 
+        txt_total.setEditable(false);
         txt_total.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         txt_total.setPreferredSize(new java.awt.Dimension(63, 20));
         txt_total.addActionListener(new java.awt.event.ActionListener() {
@@ -671,7 +672,7 @@ public class NewSale extends javax.swing.JInternalFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -683,12 +684,19 @@ public class NewSale extends javax.swing.JInternalFrame {
                 table_view_productsMouseClicked(evt);
             }
         });
+        table_view_products.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                table_view_productsKeyReleased(evt);
+            }
+        });
         jScrollPane4.setViewportView(table_view_products);
         if (table_view_products.getColumnModel().getColumnCount() > 0) {
             table_view_products.getColumnModel().getColumn(1).setPreferredWidth(100);
             table_view_products.getColumnModel().getColumn(1).setMaxWidth(200);
-            table_view_products.getColumnModel().getColumn(2).setMaxWidth(80);
-            table_view_products.getColumnModel().getColumn(3).setMaxWidth(80);
+            table_view_products.getColumnModel().getColumn(2).setPreferredWidth(80);
+            table_view_products.getColumnModel().getColumn(2).setMaxWidth(120);
+            table_view_products.getColumnModel().getColumn(3).setPreferredWidth(80);
+            table_view_products.getColumnModel().getColumn(3).setMaxWidth(120);
         }
 
         txt_search_computer.setFont(new java.awt.Font("Lucida Grande", 0, 20)); // NOI18N
@@ -861,7 +869,7 @@ public class NewSale extends javax.swing.JInternalFrame {
                                 .addComponent(lbl_service_product)))
                         .addGap(12, 12, 12)
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 31, Short.MAX_VALUE)
+                .addGap(18, 24, Short.MAX_VALUE)
                 .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_save_sale)
                     .addComponent(btn_cancel)
@@ -872,7 +880,7 @@ public class NewSale extends javax.swing.JInternalFrame {
                     .addComponent(txt_search_computer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
 
         desktop_pane_new_sale.setLayer(panel_sale_details, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -890,7 +898,7 @@ public class NewSale extends javax.swing.JInternalFrame {
             desktop_pane_new_saleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(desktop_pane_new_saleLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(panel_sale_details, javax.swing.GroupLayout.DEFAULT_SIZE, 684, Short.MAX_VALUE)
+                .addComponent(panel_sale_details, javax.swing.GroupLayout.DEFAULT_SIZE, 669, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
@@ -1239,6 +1247,20 @@ public class NewSale extends javax.swing.JInternalFrame {
             }
         }
     }//GEN-LAST:event_btn_add_product_serviceActionPerformed
+
+    private void table_view_productsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_table_view_productsKeyReleased
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        {
+            double sum = 0;
+            for (int i = 0; i < table_view_products.getRowCount(); i++) {
+                double price = Double.parseDouble(table_view_products.getValueAt(i, 3).toString());
+                table_view_products.setValueAt(price, i, 3);
+                sum += price;
+            }
+            txt_total.setText(Double.toString(sum));
+        }
+    }//GEN-LAST:event_table_view_productsKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_add_product_service;

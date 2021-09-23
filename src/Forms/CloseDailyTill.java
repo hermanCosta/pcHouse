@@ -56,9 +56,9 @@ public class CloseDailyTill extends javax.swing.JFrame {
             txt_enter_cash_total.requestFocus();
         });
 
-        lbl_till_closing_on.setText("Till Closing Date: " + tillClosingDate);
+        lbl_till_opening_on.setText("Till Opening on " + tillOpeningDate);
         lbl_date_cashier.setText("Cashier: " + Login.fullName);
-        lbl_till_opening_date.setText("Till Opening Date: " + tillOpeningDate);
+        lbl_till_closing_date.setText("Till Closing Date: " + tillClosingDate);
 
         loadEntriesTotal();
         loadCashOut();
@@ -233,7 +233,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
         lbl_other = new javax.swing.JLabel();
         txt_other = new javax.swing.JTextField();
         btn_money_counter = new javax.swing.JButton();
-        lbl_till_closing_on = new javax.swing.JLabel();
+        lbl_till_opening_on = new javax.swing.JLabel();
         btn_cancel = new javax.swing.JButton();
         btn_save = new javax.swing.JButton();
         panel_totals = new javax.swing.JPanel();
@@ -259,7 +259,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
         txt_cash_in_total = new javax.swing.JTextField();
         lbl_card_total1 = new javax.swing.JLabel();
         txt_entries_total = new javax.swing.JTextField();
-        lbl_till_opening_date = new javax.swing.JLabel();
+        lbl_till_closing_date = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -377,8 +377,8 @@ public class CloseDailyTill extends javax.swing.JFrame {
             }
         });
 
-        lbl_till_closing_on.setFont(new java.awt.Font("sansserif", 1, 17)); // NOI18N
-        lbl_till_closing_on.setText("tillClosingOn");
+        lbl_till_opening_on.setFont(new java.awt.Font("sansserif", 1, 17)); // NOI18N
+        lbl_till_opening_on.setText("tillClosingOn");
 
         btn_cancel.setBackground(new java.awt.Color(21, 76, 121));
         btn_cancel.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
@@ -642,9 +642,9 @@ public class CloseDailyTill extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        lbl_till_opening_date.setFont(new java.awt.Font("sansserif", 0, 13)); // NOI18N
-        lbl_till_opening_date.setText("tillOpeningDate");
-        lbl_till_opening_date.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        lbl_till_closing_date.setFont(new java.awt.Font("sansserif", 0, 13)); // NOI18N
+        lbl_till_closing_date.setText("tillOpeningDate");
+        lbl_till_closing_date.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
         javax.swing.GroupLayout panel_daily_closing_tillLayout = new javax.swing.GroupLayout(panel_daily_closing_till);
         panel_daily_closing_till.setLayout(panel_daily_closing_tillLayout);
@@ -654,7 +654,7 @@ public class CloseDailyTill extends javax.swing.JFrame {
                 .addGroup(panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_daily_closing_tillLayout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lbl_till_closing_on)
+                        .addComponent(lbl_till_opening_on)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(panel_daily_closing_tillLayout.createSequentialGroup()
                         .addContainerGap()
@@ -677,18 +677,18 @@ public class CloseDailyTill extends javax.swing.JFrame {
                 .addGap(16, 16, 16)
                 .addComponent(lbl_date_cashier)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbl_till_opening_date)
+                .addComponent(lbl_till_closing_date)
                 .addGap(18, 18, 18))
         );
         panel_daily_closing_tillLayout.setVerticalGroup(
             panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_daily_closing_tillLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lbl_till_closing_on)
+                .addComponent(lbl_till_opening_on)
                 .addGap(30, 30, 30)
                 .addGroup(panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_date_cashier)
-                    .addComponent(lbl_till_opening_date))
+                    .addComponent(lbl_till_closing_date))
                 .addGap(30, 30, 30)
                 .addGroup(panel_daily_closing_tillLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panel_cash_out, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -901,8 +901,8 @@ public class CloseDailyTill extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_other;
     private javax.swing.JLabel lbl_payments;
     private javax.swing.JLabel lbl_takes;
-    private javax.swing.JLabel lbl_till_closing_on;
-    private javax.swing.JLabel lbl_till_opening_date;
+    private javax.swing.JLabel lbl_till_closing_date;
+    private javax.swing.JLabel lbl_till_opening_on;
     private javax.swing.JLabel lbl_till_total;
     private javax.swing.JPanel panel_cash_in;
     private javax.swing.JPanel panel_cash_out;

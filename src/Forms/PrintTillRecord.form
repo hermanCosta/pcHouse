@@ -133,7 +133,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      <Component id="lbl_till_closed_on" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_till_opening_date" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="151" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
@@ -171,7 +171,7 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="lbl_cashier" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="lbl_till_opening_date" min="-2" pref="192" max="-2" attributes="0"/>
+                                      <Component id="lbl_till_closing_date" min="-2" pref="192" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
@@ -187,11 +187,11 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="panel_header" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="lbl_till_closed_on" min="-2" max="-2" attributes="0"/>
+                      <Component id="lbl_till_opening_date" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="lbl_cashier" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lbl_till_opening_date" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lbl_till_closing_date" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -221,12 +221,12 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="lbl_till_closed_on">
+            <Component class="javax.swing.JLabel" name="lbl_till_opening_date">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="sansserif" size="17" style="1"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="tillClosedOn"/>
+                <Property name="text" type="java.lang.String" value="tillOpeningDate"/>
               </Properties>
             </Component>
             <Container class="javax.swing.JPanel" name="panel_header">
@@ -643,9 +643,9 @@
             </Component>
             <Component class="javax.swing.JSeparator" name="jSeparator2">
             </Component>
-            <Component class="javax.swing.JLabel" name="lbl_till_opening_date">
+            <Component class="javax.swing.JLabel" name="lbl_till_closing_date">
               <Properties>
-                <Property name="text" type="java.lang.String" value="tillOpeningDate"/>
+                <Property name="text" type="java.lang.String" value="tillClosingDate"/>
                 <Property name="horizontalTextPosition" type="int" value="2"/>
               </Properties>
             </Component>

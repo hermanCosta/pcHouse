@@ -616,6 +616,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             }
         });
 
+        txt_total.setEditable(false);
         txt_total.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
         txt_total.setPreferredSize(new java.awt.Dimension(63, 20));
         txt_total.addActionListener(new java.awt.event.ActionListener() {
@@ -662,7 +663,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -674,11 +675,22 @@ public class NewOrder extends javax.swing.JInternalFrame {
                 table_view_productsMouseClicked(evt);
             }
         });
+        table_view_products.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                table_view_productsKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                table_view_productsKeyReleased(evt);
+            }
+        });
         jScrollPane2.setViewportView(table_view_products);
         if (table_view_products.getColumnModel().getColumnCount() > 0) {
-            table_view_products.getColumnModel().getColumn(1).setMaxWidth(40);
-            table_view_products.getColumnModel().getColumn(2).setMaxWidth(80);
-            table_view_products.getColumnModel().getColumn(3).setMaxWidth(80);
+            table_view_products.getColumnModel().getColumn(1).setPreferredWidth(40);
+            table_view_products.getColumnModel().getColumn(1).setMaxWidth(60);
+            table_view_products.getColumnModel().getColumn(2).setPreferredWidth(80);
+            table_view_products.getColumnModel().getColumn(2).setMaxWidth(120);
+            table_view_products.getColumnModel().getColumn(3).setPreferredWidth(80);
+            table_view_products.getColumnModel().getColumn(3).setMaxWidth(120);
         }
 
         table_view_faults.setFont(new java.awt.Font("Lucida Grande", 0, 17)); // NOI18N
@@ -1202,36 +1214,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_txt_last_nameKeyPressed
 
-    private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
-       try {
-            dbConnection();
-            
-            String query = "SELECT * FROM customers WHERE contactNo = ? ";
-            ps = con.prepareStatement(query);
-            ps.setString(1, txt_contact.getText());
-            rs = ps.executeQuery();
-            
-            if (!rs.isBeforeFirst()) {
-                JOptionPane.showMessageDialog(this, "Customer not found in the Database", "New Customer", JOptionPane.ERROR_MESSAGE);
-            } 
-            else {
-                    while (rs.next()) {
-                        txt_first_name.setText(rs.getString("firstName"));
-                        txt_last_name.setText(rs.getString("lastName"));
-                        txt_contact.setText(rs.getString("contactNo"));
-                        txt_email.setText(rs.getString("email"));
-                    }
-                }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_txt_contactActionPerformed
-
-    private void txt_contactKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_contactKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_contactKeyReleased
-
     private void txt_brandKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_brandKeyPressed
         // TODO add your handling code here:
         //Suggest autoComplete brand from Database
@@ -1447,6 +1429,56 @@ public class NewOrder extends javax.swing.JInternalFrame {
             }
         }
     }//GEN-LAST:event_btn_add_product_serviceActionPerformed
+
+    private void txt_contactKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_contactKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_contactKeyReleased
+
+    private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
+        try {
+            dbConnection();
+
+            String query = "SELECT * FROM customers WHERE contactNo = ? ";
+            ps = con.prepareStatement(query);
+            ps.setString(1, txt_contact.getText());
+            rs = ps.executeQuery();
+
+            if (!rs.isBeforeFirst()) {
+                JOptionPane.showMessageDialog(this, "Customer not found in the Database", "New Customer", JOptionPane.ERROR_MESSAGE);
+            }
+            else {
+                while (rs.next()) {
+                    txt_first_name.setText(rs.getString("firstName"));
+                    txt_last_name.setText(rs.getString("lastName"));
+                    txt_contact.setText(rs.getString("contactNo"));
+                    txt_email.setText(rs.getString("email"));
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_txt_contactActionPerformed
+
+    private void table_view_productsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_table_view_productsKeyReleased
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
+        {
+            double sum = 0;
+            for (int i = 0; i < table_view_products.getRowCount(); i++) {
+                double price = Double.parseDouble(table_view_products.getValueAt(i, 3).toString());
+                table_view_products.setValueAt(price, i, 3);
+                sum += price;
+            }
+
+            txt_total.setText(Double.toString(sum));
+            txt_due.setText(String.valueOf(txt_total.getText()));
+        }
+    }//GEN-LAST:event_table_view_productsKeyReleased
+
+    private void table_view_productsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_table_view_productsKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_table_view_productsKeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_add_product_service;

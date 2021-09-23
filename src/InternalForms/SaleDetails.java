@@ -100,28 +100,33 @@ public class SaleDetails extends javax.swing.JInternalFrame {
     }
     
     public void loadContactNo() {
-        // If ContactNo is foreign number disable text format of Irish number and set the foreign number to the textField
-        if (sale.getContactNo().contains("+"))
-        {
-            txt_contact.setFormatterFactory(null);
-            txt_contact.setText(sale.getContactNo());
+        switch (sale.getContactNo().length()) {
+            case 9:
+                JFormattedTextField landLineFormat  = new JFormattedTextField(createFormatter("(##) ###-####"));
+                landLineFormat.setText(sale.getContactNo());
+                txt_contact.setText(landLineFormat.getText());
+                break;
+            case 10:
+                JFormattedTextField mobileFormat  = new JFormattedTextField(createFormatter("(###) ###-####"));
+                mobileFormat.setText(sale.getContactNo());
+                txt_contact.setText(mobileFormat.getText());
+                break;
+            default:
+                txt_contact.setText(sale.getContactNo());
+                break;
         }
-        else if (sale.getContactNo().length() == 9) {  
-            
-            try {
-               MaskFormatter ssnFormatter = new MaskFormatter("(##) ###-####");
-               txt_contact = new JFormattedTextField(ssnFormatter);
-               txt_contact.setValue(sale.getContactNo());
-               System.out.println("FormatLandLine " + txt_contact.getText());
-               
-            } catch (ParseException ex) {
-                Logger.getLogger(SaleDetails.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-        } else
-            txt_contact.setText(sale.getContactNo());    
     }
-            
+         
+    protected MaskFormatter createFormatter(String s) {
+    MaskFormatter formatter = null;
+    try {
+        formatter = new MaskFormatter(s);
+    } catch (java.text.ParseException exc) {
+        System.err.println("formatter is bad: " + exc.getMessage());
+        System.exit(-1);
+    }
+    return formatter;
+    }
 
     public void loadSaleDetails() {
         
@@ -359,11 +364,6 @@ public class SaleDetails extends javax.swing.JInternalFrame {
             }
         });
 
-        try {
-            txt_contact.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(0##) ###-####")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
         txt_contact.setEnabled(false);
         txt_contact.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_contact.addActionListener(new java.awt.event.ActionListener() {

@@ -32,6 +32,7 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.text.MaskFormatter;
 
 /**
  *
@@ -77,6 +78,7 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         tableSettings(table_view_faults);
         tableSettings(table_view_products);
         loadSelectedOrder();
+        loadContactNo();
     }
 
     public void tableSettings(JTable table) {
@@ -85,6 +87,35 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         table.getTableHeader().setForeground(Color.gray);
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
         ((DefaultTableCellRenderer) table.getDefaultRenderer(Object.class)).setForeground(Color.gray);
+    }
+    
+    public void loadContactNo() {
+        switch (order.getContactNo().length()) {
+            case 9:
+                JFormattedTextField landLineFormat  = new JFormattedTextField(createFormatter("(##) ###-####"));
+                landLineFormat.setText(order.getContactNo());
+                txt_contact.setText(landLineFormat.getText());
+                break;
+            case 10:
+                JFormattedTextField mobileFormat  = new JFormattedTextField(createFormatter("(###) ###-####"));
+                mobileFormat.setText(order.getContactNo());
+                txt_contact.setText(mobileFormat.getText());
+                break;
+            default:
+                txt_contact.setText(order.getContactNo());
+                break;
+        }
+    }
+    
+    protected MaskFormatter createFormatter(String s) {
+    MaskFormatter formatter = null;
+    try {
+        formatter = new MaskFormatter(s);
+    } catch (java.text.ParseException exc) {
+        System.err.println("formatter is bad: " + exc.getMessage());
+        System.exit(-1);
+    }
+    return formatter;
     }
 
     public void loadSelectedOrder() {
@@ -113,15 +144,6 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         lbl_auto_order_no.setText(order.getOrderNo());
         txt_first_name.setText(order.getFirstName());
         txt_last_name.setText(order.getLastName());
-        
-        // If ContactNo is foreign number disable text format of Irish number and set the foreign number to the textField
-        if (order.getContactNo().contains("+"))
-        {
-            txt_contact.setFormatterFactory(null);
-            txt_contact.setText(order.getContactNo());
-        } else
-            txt_contact.setText(order.getContactNo());    
-        
         txt_email.setText(order.getEmail());
         txt_brand.setText(order.getBrand());
         txt_model.setText(order.getModel());
@@ -202,7 +224,6 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         txt_first_name = new javax.swing.JTextField();
         txt_last_name = new javax.swing.JTextField();
         txt_email = new javax.swing.JTextField();
-        txt_contact = new javax.swing.JFormattedTextField();
         txt_brand = new javax.swing.JTextField();
         txt_model = new javax.swing.JTextField();
         txt_sn = new javax.swing.JTextField();
@@ -222,6 +243,7 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         jScrollPane_notes = new javax.swing.JScrollPane();
         editor_pane_important_notes = new javax.swing.JEditorPane();
         lbl_order_paid_on = new javax.swing.JLabel();
+        txt_contact = new javax.swing.JFormattedTextField();
 
         setMaximumSize(new java.awt.Dimension(1049, 827));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -337,25 +359,6 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         txt_email.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_emailKeyPressed(evt);
-            }
-        });
-
-        try {
-            txt_contact.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(0##) ###-####")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        txt_contact.setEnabled(false);
-        txt_contact.setFocusable(false);
-        txt_contact.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
-        txt_contact.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_contactActionPerformed(evt);
-            }
-        });
-        txt_contact.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txt_contactKeyReleased(evt);
             }
         });
 
@@ -542,6 +545,21 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         lbl_order_paid_on.setText("orderPaidOn");
         lbl_order_paid_on.setEnabled(false);
 
+        txt_contact.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
+        txt_contact.setEnabled(false);
+        txt_contact.setFocusable(false);
+        txt_contact.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        txt_contact.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_contactActionPerformed(evt);
+            }
+        });
+        txt_contact.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_contactKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);
         panel_order_detailsLayout.setHorizontalGroup(
@@ -551,7 +569,7 @@ public class OrderRefund extends javax.swing.JInternalFrame {
                 .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(panel_order_status, javax.swing.GroupLayout.PREFERRED_SIZE, 1010, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_first_name)
                                 .addGap(12, 12, 12)
@@ -562,8 +580,8 @@ public class OrderRefund extends javax.swing.JInternalFrame {
                                 .addComponent(txt_last_name, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_contact)
-                                .addGap(6, 6, 6)
-                                .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txt_contact))
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_email)
                                 .addGap(6, 6, 6)
@@ -655,10 +673,8 @@ public class OrderRefund extends javax.swing.JInternalFrame {
                                 .addComponent(lbl_last_name))
                             .addComponent(txt_last_name, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(12, 12, 12)
-                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addComponent(lbl_contact))
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbl_contact)
                             .addComponent(txt_contact, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(12, 12, 12)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -822,14 +838,6 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_last_nameKeyPressed
 
-    private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
-
-    }//GEN-LAST:event_txt_contactActionPerformed
-
-    private void txt_contactKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_contactKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_contactKeyReleased
-
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
         OrderRefundReceipt refundReceipt = new OrderRefundReceipt(order, completedOrders, txt_contact.getText());
@@ -841,6 +849,14 @@ public class OrderRefund extends javax.swing.JInternalFrame {
         OrderNotes orderNotes = new OrderNotes(order.getOrderNo(), order.getUsername());
         orderNotes.setVisible(true);
     }//GEN-LAST:event_btn_notesActionPerformed
+
+    private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_contactActionPerformed
+
+    private void txt_contactKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_contactKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_contactKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_notes;

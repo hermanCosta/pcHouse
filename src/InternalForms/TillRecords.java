@@ -68,17 +68,18 @@ public class TillRecords extends javax.swing.JInternalFrame {
     }
 
     public void loadWeeklyRecordsFromDb() {
+         tillOpeningDate = new SimpleDateFormat("yyyy-MM-dd").format(date_picker.getDate());
         // TODO add your handling code here:
         ArrayList<TillRecord> tillRecordsList = new ArrayList<>();
-        //String dateFormat = "";
         double cashInTotal = 0, cashOutTotal = 0;
         DefaultTableModel dtm = (DefaultTableModel) table_view_till_records.getModel();
         dtm.setRowCount(0);
         try {
             dbConnection();
 
-            String query = "SELECT * FROM tillClosing WHERE WEEKOFYEAR(tillOpeningDate) = WEEKOFYEAR(NOW()) ORDER BY date DESC";
+            String query = "SELECT * FROM tillClosing WHERE WEEKOFYEAR(tillOpeningDate) = WEEKOFYEAR(?) ORDER BY date DESC";
             ps = con.prepareStatement(query);
+            ps.setString(1, tillOpeningDate);
             rs = ps.executeQuery();
 
             if (!rs.isBeforeFirst()) {
@@ -462,8 +463,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
     private void btn_daily_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_daily_recordsActionPerformed
         // TODO add your handling code here:
         String tillClosingDate = "";
-        Date datePicker = date_picker.getDate();
-        tillOpeningDate = new SimpleDateFormat("yyyy-MM-dd").format(datePicker.getTime());
+        tillOpeningDate = new SimpleDateFormat("yyyy-MM-dd").format(date_picker.getDate());
 
         try {
             dbConnection();
@@ -474,7 +474,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
             rs = ps.executeQuery();
 
             if (!rs.isBeforeFirst()) {
-                tillOpeningDate = new SimpleDateFormat("dd/MM/yyyy").format(datePicker.getTime());
+                tillOpeningDate = new SimpleDateFormat("dd/MM/yyyy").format(date_picker.getDate());
                 JOptionPane.showMessageDialog(this, "No Till records on " + tillOpeningDate + "!");
             } else {
                 while (rs.next()) {
@@ -503,8 +503,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
     private void btn_print_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_print_recordsActionPerformed
         // TODO add your handling code here:
         // Get date from calendar
-        Date pickedDate = pickedDate = date_picker.getDate();
-        String tillClosingDate = tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
+        String tillClosingDate = tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(date_picker.getDate());
 
         PrinterJob printerJob = PrinterJob.getPrinterJob();
         printerJob.setJobName("ClosingTillRecord" + tillClosingDate);
@@ -550,16 +549,17 @@ public class TillRecords extends javax.swing.JInternalFrame {
 
     private void btn_monthly_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_monthly_recordsActionPerformed
         // TODO add your handling code here:
+        tillOpeningDate = new SimpleDateFormat("yyyy-MM-dd").format(date_picker.getDate());
         ArrayList<TillRecord> tillRecordsList = new ArrayList<>();
-        String dateFormat = "";
         double cashInTotal = 0, cashOutTotal = 0;
         DefaultTableModel dtm = (DefaultTableModel) table_view_till_records.getModel();
         dtm.setRowCount(0);
         try {
             dbConnection();
 
-            String query = "SELECT * FROM tillClosing WHERE MONTH(tillOpeningDate) = MONTH(NOW()) ORDER BY date DESC";
+            String query = "SELECT * FROM tillClosing WHERE MONTH(tillOpeningDate) = MONTH(?) ORDER BY date DESC";
             ps = con.prepareStatement(query);
+            ps.setString(1, tillOpeningDate);
             rs = ps.executeQuery();
 
             if (!rs.isBeforeFirst()) {

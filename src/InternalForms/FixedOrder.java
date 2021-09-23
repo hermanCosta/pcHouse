@@ -34,6 +34,7 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTable;
@@ -41,6 +42,7 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.text.MaskFormatter;
 
 /**
  *
@@ -85,6 +87,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         tableSettings(table_view_faults);
         tableSettings(table_view_products);
         loadSelectedOrder();
+        loadContactNo();
     }
 
     public void tableSettings(JTable table) {
@@ -93,6 +96,35 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         table.getTableHeader().setForeground(Color.gray);
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
         ((DefaultTableCellRenderer) table.getDefaultRenderer(Object.class)).setForeground(Color.gray);
+    }
+    
+    public void loadContactNo() {
+        switch (order.getContactNo().length()) {
+            case 9:
+                JFormattedTextField landLineFormat  = new JFormattedTextField(createFormatter("(##) ###-####"));
+                landLineFormat.setText(order.getContactNo());
+                txt_contact.setText(landLineFormat.getText());
+                break;
+            case 10:
+                JFormattedTextField mobileFormat  = new JFormattedTextField(createFormatter("(###) ###-####"));
+                mobileFormat.setText(order.getContactNo());
+                txt_contact.setText(mobileFormat.getText());
+                break;
+            default:
+                txt_contact.setText(order.getContactNo());
+                break;
+        }
+    }
+    
+    protected MaskFormatter createFormatter(String s) {
+    MaskFormatter formatter = null;
+    try {
+        formatter = new MaskFormatter(s);
+    } catch (java.text.ParseException exc) {
+        System.err.println("formatter is bad: " + exc.getMessage());
+        System.exit(-1);
+    }
+    return formatter;
     }
 
     public void loadSelectedOrder() {
@@ -138,15 +170,6 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         lbl_auto_order_no.setText(order.getOrderNo());
         txt_first_name.setText(order.getFirstName());
         txt_last_name.setText(order.getLastName());
-        
-        // If ContactNo is foreign number disable text format of Irish number and set the foreign number to the textField
-        if (order.getContactNo().contains("+"))
-        {
-            txt_contact.setFormatterFactory(null);
-            txt_contact.setText(order.getContactNo());
-        } else
-            txt_contact.setText(order.getContactNo());    
-        
         txt_email.setText(order.getEmail());
         txt_brand.setText(order.getBrand());
         txt_model.setText(order.getModel());
@@ -286,7 +309,6 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         txt_first_name = new javax.swing.JTextField();
         txt_last_name = new javax.swing.JTextField();
         txt_email = new javax.swing.JTextField();
-        txt_contact = new javax.swing.JFormattedTextField();
         txt_brand = new javax.swing.JTextField();
         txt_model = new javax.swing.JTextField();
         txt_sn = new javax.swing.JTextField();
@@ -307,6 +329,7 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         jScrollPane_notes = new javax.swing.JScrollPane();
         editor_pane_important_notes = new javax.swing.JEditorPane();
         btn_copy = new javax.swing.JButton();
+        txt_contact = new javax.swing.JFormattedTextField();
 
         setMaximumSize(new java.awt.Dimension(1049, 827));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -480,26 +503,6 @@ public class FixedOrder extends javax.swing.JInternalFrame {
             }
         });
         panel_order_details.add(txt_email, new org.netbeans.lib.awtextra.AbsoluteConstraints(72, 254, 348, 30));
-
-        try {
-            txt_contact.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(0##) ###-####")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
-        txt_contact.setEnabled(false);
-        txt_contact.setFocusable(false);
-        txt_contact.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
-        txt_contact.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_contactActionPerformed(evt);
-            }
-        });
-        txt_contact.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txt_contactKeyReleased(evt);
-            }
-        });
-        panel_order_details.add(txt_contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 212, 250, 30));
 
         txt_brand.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
         txt_brand.setEnabled(false);
@@ -711,6 +714,22 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         });
         panel_order_details.add(btn_copy, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 210, 40, 30));
 
+        txt_contact.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
+        txt_contact.setEnabled(false);
+        txt_contact.setFocusable(false);
+        txt_contact.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        txt_contact.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_contactActionPerformed(evt);
+            }
+        });
+        txt_contact.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_contactKeyReleased(evt);
+            }
+        });
+        panel_order_details.add(txt_contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 209, 250, 30));
+
         desktop_pane_fixed_order.setLayer(panel_order_details, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout desktop_pane_fixed_orderLayout = new javax.swing.GroupLayout(desktop_pane_fixed_order);
@@ -816,14 +835,6 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         //Sugest autoComplete firstNames from Database
     }//GEN-LAST:event_txt_last_nameKeyPressed
-
-    private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
-
-    }//GEN-LAST:event_txt_contactActionPerformed
-
-    private void txt_contactKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_contactKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_contactKeyReleased
 
     private void btn_payActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_payActionPerformed
         // TODO add your handling code here:
@@ -997,6 +1008,14 @@ public class FixedOrder extends javax.swing.JInternalFrame {
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection , null);
         JOptionPane.showMessageDialog(this, txt_contact.getText() + " Copied to Clipboard");
     }//GEN-LAST:event_btn_copyActionPerformed
+
+    private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_contactActionPerformed
+
+    private void txt_contactKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_contactKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_contactKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_copy;

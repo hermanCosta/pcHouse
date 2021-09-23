@@ -75,7 +75,7 @@
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="panel_order_status" min="-2" pref="1010" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Component id="lbl_first_name" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
@@ -88,8 +88,8 @@
                                   </Group>
                                   <Group type="102" attributes="0">
                                       <Component id="lbl_contact" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                                      <Component id="txt_contact" min="-2" pref="300" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="txt_contact" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
                                       <Component id="lbl_email" min="-2" max="-2" attributes="0"/>
@@ -210,15 +210,12 @@
                                   </Group>
                                   <Component id="txt_last_name" min="-2" pref="30" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="5" pref="5" max="-2" attributes="0"/>
-                                      <Component id="lbl_contact" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="txt_contact" min="-2" pref="30" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="lbl_contact" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txt_contact" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
                                       <EmptySpace min="5" pref="5" max="-2" attributes="0"/>
@@ -455,22 +452,6 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_emailActionPerformed"/>
                 <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_emailKeyPressed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JFormattedTextField" name="txt_contact">
-              <Properties>
-                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
-                  <Format format="(0##) ###-####" subtype="-1" type="5"/>
-                </Property>
-                <Property name="enabled" type="boolean" value="false"/>
-                <Property name="focusable" type="boolean" value="false"/>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Lucida Grande" size="16" style="0"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_contactActionPerformed"/>
-                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_contactKeyReleased"/>
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="txt_brand">
@@ -778,6 +759,22 @@
                 <Property name="text" type="java.lang.String" value="orderPaidOn"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JFormattedTextField" name="txt_contact">
+              <Properties>
+                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                  <Format subtype="0" type="0"/>
+                </Property>
+                <Property name="enabled" type="boolean" value="false"/>
+                <Property name="focusable" type="boolean" value="false"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Lucida Grande" size="16" style="0"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_contactActionPerformed"/>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txt_contactKeyReleased"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

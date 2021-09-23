@@ -37,6 +37,7 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.text.MaskFormatter;
 
 /**
  *
@@ -82,6 +83,7 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         tableSettings(table_view_faults);
         tableSettings(table_view_products);
         loadSelectedOrder();
+        loadContactNo();
     }
 
     public void tableSettings(JTable table) {
@@ -90,6 +92,35 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         table.getTableHeader().setForeground(Color.gray);
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 14));
         ((DefaultTableCellRenderer) table.getDefaultRenderer(Object.class)).setForeground(Color.gray);
+    }
+    
+    public void loadContactNo() {
+        switch (order.getContactNo().length()) {
+            case 9:
+                JFormattedTextField landLineFormat  = new JFormattedTextField(createFormatter("(##) ###-####"));
+                landLineFormat.setText(order.getContactNo());
+                txt_contact.setText(landLineFormat.getText());
+                break;
+            case 10:
+                JFormattedTextField mobileFormat  = new JFormattedTextField(createFormatter("(###) ###-####"));
+                mobileFormat.setText(order.getContactNo());
+                txt_contact.setText(mobileFormat.getText());
+                break;
+            default:
+                txt_contact.setText(order.getContactNo());
+                break;
+        }
+    }
+    
+    protected MaskFormatter createFormatter(String s) {
+    MaskFormatter formatter = null;
+    try {
+        formatter = new MaskFormatter(s);
+    } catch (java.text.ParseException exc) {
+        System.err.println("formatter is bad: " + exc.getMessage());
+        System.exit(-1);
+    }
+    return formatter;
     }
 
     public void loadSelectedOrder() {
@@ -412,11 +443,8 @@ public class NotFixedOrder extends javax.swing.JInternalFrame {
         });
         panel_order_details.add(txt_email, new org.netbeans.lib.awtextra.AbsoluteConstraints(72, 251, 348, 30));
 
-        try {
-            txt_contact.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("(0##) ###-####")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
+        txt_contact.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
+        txt_contact.setText("");
         txt_contact.setEnabled(false);
         txt_contact.setFocusable(false);
         txt_contact.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N

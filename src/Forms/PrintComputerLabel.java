@@ -43,7 +43,7 @@ public class PrintComputerLabel extends javax.swing.JFrame {
     public void loadOrderToPrint()
     {
         txt_pane_print_computer.setText(txt_pane_print_computer.getText() + " Computer ID: " + computer.getComputerId() + "\n");
-        txt_pane_print_computer.setText(txt_pane_print_computer.getText() + " Band: " + computer.getBrand()+ "\n");
+        txt_pane_print_computer.setText(txt_pane_print_computer.getText() + " Brand: " + computer.getBrand()+ "\n");
         txt_pane_print_computer.setText(txt_pane_print_computer.getText() + " Model: " + computer.getModel()+ "\n");
         txt_pane_print_computer.setText(txt_pane_print_computer.getText() + " S/N: " + computer.getSerialNumber()+ "\n");
         txt_pane_print_computer.setText(txt_pane_print_computer.getText() + " Processor: " + computer.getProcessor()+ "\n");
@@ -51,8 +51,8 @@ public class PrintComputerLabel extends javax.swing.JFrame {
         txt_pane_print_computer.setText(txt_pane_print_computer.getText() + " Storage: " + computer.getStorage()+ "\n");
         txt_pane_print_computer.setText(txt_pane_print_computer.getText() + " Graphic (GPU): " + computer.getGpu()+ "\n");
         txt_pane_print_computer.setText(txt_pane_print_computer.getText() + " Screen: " + computer.getScreen()+ "\n");
-        txt_pane_print_computer.setText(txt_pane_print_computer.getText() + " Price €: " + computer.getPrice()+ "\n");
         txt_pane_print_computer.setText(txt_pane_print_computer.getText() + " Notes: " + computer.getNotes()+ "\n");
+        lbl_price.setText(" Price: ............................................................................ €" + computer.getPrice());
     }
     
     public void backToPreviousFrame()
@@ -128,6 +128,7 @@ public class PrintComputerLabel extends javax.swing.JFrame {
         panel_products = new javax.swing.JPanel();
         jScrollPane8 = new javax.swing.JScrollPane();
         txt_pane_print_computer = new javax.swing.JTextPane();
+        lbl_price = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -202,21 +203,28 @@ public class PrintComputerLabel extends javax.swing.JFrame {
         txt_pane_print_computer.setOpaque(false);
         jScrollPane8.setViewportView(txt_pane_print_computer);
 
+        lbl_price.setFont(new java.awt.Font("sansserif", 1, 16)); // NOI18N
+        lbl_price.setText("price");
+
         javax.swing.GroupLayout panel_productsLayout = new javax.swing.GroupLayout(panel_products);
         panel_products.setLayout(panel_productsLayout);
         panel_productsLayout.setHorizontalGroup(
             panel_productsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_productsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
+                .addGroup(panel_productsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
+                    .addComponent(lbl_price, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panel_productsLayout.setVerticalGroup(
             panel_productsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_productsLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbl_price)
+                .addGap(40, 40, 40))
         );
 
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
@@ -280,6 +288,7 @@ public class PrintComputerLabel extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_land_line_number1;
     private javax.swing.JLabel lbl_logo_icon1;
     private javax.swing.JLabel lbl_mobile_number1;
+    private javax.swing.JLabel lbl_price;
     private javax.swing.JSeparator line_header;
     private javax.swing.JPanel panel_header;
     private javax.swing.JPanel panel_print_order;

@@ -75,7 +75,6 @@ public class TillClosing extends javax.swing.JInternalFrame {
         scroll_pane_table_sales.setOpaque(false);
         scroll_pane_table_sales.getViewport().setOpaque(false);
 
-        loadSalesOfTheDay();
         loadOrdersReportOfTheDay();
     }
 
@@ -1029,6 +1028,9 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
     private void btn_close_dayling_tillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_close_dayling_tillActionPerformed
         // TODO add your handling code here:
+        loadOrdersReportOfTheDay();
+        loadSalesOfTheDay();
+        
         Calendar calendar = Calendar.getInstance();
         Date pickedDate = date_picker.getDate();
         String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(pickedDate);
@@ -1037,7 +1039,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        cal.add(Calendar.DATE, -2);
+        cal.add(Calendar.DATE, -8);
 
         try {
             dbConnection();
