@@ -36,6 +36,7 @@ public class Sales extends javax.swing.JInternalFrame {
 
     ArrayList firstNames = new ArrayList();
     ArrayList lastNames = new ArrayList();
+    ArrayList<Sale> salesList = new ArrayList<>();
 
     Vector vecProducts = new Vector();
     Vector vecQty = new Vector();
@@ -91,7 +92,7 @@ public class Sales extends javax.swing.JInternalFrame {
     }
 
     public void searchSale() {
-        ArrayList<Sale> saleList = new ArrayList<>();
+        salesList.clear();
         String searchSale = txt_search_sale.getText();
 
         try {
@@ -111,7 +112,7 @@ public class Sales extends javax.swing.JInternalFrame {
                         rs.getDouble("total"), rs.getString("saleDate"), rs.getDouble("cash"), rs.getDouble("card"),
                         rs.getDouble("changeTotal"), rs.getString("status"), rs.getString("createdBy"));
 
-                saleList.add(sale);
+                salesList.add(sale);
 
             }
 
@@ -119,15 +120,29 @@ public class Sales extends javax.swing.JInternalFrame {
             dtm.setRowCount(0);
 
             Object[] row = new Object[8];
-            for (int i = 0; i < saleList.size(); i++) {
-                row[0] = saleList.get(i).getSaleNo();
-                row[1] = saleList.get(i).getFirstName();
-                row[2] = saleList.get(i).getLastName();
-                row[3] = saleList.get(i).getContactNo();
-                row[4] = saleList.get(i).getStringProducts();
-                row[5] = saleList.get(i).getStringQty();
-                row[6] = saleList.get(i).getTotal();
-                row[7] = saleList.get(i).getStatus();
+            for (int i = 0; i < salesList.size(); i++) {
+                row[0] = salesList.get(i).getSaleNo();
+                row[1] = salesList.get(i).getFirstName();
+                row[2] = salesList.get(i).getLastName();
+
+                switch (salesList.get(i).getContactNo().length()) {
+                    case 9:
+                        String landLine = salesList.get(i).getContactNo().replaceFirst("(\\d{2})(\\d{3})(\\d+)", "($1) $2-$3");
+                        row[3] = landLine;
+                        break;
+                    case 10:
+                        String mobile = salesList.get(i).getContactNo().replaceFirst("(\\d{3})(\\d{3})(\\d+)", "($1) $2-$3");
+                        row[3] = mobile;
+                        break;
+                    default:
+                        row[3] = salesList.get(i).getContactNo();
+                        break;
+                }
+
+                row[4] = salesList.get(i).getStringProducts();
+                row[5] = salesList.get(i).getStringQty();
+                row[6] = salesList.get(i).getTotal();
+                row[7] = salesList.get(i).getStatus();
 
                 dtm.addRow(row);
             }
@@ -138,7 +153,7 @@ public class Sales extends javax.swing.JInternalFrame {
     }
 
     public void showRecentSales() {
-        ArrayList<Sale> list = new ArrayList<>();
+        salesList.clear();
         try {
             dbConnection();
 
@@ -153,22 +168,36 @@ public class Sales extends javax.swing.JInternalFrame {
                         rs.getDouble("total"), rs.getString("saleDate"), rs.getDouble("cash"), rs.getDouble("card"),
                         rs.getDouble("changeTotal"), rs.getString("status"), rs.getString("createdBy"));
 
-                list.add(sale);
+                salesList.add(sale);
             }
 
             DefaultTableModel dtm = (DefaultTableModel) table_view_sales.getModel();
             dtm.setRowCount(0);
 
             Object[] row = new Object[8];
-            for (int i = 0; i < list.size(); i++) {
-                row[0] = list.get(i).getSaleNo();
-                row[1] = list.get(i).getFirstName();
-                row[2] = list.get(i).getLastName();
-                row[3] = list.get(i).getContactNo();
-                row[4] = list.get(i).getStringProducts();
-                row[5] = list.get(i).getStringQty();
-                row[6] = list.get(i).getTotal();
-                row[7] = list.get(i).getStatus();
+            for (int i = 0; i < salesList.size(); i++) {
+                row[0] = salesList.get(i).getSaleNo();
+                row[1] = salesList.get(i).getFirstName();
+                row[2] = salesList.get(i).getLastName();
+
+                switch (salesList.get(i).getContactNo().length()) {
+                    case 9:
+                        String landLine = salesList.get(i).getContactNo().replaceFirst("(\\d{2})(\\d{3})(\\d+)", "($1) $2-$3");
+                        row[3] = landLine;
+                        break;
+                    case 10:
+                        String mobile = salesList.get(i).getContactNo().replaceFirst("(\\d{3})(\\d{3})(\\d+)", "($1) $2-$3");
+                        row[3] = mobile;
+                        break;
+                    default:
+                        row[3] = salesList.get(i).getContactNo();
+                        break;
+                }
+
+                row[4] = salesList.get(i).getStringProducts();
+                row[5] = salesList.get(i).getStringQty();
+                row[6] = salesList.get(i).getTotal();
+                row[7] = salesList.get(i).getStatus();
 
                 dtm.addRow(row);
             }

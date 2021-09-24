@@ -153,15 +153,19 @@
                   <Layout>
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
                               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="lbl_entry_records" alignment="0" max="32767" attributes="0"/>
                                   <Component id="panel_table_view" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="lbl_cash_entries_total" min="-2" pref="548" max="-2" attributes="0"/>
                                   <Component id="panel_header" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="17" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace pref="223" max="32767" attributes="0"/>
+                              <Component id="lbl_entry_records" pref="149" max="32767" attributes="0"/>
+                              <EmptySpace pref="223" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -290,7 +294,7 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Lucida Grande" size="16" style="1"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Cash Entry Records"/>
+                        <Property name="text" type="java.lang.String" value="cashEntryRecords"/>
                       </Properties>
                     </Component>
                     <Container class="javax.swing.JPanel" name="panel_table_view">

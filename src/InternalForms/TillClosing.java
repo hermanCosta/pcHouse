@@ -1030,7 +1030,7 @@ public class TillClosing extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         loadOrdersReportOfTheDay();
         loadSalesOfTheDay();
-        
+
         Calendar calendar = Calendar.getInstance();
         Date pickedDate = date_picker.getDate();
         String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(pickedDate);

@@ -83,7 +83,7 @@ public class NewSale extends javax.swing.JInternalFrame {
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
-        
+
         SwingUtilities.invokeLater(() -> {
             txt_first_name.requestFocus();
         });
@@ -137,7 +137,7 @@ public class NewSale extends javax.swing.JInternalFrame {
             } else {
                 lbl_auto_sale_no.setText("SNO0001");
             }
-            
+
             ps.close();
             con.close();
 
@@ -197,7 +197,7 @@ public class NewSale extends javax.swing.JInternalFrame {
             while (rs.next()) {
                 list.add(rs.getString(columnName));
             }
-            
+
             ps.close();
             con.close();
 
@@ -274,7 +274,7 @@ public class NewSale extends javax.swing.JInternalFrame {
             saleNo = lbl_auto_sale_no.getText();
             firstName = txt_first_name.getText().toUpperCase();
             lastName = txt_last_name.getText().toUpperCase();
-            contactNo = txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", "");
+            contactNo = txt_contact.getText().replace("(", "").replace(")", "").replace("-", "").replace(" ", "");
             email = txt_email.getText();
             total = Double.parseDouble(txt_total.getText());
 
@@ -345,19 +345,19 @@ public class NewSale extends javax.swing.JInternalFrame {
 
             Object[] row = new Object[9];
             for (int i = 0; i < computerList.size(); i++) {
-            row[0] = computerList.get(i).getComputerId();
-            row[1] = computerList.get(i).getBrand();
-            row[2] = computerList.get(i).getModel();
-            row[3] = computerList.get(i).getSerialNumber();
-            row[4] = computerList.get(i).getProcessor();
-            row[5] = computerList.get(i).getRam();
-            row[6] = computerList.get(i).getStorage();
-            row[7] = computerList.get(i).getQty();
-            row[8] = computerList.get(i).getPrice();
-            
-            dtm.addRow(row);
+                row[0] = computerList.get(i).getComputerId();
+                row[1] = computerList.get(i).getBrand();
+                row[2] = computerList.get(i).getModel();
+                row[3] = computerList.get(i).getSerialNumber();
+                row[4] = computerList.get(i).getProcessor();
+                row[5] = computerList.get(i).getRam();
+                row[6] = computerList.get(i).getStorage();
+                row[7] = computerList.get(i).getQty();
+                row[8] = computerList.get(i).getPrice();
+
+                dtm.addRow(row);
             }
-            
+
             ps.close();
             con.close();
         } catch (SQLException ex) {
@@ -383,7 +383,7 @@ public class NewSale extends javax.swing.JInternalFrame {
 
                 computerList.add(computer);
             }
-            
+
             ps.close();
             con.close();
         } catch (SQLException ex) {
@@ -407,20 +407,20 @@ public class NewSale extends javax.swing.JInternalFrame {
             dtm.addRow(row);
         }
     }
-    
+
     public boolean saveCustomerIntoDb() {
-         boolean isContactNo = false;
-         contactNo = txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", "");
-         try {
+        boolean isContactNo = false;
+        contactNo = txt_contact.getText().replace("(", "").replace(")", "").replace("-", "").replace(" ", "");
+        try {
             dbConnection();
             String query = "SELECT contactNo, firstName, lastName FROM customers WHERE contactNo = ? ";
             ps = con.prepareStatement(query);
             ps.setString(1, contactNo);
             rs = ps.executeQuery();
-            
+
             if (!rs.isBeforeFirst()) {
                 customer = new Customer(txt_first_name.getText().toUpperCase(), txt_last_name.getText().toUpperCase(), contactNo, txt_email.getText());
-                    
+
                 String queryInsert = "INSERT INTO customers (firstName, lastName, contactNo, email) VALUES(?, ?, ?, ?)";
                 ps = con.prepareStatement(queryInsert);
                 ps.setString(1, customer.getFirstName());
@@ -428,24 +428,22 @@ public class NewSale extends javax.swing.JInternalFrame {
                 ps.setString(3, customer.getContactNo());
                 ps.setString(4, customer.getEmail());
                 ps.executeUpdate();
-            }
-            
-            else  {
+            } else {
                 while (rs.next()) {
                     firstName = rs.getString("firstName");
                     lastName = rs.getString("lastName");
                 }
-            
+
                 if (!firstName.equals(txt_first_name.getText())
-                    && !lastName.equals(txt_last_name.getText())) {
+                        && !lastName.equals(txt_last_name.getText())) {
                     JOptionPane.showMessageDialog(this, "There is another Customer associated with ContactNo " + txt_contact.getText(), "New Customer", JOptionPane.ERROR_MESSAGE);
                     isContactNo = true;
                 }
             }
-         } catch (SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return isContactNo;
     }
 
@@ -468,7 +466,6 @@ public class NewSale extends javax.swing.JInternalFrame {
         txt_email = new javax.swing.JTextField();
         txt_contact = new javax.swing.JFormattedTextField();
         combo_box_product_service = new javax.swing.JComboBox<>();
-        txt_total = new javax.swing.JTextField();
         btn_save_sale = new javax.swing.JButton();
         btn_cancel = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -481,6 +478,7 @@ public class NewSale extends javax.swing.JInternalFrame {
         btn_international_number = new javax.swing.JButton();
         btn_copy = new javax.swing.JButton();
         btn_add_product_service = new javax.swing.JButton();
+        txt_total = new javax.swing.JTextField();
 
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -591,20 +589,6 @@ public class NewSale extends javax.swing.JInternalFrame {
             }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 combo_box_product_serviceKeyReleased(evt);
-            }
-        });
-
-        txt_total.setEditable(false);
-        txt_total.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
-        txt_total.setPreferredSize(new java.awt.Dimension(63, 20));
-        txt_total.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_totalActionPerformed(evt);
-            }
-        });
-        txt_total.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txt_totalKeyPressed(evt);
             }
         });
 
@@ -755,6 +739,14 @@ public class NewSale extends javax.swing.JInternalFrame {
             }
         });
 
+        txt_total.setEditable(false);
+        txt_total.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
+        txt_total.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_totalActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_sale_detailsLayout = new javax.swing.GroupLayout(panel_sale_details);
         panel_sale_details.setLayout(panel_sale_detailsLayout);
         panel_sale_detailsLayout.setHorizontalGroup(
@@ -764,7 +756,7 @@ public class NewSale extends javax.swing.JInternalFrame {
                 .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2)
                     .addGroup(panel_sale_detailsLayout.createSequentialGroup()
-                        .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(panel_sale_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_sale_no)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -796,8 +788,8 @@ public class NewSale extends javax.swing.JInternalFrame {
                                             .addComponent(btn_copy, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addGroup(panel_sale_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_price)
-                                .addGap(47, 47, 47)
-                                .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panel_sale_detailsLayout.createSequentialGroup()
                                 .addGap(30, 30, 30)
@@ -857,8 +849,8 @@ public class NewSale extends javax.swing.JInternalFrame {
                         .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_email)
                             .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(15, 15, 15)
-                        .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGap(10, 10, 10)
+                        .addGroup(panel_sale_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lbl_price)
                             .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panel_sale_detailsLayout.createSequentialGroup()
@@ -934,23 +926,12 @@ public class NewSale extends javax.swing.JInternalFrame {
     private void btn_save_saleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save_saleActionPerformed
         // TODO add your handling code here:
         getSaleValues();
-        if (!saveCustomerIntoDb())
-        {
-           String formatContactNo = txt_contact.getText();
-           SalePayment salePayment = new SalePayment(sale, table_view_products, formatContactNo);
+        if (!saveCustomerIntoDb()) {
+            String formatContactNo = txt_contact.getText();
+            SalePayment salePayment = new SalePayment(sale, table_view_products, formatContactNo);
             salePayment.setVisible(true);
         }
     }//GEN-LAST:event_btn_save_saleActionPerformed
-
-    private void txt_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_totalActionPerformed
-        // TODO add your handling code here:
-        double sum = 0;
-        for (int i = 0; i < table_view_products.getRowCount(); i++) {
-            sum += Double.parseDouble(table_view_products.getValueAt(i, 3).toString());
-        }
-
-        txt_total.setText(Double.toString(sum));
-    }//GEN-LAST:event_txt_totalActionPerformed
 
     private void btn_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelActionPerformed
 
@@ -990,15 +971,6 @@ public class NewSale extends javax.swing.JInternalFrame {
     private void txt_last_nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_last_nameKeyReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_last_nameKeyReleased
-
-    private void txt_totalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_totalKeyPressed
-        // TODO add your handling code here:
-        //Accepts number characters only
-        if (Character.isLetter(evt.getKeyChar()))
-            txt_total.setEditable(false);
-        else
-            txt_total.setEditable(true);
-    }//GEN-LAST:event_txt_totalKeyPressed
 
     private void table_view_computersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_view_computersMouseClicked
         // TODO add your handling code here:
@@ -1072,26 +1044,25 @@ public class NewSale extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_last_nameKeyPressed
 
     private void txt_contactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_contactActionPerformed
-        contactNo = txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", "");
+        contactNo = txt_contact.getText().replace("(", "").replace(")", "").replace("-", "").replace(" ", "");
         try {
             dbConnection();
-            
+
             String query = "SELECT * FROM customers WHERE contactNo = ? ";
             ps = con.prepareStatement(query);
             ps.setString(1, contactNo);
             rs = ps.executeQuery();
-            
+
             if (!rs.isBeforeFirst()) {
                 JOptionPane.showMessageDialog(this, "Customer not found in the Database", "New Customer", JOptionPane.ERROR_MESSAGE);
-            } 
-            else {
-                    while (rs.next()) {
-                        txt_first_name.setText(rs.getString("firstName"));
-                        txt_last_name.setText(rs.getString("lastName"));
-                        txt_contact.setText(rs.getString("contactNo"));
-                        txt_email.setText(rs.getString("email"));
-                    }
+            } else {
+                while (rs.next()) {
+                    txt_first_name.setText(rs.getString("firstName"));
+                    txt_last_name.setText(rs.getString("lastName"));
+                    txt_contact.setText(rs.getString("contactNo"));
+                    txt_email.setText(rs.getString("email"));
                 }
+            }
 
         } catch (SQLException ex) {
             Logger.getLogger(NewSale.class.getName()).log(Level.SEVERE, null, ex);
@@ -1164,36 +1135,39 @@ public class NewSale extends javax.swing.JInternalFrame {
 
     private void btn_copyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_copyActionPerformed
         // TODO add your handling code here:
-        StringSelection stringSelection = new StringSelection(txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", ""));
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection , null);
+        StringSelection stringSelection = new StringSelection(txt_contact.getText().replace("(", "").replace(")", "").replace("-", "").replace(" ", ""));
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
         JOptionPane.showMessageDialog(this, txt_contact.getText() + " Copied to Clipboard");
     }//GEN-LAST:event_btn_copyActionPerformed
 
     private void btn_add_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add_product_serviceActionPerformed
         // TODO add your handling code here:
         // Add selected items to the products table
+        ArrayList<String> productsList = new ArrayList<>();
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
         String selectedItem = combo_box_product_service.getSelectedItem().toString();
-        String productName = "", newProdAdd = "", category = "";
+        String newProdAdd = "", category = "";
         int qty = 0;
         double unitPrice = 0;
         double totalPrice = 0;
         Vector vector = new Vector();
 
+        productsList.clear();
         for (int i = 0; i < dtm.getRowCount(); i++) {
-            productName = dtm.getValueAt(i, 0).toString();
+            productsList.add(dtm.getValueAt(i, 0).toString());
         }
 
-        if (selectedItem.isEmpty() || selectedItem.matches("Select or Type"))
-        JOptionPane.showMessageDialog(this, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
-        else if (selectedItem.equals(productName))
-        JOptionPane.showMessageDialog(this, "Item '" + selectedItem + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
-        else {
+        if (selectedItem.isEmpty() || selectedItem.matches("Select or Type")) {
+            JOptionPane.showMessageDialog(this, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
+        } else if (productsList.contains(selectedItem)) {
+            JOptionPane.showMessageDialog(this, "Item '" + selectedItem + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
+        } else {
             try {
                 dbConnection();
 
-                String query = "SELECT * FROM products WHERE productService = '" + selectedItem + "'";
+                String query = "SELECT * FROM products WHERE productService = ?";
                 ps = con.prepareStatement(query);
+                ps.setString(1, selectedItem);
                 rs = ps.executeQuery();
 
                 if (!rs.isBeforeFirst()) {
@@ -1250,8 +1224,7 @@ public class NewSale extends javax.swing.JInternalFrame {
 
     private void table_view_productsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_table_view_productsKeyReleased
         // TODO add your handling code here:
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER)
-        {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             double sum = 0;
             for (int i = 0; i < table_view_products.getRowCount(); i++) {
                 double price = Double.parseDouble(table_view_products.getValueAt(i, 3).toString());
@@ -1261,6 +1234,10 @@ public class NewSale extends javax.swing.JInternalFrame {
             txt_total.setText(Double.toString(sum));
         }
     }//GEN-LAST:event_table_view_productsKeyReleased
+
+    private void txt_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_totalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_totalActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_add_product_service;

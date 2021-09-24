@@ -422,7 +422,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
         txt_model = new javax.swing.JTextField();
         txt_serial_number = new javax.swing.JTextField();
         txt_deposit = new javax.swing.JTextField();
-        txt_total = new javax.swing.JTextField();
         btn_save_order = new javax.swing.JButton();
         btn_cancel = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -437,6 +436,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
         btn_international_number = new javax.swing.JButton();
         btn_copy = new javax.swing.JButton();
         btn_add_product_service = new javax.swing.JButton();
+        txt_total = new javax.swing.JTextField();
 
         setMaximumSize(new java.awt.Dimension(1049, 700));
         setPreferredSize(new java.awt.Dimension(1049, 700));
@@ -616,20 +616,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
             }
         });
 
-        txt_total.setEditable(false);
-        txt_total.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
-        txt_total.setPreferredSize(new java.awt.Dimension(63, 20));
-        txt_total.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_totalActionPerformed(evt);
-            }
-        });
-        txt_total.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txt_totalKeyPressed(evt);
-            }
-        });
-
         btn_save_order.setBackground(new java.awt.Color(21, 76, 121));
         btn_save_order.setFont(new java.awt.Font("Lucida Grande", 1, 22)); // NOI18N
         btn_save_order.setForeground(new java.awt.Color(255, 255, 255));
@@ -791,6 +777,14 @@ public class NewOrder extends javax.swing.JInternalFrame {
             }
         });
 
+        txt_total.setEditable(false);
+        txt_total.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
+        txt_total.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_totalActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_order_detailsLayout = new javax.swing.GroupLayout(panel_order_details);
         panel_order_details.setLayout(panel_order_detailsLayout);
         panel_order_detailsLayout.setHorizontalGroup(
@@ -932,8 +926,8 @@ public class NewOrder extends javax.swing.JInternalFrame {
                                 .addComponent(lbl_deposit)
                                 .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(lbl_price)
-                                .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txt_due, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addComponent(lbl_due)))))
@@ -1054,16 +1048,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btn_save_orderActionPerformed
 
-    private void txt_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_totalActionPerformed
-        // TODO add your handling code here:
-        double sum = 0;
-        for (int i = 0; i < table_view_products.getRowCount(); i++) {
-            sum = sum + Double.parseDouble(table_view_products.getValueAt(i, 3).toString());
-        }
-
-        txt_total.setText(Double.toString(sum));
-    }//GEN-LAST:event_txt_totalActionPerformed
-
     private void txt_depositKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_depositKeyReleased
         // TODO add your handling code here:
         //Calculate deposit paid and display due value
@@ -1141,15 +1125,6 @@ public class NewOrder extends javax.swing.JInternalFrame {
     private void txt_last_nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_last_nameKeyReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_last_nameKeyReleased
-
-    private void txt_totalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_totalKeyPressed
-        // TODO add your handling code here:
-        //Accepts number characters only
-        if (Character.isLetter(evt.getKeyChar()))
-            txt_total.setEditable(false);
-        else
-            txt_total.setEditable(true);
-    }//GEN-LAST:event_txt_totalKeyPressed
 
     private void txt_depositKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_depositKeyPressed
         // TODO add your handling code here:
@@ -1260,7 +1235,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void txt_faultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_faultActionPerformed
         // TODO add your handling code here:
-         String faultText = txt_fault.getText();
+        String faultText = txt_fault.getText();
         String tableFault = "";
         Vector faultsList = new Vector();
         DefaultTableModel dtm = (DefaultTableModel) table_view_faults.getModel();
@@ -1278,8 +1253,9 @@ public class NewOrder extends javax.swing.JInternalFrame {
             try {
                 dbConnection();
 
-                String queryCheck = "SELECT * FROM faults WHERE faultName = '" + faultText + "'";
+                String queryCheck = "SELECT * FROM faults WHERE faultName = '?";
                 ps = con.prepareStatement(queryCheck);
+                ps.setString(1, faultText);
                 rs = ps.executeQuery();
 
                 if (!rs.isBeforeFirst()) {
@@ -1354,28 +1330,31 @@ public class NewOrder extends javax.swing.JInternalFrame {
     private void btn_add_product_serviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add_product_serviceActionPerformed
         // TODO add your handling code here:
         // Add selected items to the products table
+        ArrayList<String> productsList = new ArrayList<>();
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
         String selectedItem = combo_box_product_service.getSelectedItem().toString();
-        String productName = "", newProdAdd = "", category = "";
+        String newProdAdd = "", category = "";
         int qty = 0;
         double unitPrice = 0;
         double totalPrice = 0;
         Vector vector = new Vector();
-
+        
+        productsList.clear();
         for (int i = 0; i < dtm.getRowCount(); i++) {
-            productName = dtm.getValueAt(i, 0).toString();
+            productsList.add(dtm.getValueAt(i, 0).toString());
         }
 
         if (selectedItem.isEmpty() || selectedItem.matches("Select or Type"))
             JOptionPane.showMessageDialog(this, "Please select a Product | Service!", "Service | Product", JOptionPane.ERROR_MESSAGE);
-        else if (selectedItem.equals(productName))
+        else if (productsList.contains(selectedItem))
             JOptionPane.showMessageDialog(this, "Item '" + selectedItem + "' already added !", "Add Computer", JOptionPane.ERROR_MESSAGE);
         else {
             try {
                 dbConnection();
 
-                String query = "SELECT * FROM products WHERE productService = '" + selectedItem + "'";
+                String query = "SELECT * FROM products WHERE productService = ?";
                 ps = con.prepareStatement(query);
+                ps.setString(1, selectedItem);
                 rs = ps.executeQuery();
 
                 if (!rs.isBeforeFirst()) {
@@ -1479,6 +1458,10 @@ public class NewOrder extends javax.swing.JInternalFrame {
     private void table_view_productsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_table_view_productsKeyPressed
         // TODO add your handling code here:
     }//GEN-LAST:event_table_view_productsKeyPressed
+
+    private void txt_totalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_totalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_totalActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_add_product_service;

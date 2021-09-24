@@ -27,23 +27,23 @@ public class PrintTillRecord extends javax.swing.JFrame {
     PreparedStatement ps;
     Connection con;
     ResultSet rs;
-    
+
     String tillClosingDate, cashier, tillOpeningDate, notes;
-    double cashTotal, cardTotal, entriesTotal, cashInTotal, 
-            enterCashTotal, enterCardTotal, adjustments, balance, 
+    double cashTotal, cardTotal, entriesTotal, cashInTotal,
+            enterCashTotal, enterCardTotal, adjustments, balance,
             cashEntryTotal, payments, takes, other, tillTotal, cashOutTotal;
-    
+
     public PrintTillRecord() {
         initComponents();
     }
-    
-    public PrintTillRecord(String _tillClosingDate, String _cashier, String _tillOpeningDate, double _cashTotal, double _cardTotal, 
-            double _entriesTotal, double _cashInTotal, double _payments, double _takes, double _other, 
-            double _cashOutTotal, double _tillTotal, double _enterCashTotal, double _enterCardTotal, 
+
+    public PrintTillRecord(String _tillClosingDate, String _cashier, String _tillOpeningDate, double _cashTotal, double _cardTotal,
+            double _entriesTotal, double _cashInTotal, double _payments, double _takes, double _other,
+            double _cashOutTotal, double _tillTotal, double _enterCashTotal, double _enterCardTotal,
             double _adjustments, double _balance, String _notes) {
         initComponents();
-        setResizable(false);  
-        
+        setResizable(false);
+
         this.tillClosingDate = _tillClosingDate;
         this.cashier = _cashier;
         this.tillOpeningDate = _tillOpeningDate;
@@ -61,7 +61,7 @@ public class PrintTillRecord extends javax.swing.JFrame {
         this.adjustments = _adjustments;
         this.balance = _balance;
         this.notes = _notes;
-        
+
         loadTillRecordsFromDb();
     }
 
@@ -83,15 +83,15 @@ public class PrintTillRecord extends javax.swing.JFrame {
         lbl_enter_card_total.setText("Entered Card Total...................................................................... €" + String.valueOf(enterCardTotal));
         lbl_adjustments.setText("Adjustments............................................................................... €" + String.valueOf(adjustments));
         lbl_balance.setText("Balance............................................................................................................. €" + String.valueOf(balance));
-        
-        if (notes.trim().isEmpty())
+
+        if (notes.trim().isEmpty()) {
             lbl_notes.setVisible(false);
-        else {
-          lbl_notes.setVisible(true);
-          editor_pane_notes.setText(notes);
+        } else {
+            lbl_notes.setVisible(true);
+            editor_pane_notes.setText(notes);
         }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -513,7 +513,7 @@ public class PrintTillRecord extends javax.swing.JFrame {
 
     private void btn_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_printActionPerformed
         // TODO add your handling code here:
-       // Get date from calendar
+        // Get date from calendar
         PrinterJob printerJob = PrinterJob.getPrinterJob();
         printerJob.setJobName("ClosingTillRecord" + tillClosingDate);
         PageFormat format = printerJob.getPageFormat(null);

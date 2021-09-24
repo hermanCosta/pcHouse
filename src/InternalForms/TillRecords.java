@@ -8,6 +8,7 @@ package InternalForms;
 import Forms.PrintFullReport;
 import Forms.PrintTillRecord;
 import Model.TillRecord;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -22,6 +23,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,8 +70,9 @@ public class TillRecords extends javax.swing.JInternalFrame {
     }
 
     public void loadWeeklyRecordsFromDb() {
-         tillOpeningDate = new SimpleDateFormat("yyyy-MM-dd").format(date_picker.getDate());
-        // TODO add your handling code here:
+        tillOpeningDate = new SimpleDateFormat("yyyy-MM-dd").format(date_picker.getDate());
+        int weekYear = date_picker.getCalendar().get(Calendar.WEEK_OF_YEAR);
+
         ArrayList<TillRecord> tillRecordsList = new ArrayList<>();
         double cashInTotal = 0, cashOutTotal = 0;
         DefaultTableModel dtm = (DefaultTableModel) table_view_till_records.getModel();
@@ -77,19 +80,25 @@ public class TillRecords extends javax.swing.JInternalFrame {
         try {
             dbConnection();
 
-            String query = "SELECT * FROM tillClosing WHERE WEEKOFYEAR(tillOpeningDate) = WEEKOFYEAR(?) ORDER BY date DESC";
+            String query = "SELECT * FROM tillClosing WHERE WEEK(tillOpeningDate, 0) = WEEK(?, 0) ORDER BY date DESC";
             ps = con.prepareStatement(query);
             ps.setString(1, tillOpeningDate);
             rs = ps.executeQuery();
 
             if (!rs.isBeforeFirst()) {
-                JOptionPane.showMessageDialog(this, "No Till Records on this week !");
+                lbl_till_closing_records.setText("No Till Closing Records on Week " + weekYear);
+                lbl_till_closing_records.setForeground(Color.red);
+                lbl_cash_in_total.setVisible(false);
+                lbl_cash_out_total.setVisible(false);
+                JOptionPane.showMessageDialog(this, "No Till Records on week " + weekYear + " !");
+
             } else {
                 while (rs.next()) {
                     tillOpeningDate = new SimpleDateFormat("dd/MM/yyyy").format(rs.getTimestamp("tillOpeningDate"));
 
                     tillRecord = new TillRecord(tillOpeningDate, rs.getDouble("cashInTotal"), rs.getDouble("cashOutTotal"), rs.getString("notes"));
-                    lbl_till_closing_records.setText("Till Closing Records");
+                    lbl_till_closing_records.setText("Till Closing Records on Week " + weekYear);
+                    lbl_till_closing_records.setForeground(Color.black);
 
                     tillRecordsList.add(tillRecord);
                 }
@@ -274,7 +283,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
         );
 
         lbl_till_closing_records.setFont(new java.awt.Font("sansserif", 1, 17)); // NOI18N
-        lbl_till_closing_records.setText("Till Closing Records");
+        lbl_till_closing_records.setText("tillClosingRecords");
 
         lbl_cash_in_total.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
         lbl_cash_in_total.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Img/icon_gross_total.png"))); // NOI18N
@@ -343,7 +352,7 @@ public class TillRecords extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_till_recordsLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_till_closing_records)
-                .addGap(207, 207, 207))
+                .addGap(135, 135, 135))
             .addGroup(panel_till_recordsLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(panel_till_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -550,6 +559,8 @@ public class TillRecords extends javax.swing.JInternalFrame {
     private void btn_monthly_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_monthly_recordsActionPerformed
         // TODO add your handling code here:
         tillOpeningDate = new SimpleDateFormat("yyyy-MM-dd").format(date_picker.getDate());
+        String month = new SimpleDateFormat("MMMM").format(date_picker.getDate());
+
         ArrayList<TillRecord> tillRecordsList = new ArrayList<>();
         double cashInTotal = 0, cashOutTotal = 0;
         DefaultTableModel dtm = (DefaultTableModel) table_view_till_records.getModel();
@@ -563,14 +574,19 @@ public class TillRecords extends javax.swing.JInternalFrame {
             rs = ps.executeQuery();
 
             if (!rs.isBeforeFirst()) {
-                JOptionPane.showMessageDialog(this, "No Till Records on this Month !");
+                lbl_till_closing_records.setText("No Till Closing Records In " + month + " !");
+                lbl_till_closing_records.setForeground(Color.red);
+                lbl_cash_in_total.setVisible(false);
+                lbl_cash_out_total.setVisible(false);
+                JOptionPane.showMessageDialog(this, "No Till Records In " + month + " !");
 
             } else {
                 while (rs.next()) {
                     tillOpeningDate = new SimpleDateFormat("dd/MM/yyyy").format(rs.getDate("tillOpeningDate"));
 
                     tillRecord = new TillRecord(tillOpeningDate, rs.getDouble("cashInTotal"), rs.getDouble("cashOutTotal"), rs.getString("notes"));
-                    lbl_till_closing_records.setText("Till Closing Records");
+                    lbl_till_closing_records.setText("Till Closing Records In " + month + " !");
+                    lbl_till_closing_records.setForeground(Color.black);
 
                     tillRecordsList.add(tillRecord);
                 }

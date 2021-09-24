@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,6 +46,7 @@ public class CashOuts extends javax.swing.JInternalFrame {
     ResultSetMetaData rsmd;
     CashOut cashOut;
     Date pickedDate;
+    String cashOutsDate;
 
     public CashOuts(Date _date) {
         initComponents();
@@ -56,10 +58,10 @@ public class CashOuts extends javax.swing.JInternalFrame {
         tableSettings(table_view_cash_out_records);
         loadRecordsOfTheDay();
     }
-    
+
     public void tableSettings(JTable table) {
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 12));
-        
+
         scroll_pane_table_cash_out.setOpaque(false);
         scroll_pane_table_cash_out.getViewport().setOpaque(false);
     }
@@ -82,50 +84,47 @@ public class CashOuts extends javax.swing.JInternalFrame {
         String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(date_picker.getDate());
         String endDate = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(date_picker.getDate());
         String dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(date_picker.getDate());
-        
+
         try {
             dbConnection();
-            
+
             String query = "SELECT * FROM cashOut WHERE outDate >= ? AND outDate <= ? ORDER BY outDate DESC";
             ps = con.prepareStatement(query);
             ps.setString(1, startDate);
             ps.setString(2, endDate);
             rs = ps.executeQuery();
-            
+
             DefaultTableModel dtm = (DefaultTableModel) table_view_cash_out_records.getModel();
             dtm.setRowCount(0);
-            
+
             if (rs.isBeforeFirst()) {
                 while (rs.next()) {
-                    dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("outDate"));
-                    cashOut = new CashOut(rs.getDouble("value"), dateFormat, rs.getString("type"), 
+                    String outDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("outDate"));
+                    cashOut = new CashOut(rs.getDouble("value"), outDate, rs.getString("type"),
                             rs.getString("notes"), rs.getString("user"));
 
                     recordsList.add(cashOut);
-                }     
-                    // Table models
-                    Object[] row = new Object[5];
-                    for (int i = 0; i < recordsList.size(); i++)
-                    {
-                        row[0] = recordsList.get(i).getValue();
-                        row[1] = recordsList.get(i).getType();
-                        row[2] = recordsList.get(i).getOutDate();
-                        row[3] = recordsList.get(i).getNotes();
-                        row[4] = recordsList.get(i).getUser();
-                        dtm.addRow(row);
-                    }
+                }
+                // Table models
+                Object[] row = new Object[5];
+                for (int i = 0; i < recordsList.size(); i++) {
+                    row[0] = recordsList.get(i).getValue();
+                    row[1] = recordsList.get(i).getType();
+                    row[2] = recordsList.get(i).getOutDate();
+                    row[3] = recordsList.get(i).getNotes();
+                    row[4] = recordsList.get(i).getUser();
+                    dtm.addRow(row);
+                }
 
-                    for (int i = 0; i < dtm.getRowCount(); i++)
-                        cashOutTotal += (double) dtm.getValueAt(i, 0);
-                    
-                lbl_cash_out_records.setText("Cash Out Records");
-                lbl_cash_out_records.setForeground(Color.black);    
+                for (int i = 0; i < dtm.getRowCount(); i++) {
+                    cashOutTotal += (double) dtm.getValueAt(i, 0);
+                }
+
+                lbl_cash_out_records.setText("Cash Out Records on " + dateFormat);
+                lbl_cash_out_records.setForeground(Color.black);
                 lbl_cash_outs.setText("Cash Out Total ............. €" + String.valueOf(cashOutTotal));
                 lbl_cash_outs.setVisible(true);
-            }
-                
-            else
-            {
+            } else {
                 lbl_cash_out_records.setText("No Cash Outs on " + dateFormat + " !");
                 lbl_cash_out_records.setForeground(Color.red);
                 lbl_cash_outs.setVisible(false);
@@ -304,14 +303,14 @@ public class CashOuts extends javax.swing.JInternalFrame {
             .addGroup(panel_cash_recordsLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(panel_cash_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_cash_out_records, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(panel_cash_recordsLayout.createSequentialGroup()
-                        .addGroup(panel_cash_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(panel_table_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_cash_outs, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addComponent(panel_table_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_cash_outs, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_cash_recordsLayout.createSequentialGroup()
+                .addContainerGap(223, Short.MAX_VALUE)
+                .addComponent(lbl_cash_out_records, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(224, Short.MAX_VALUE))
         );
         panel_cash_recordsLayout.setVerticalGroup(
             panel_cash_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -532,50 +531,52 @@ public class CashOuts extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_monthly_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_monthly_recordsActionPerformed
+        cashOutsDate = new SimpleDateFormat("yyyy-MM-dd").format(date_picker.getDate());
+        String month = new SimpleDateFormat("MMMM").format(date_picker.getDate());
         ArrayList<CashOut> recordsList = new ArrayList<>();
         double cashOutTotal = 0;
 
         try {
             dbConnection();
-            
-            String query = "SELECT * FROM cashOut WHERE MONTH(outDate) = MONTH(NOW()) ORDER BY outDate DESC";
+
+            String query = "SELECT * FROM cashOut WHERE MONTH(outDate) = MONTH(?) ORDER BY outDate DESC";
             ps = con.prepareStatement(query);
+            ps.setString(1, cashOutsDate);
             rs = ps.executeQuery();
-            
+
             DefaultTableModel dtm = (DefaultTableModel) table_view_cash_out_records.getModel();
             dtm.setRowCount(0);
-            
+
             if (rs.isBeforeFirst()) {
                 while (rs.next()) {
                     String dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("outDate"));
-                    cashOut = new CashOut(rs.getDouble("value"), dateFormat, rs.getString("type"), 
+                    cashOut = new CashOut(rs.getDouble("value"), dateFormat, rs.getString("type"),
                             rs.getString("notes"), rs.getString("user"));
 
                     recordsList.add(cashOut);
-                }     
-                    // Table models
-                    Object[] row = new Object[5];
-                    for (int i = 0; i < recordsList.size(); i++)
-                    {
-                        row[0] = recordsList.get(i).getValue();
-                        row[1] = recordsList.get(i).getType();
-                        row[2] = recordsList.get(i).getOutDate();
-                        row[3] = recordsList.get(i).getNotes();
-                        row[4] = recordsList.get(i).getUser();
-                        dtm.addRow(row);
-                    }
+                }
+                // Table models
+                Object[] row = new Object[5];
+                for (int i = 0; i < recordsList.size(); i++) {
+                    row[0] = recordsList.get(i).getValue();
+                    row[1] = recordsList.get(i).getType();
+                    row[2] = recordsList.get(i).getOutDate();
+                    row[3] = recordsList.get(i).getNotes();
+                    row[4] = recordsList.get(i).getUser();
+                    dtm.addRow(row);
+                }
 
-                    for (int i = 0; i < dtm.getRowCount(); i++)
-                        cashOutTotal += (double) dtm.getValueAt(i, 0);
-                    
-                lbl_cash_out_records.setText("Cash Out Records");
-                lbl_cash_out_records.setForeground(Color.black);    
+                for (int i = 0; i < dtm.getRowCount(); i++) {
+                    cashOutTotal += (double) dtm.getValueAt(i, 0);
+                }
+
+                lbl_cash_out_records.setText("Cash Out Records In " + month);
+                lbl_cash_out_records.setForeground(Color.black);
                 lbl_cash_outs.setText("Cash Out Total ............. €" + String.valueOf(cashOutTotal));
                 lbl_cash_outs.setVisible(true);
-            }
-                
-            else {
-                JOptionPane.showMessageDialog(this, "No Cash Out on this month !");
+            } else {
+                lbl_cash_out_records.setText("No Cash Out Records In " + month + " !");
+                lbl_cash_out_records.setForeground(Color.red);
                 lbl_cash_outs.setVisible(false);
             }
         } catch (SQLException ex) {
@@ -594,54 +595,55 @@ public class CashOuts extends javax.swing.JInternalFrame {
 
     private void btn_weekly_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_weekly_recordsActionPerformed
         // TODO add your handling code here:
+        cashOutsDate = new SimpleDateFormat("yyyy-MM-dd").format(date_picker.getDate());
+        int weekYear = date_picker.getCalendar().get(Calendar.WEEK_OF_YEAR);
         ArrayList<CashOut> recordsList = new ArrayList<>();
         double cashOutTotal = 0;
 
         try {
             dbConnection();
-            
-            String query = "SELECT * FROM cashOut WHERE WEEKOFYEAR(outDate) = WEEKOFYEAR(NOW()) ORDER BY outDate DESC";
+
+            String query = "SELECT * FROM cashOut WHERE WEEK(outDate, 0) = WEEK(?, 0) ORDER BY outDate DESC";
             ps = con.prepareStatement(query);
+            ps.setString(1, cashOutsDate);
             rs = ps.executeQuery();
-            
+
             DefaultTableModel dtm = (DefaultTableModel) table_view_cash_out_records.getModel();
             dtm.setRowCount(0);
-            
-           
+
             if (rs.isBeforeFirst()) {
                 while (rs.next()) {
                     String dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("outDate"));
-                    cashOut = new CashOut(rs.getDouble("value"), dateFormat, rs.getString("type"), 
+                    cashOut = new CashOut(rs.getDouble("value"), dateFormat, rs.getString("type"),
                             rs.getString("notes"), rs.getString("user"));
 
                     recordsList.add(cashOut);
-                }     
-                    // Table models
-                    Object[] row = new Object[5];
-                    for (int i = 0; i < recordsList.size(); i++)
-                    {
-                        row[0] = recordsList.get(i).getValue();
-                        row[1] = recordsList.get(i).getType();
-                        row[2] = recordsList.get(i).getOutDate();
-                        row[3] = recordsList.get(i).getNotes();
-                        row[4] = recordsList.get(i).getUser();
-                        dtm.addRow(row);
-                    }
+                }
+                // Table models
+                Object[] row = new Object[5];
+                for (int i = 0; i < recordsList.size(); i++) {
+                    row[0] = recordsList.get(i).getValue();
+                    row[1] = recordsList.get(i).getType();
+                    row[2] = recordsList.get(i).getOutDate();
+                    row[3] = recordsList.get(i).getNotes();
+                    row[4] = recordsList.get(i).getUser();
+                    dtm.addRow(row);
+                }
 
-                    for (int i = 0; i < dtm.getRowCount(); i++)
-                        cashOutTotal += (double) dtm.getValueAt(i, 0);
-                    
-                lbl_cash_out_records.setText("Cash Out Records");
-                lbl_cash_out_records.setForeground(Color.black);    
+                for (int i = 0; i < dtm.getRowCount(); i++) {
+                    cashOutTotal += (double) dtm.getValueAt(i, 0);
+                }
+
+                lbl_cash_out_records.setText("Cash Out Records on Week " + weekYear);
+                lbl_cash_out_records.setForeground(Color.black);
                 lbl_cash_outs.setText("Cash Out Total ............. €" + String.valueOf(cashOutTotal));
                 lbl_cash_outs.setVisible(true);
-            }
-                
-            else {
-                JOptionPane.showMessageDialog(this, "No Cash Out on this week !");
+            } else {
+                lbl_cash_out_records.setText("No Cash Out Records on Week " + weekYear + " !");
+                lbl_cash_out_records.setForeground(Color.red);
                 lbl_cash_outs.setVisible(false);
             }
-                
+
         } catch (SQLException ex) {
             Logger.getLogger(CashOuts.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -661,22 +663,20 @@ public class CashOuts extends javax.swing.JInternalFrame {
 
     private void btn_register_cash_outActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_register_cash_outActionPerformed
         // TODO add your handling code here:
-        if (txt_enter_value.getText().trim().isEmpty() || txt_notes.getText().trim().isEmpty() 
-                || combo_box_type.getSelectedItem().equals("Select"))
+        if (txt_enter_value.getText().trim().isEmpty() || txt_notes.getText().trim().isEmpty()
+                || combo_box_type.getSelectedItem().equals("Select")) {
             JOptionPane.showMessageDialog(this, "Please check empty fields !", "Cash Out", JOptionPane.ERROR_MESSAGE);
-        
-        else {
+        } else {
             double value = Double.parseDouble(txt_enter_value.getText());
             String notes = txt_notes.getText();
             String type = combo_box_type.getSelectedItem().toString();
-        
+
             Date date = new Date();
             Timestamp currentDateTime = new Timestamp(date.getTime());
 
-            int confirmCashOutRegistering = JOptionPane.showConfirmDialog(this, "Confirm " + type +" of €" + value + " ?", "Cash Out", JOptionPane.YES_NO_OPTION);
+            int confirmCashOutRegistering = JOptionPane.showConfirmDialog(this, "Confirm " + type + " of €" + value + " ?", "Cash Out", JOptionPane.YES_NO_OPTION);
 
-            if (confirmCashOutRegistering == 0)
-            {
+            if (confirmCashOutRegistering == 0) {
                 try {
                     dbConnection();
                     String query = "INSERT INTO cashOut (value, outDate, type, notes, user) VALUES(?, ?, ?, ?, ?)";
@@ -693,9 +693,8 @@ public class CashOuts extends javax.swing.JInternalFrame {
                     txt_notes.setText("");
                     combo_box_type.setSelectedIndex(0);
                     txt_enter_value.requestFocus();
-                    
+
                     loadRecordsOfTheDay();
-                    
 
                 } catch (SQLException ex) {
                     Logger.getLogger(CashOuts.class.getName()).log(Level.SEVERE, null, ex);
@@ -707,8 +706,7 @@ public class CashOuts extends javax.swing.JInternalFrame {
     private void btn_print_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_print_recordsActionPerformed
         // TODO add your handling code here:
         // Get date from calendar
-        Date pickedDate = pickedDate = date_picker.getDate();
-        String tillClosingDate = tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(pickedDate);
+        String tillClosingDate = tillClosingDate = new SimpleDateFormat("dd/MM/yyyy").format(date_picker.getDate());
 
         PrinterJob printerJob = PrinterJob.getPrinterJob();
         printerJob.setJobName("CashOutRecords" + tillClosingDate);
@@ -751,7 +749,7 @@ public class CashOuts extends javax.swing.JInternalFrame {
 
     private void date_pickerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_date_pickerMouseClicked
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_date_pickerMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

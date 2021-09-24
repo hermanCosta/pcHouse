@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,11 +46,12 @@ public class CashEntries extends javax.swing.JInternalFrame {
     ResultSetMetaData rsmd;
     CashEntry cashEntry;
     Date datePicked;
+    String cashEntriesDate;
 
     public CashEntries(Date _date) {
         initComponents();
         this.datePicked = _date;
-        
+
         this.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         BasicInternalFrameUI ui = (BasicInternalFrameUI) this.getUI();
         ui.setNorthPane(null);
@@ -57,10 +59,10 @@ public class CashEntries extends javax.swing.JInternalFrame {
         tableSettings(table_view_cash_entry_records);
         loadRecordsOfTheDay();
     }
-    
+
     public void tableSettings(JTable table) {
         table.getTableHeader().setFont(new Font("Lucida Grande", Font.BOLD, 12));
-        
+
         scroll_pane_table_cash_entry.setOpaque(false);
         scroll_pane_table_cash_entry.getViewport().setOpaque(false);
     }
@@ -80,53 +82,49 @@ public class CashEntries extends javax.swing.JInternalFrame {
         ArrayList<CashEntry> recordsList = new ArrayList<>();
         double cashEntriesTotal = 0;
 
-//        Date date = date_picker.getDate();
         String startDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(date_picker.getDate());
         String endDate = new SimpleDateFormat("yyyy-MM-dd 23:59:59").format(date_picker.getDate());
         String dateFormat = new SimpleDateFormat("dd/MM/yyyy").format(date_picker.getDate());
-        
+
         try {
             dbConnection();
-            
+
             String query = "SELECT * FROM cashEntry WHERE entryDate >= ? AND entryDate <= ? ORDER BY entryDate DESC";
             ps = con.prepareStatement(query);
             ps.setString(1, startDate);
             ps.setString(2, endDate);
             rs = ps.executeQuery();
-            
+
             DefaultTableModel dtm = (DefaultTableModel) table_view_cash_entry_records.getModel();
             dtm.setRowCount(0);
-            
+
             if (rs.isBeforeFirst()) {
                 while (rs.next()) {
-                    dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("entryDate"));
-                    cashEntry = new CashEntry(rs.getDouble("value"), dateFormat, rs.getString("notes"), rs.getString("user"));
+                    String entryDate = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("entryDate"));
+                    cashEntry = new CashEntry(rs.getDouble("value"), entryDate, rs.getString("notes"), rs.getString("user"));
 
                     recordsList.add(cashEntry);
-                }     
-                    // Table models
-                    Object[] row = new Object[4];
-                    for (int i = 0; i < recordsList.size(); i++)
-                    {
-                        row[0] = recordsList.get(i).getValue();
-                        row[1] = recordsList.get(i).getEntryDate();
-                        row[2] = recordsList.get(i).getNotes();
-                        row[3] = recordsList.get(i).getUser();
-                        dtm.addRow(row);
-                    }
+                }
 
-                    for (int i = 0; i < dtm.getRowCount(); i++)
-                        cashEntriesTotal += (double) dtm.getValueAt(i, 0);
-                
-                lbl_entry_records.setText("Cash Entries Records ");
+                Object[] row = new Object[4];
+                for (int i = 0; i < recordsList.size(); i++) {
+                    row[0] = recordsList.get(i).getValue();
+                    row[1] = recordsList.get(i).getEntryDate();
+                    row[2] = recordsList.get(i).getNotes();
+                    row[3] = recordsList.get(i).getUser();
+                    dtm.addRow(row);
+                }
+
+                for (int i = 0; i < dtm.getRowCount(); i++) {
+                    cashEntriesTotal += (double) dtm.getValueAt(i, 0);
+                }
+
+                lbl_entry_records.setText("Cash Entries Records on " + dateFormat + " !");
                 lbl_entry_records.setForeground(Color.black);
                 lbl_cash_entries_total.setText("Cash Entries Total ............. € " + String.valueOf(cashEntriesTotal));
                 lbl_cash_entries_total.setVisible(true);
-            }
-                
-            else
-            {
-                lbl_entry_records.setText("No Cash Entries on " + dateFormat + " !");
+            } else {
+                lbl_entry_records.setText("No Cash Entries Records on " + dateFormat + " !");
                 lbl_entry_records.setForeground(Color.red);
                 lbl_cash_entries_total.setVisible(false);
             }
@@ -240,7 +238,7 @@ public class CashEntries extends javax.swing.JInternalFrame {
         lbl_cash_entries_total.setText("cashEntriesTotal");
 
         lbl_entry_records.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
-        lbl_entry_records.setText("Cash Entry Records");
+        lbl_entry_records.setText("cashEntryRecords");
 
         panel_table_view.setBackground(new java.awt.Color(255, 255, 255));
         panel_table_view.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
@@ -300,11 +298,14 @@ public class CashEntries extends javax.swing.JInternalFrame {
             .addGroup(panel_cash_recordsLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(panel_cash_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_entry_records, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panel_table_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_cash_entries_total, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel_header, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_cash_recordsLayout.createSequentialGroup()
+                .addContainerGap(223, Short.MAX_VALUE)
+                .addComponent(lbl_entry_records, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                .addContainerGap(223, Short.MAX_VALUE))
         );
         panel_cash_recordsLayout.setVerticalGroup(
             panel_cash_recordsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -512,52 +513,53 @@ public class CashEntries extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_monthly_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_monthly_recordsActionPerformed
+        cashEntriesDate = new SimpleDateFormat("yyyy-MM-dd").format(date_picker.getDate());
+        String month = new SimpleDateFormat("MMMM").format(date_picker.getDate());
         ArrayList<CashEntry> recordsList = new ArrayList<>();
         double cashEntriesTotal = 0;
 
         try {
             dbConnection();
-            
-            String query = "SELECT * FROM cashEntry WHERE MONTH(entryDate) = MONTH(NOW()) ORDER BY entryDate DESC";
+
+            String query = "SELECT * FROM cashEntry WHERE MONTH(entryDate) = MONTH(?) ORDER BY entryDate DESC";
             ps = con.prepareStatement(query);
+            ps.setString(1, cashEntriesDate);
             rs = ps.executeQuery();
-            
+
             DefaultTableModel dtm = (DefaultTableModel) table_view_cash_entry_records.getModel();
             dtm.setRowCount(0);
-            
+
             if (rs.isBeforeFirst()) {
                 while (rs.next()) {
                     String dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("entryDate"));
                     cashEntry = new CashEntry(rs.getDouble("value"), dateFormat, rs.getString("notes"), rs.getString("user"));
 
                     recordsList.add(cashEntry);
-                }     
-                    // Table models
-                    Object[] row = new Object[4];
-                    for (int i = 0; i < recordsList.size(); i++)
-                    {
-                        row[0] = recordsList.get(i).getValue();
-                        row[1] = recordsList.get(i).getEntryDate();
-                        row[2] = recordsList.get(i).getNotes();
-                        row[3] = recordsList.get(i).getUser();
-                        dtm.addRow(row);
-                    }
+                }
+                // Table models
+                Object[] row = new Object[4];
+                for (int i = 0; i < recordsList.size(); i++) {
+                    row[0] = recordsList.get(i).getValue();
+                    row[1] = recordsList.get(i).getEntryDate();
+                    row[2] = recordsList.get(i).getNotes();
+                    row[3] = recordsList.get(i).getUser();
+                    dtm.addRow(row);
+                }
 
-                    for (int i = 0; i < dtm.getRowCount(); i++)
-                        cashEntriesTotal += (double) dtm.getValueAt(i, 0);
-                    
-                lbl_entry_records.setText("Cash Entries Records");
+                for (int i = 0; i < dtm.getRowCount(); i++) {
+                    cashEntriesTotal += (double) dtm.getValueAt(i, 0);
+                }
+
+                lbl_entry_records.setText("Cash Entries Records In " + month + " !");
                 lbl_entry_records.setForeground(Color.black);
                 lbl_cash_entries_total.setText("Cash Entries Total ............. €" + String.valueOf(cashEntriesTotal));
                 lbl_cash_entries_total.setVisible(true);
-            }
-                
-            else {
-                
-                JOptionPane.showMessageDialog(this, "No Cash Entries on this month");
+            } else {
+
+                lbl_entry_records.setText("No Cash Entries Records In " + month + " !");
+                lbl_entry_records.setForeground(Color.red);
                 lbl_cash_entries_total.setVisible(false);
             }
-                
 
         } catch (SQLException ex) {
             Logger.getLogger(CashEntries.class.getName()).log(Level.SEVERE, null, ex);
@@ -575,51 +577,52 @@ public class CashEntries extends javax.swing.JInternalFrame {
 
     private void btn_weekly_recordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_weekly_recordsActionPerformed
         // TODO add your handling code here:
+        cashEntriesDate = new SimpleDateFormat("yyyy-MM-dd").format(date_picker.getDate());
+        int weekYear = date_picker.getCalendar().get(Calendar.WEEK_OF_YEAR);
         ArrayList<CashEntry> recordsList = new ArrayList<>();
         double cashEntriesTotal = 0;
 
         try {
             dbConnection();
-            
-            String query = "SELECT * FROM cashEntry WHERE WEEKOFYEAR(entryDate) = WEEKOFYEAR(NOW()) ORDER BY entryDate DESC";
+
+            String query = "SELECT * FROM cashEntry WHERE WEEK(entryDate, 0) = WEEK(?, 0) ORDER BY entryDate DESC";
             ps = con.prepareStatement(query);
+            ps.setString(1, cashEntriesDate);
             rs = ps.executeQuery();
-            
+
             DefaultTableModel dtm = (DefaultTableModel) table_view_cash_entry_records.getModel();
             dtm.setRowCount(0);
-            
+
             if (rs.isBeforeFirst()) {
                 while (rs.next()) {
                     String dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm").format(rs.getTimestamp("entryDate"));
                     cashEntry = new CashEntry(rs.getDouble("value"), dateFormat, rs.getString("notes"), rs.getString("user"));
 
                     recordsList.add(cashEntry);
-                }     
-                    // Table models
-                    Object[] row = new Object[4];
-                    for (int i = 0; i < recordsList.size(); i++)
-                    {
-                        row[0] = recordsList.get(i).getValue();
-                        row[1] = recordsList.get(i).getEntryDate();
-                        row[2] = recordsList.get(i).getNotes();
-                        row[3] = recordsList.get(i).getUser();
-                        dtm.addRow(row);
-                    }
+                }
+                // Table models
+                Object[] row = new Object[4];
+                for (int i = 0; i < recordsList.size(); i++) {
+                    row[0] = recordsList.get(i).getValue();
+                    row[1] = recordsList.get(i).getEntryDate();
+                    row[2] = recordsList.get(i).getNotes();
+                    row[3] = recordsList.get(i).getUser();
+                    dtm.addRow(row);
+                }
 
-                    for (int i = 0; i < dtm.getRowCount(); i++)
-                        cashEntriesTotal += (double) dtm.getValueAt(i, 0);
-                    
-                lbl_entry_records.setText("Cash Entries Records");
-                lbl_entry_records.setForeground(Color.black);   
+                for (int i = 0; i < dtm.getRowCount(); i++) {
+                    cashEntriesTotal += (double) dtm.getValueAt(i, 0);
+                }
+
+                lbl_entry_records.setText("Cash Entries Records on Week " + weekYear + " !");
+                lbl_entry_records.setForeground(Color.black);
                 lbl_cash_entries_total.setText("Cash Entries Total ............. €" + String.valueOf(cashEntriesTotal));
                 lbl_cash_entries_total.setVisible(true);
-            }
-                
-            else {
-                JOptionPane.showMessageDialog(this, "No Cash Entries on this week");
+            } else {
+                lbl_entry_records.setText("No Cash Entries on Week " + weekYear + " !");
+                lbl_entry_records.setForeground(Color.red);
                 lbl_cash_entries_total.setVisible(false);
             }
-                
 
         } catch (SQLException ex) {
             Logger.getLogger(CashEntries.class.getName()).log(Level.SEVERE, null, ex);
@@ -640,20 +643,18 @@ public class CashEntries extends javax.swing.JInternalFrame {
 
     private void btn_register_entryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_register_entryActionPerformed
         // TODO add your handling code here:
-        if (txt_enter_value.getText().trim().isEmpty() || txt_notes.getText().trim().isEmpty())
+        if (txt_enter_value.getText().trim().isEmpty() || txt_notes.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please check empty fields !", "Cash Entry", JOptionPane.ERROR_MESSAGE);
-        
-        else {
+        } else {
             double value = Double.parseDouble(txt_enter_value.getText());
             String notes = txt_notes.getText();
-        
+
             Date date = new Date();
             Timestamp currentDateTime = new Timestamp(date.getTime());
 
             int confirmEntryRegistering = JOptionPane.showConfirmDialog(this, "Confirm Entry of €" + value + " ?", "Cash Entry", JOptionPane.YES_NO_OPTION);
 
-            if (confirmEntryRegistering == 0)
-            {
+            if (confirmEntryRegistering == 0) {
                 try {
                     dbConnection();
                     String query = "INSERT INTO cashEntry (value, entryDate, notes, user) VALUES(?, ?, ?, ?)";
@@ -667,9 +668,8 @@ public class CashEntries extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(this, "Cash entry registered successfully !");
                     txt_enter_value.setText("");
                     txt_notes.setText("");
-                    
+
                     loadRecordsOfTheDay();
-                    
 
                 } catch (SQLException ex) {
                     Logger.getLogger(CashEntries.class.getName()).log(Level.SEVERE, null, ex);
@@ -725,7 +725,7 @@ public class CashEntries extends javax.swing.JInternalFrame {
 
     private void date_pickerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_date_pickerMouseClicked
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_date_pickerMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

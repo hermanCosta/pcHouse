@@ -24,7 +24,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +39,6 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 
 /**
@@ -98,16 +96,16 @@ public class SaleDetails extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(this, ex, "DB Connection", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     public void loadContactNo() {
         switch (sale.getContactNo().length()) {
             case 9:
-                JFormattedTextField landLineFormat  = new JFormattedTextField(createFormatter("(##) ###-####"));
+                JFormattedTextField landLineFormat = new JFormattedTextField(createFormatter("(##) ###-####"));
                 landLineFormat.setText(sale.getContactNo());
                 txt_contact.setText(landLineFormat.getText());
                 break;
             case 10:
-                JFormattedTextField mobileFormat  = new JFormattedTextField(createFormatter("(###) ###-####"));
+                JFormattedTextField mobileFormat = new JFormattedTextField(createFormatter("(###) ###-####"));
                 mobileFormat.setText(sale.getContactNo());
                 txt_contact.setText(mobileFormat.getText());
                 break;
@@ -116,20 +114,20 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                 break;
         }
     }
-         
+
     protected MaskFormatter createFormatter(String s) {
-    MaskFormatter formatter = null;
-    try {
-        formatter = new MaskFormatter(s);
-    } catch (java.text.ParseException exc) {
-        System.err.println("formatter is bad: " + exc.getMessage());
-        System.exit(-1);
-    }
-    return formatter;
+        MaskFormatter formatter = null;
+        try {
+            formatter = new MaskFormatter(s);
+        } catch (java.text.ParseException exc) {
+            System.err.println("formatter is bad: " + exc.getMessage());
+            System.exit(-1);
+        }
+        return formatter;
     }
 
     public void loadSaleDetails() {
-        
+
         DefaultTableModel dtm = (DefaultTableModel) table_view_products.getModel();
         TableColumnModel model = table_view_products.getColumnModel();
         dtm.setRowCount(0);
@@ -141,20 +139,22 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         txt_total.setText(String.valueOf(sale.getTotal()));
         lbl_sale_paid_on.setText("Sale Date: " + sale.getSaleDate());
 
-        if (sale.getCash() == 0)
+        if (sale.getCash() == 0) {
             lbl_paid_by.setText("Paid by Card: €" + sale.getCard());
-        else if (sale.getCard() == 0)
+        } else if (sale.getCard() == 0) {
             lbl_paid_by.setText("Paid by Cash: €" + sale.getCash() + " | Change: €" + sale.getChangeTotal());
-        else
+        } else {
             lbl_paid_by.setText("Paid by Cash: €" + sale.getCash() + " | Card: €" + sale.getCard() + " | Change: €" + sale.getChangeTotal());
+        }
 
         String[] arrayProducts = sale.getStringProducts().split(",");
         String[] arrayQty = sale.getStringQty().split(",");
         String[] arrayUnitPrice = sale.getStringUnitPrice().split(",");
         String[] arrayPriceTotal = sale.getStringPriceTotal().split(",");
 
-        for (Object objProducts : arrayProducts)
+        for (Object objProducts : arrayProducts) {
             dtm.addRow(new Object[]{objProducts});
+        }
 
         Vector vecProducts = new Vector();
         Vector vecQty = new Vector();
@@ -521,8 +521,8 @@ public class SaleDetails extends javax.swing.JInternalFrame {
                                             .addGap(3, 3, 3)))))
                             .addGroup(panel_order_detailsLayout.createSequentialGroup()
                                 .addComponent(lbl_total)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txt_total, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(30, 30, 30)
                         .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 571, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -666,19 +666,18 @@ public class SaleDetails extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         JPasswordField pf = new JPasswordField();
         int askPassword = JOptionPane.showConfirmDialog(null, pf, "Enter Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        
+
         if (askPassword == JOptionPane.OK_OPTION) {
             String password = new String(pf.getPassword());
             try {
                 dbConnection();
-                
+
                 String query = "SELECT password FROM users WHERE password = ?";
                 ps = con.prepareStatement(query);
                 ps.setString(1, password);
                 rs = ps.executeQuery();
-                
-                if (rs.isBeforeFirst())
-                {
+
+                if (rs.isBeforeFirst()) {
 
                     Date date = new Date();
                     Timestamp currentDate = new Timestamp(date.getTime());
@@ -731,10 +730,10 @@ public class SaleDetails extends javax.swing.JInternalFrame {
 
                     ps.close();
                     con.close();
-                }
-                else
+                } else {
                     JOptionPane.showMessageDialog(this, "Wrong Password !", "Till Closing", JOptionPane.ERROR_MESSAGE);
-                
+                }
+
             } catch (SQLException ex) {
                 Logger.getLogger(SaleDetails.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -743,8 +742,8 @@ public class SaleDetails extends javax.swing.JInternalFrame {
 
     private void btn_copyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_copyActionPerformed
         // TODO add your handling code here:
-        StringSelection stringSelection = new StringSelection(txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", ""));
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection , null);
+        StringSelection stringSelection = new StringSelection(txt_contact.getText().replace("(", "").replace(")", "").replace("-", "").replace(" ", ""));
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
         JOptionPane.showMessageDialog(this, txt_contact.getText() + " Copied to Clipboard");
     }//GEN-LAST:event_btn_copyActionPerformed
 
