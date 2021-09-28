@@ -649,7 +649,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, true
+                false, false, true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1235,46 +1235,48 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
     private void txt_faultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_faultActionPerformed
         // TODO add your handling code here:
-        String faultText = txt_fault.getText();
-        String tableFault = "";
-        Vector faultsList = new Vector();
         DefaultTableModel dtm = (DefaultTableModel) table_view_faults.getModel();
+        ArrayList<String> tableFaultsList = new ArrayList<>();
+        String faultText = txt_fault.getText().replace(" ", "");
+        String tableFault = "";
+        Vector faultsVector = new Vector();
 
         for (int i = 0; i < dtm.getRowCount(); i++) {
-            tableFault = dtm.getValueAt(i, 0).toString();
+            tableFault = dtm.getValueAt(i, 0).toString().replace(" ", "");
+            tableFaultsList.add(tableFault);
         }
-
-        if (faultText.isEmpty())
-        JOptionPane.showMessageDialog(this, "Please add a Fault!", "Faults", JOptionPane.ERROR_MESSAGE);
-        else if (faultText.equals(tableFault)) {
+        if (faultText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please add a Fault!", "Faults", JOptionPane.ERROR_MESSAGE);
+        } else if (tableFaultsList.contains(faultText)) {
             JOptionPane.showMessageDialog(this, "Item '" + faultText + "' already added !", "Faults", JOptionPane.ERROR_MESSAGE);
             txt_fault.setText("");
         } else {
             try {
                 dbConnection();
+                faultText = txt_fault.getText();
 
-                String queryCheck = "SELECT * FROM faults WHERE faultName = '?";
+                String queryCheck = "SELECT * FROM faults WHERE faultName = ?";
                 ps = con.prepareStatement(queryCheck);
                 ps.setString(1, faultText);
                 rs = ps.executeQuery();
 
                 if (!rs.isBeforeFirst()) {
-                    int confirmInsertion = JOptionPane.showConfirmDialog(this, "Do you want to add a new fault ?", "Add New Fault", JOptionPane.YES_NO_OPTION);
+                    int confirmInsertion = JOptionPane.showConfirmDialog(null, "Do you want to add a new fault ?", "Add New Fault", JOptionPane.YES_NO_OPTION);
                     if (confirmInsertion == 0) {
                         String query = "INSERT INTO faults (faultName) VALUES(?)";
                         ps = con.prepareStatement(query);
                         ps.setString(1, faultText);
                         ps.executeUpdate();
 
-                        faultsList.add(faultText);
-                        dtm.addRow(faultsList);
+                        faultsVector.add(faultText);
+                        dtm.addRow(faultsVector);
                         txt_fault.setText("");
                     } else {
                         txt_fault.setText("");
                     }
                 } else {
-                    faultsList.add(faultText);
-                    dtm.addRow(faultsList);
+                    faultsVector.add(faultText);
+                    dtm.addRow(faultsVector);
                     txt_fault.setText("");
                 }
 
@@ -1419,7 +1421,7 @@ public class NewOrder extends javax.swing.JInternalFrame {
 
             String query = "SELECT * FROM customers WHERE contactNo = ? ";
             ps = con.prepareStatement(query);
-            ps.setString(1, txt_contact.getText());
+            ps.setString(1, contactNo = txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", ""));
             rs = ps.executeQuery();
 
             if (!rs.isBeforeFirst()) {
@@ -1445,12 +1447,16 @@ public class NewOrder extends javax.swing.JInternalFrame {
         {
             double sum = 0;
             for (int i = 0; i < table_view_products.getRowCount(); i++) {
-                double price = Double.parseDouble(table_view_products.getValueAt(i, 3).toString());
-                table_view_products.setValueAt(price, i, 3);
-                sum += price;
+                double unitPrice = Double.parseDouble(table_view_products.getValueAt(i, 2).toString());
+                int qty = Integer.parseInt(table_view_products.getValueAt(i, 1).toString());
+                
+                table_view_products.setValueAt(unitPrice, i, 2);
+                double priceTotal = unitPrice * qty;
+                table_view_products.setValueAt(priceTotal, i, 3);
+                sum += priceTotal;
             }
 
-            txt_total.setText(Double.toString(sum));
+            txt_total.setText(String.valueOf(sum));
             txt_due.setText(String.valueOf(txt_total.getText()));
         }
     }//GEN-LAST:event_table_view_productsKeyReleased

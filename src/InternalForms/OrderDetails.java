@@ -805,7 +805,7 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         )
         {
             public boolean isCellEditable(int row, int column) {
-                return column == 3;
+                return column == 2;
             }
         }
     );
@@ -1001,11 +1001,9 @@ public class OrderDetails extends javax.swing.JInternalFrame {
                             .addGap(3, 3, 3)
                             .addComponent(lbl_deposit))
                         .addComponent(txt_deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(panel_order_detailsLayout.createSequentialGroup()
-                            .addGap(0, 0, 0)
-                            .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(lbl_price)
-                                .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                        .addGroup(panel_order_detailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbl_price)
+                            .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))))
             .addGap(20, 20, 20)
             .addComponent(panel_buttons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     );
@@ -1662,11 +1660,6 @@ public class OrderDetails extends javax.swing.JInternalFrame {
 
     private void table_view_productsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_table_view_productsKeyPressed
         // TODO add your handling code here:
-        // Accepts number only
-        if (Character.isLetter(evt.getKeyChar())) {
-            table_view_faults.setDefaultEditor(Object.class, null);
-        }
-
     }//GEN-LAST:event_table_view_productsKeyPressed
 
     private void table_view_productsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_table_view_productsKeyReleased
@@ -1674,15 +1667,18 @@ public class OrderDetails extends javax.swing.JInternalFrame {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             double sum = 0;
             for (int i = 0; i < table_view_products.getRowCount(); i++) {
-                if (table_view_products.getValueAt(i, 3).toString().trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Price Total can not be empty !", "Product | Service", JOptionPane.ERROR_MESSAGE);
-                }
-                double price = Double.parseDouble(table_view_products.getValueAt(i, 3).toString());
-                table_view_products.setValueAt(price, i, 3);
-                sum += price;
+                
+                double unitPrice = Double.parseDouble(table_view_products.getValueAt(i, 2).toString());
+                int qty = Integer.parseInt(table_view_products.getValueAt(i, 1).toString().replaceFirst(" ", ""));
+                
+                table_view_products.setValueAt(unitPrice, i, 2);
+                double priceTotal = unitPrice * qty;
+                sum += priceTotal;
+                
+                table_view_products.setValueAt(priceTotal, i, 3);
             }
 
-            txt_total.setText(Double.toString(sum));
+            txt_total.setText(String.valueOf(sum));
             txt_due.setText(String.valueOf(txt_total.getText()));
         }
     }//GEN-LAST:event_table_view_productsKeyReleased

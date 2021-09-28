@@ -111,7 +111,21 @@ public class Customers extends javax.swing.JInternalFrame {
             row[0] = list.get(i).getCustomerId();
             row[1] = list.get(i).getFirstName();
             row[2] = list.get(i).getLastName();
-            row[3] = list.get(i).getContactNo();
+            
+            switch (list.get(i).getContactNo().length()) {
+                case 9:
+                    String landLine = list.get(i).getContactNo().replaceFirst("(\\d{2})(\\d{3})(\\d+)", "($1) $2-$3");
+                    row[3] = landLine;
+                    break;
+                case 10:
+                    String mobile = list.get(i).getContactNo().replaceFirst("(\\d{3})(\\d{3})(\\d+)", "($1) $2-$3");
+                    row[3] = mobile;
+                    break;
+                default:
+                    row[3] = list.get(i).getContactNo();
+                    break;
+            }
+            
             row[4] = list.get(i).getEmail();
 
             dtm.addRow(row);
@@ -559,7 +573,7 @@ public class Customers extends javax.swing.JInternalFrame {
         } else {
             firstName = txt_first_name.getText().toUpperCase();
             lastName = txt_last_name.getText().toUpperCase();
-            contactNo = txt_contact.getText();
+            contactNo = txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", "");
             email = txt_email.getText();
 
             try {
@@ -610,7 +624,7 @@ public class Customers extends javax.swing.JInternalFrame {
         } else {
             firstName = txt_first_name.getText().toUpperCase();
             lastName = txt_last_name.getText().toUpperCase();
-            contactNo = txt_contact.getText();
+            contactNo = txt_contact.getText().replace("(","").replace(")", "").replace("-", "").replace(" ", "");
             email = txt_email.getText();
 
             try {
@@ -752,7 +766,22 @@ public class Customers extends javax.swing.JInternalFrame {
             row[0] = customerList.get(i).getCustomerId();
             row[1] = customerList.get(i).getFirstName();
             row[2] = customerList.get(i).getLastName();
-            row[3] = customerList.get(i).getContactNo();
+         
+            switch (customerList.get(i).getContactNo().length()) {
+                case 9:
+                    String landLine = customerList.get(i).getContactNo().replaceFirst("(\\d{2})(\\d{3})(\\d+)", "($1) $2-$3");
+                    row[3] = landLine;
+                    break;
+                case 10:
+                    String mobile = customerList.get(i).getContactNo().replaceFirst("(\\d{3})(\\d{3})(\\d+)", "($1) $2-$3");
+                    row[3] = mobile;
+                    break;
+                default:
+                    row[3] = customerList.get(i).getContactNo();
+                    break;
+            }
+
+            
             row[4] = customerList.get(i).getEmail();
 
             dtm.addRow(row);

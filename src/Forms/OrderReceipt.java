@@ -5,6 +5,7 @@
  */
 package Forms;
 
+import InternalForms.OrderList;
 import Model.CompletedOrder;
 import Model.Order;
 import java.awt.Graphics;
@@ -86,7 +87,9 @@ public class OrderReceipt extends javax.swing.JFrame {
     protected void processWindowEvent(WindowEvent e) {
         super.processWindowEvent(e);
         if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-            new MainMenu().setVisible(true);
+            OrderList orderList = new OrderList();
+            MainMenu.mainMenuDesktopPane.removeAll();
+            MainMenu.mainMenuDesktopPane.add(orderList).setVisible(true);
         }
     }
 
@@ -482,7 +485,9 @@ public class OrderReceipt extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Receipt: " + order.getOrderNo() + " Printed Successfully", "Payment Receipt", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
                 
-                new MainMenu().setVisible(true);
+                OrderList orderList = new OrderList();
+                MainMenu.mainMenuDesktopPane.removeAll();
+                MainMenu.mainMenuDesktopPane.add(orderList).setVisible(true);
 
             } catch (PrinterException ex) {
                 Logger.getLogger(OrderReceipt.class.getName()).log(Level.SEVERE, null, ex);

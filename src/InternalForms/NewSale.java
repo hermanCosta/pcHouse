@@ -656,7 +656,7 @@ public class NewSale extends javax.swing.JInternalFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, true
+                false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1227,11 +1227,15 @@ public class NewSale extends javax.swing.JInternalFrame {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             double sum = 0;
             for (int i = 0; i < table_view_products.getRowCount(); i++) {
-                double price = Double.parseDouble(table_view_products.getValueAt(i, 3).toString());
-                table_view_products.setValueAt(price, i, 3);
-                sum += price;
+                double unitPrice = Double.parseDouble(table_view_products.getValueAt(i, 2).toString());
+                int qty = Integer.parseInt(table_view_products.getValueAt(i, 1).toString());
+                
+                table_view_products.setValueAt(unitPrice, i, 2);
+                double priceTotal = unitPrice * qty;
+                table_view_products.setValueAt(priceTotal, i, 3);
+                sum += priceTotal;
             }
-            txt_total.setText(Double.toString(sum));
+            txt_total.setText(String.valueOf(sum));
         }
     }//GEN-LAST:event_table_view_productsKeyReleased
 

@@ -67,7 +67,6 @@ public class MainMenu extends javax.swing.JFrame {
         initComponents();
         setResizable(false);
         
-
         tableSettings(table_view_products_stock);
         tableSettings(table_view_orders);
         mainMenuDesktopPane = desktop_pane_main_menu;
